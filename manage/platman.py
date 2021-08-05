@@ -118,7 +118,7 @@ async def install_system_release(version: str) -> None:
         'webpack.config.js'
     ]
     for dfn in todeploy:
-        print(f"deploying {CSTYLE['red']}{dfn}{CSTYLE['clear']}")
+        print(f"deploying {dfn}")
         dest_fqfn: str = os.path.join(config.PRJROOT, dfn)
         repo_fqfn: str = os.path.join(release_path, dfn)
         if os.path.isdir(dest_fqfn):
