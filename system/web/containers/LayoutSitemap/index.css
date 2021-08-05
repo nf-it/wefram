@@ -1,0 +1,43 @@
+.SystemUI-LayoutSitemap {
+    width: 18vw;
+    flex-shrink: 0;
+}
+
+.SystemUI-LayoutSitemap-paper {
+    width: 18vw;
+    background-color: #253043 !important;
+    color: #eee !important;
+}
+
+.SystemUI-LayoutSitemap-container {
+    overflow: auto;
+}
+
+.SystemUI-LayoutSitemap-folder {
+    font-size: 0.9em;
+    border-top: 1px solid #0004;
+    border-bottom: 1px solid #0004;
+    background-color: #0002;
+}
+
+.SystemUI-LayoutSitemap a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.SystemUI-LayoutSitemap a:hover {
+    background-color: #0005 !important;
+}
+
+.SystemUI-LayoutSitemap-item {
+
+}
+
+.SystemUI-LayoutSitemap-item:hover {
+    background-color: #0005 !important;
+}
+
+.SystemUI-LayoutSitemap-icon {
+    width: 1.5vw;
+    height: 1.5vw;
+}

@@ -1,0 +1,10 @@
+.SystemUI-OptionsList-chip-root {
+    height: auto;
+    min-height: 32px;
+    width: 100%;
+}
+
+.SystemUI-OptionsList-chip-label {
+    flex-grow: 1;
+    white-space: pre-wrap;
+}

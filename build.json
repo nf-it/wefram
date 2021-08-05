@@ -1,0 +1,9 @@
+{
+  "staticsDir": "static",
+  "staticsUrl": "/static",
+  "assetsDir": "project/assets",
+  "coreDir": "system",
+  "appsDir": "project",
+  "filesDir": "files",
+  "filesUrl": "/files"
+}

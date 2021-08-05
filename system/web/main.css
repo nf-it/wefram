@@ -1,0 +1,30 @@
+html {
+    font-size: 1.05vw;
+    background-color: #f8f8f8;
+    /*overflow-y: scroll;*/
+}
+
+body {
+    background-color: #f8f8f8;
+}
+
+div {
+    position: relative;
+}
+
+.SystemUI-Layout-root {
+    display: flex;
+}
+
+.SystemUI-Layout-content {
+    flex-grow: 1;
+    padding: 0 24px 50px;
+}
+
+
+.SystemUI-Box-GrayPanel {
+    padding: 2px;
+    border-radius: 5px;
+    background-color: #eee;
+    border: 1px solid #e7e7e7;
+}
