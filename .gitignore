@@ -3,14 +3,12 @@
 .pnp.cjs
 .DS_Store
 *.log*
-*.log*
-*.log*
 /.venv
 /.idea
 /.cache
 /.yarnrc.yml
 /.yarn
-/.yarn.lock
+/yarn.lock
 /requirements
 /package.json
 /static
