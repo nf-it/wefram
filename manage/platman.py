@@ -34,18 +34,13 @@ async def download_release(url: str, version: str) -> bool:
         os.unlink(release_fn)
     print(f"Downloading release from [github] repository: {version}")
 
-    loop = asyncio.get_event_loop()
-    term_reader = asyncio.StreamReader()
-    w_transport, w_protocol = await loop.connect_write_pipe(asyncio.streams.FlowControlMixin, sys.stdout)
-    term_stdout = asyncio.StreamWriter(w_transport, w_protocol, term_reader, loop)
-
     with open(release_fn, 'wb') as tarball:
         async with aiohttp.ClientSession() as httpreq:
             async with httpreq.get(url) as response:
                 if response.status != 200:
                     return False
                 async for data, _ in response.content.iter_chunks():
-                    term_stdout.write(b'.')
+                    print('.', end='', flush=True)
                     tarball.write(data)
                 print("\ndone")
     return True
