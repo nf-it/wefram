@@ -17,3 +17,4 @@ __pycache__
 *.pyc
 react-app-env.d.ts
 /system/prepared
+/.repos

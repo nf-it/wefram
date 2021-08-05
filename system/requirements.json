@@ -2,6 +2,7 @@
   "pip": {
     "aiofiles": "latest",
     "aioredis": "2.0",
+    "aiohttp": "latest",
     "async-timeout": "latest",
     "asyncpg": "latest",
     "click": "latest",

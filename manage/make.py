@@ -12,8 +12,8 @@ from system.tools import CSTYLE, json_encode_custom, app_dir, app_root
 from system import logger, ui, apps, l10n
 
 
-TS_TEMPLATES_ROOT: str = os.path.join(config.COREROOT, '../system/web', 'templates')
-TS_PREPARED_ROOT: str = os.path.join(config.COREROOT, '../system/web', 'prepared')
+TS_TEMPLATES_ROOT: str = os.path.join(config.COREROOT, 'web', 'templates')
+TS_PREPARED_ROOT: str = os.path.join(config.COREROOT, 'web', 'prepared')
 STATICS_URL: str = config.STATICS_URL
 STATICS_ROOT: str = config.STATICS_ROOT
 STATICS_CSS_ROOT: str = os.path.join(STATICS_ROOT, 'css')
@@ -88,7 +88,7 @@ def make_statics_js(roots: List[str], assets_uuid: str) -> None:
     embed: List[str] = []
     logger.info(f"building public statics [{CSTYLE['bold']}JS{CSTYLE['clear']}]")
     for root in roots:
-        srcpath: str = os.path.join(config.PRJROOT, root, '../system/public', 'js')
+        srcpath: str = os.path.join(config.PRJROOT, root, 'public', 'js')
         if not os.path.isdir(srcpath):
             continue
         logger.info(f"building public statics [{CSTYLE['bold']}JS{CSTYLE['clear']}] => {root}")
@@ -122,9 +122,10 @@ def make_statics_css(roots: List[str], assets_uuid: str) -> None:
     shutil.rmtree(STATICS_CSS_ROOT, ignore_errors=True)
     os.makedirs(STATICS_CSS_ROOT)
     contents: List[str] = []
+    embed: List[str] = []
     logger.info(f"building public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}]")
     for root in roots:
-        srcpath: str = os.path.join(config.PRJROOT, root, '../system/public', 'css')
+        srcpath: str = os.path.join(config.PRJROOT, root, 'public', 'css')
         if not os.path.isdir(srcpath):
             continue
         logger.info(f"building public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}] => {root}")
@@ -138,13 +139,25 @@ def make_statics_css(roots: List[str], assets_uuid: str) -> None:
                     .replace('{{ PUBLIC_FONTS }}', f'{STATICS_URL}/fonts') \
                     .replace('{{ APP_MEDIA }}', f'{STATICS_URL}/media/{root}')
                 contents.append(content)
-    if not contents:
+        embedpath: str = os.path.join(srcpath, 'embed')
+        if os.path.isdir(embedpath):
+            sources: List[str] = sorted([f for f in os.listdir(embedpath) if f.endswith('.css')])
+            for source in sources:
+                logger.info(f"embedding public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}] => {root}/css/{source}")
+                with open(os.path.join(embedpath, source), 'r') as f:
+                    embed.append(f.read())
+    if not contents and not embed:
         return
     contents: str = csscompressor.compress('\n\n'.join(contents))
+    embed: str = '\n\n'.join(embed)
     fn: str = f"assets.{assets_uuid}.css"
     logger.info(f"building public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}] -> writting {CSTYLE['red']}{fn}{CSTYLE['clear']}")
     with open(os.path.join(STATICS_CSS_ROOT, fn), 'w') as f:
-        f.write(contents)
+        if embed:
+            f.write(embed)
+            f.write('\n\n')
+        if contents:
+            f.write(contents)
 
 
 def make_statics_media(roots: List[str]) -> None:
@@ -152,7 +165,7 @@ def make_statics_media(roots: List[str]) -> None:
     os.makedirs(STATICS_MEDIA_ROOT)
     logger.info(f"building public statics [{CSTYLE['bold']}MEDIA{CSTYLE['clear']}]")
     for root in roots:
-        fqpath: str = os.path.join(config.PRJROOT, root, '../system/public', 'media')
+        fqpath: str = os.path.join(config.PRJROOT, root, 'public', 'media')
         if not os.path.isdir(fqpath):
             continue
         logger.info(f"building public statics [{CSTYLE['bold']}MEDIA{CSTYLE['clear']}] => {root}")
@@ -168,7 +181,7 @@ def make_statics_fonts(roots: List[str]) -> None:
     os.makedirs(STATICS_FONTS_ROOT)
     logger.info(f"building public statics [{CSTYLE['bold']}FONTS{CSTYLE['clear']}]")
     for root in roots:
-        fqpath: str = os.path.join(config.PRJROOT, root, '../system/public', 'fonts')
+        fqpath: str = os.path.join(config.PRJROOT, root, 'public', 'fonts')
         if not os.path.isdir(fqpath):
             continue
         logger.info(f"building public statics [{CSTYLE['bold']}FONTS{CSTYLE['clear']}] => {root}")
@@ -179,7 +192,7 @@ def make_statics_fonts(roots: List[str]) -> None:
 def make_statics_dists(roots: List[str]) -> None:
     logger.info(f"building public statics [{CSTYLE['bold']}DIST{CSTYLE['clear']}]")
     for root in roots:
-        fqpath: str = os.path.join(config.PRJROOT, root, '../system/public', 'dist')
+        fqpath: str = os.path.join(config.PRJROOT, root, 'public', 'dist')
         if not os.path.isdir(fqpath):
             continue
         logger.info(f"building public statics [{CSTYLE['bold']}DIST{CSTYLE['clear']}] => {root}")

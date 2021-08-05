@@ -10,7 +10,7 @@ sys.path.insert(0, os.getcwd())
 async def _main():
     parser = argparse.ArgumentParser()
     parser.add_argument('command', metavar='command')
-    parser.add_argument('--name', metavar='name', required=False)
+    parser.add_argument('--pre-release', choices=['y', 'n'], default='n', required=False)
     args = parser.parse_args()
 
     command = args.command
@@ -21,6 +21,11 @@ async def _main():
     elif command == 'build':
         from manage import build
         await build.execute()
+        exit(0)
+
+    elif command == 'update-deps':
+        from manage import build
+        await build.resolve_deps()
         exit(0)
 
     elif command == 'make':
@@ -55,6 +60,12 @@ async def _main():
     elif command == 'first-install-prepare':
         from manage import build
         await build.first_install_prepare()
+        exit(0)
+
+    elif command == 'upgrade-system':
+        from manage import platman
+        pre_release: bool = args.pre_release == 'y'
+        await platman.upgrade_system(pre_release)
         exit(0)
 
     print(f"Unknown command: {command}")

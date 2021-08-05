@@ -29,7 +29,7 @@ def create_app() -> None:
     app_caption: str = _get_gettextable_str("The new app's caption")
     app_order: int = term_intinput("The new app's order (number from 0 upto 99999)", 0)
 
-    shutil.copytree(os.path.join(config.COREROOT, '../system/skel', 'app'), app_root)
+    shutil.copytree(os.path.join(config.COREROOT, 'skel', 'app'), app_root)
 
     with open(os.path.join(app_root, 'app.py'), 'r') as f:
         content: str = f.read()

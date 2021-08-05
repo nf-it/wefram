@@ -63,7 +63,7 @@ def apply_reqs_from(app_dir: str) -> None:
             requirements_yarn[pkg_name] = fit_dependency_vers(requirements_pip.get(pkg_name, None), pkg_ver)
 
 
-async def ensure_dependencies(with_apps: bool = True) -> None:
+async def resolve_deps(with_apps: bool = True) -> None:
     apply_reqs_from('system')
     if with_apps:
         for app_name in apps_enabled:
@@ -101,7 +101,7 @@ async def ensure_dependencies(with_apps: bool = True) -> None:
 
 
 async def execute() -> None:
-    await ensure_dependencies()
+    await resolve_deps()
     print(f"[v] pre-build {CSTYLE['green']}DONE{CSTYLE['clear']}")
     print(f"running {CSTYLE['yellow']}make{CSTYLE['clear']}")
 
@@ -110,5 +110,5 @@ async def execute() -> None:
 
 
 async def first_install_prepare() -> None:
-    await ensure_dependencies(False)
+    await resolve_deps(False)
 
