@@ -277,7 +277,7 @@ class ModelAPI(EntityAPI):
         await db.execute(stmt)
 
         try:
-            await db.commit()
+            await db.commit()  # TODO! Is there COMMIT really needed?, or just FLUSH is enought for that
 
         except IntegrityError as e:
             raise HTTPException(400, str(e.orig))

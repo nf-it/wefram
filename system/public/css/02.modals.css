@@ -1,0 +1,68 @@
+.SystemModalWindow-root {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #0005;
+    font-size: 1.1rem;
+}
+
+.SystemModalWindow-root .SystemModalWindow-window {
+    background-color: #eee;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform .25s ease, opacity .25s ease;
+    opacity: 0;
+    transform: scale(.85);
+    max-height: 90%;
+    display: flex;
+    flex-flow: column;
+    box-shadow: 0 0 1vmax #0006;
+}
+
+.SystemModalWindow-root .SystemModalWindow-window.open {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.SystemModalWindow-root .SystemModalWindow-window button {
+    border: none;
+    background-color: #5202;
+    border-radius: 5px;
+    padding: .4vmax 1.5vmax;
+    font-size: .9em;
+    color: #520;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color .2s ease, color .2s ease;
+}
+
+.SystemModalWindow-root .SystemModalWindow-window button:not(:first-child) {
+    margin-left: .2vmax;
+}
+
+.SystemModalWindow-root .SystemModalWindow-window button:not(:last-child) {
+    margin-right: .2vmax;
+}
+
+.SystemModalWindow-root .SystemModalWindow-window button:active {
+    transform: scale(.95);
+}
+
+@media screen and (min-width: 751px) {
+    .SystemModalWindow-root .SystemModalWindow-window button:hover {
+        background-color: #5206;
+        color: #310;
+    }
+}
+
+
+@media screen and (min-width: 575px) {
+    .SystemModalWindow-root {
+        padding: 2vmax;
+    }
+}
