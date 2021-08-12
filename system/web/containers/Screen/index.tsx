@@ -1,7 +1,7 @@
 import React from 'react'
-import {Box} from '@material-ui/core'
-import {LoadingLinear} from '../../components'
-import {ScreenProps} from '../../types'
+import {Box} from 'system/components'
+import {LoadingLinear} from 'system/components'
+import {ScreenProps} from 'system/types'
 
 
 export class Screen extends React.Component<ScreenProps> {

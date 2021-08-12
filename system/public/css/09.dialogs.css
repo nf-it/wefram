@@ -1,26 +1,4 @@
-.SystemModalWindow-root .SystemDialog-header {
-    padding: .5vmax 1vmax;
-    color: #520;
-    border-bottom: 1px solid #aaa;
-    text-align: center;
-    font-weight: 600;
-    font-size: 1.1em;
-}
 
-.SystemModalWindow-root .SystemDialog-header:empty {
-    display: none;
-}
-
-.SystemModalWindow-root .SystemDialog-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding: .5vmax 1vmax;
-}
-
-.SystemModalWindow-root .SystemDialog-footer:empty {
-    display: none;
-}
-
-.SystemModalWindow-root .SystemDialog-content {
+.SystemModalWindow-root > div.SystemModalWindow-window > div.paper {
     padding: 1vmax;
 }

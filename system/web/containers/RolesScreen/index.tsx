@@ -1,11 +1,11 @@
 import React from 'react'
-import {Box, Typography} from '@material-ui/core'
-import {ScreenProps} from '../../types'
+import {Box, Typography} from 'system/components'
+import {ScreenProps} from 'system/types'
 import {EntityList} from '../EntityList'
-import {gettext} from '../../l10n'
-import {runtime} from '../../runtime'
-import {api} from '../../api'
-import {RequestApiPath} from '../../routing'
+import {gettext} from 'system/l10n'
+import {runtime} from 'system/runtime'
+import {api} from 'system/api'
+import {RequestApiPath} from 'system/routing'
 
 
 const itemScreenPath: string = '/settings/system/roles/{key}'

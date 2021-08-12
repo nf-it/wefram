@@ -1,16 +1,16 @@
 import React from 'react'
 import {
   AppBar,
+  ClockTime,
   Menu,
   MenuItem,
   IconButton,
   Toolbar,
   Typography,
   Tooltip,
-} from '@material-ui/core'
+} from 'system/components'
 import {AccountCircle} from '@material-ui/icons'
 import {appInterface, runtime} from 'system/runtime'
-import {ClockTime} from 'system/components'
 import {aaa, session} from 'system/aaa'
 import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'

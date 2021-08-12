@@ -215,18 +215,26 @@ def camelcase_to_snakecase(text: str) -> str:
     return re.sub(r'(?<!^)(?=[A-Z])', '_', text).lower()
 
 
-def rerekey_snakecase_to_lowercamelcase(d: dict) -> dict:
+def rerekey_snakecase_to_lowercamelcase(d: Union[dict, list, tuple]) -> Union[dict, list]:
+    if isinstance(d, (list, tuple)):
+        return [rerekey_snakecase_to_lowercamelcase(x) for x in d]
+    if not isinstance(d, dict):
+        return d
     return {
         snakecase_to_lowercamelcase(k):
-            (v if not isinstance(v, dict) else rerekey_snakecase_to_lowercamelcase(v))
+            (v if not isinstance(v, (dict, list, tuple)) else rerekey_snakecase_to_lowercamelcase(v))
         for k, v in d.items()
     }
 
 
-def rerekey_camelcase_to_snakecase(d: dict) -> dict:
+def rerekey_camelcase_to_snakecase(d: Union[dict, list, tuple]) -> Union[dict, list]:
+    if isinstance(d, (list, tuple)):
+        return [rerekey_camelcase_to_snakecase(x) for x in d]
+    if not isinstance(d, dict):
+        return d
     return {
         camelcase_to_snakecase(k):
-            (v if not isinstance(v, dict) else rerekey_camelcase_to_snakecase(v))
+            (v if not isinstance(v, (dict, list, tuple)) else rerekey_camelcase_to_snakecase(v))
         for k, v in d.items()
     }
 

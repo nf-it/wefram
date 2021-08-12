@@ -16,7 +16,7 @@ import {
   Toolbar,
   Tooltip,
   Typography
-} from '@material-ui/core'
+} from 'system/components'
 import {
   AccountCircle,
   ExpandLess,
@@ -27,12 +27,12 @@ import {observer} from 'mobx-react'
 import {LoginScreen} from '../LoginScreen'
 import {aaa, session} from 'system/aaa'
 import {gettext} from 'system/l10n'
-import {ClockTime} from '../../components'
-import {screensSchema} from '../../prepared/screens'
+import {ClockTime} from 'system/components'
+import {screensSchema} from 'system/prepared/screens'
 import {Screen} from '../Screen'
-import {notifications} from '../../notification'
-import {routingHistory, routing} from '../../routing'
-import {runtime, appInterface} from '../../runtime'
+import {notifications} from 'system/notification'
+import {routingHistory, routing} from 'system/routing'
+import {runtime, appInterface} from 'system/runtime'
 import './index.css'
 
 

@@ -1,24 +1,22 @@
 import React from 'react'
 import {
+  DateTimeText,
   Divider,
   Grid,
   Box,
   Paper,
+  PasswordSetter,
   FormControlLabel,
+  StaticText,
   Switch,
   TextField,
   Typography
-} from '@material-ui/core'
+} from 'system/components'
 import {EntityForm, EntityData} from '../EntityForm'
-import {gettext} from '../../l10n'
-import {api} from '../../api'
-import {
-  DateTimeText,
-  PasswordSetter,
-  StaticText,
-} from '../../components'
-import {RequestApiPath} from '../../routing'
-import {session} from '../../aaa'
+import {gettext} from 'system/l10n'
+import {api} from 'system/api'
+import {RequestApiPath} from 'system/routing'
+import {session} from 'system/aaa'
 
 
 const objectPath: RequestApiPath = api.entityObjectPath('system', 'User')

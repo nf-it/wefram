@@ -9,7 +9,7 @@ import {
   ListItemIcon,
   ListItemText,
   Toolbar
-} from '@material-ui/core'
+} from 'system/components'
 import {ExpandLess, ExpandMore} from '@material-ui/icons'
 import {Link} from 'react-router-dom'
 import {runtime} from 'system/runtime'

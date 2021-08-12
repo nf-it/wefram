@@ -9,6 +9,7 @@
     align-items: center;
     background-color: #0005;
     font-size: 1.1rem;
+    z-index: 50000;
 }
 
 .SystemModalWindow-root .SystemModalWindow-window {
@@ -18,7 +19,7 @@
     transition: transform .25s ease, opacity .25s ease;
     opacity: 0;
     transform: scale(.85);
-    max-height: 90%;
+    max-height: 95%;
     display: flex;
     flex-flow: column;
     box-shadow: 0 0 1vmax #0006;
@@ -41,6 +42,17 @@
     transition: background-color .2s ease, color .2s ease;
 }
 
+.SystemModalWindow-root .SystemModalWindow-window button.accent {
+    background-color: #600;
+    color: #f6b15c;
+}
+
+.SystemModalWindow-root .SystemModalWindow-window button[disabled] {
+    background-color: #ccc;
+    color: #777;
+    cursor: default;
+}
+
 .SystemModalWindow-root .SystemModalWindow-window button:not(:first-child) {
     margin-left: .2vmax;
 }
@@ -49,14 +61,50 @@
     margin-right: .2vmax;
 }
 
-.SystemModalWindow-root .SystemModalWindow-window button:active {
+.SystemModalWindow-root .SystemModalWindow-window button:not([disabled]):active {
     transform: scale(.95);
 }
 
+
+.SystemModalWindow-root > div.SystemModalWindow-window > div.header {
+    padding: .5vmax 1vmax;
+    color: #520;
+    border-bottom: 1px solid #aaa;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.SystemModalWindow-root > div.SystemModalWindow-window > div.header:empty {
+    display: none;
+}
+
+.SystemModalWindow-root > div.SystemModalWindow-window > div.footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: .5vmax 1vmax;
+}
+
+.SystemModalWindow-root > div.SystemModalWindow-window > div.footer:empty {
+    display: none;
+}
+
+.SystemModalWindow-root > div.SystemModalWindow-window > div.paper {
+    display: flex;
+    flex-flow: column;
+    overflow-y: auto;
+}
+
+
 @media screen and (min-width: 751px) {
-    .SystemModalWindow-root .SystemModalWindow-window button:hover {
+    .SystemModalWindow-root .SystemModalWindow-window button:not([disabled]):hover {
         background-color: #5206;
         color: #310;
+    }
+
+    .SystemModalWindow-root .SystemModalWindow-window button.accent:not([disabled]):hover {
+        background-color: #400;
+        color: #f6d17c;
     }
 }
 

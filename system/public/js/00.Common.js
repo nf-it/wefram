@@ -8,12 +8,6 @@ const Common = {
     return s.replace(/^\/|\/$/g, '');
   },
 
-  domRemoveChildren(parentNode) {
-    while (parentNode.firstChild) {
-      parentNode.removeChild(parentNode.firstChild);
-    }
-  },
-
   sumArray(arr) {
     return arr.reduce((a, b) => a + b, 0)
   },

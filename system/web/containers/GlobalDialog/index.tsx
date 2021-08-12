@@ -7,8 +7,8 @@ import {
   DialogContentText,
   DialogActions,
   CircularProgress, Button
-} from '@material-ui/core'
-import {IDialog, DialogButton} from '../../dialog'
+} from 'system/components'
+import {IDialog, DialogButton} from 'system/dialog'
 
 
 export type GlobalDialogProps = {

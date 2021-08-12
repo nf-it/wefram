@@ -20,12 +20,30 @@ def _uuid_primary_key_column():
     return Column(UUID(), primary_key=True, default=_new_uuid4, unique=True)
 
 
-def _serial_column():
-    return Column(Integer(), primary_key=True, nullable=False, unique=True)
+def _serial_column(
+        start: int = 1,
+        increment: int = 1
+):
+    return Column(
+        Integer(),
+        Identity(start=start, increment=increment, cycle=True),
+        primary_key=True,
+        nullable=False,
+        unique=True
+    )
 
 
-def _bigserial_column():
-    return Column(BigInteger(), primary_key=True, nullable=False, unique=True)
+def _bigserial_column(
+        start: int = 1,
+        increment: int = 1
+):
+    return Column(
+        BigInteger(),
+        Identity(start=start, increment=increment, cycle=True),
+        primary_key=True,
+        nullable=False,
+        unique=True
+    )
 
 
 UUIDPrimaryKey = _uuid_primary_key_column

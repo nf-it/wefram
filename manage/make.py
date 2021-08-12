@@ -87,6 +87,8 @@ def make_statics_js(roots: List[str], assets_uuid: str) -> None:
     contents: List[str] = []
     embed: List[str] = []
     logger.info(f"building public statics [{CSTYLE['bold']}JS{CSTYLE['clear']}]")
+
+    # The first step about to merge first-loading
     for root in roots:
         srcpath: str = os.path.join(config.PRJROOT, root, 'public', 'js')
         if not os.path.isdir(srcpath):
@@ -101,9 +103,23 @@ def make_statics_js(roots: List[str], assets_uuid: str) -> None:
         if os.path.isdir(embedpath):
             sources: List[str] = sorted([f for f in os.listdir(embedpath) if f.endswith('.js')])
             for source in sources:
-                logger.info(f"embedding public statics [{CSTYLE['bold']}JS{CSTYLE['clear']}] => {root}/js/{source}")
+                logger.info(f"embedding public statics [{CSTYLE['bold']}JS{CSTYLE['clear']}] => {root}/js/embed/{source}")
                 with open(os.path.join(embedpath, source), 'r') as f:
                     embed.append(f.read())
+
+    # And the second step, merging finallies
+    for root in roots:
+        srcpath: str = os.path.join(config.PRJROOT, root, 'public', 'js', 'finally')
+        if not os.path.isdir(srcpath):
+            continue
+        logger.info(f"building public statics [{CSTYLE['bold']}JS{CSTYLE['clear']}] => {root}")
+        sources: List[str] = sorted([f for f in os.listdir(srcpath) if f.endswith('.js')])
+        for source in sources:
+            logger.info(f"building public statics [{CSTYLE['bold']}JS{CSTYLE['clear']}] => {root}/js/finally/{source}")
+            with open(os.path.join(srcpath, source), 'r') as f:
+                contents.append(f.read())
+
+    # Now making the final asset
     if not contents and not embed:
         return
     contents: str = jsmin.jsmin('\n\n'.join(contents))
@@ -111,6 +127,7 @@ def make_statics_js(roots: List[str], assets_uuid: str) -> None:
     fn: str = f"assets.{assets_uuid}.js"
     logger.info(f"building public statics [{CSTYLE['bold']}JS{CSTYLE['clear']}] -> writting {CSTYLE['red']}{fn}{CSTYLE['clear']}")
     with open(os.path.join(STATICS_JS_ROOT, fn), 'w') as f:
+        f.write('"use strict";\n\n');
         if embed:
             f.write(embed)
             f.write('\n\n')
@@ -124,6 +141,8 @@ def make_statics_css(roots: List[str], assets_uuid: str) -> None:
     contents: List[str] = []
     embed: List[str] = []
     logger.info(f"building public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}]")
+
+    # The first step about to merge first-loading
     for root in roots:
         srcpath: str = os.path.join(config.PRJROOT, root, 'public', 'css')
         if not os.path.isdir(srcpath):
@@ -143,9 +162,28 @@ def make_statics_css(roots: List[str], assets_uuid: str) -> None:
         if os.path.isdir(embedpath):
             sources: List[str] = sorted([f for f in os.listdir(embedpath) if f.endswith('.css')])
             for source in sources:
-                logger.info(f"embedding public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}] => {root}/css/{source}")
+                logger.info(f"embedding public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}] => {root}/css/embed/{source}")
                 with open(os.path.join(embedpath, source), 'r') as f:
                     embed.append(f.read())
+
+    # And the second step, merging finallies
+    for root in roots:
+        srcpath: str = os.path.join(config.PRJROOT, root, 'public', 'css', 'finally')
+        if not os.path.isdir(srcpath):
+            continue
+        logger.info(f"building public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}] => {root}")
+        sources: List[str] = sorted([f for f in os.listdir(srcpath) if f.endswith('.css')])
+        for source in sources:
+            logger.info(f"building public statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}] => {root}/css/finally/{source}")
+            with open(os.path.join(srcpath, source), 'r') as f:
+                content: str = f.read() \
+                    .strip() \
+                    .replace('{{ PUBLIC_MEDIA }}', f'{STATICS_URL}/media') \
+                    .replace('{{ PUBLIC_FONTS }}', f'{STATICS_URL}/fonts') \
+                    .replace('{{ APP_MEDIA }}', f'{STATICS_URL}/media/{root}')
+                contents.append(content)
+
+    # Now making the final asset
     if not contents and not embed:
         return
     contents: str = csscompressor.compress('\n\n'.join(contents))

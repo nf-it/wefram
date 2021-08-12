@@ -8,22 +8,22 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  LoadingLinear,
   Toolbar,
   Tooltip,
   Typography
-} from '@material-ui/core'
+} from 'system/components'
 import BackIcon from '@material-ui/icons/ArrowBackIosRounded'
 import SubmitIcon from '@material-ui/icons/DoneRounded'
 import DeleteIcon from '@material-ui/icons/DeleteRounded'
-import {api} from '../../api'
-import {TApiSubmitMethod} from '../../types'
-import {RequestApiPath, RequestMethod, routing} from '../../routing'
-import {LoadingLinear} from '../../components'
-import {CommonKey, IApiEntityComplexResponse, IApiEntityResponse} from '../../types'
-import {notifications} from '../../notification'
-import {dialog} from '../../dialog'
-import {Permissions} from '../../aaa'
-import {gettext} from '../../l10n'
+import {api} from 'system/api'
+import {TApiSubmitMethod} from 'system/types'
+import {RequestApiPath, RequestMethod, routing} from 'system/routing'
+import {CommonKey, IApiEntityComplexResponse, IApiEntityResponse} from 'system/types'
+import {notifications} from 'system/notification'
+import {dialog} from 'system/dialog'
+import {Permissions} from 'system/aaa'
+import {gettext} from 'system/l10n'
 
 
 type ReactElements = any | any[] | null | undefined

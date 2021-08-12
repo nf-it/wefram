@@ -12,14 +12,14 @@ import {
   Paper,
   TextField,
   Typography
-} from '../../components'
+} from 'system/components'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import {ScreenProps} from '../../types'
+import {ScreenProps} from 'system/types'
 import {EntityForm, EntityData} from '../EntityForm'
-import {gettext} from '../../l10n'
-import {api} from '../../api'
-import {RequestApiPath, routing} from '../../routing'
-import {notifications} from '../../notification'
+import {gettext} from 'system/l10n'
+import {api} from 'system/api'
+import {RequestApiPath, routing} from 'system/routing'
+import {notifications} from 'system/notification'
 
 
 const apiVersion: number = 1

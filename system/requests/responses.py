@@ -9,7 +9,7 @@ from starlette.background import BackgroundTask
 from starlette.templating import Jinja2Templates
 from starlette.exceptions import HTTPException
 import config
-from ..tools import json_encode
+from ..tools import json_encode, rerekey_snakecase_to_lowercamelcase
 
 
 __all__ = [
@@ -21,6 +21,7 @@ __all__ = [
     'RedirectResponse',
     'StreamingResponse',
     'JSONResponse',
+    'JSONedResponse',
     'StatusResponse',
     'NoContentResponse',
     'PrebuiltFile',
@@ -34,6 +35,19 @@ templates = Jinja2Templates(directory=config.APPSROOT)
 
 class JSONResponse(_starletteJSONResponse):
     def render(self, content: typing.Any) -> bytes:
+        return json_encode(
+            content,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=None,
+            separators=(",", ":"),
+        ).encode("utf-8")
+
+
+class JSONedResponse(_starletteJSONResponse):
+    def render(self, content: typing.Any) -> bytes:
+        if isinstance(content, (dict, list, tuple)):
+            content = rerekey_snakecase_to_lowercamelcase(content)
         return json_encode(
             content,
             ensure_ascii=False,

@@ -30,10 +30,10 @@ const System = {
     if (state) {
       if (domLoadingBackdrop)
         return;
-      Common.UI.newDiv(null, {
+      UI.newDiv(null, {
         id: "System-loadingAnimationBackdrop"
       }, [
-        Common.UI.newDiv()
+        UI.newDiv()
       ]).appendTo(document.body);
     } else {
       if (!domLoadingBackdrop)

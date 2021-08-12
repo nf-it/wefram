@@ -6,6 +6,7 @@ from starlette.requests import HTTPConnection
 from starlette.responses import PlainTextResponse, Response
 from starlette_context.middleware import RawContextMiddleware as ContextMiddleware
 from system import exceptions
+from system.tools import rerekey_camelcase_to_snakecase
 import config
 
 
@@ -60,6 +61,7 @@ class RequestMiddleware:
 
             elif 'application/json' in content_type:
                 payload: [List, Dict] = await request.json()
+                scope['payload_py'] = rerekey_camelcase_to_snakecase(payload)
                 payload_type = 'json'
 
             else:

@@ -139,6 +139,7 @@ class _Model:
         limit: Optional[int] = kw.pop('limit', None)
         offset: Optional[int] = kw.pop('offset', None)
         order: Optional[Union[Any, List[Any]]] = kw.pop('order', None)
+        for_update: bool = bool(kw.pop('update', False))
 
         session: AsyncSession = context['db']
         statement: Select = select(cls)
@@ -158,6 +159,9 @@ class _Model:
             order = [order, ]
         if order is not None:
             statement = statement.order_by(*order)
+
+        if for_update:
+            statement = statement.with_for_update()
 
         return (await session.execute(statement)).scalars()
 
@@ -208,8 +212,8 @@ class _Model:
         return (await cls.select(*filter_args, **kw)).first()
 
     @classmethod
-    async def get(cls, *pk):
-        return await cls.first(*[(c == pk[i]) for i, c in enumerate(cls.Meta.primary_key)])
+    async def get(cls, *pk, update: bool = False):
+        return await cls.first(*[(c == pk[i]) for i, c in enumerate(cls.Meta.primary_key)], update=update)
 
     @classmethod
     async def delete_where(cls, *filter_args, **filter_kwargs):

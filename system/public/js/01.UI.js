@@ -1,4 +1,10 @@
-Common.UI = {
+const UI = {
+
+  domRemoveChildren(parentNode) {
+    while (parentNode.firstChild) {
+      parentNode.removeChild(parentNode.firstChild);
+    }
+  },
 
   nodeAddClasses: (el, classList) => {
     if (!classList)
@@ -115,8 +121,8 @@ Common.UI = {
 
   newNode: (tagName, classList, props = {}, children = [], ns = null) => {
     const node = (ns === null) ? document.createElement(tagName) : document.createElementNS(ns, tagName);
-    Common.UI.nodeAddClasses(node, classList);
-    Common.UI.nodeApplyProps(node, props);
+    UI.nodeAddClasses(node, classList);
+    UI.nodeApplyProps(node, props);
     if (children && Array.isArray(children) && children.length) {
       children.forEach(child => {
         if (!child)
@@ -132,69 +138,78 @@ Common.UI = {
   },
 
   newNodeNS: (namespace, tagName, classList, props = {}, children = []) => {
-    return Common.UI.newNode(tagName, classList, props, children, namespace);
+    return UI.newNode(tagName, classList, props, children, namespace);
   },
 
   newDiv: (classList, props, children) => {
-    return Common.UI.newNode('div', classList, props, children);
+    return UI.newNode('div', classList, props, children);
   },
 
   newSpan: (classList, props, children) => {
-    return Common.UI.newNode('span', classList, props, children);
+    return UI.newNode('span', classList, props, children);
   },
 
   newSpanText: (innerText, classList, props = {}, children = []) => {
     props = props || {};
     props['innerText'] = innerText;
-    return Common.UI.newNode('span', classList, props, children);
+    return UI.newNode('span', classList, props, children);
   },
 
   newSpanHTML: (innerHTML, classList, props = {}, children = []) => {
     props = props || {};
     props['innerHTML'] = innerHTML;
-    return Common.UI.newNode('span', classList, props, children);
+    return UI.newNode('span', classList, props, children);
   },
 
   newStrongText: (innerText, classList, props = {}, children = []) => {
     props = props || {};
     props['innerText'] = innerText;
-    return Common.UI.newNode('strong', classList, props, children);
+    return UI.newNode('strong', classList, props, children);
   },
 
   newParagraph: (innerText, classList, props = {}, children = []) => {
     props = props || {};
     props['innerText'] = innerText;
-    return Common.UI.newNode('p', classList, props, children);
+    return UI.newNode('p', classList, props, children);
+  },
+
+  newTypography: (innerText, variant, classList, props={}) => {
+    props = props || {};
+    props['innerText'] = innerText;
+    props['style'] = props['style'] || {};
+    props['style']['display'] = props['style']['display'] ?? 'block';
+    const nodeTagName = variant ?? 'span';
+    return UI.newNode(nodeTagName, classList, props);
   },
 
   newImg: (src, classList, props = {}) => {
     props = props || {};
     props['src'] = src;
-    return Common.UI.newNode('img', classList, props);
+    return UI.newNode('img', classList, props);
   },
 
   newSVG: (sourceURL, classList, props = {}) => {
     props = props || {};
-    const node = Common.UI.newNodeNS("http://www.w3.org/2000/svg", "svg", classList, props);
+    const node = UI.newNodeNS("http://www.w3.org/2000/svg", "svg", classList, props);
     node.setAttribute('xmlns', "http://www.w3.org/2000/svg");
     node.setAttribute('preserveAspectRatio', props['preserveAspectRatio'] || "xMidYMid meet");
     node._srcURL = null;
     Object.defineProperty(node, 'src', {
       get: function () {
-        return Common.UI._srcURL;
+        return UI._srcURL;
       },
       set: function (value) {
-        if (value === Common.UI._srcURL)
+        if (value === UI._srcURL)
           return;
         fetch(value).then(response => {
           response.text().then(content => {
             const temporarySVGouter = document.createElement('div');
             temporarySVGouter.innerHTML = content;
             const svg = temporarySVGouter.children[0];
-            // Common.UI.setAttribute('width', svg.getAttribute('width'));
-            // Common.UI.setAttribute('height', svg.getAttribute('height'));
-            Common.UI.setAttribute('viewBox', svg.getAttribute('viewBox'));
-            Common.UI.innerHTML = svg.innerHTML;
+            // UI.setAttribute('width', svg.getAttribute('width'));
+            // UI.setAttribute('height', svg.getAttribute('height'));
+            UI.setAttribute('viewBox', svg.getAttribute('viewBox'));
+            UI.innerHTML = svg.innerHTML;
           });
         });
       }
@@ -214,7 +229,7 @@ Common.UI = {
       props['eventListeners'] = props['eventListeners'] || {};
       props['eventListeners']['click'] = onclick;
     }
-    return Common.UI.newNode('button', classList, props, children);
+    return UI.newNode('button', classList, props, children);
   },
 
   newForm: (classList, onsubmit, props = {}, children = []) => {
@@ -227,7 +242,7 @@ Common.UI = {
         onsubmit(e);
       }
     }
-    return Common.UI.newNode('form', classList, props, children);
+    return UI.newNode('form', classList, props, children);
   },
 
   newInput: (name, value, classList, placeholder, props = {}) => {
@@ -241,7 +256,21 @@ Common.UI = {
     if (placeholder) {
       props['placeholder'] = String(placeholder);
     }
-    return Common.UI.newNode('input', classList, props);
+    return UI.newNode('input', classList, props);
+  },
+
+  newTextArea: (name, value, classList, placeholder, props = {}) => {
+    props = props || {};
+    if (name) {
+      props['name'] = name;
+    }
+    if (value) {
+      props['value'] = String(value);
+    }
+    if (placeholder) {
+      props['placeholder'] = String(placeholder);
+    }
+    return UI.newNode('textarea', classList, props);
   },
 
   newLink: (caption, callback, classList, props = {}) => {
@@ -254,11 +283,11 @@ Common.UI = {
       props['href'] = callback;
     }
     props['innerText'] = caption;
-    return Common.UI.newNode('a', classList, props);
+    return UI.newNode('a', classList, props);
   },
 
   newSelectOption: (value, caption, selected = false) => {
-    return Common.UI.newNode('option', null, {
+    return UI.newNode('option', null, {
       innerText: caption,
       value: value === null ? "" : value,
       isnull: value === null,

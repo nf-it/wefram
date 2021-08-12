@@ -1,24 +1,23 @@
 import React, {createRef} from 'react'
+import DeleteIcon from '@material-ui/icons/Delete'
 import {
   Box,
   Button,
-  Paper,
-  Tooltip
-} from '@material-ui/core'
-import DeleteIcon from '@material-ui/icons/Delete'
-import {
   ButtonLink,
   LazyTextField,
+  ListProvidedFilters,
+  ListSelection,
+  Paper,
   ProvList,
-  ProvListProps
-} from '../../components'
-import {ListProvidedFilters, ListSelection} from '../../components'
-import {gettext} from '../../l10n'
-import {dialog} from '../../dialog'
-import {api} from '../../api'
-import {notifications} from '../../notification'
-import {RequestApiPath} from '../../routing'
-import {UrlStateStorage} from '../../components/Lists/types'
+  ProvListProps,
+  Tooltip
+} from 'system/components'
+import {gettext} from 'system/l10n'
+import {dialog} from 'system/dialog'
+import {api} from 'system/api'
+import {notifications} from 'system/notification'
+import {RequestApiPath} from 'system/routing'
+import {UrlStateStorage} from 'system/components/Lists/types'
 
 
 export interface EntityListProps extends ProvListProps {

@@ -1,7 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react'
-import {Notification} from '../../components'
-import {INotification, notifications} from '../../notification'
+import {Notification} from 'system/components'
+import {INotification, notifications} from 'system/notification'
 
 
 export type GlobalNotifyProps = {

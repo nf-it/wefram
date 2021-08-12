@@ -4,14 +4,14 @@ import {
   Dialog,
   DialogContent,
   Typography
-} from '@material-ui/core'
+} from 'system/components'
 import {LockOpen, Lock} from '@material-ui/icons'
-import {ScreenProps} from '../../types'
+import {ScreenProps} from 'system/types'
 import {EntityList} from '../EntityList'
-import {gettext} from '../../l10n'
-import {runtime} from '../../runtime'
-import {api} from '../../api'
-import {RequestApiPath} from '../../routing'
+import {gettext} from 'system/l10n'
+import {runtime} from 'system/runtime'
+import {api} from 'system/api'
+import {RequestApiPath} from 'system/routing'
 import {UserCard} from '../UserCard'
 
 const objectsPath: RequestApiPath = api.entityPath('system', 'User')
