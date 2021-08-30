@@ -3,12 +3,24 @@ from starlette.types import ASGIApp, Receive, Scope, Send
 from starlette.requests import HTTPConnection
 import babel
 import config
-from ..requests import context, is_static_path
+from ..requests import is_static_path
+from ..runtime import context
+from ..cli import CliMiddleware
+from .. import middlewares
 from .funcs import best_matching_locale
 from .locales import Locale
 
 
-__all__ = ['LocalizationMiddleware']
+__all__ = [
+    'LocalizationMiddleware'
+]
+
+
+@middlewares.register_for_cli
+class LocalizationCliMiddleware(CliMiddleware):
+    async def __call__(self, call_next: Callable) -> None:
+        context['locale']: Locale = Locale.parse(config.DEFAULT_LOCALE)
+        await call_next()
 
 
 class LocalizationMiddleware:
@@ -55,6 +67,7 @@ class LocalizationMiddleware:
             else:
                 selected_locale = Locale.parse(config.DEFAULT_LOCALE)
 
+        # selected_locale = Locale.parse(config.DEFAULT_LOCALE)
         context['locale']: Locale = selected_locale
         await self.app(scope, receive, send)
 

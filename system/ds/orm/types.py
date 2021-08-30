@@ -70,12 +70,21 @@ class Caption(TypeDecorator):
         super().__init__(*args, **kwargs)
 
 
-class Choice(TypeDecorator):
+class StringChoice(TypeDecorator):
     impl = String
     cache_ok = True
 
-    def __init__(self, options: Union[List[str], tuple, Dict[str, Any]], **kwargs):
-        optlen: int = max([len(key) for key in options])
+    def __init__(self, choices: Union[List[str], tuple, Dict[str, Any]], **kwargs):
+        optlen: int = max([len(key) for key in choices])
         kwargs.setdefault('length', optlen)
         super().__init__(**kwargs)
+        self.choices_items = choices
 
+
+class Email(TypeDecorator):
+    impl = String
+    cache_ok = True
+
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault('length', 200)
+        super().__init__(*args, **kwargs)

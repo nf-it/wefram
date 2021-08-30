@@ -1,54 +1,84 @@
+from typing import *
 from starlette.types import ASGIApp, Receive, Scope, Send
-from ..requests import context, routing, is_static_path
-from .orm.engine import Session
+from starlette.middleware.base import (
+    BaseHTTPMiddleware,
+    RequestResponseEndpoint,
+)
+from starlette.requests import Request
+from starlette.responses import Response
+from ..requests import routing, is_static_path
+from ..runtime import context
+from ..cli import CliMiddleware
+from .. import middlewares
+from .orm.engine import AsyncSession
 from . import redis
 
 
-class DatastorageConnectionMiddleware:
-    def __init__(self, app: ASGIApp) -> None:
-        self.app: ASGIApp = app
+__all__ = [
+    'DatastorageConnectionMiddleware',
+    'DatastorageConnectionCliMiddleware',
+    'RedisConnectionMiddleware',
+    'RedisConnectionCliMiddleware'
+]
 
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if scope['type'] not in ('http', 'websocket'):
-            await self.app(scope, receive, send)
-            return
 
+class DatastorageConnectionMiddleware(BaseHTTPMiddleware):
+    async def dispatch(
+            self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
+        path: str = request.url.path
         for prefix in routing.static_routes_prefixes:
-            if scope['path'].startswith(prefix):
-                await self.app(scope, receive, send)
-                return
+            if path.startswith(prefix):
+                return await call_next(request)
 
-        if is_static_path(scope['path']):
-            await self.app(scope, receive, send)
-            return
+        if is_static_path(path):
+            return await call_next(request)
 
-        async with Session() as db:
-            scope['db'] = db
+        async with AsyncSession() as db:
+            async with db.begin():
+                request.scope['db'] = db
+                context['db'] = db
+                response: Response = await call_next(request)
+                await db.commit()
+
+        return response
+
+
+class RedisConnectionMiddleware(BaseHTTPMiddleware):
+    async def dispatch(
+            self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
+        path: str = request.url.path
+        for prefix in routing.static_routes_prefixes:
+            if path.startswith(prefix):
+                return await call_next(request)
+
+        if is_static_path(path):
+            return await call_next(request)
+
+        connection = await redis.create_connection()
+        request.scope['redis'] = connection
+        context['redis'] = connection
+        response: Response = await call_next(request)
+        await connection.close()
+
+        return response
+
+
+@middlewares.register_for_cli
+class DatastorageConnectionCliMiddleware(CliMiddleware):
+    async def __call__(self, call_next: Callable):
+        async with AsyncSession() as db:
             context['db'] = db
-            await self.app(scope, receive, send)
+            await call_next()
             await db.commit()
 
 
-class RedisConnectionMiddleware:
-    def __init__(self, app: ASGIApp) -> None:
-        self.app = app
-
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if scope['type'] not in ('http', 'websocket'):  # pragma: no cover
-            await self.app(scope, receive, send)
-            return
-
-        for prefix in routing.static_routes_prefixes:
-            if scope['path'].startswith(prefix):
-                await self.app(scope, receive, send)
-                return
-
-        if is_static_path(scope['path']):
-            await self.app(scope, receive, send)
-            return
-
+@middlewares.register_for_cli
+class RedisConnectionCliMiddleware(CliMiddleware):
+    async def __call__(self, call_next: Callable):
         connection = await redis.create_connection()
-        scope['redis'] = connection
         context['redis'] = connection
-        await self.app(scope, receive, send)
+        await call_next()
         await connection.close()
+

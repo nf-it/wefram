@@ -49,6 +49,17 @@ export const screensSchema: ScreensSchema = {
     ],
     "params": {}
   },
+  "reserve_ReservationsList": {
+    "name": "reserve_ReservationsList",
+    "rootComponentPath": "project/reserve/frontend/containers/ReservationsList",
+    "rootComponent": React.lazy(() => import('project/reserve/frontend/containers/ReservationsList')),
+    "requires": [
+      "reserve.reservations_actuals"
+    ],
+    "routeUrl": "/reserve/reservationslist",
+    "routeParams": [],
+    "params": {}
+  },
   "club_Documents": {
     "name": "club_Documents",
     "rootComponentPath": "system/containers/StoredFilesScreen",
@@ -63,17 +74,6 @@ export const screensSchema: ScreensSchema = {
       "storageEntity": "club.documents",
       "updatable": null
     }
-  },
-  "reserve_ReservationsList": {
-    "name": "reserve_ReservationsList",
-    "rootComponentPath": "project/reserve/screens/ReservationsList",
-    "rootComponent": React.lazy(() => import('project/reserve/screens/ReservationsList')),
-    "requires": [
-      "reserve.reservations_actuals"
-    ],
-    "routeUrl": "/reserve/reservationslist",
-    "routeParams": [],
-    "params": {}
   },
   "system_Workspace": {
     "name": "system_Workspace",

@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {observer} from 'mobx-react'
 import {Link, Switch, Route, Router} from 'react-router-dom'
-import {createMuiTheme, ThemeProvider} from '@material-ui/core/styles'
+import {createTheme, ThemeProvider} from '@material-ui/core/styles'
 import {Box} from '@material-ui/core'
 import {defaultTheme} from './theme'
 import {notificationsStore} from './notification'
@@ -16,7 +16,7 @@ import {LoadingGlobal} from './components'
 import {Loading} from './components'
 import {runtime, appInterface} from './runtime'
 import {notifications} from './notification'
-import {routing, routingHistory} from 'system/routing'
+import {routingHistory} from 'system/routing'
 import {LoginScreen} from 'system/containers/LoginScreen'
 import './main.css'
 
@@ -53,7 +53,7 @@ class Main extends React.Component<AppProps, AppState> {
       )
 
     return (
-      <ThemeProvider theme={createMuiTheme(defaultTheme, runtime.muiLocalization)}>
+      <ThemeProvider theme={createTheme(defaultTheme, runtime.muiLocalization)}>
         <Router history={routingHistory}>
           <Switch>
             <Route

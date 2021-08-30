@@ -7,31 +7,33 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  IconButton,
   LoadingLinear,
   Toolbar,
   Tooltip,
   Typography
 } from 'system/components'
-import BackIcon from '@material-ui/icons/ArrowBackIosRounded'
+import BackIcon from '@material-ui/icons/ArrowBackRounded'
+import CloseIcon from '@material-ui/icons/CancelTwoTone'
 import SubmitIcon from '@material-ui/icons/DoneRounded'
 import DeleteIcon from '@material-ui/icons/DeleteRounded'
+import WindowCloseIcon from '@material-ui/icons/Cancel'
 import {api} from 'system/api'
-import {TApiSubmitMethod} from 'system/types'
+import {CommonKey, IApiEntityComplexResponse, IApiEntityResponse, TApiSubmitMethod} from 'system/types'
 import {RequestApiPath, RequestMethod, routing} from 'system/routing'
-import {CommonKey, IApiEntityComplexResponse, IApiEntityResponse} from 'system/types'
 import {notifications} from 'system/notification'
 import {dialog} from 'system/dialog'
 import {Permissions} from 'system/aaa'
 import {gettext} from 'system/l10n'
+import {IconButton} from '@material-ui/core'
 
 
 type ReactElements = any | any[] | null | undefined
-export type EntityData = Record<string, any>
+// export type EntityData = Record<string, any>
 
 export type EntityFormProps = {
   close?: string | boolean
-  data: EntityData
+  controls?: JSX.Element[]
+  data: any /* EntityData */
   delete?: string | boolean
   deleteDisabled?: boolean
   deletePath?: RequestApiPath | string
@@ -40,6 +42,7 @@ export type EntityFormProps = {
   entityName?: string
   entityKey?: string | null
   stateDataName?: string
+  requestDeep?: boolean
   requestPath?: RequestApiPath | string
   requiredForSubmit?: string[]
   submit?: string | boolean
@@ -53,12 +56,14 @@ export type EntityFormProps = {
   windowed?: boolean
 
   onAfterDelete?: () => void
+  onAfterFetch?: () => void
   onAfterSubmit?: () => void
   onClose?: () => void
-  onUpdateData: (data: EntityData, cb?: any) => void
+  onUpdateData: (data: any /* EntityData */, cb?: any) => void
   onError?: (err: any) => void
   onErrorShowMsg?: boolean | string
   onFetch?: (response: IApiEntityResponse | IApiEntityComplexResponse) => void
+  onFetchMakeData?: (data: any) => any
 }
 
 type EntityFormState = {
@@ -66,7 +71,7 @@ type EntityFormState = {
   loading: boolean
   success: boolean
   submitting: boolean
-  dataInitial: EntityData
+  dataInitial: any /* EntityData */
 }
 
 
@@ -113,8 +118,8 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
   public submit = (): void => {
     const key: CommonKey | undefined =
       this.props.entityKey !== null
-      ? this.props.entityKey
-      : undefined
+        ? this.props.entityKey
+        : undefined
     const submitPath: RequestApiPath | null =
       this.props.submitPath
       ?? this.props.requestPath
@@ -125,7 +130,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     const submitMethod: TApiSubmitMethod =
       ((this.props.submitMethod ?? (key ? 'PUT' : 'POST')).toUpperCase()) as TApiSubmitMethod
 
-    if (! ['PUT', 'POST'].includes(submitMethod))
+    if (!['PUT', 'POST'].includes(submitMethod))
       throw (`FormEntity.submit() - submit method ${submitMethod} is not supported!`)
 
     const submitData: Record<string, any> = {}
@@ -136,9 +141,9 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
 
     this.setState({submitting: true})
     api.submit(
-        submitMethod,
-        api.pathWithParams(submitPath, { key }),
-        submitData
+      submitMethod,
+      api.pathWithParams(submitPath, {key}),
+      submitData
     ).then(res => {
       notifications.showRequestSuccess(res)
       this.setState({
@@ -154,8 +159,8 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
   public remove = (): void => {
     const key: CommonKey | undefined =
       this.props.entityKey !== null
-      ? this.props.entityKey
-      : undefined
+        ? this.props.entityKey
+        : undefined
     const deletePath: RequestApiPath | null =
       this.props.deletePath
       ?? this.props.requestPath
@@ -188,8 +193,12 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
 
     this.setState({loading: true})
 
-    api.get(api.pathWithParams(this.props.requestPath, {key: this.props.entityKey})).then(res => {
-      this.props.onFetch ? this.props.onFetch(res.data) : this.handleFetch(res.data)
+    api.get(api.pathWithParams(this.props.requestPath, {key: this.props.entityKey}), {
+      params: this.props.requestDeep ? {deep: true} : undefined
+    }).then(res => {
+      this.props.onFetch
+        ? this.setState({loading: false, success: true}, () => this.props.onFetch && this.props.onFetch(res.data))
+        : this.handleFetch(res.data)
     }).catch(err => {
       this.setState({
         loading: false,
@@ -211,8 +220,8 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     })
   }
 
-  public handleFetch = (response: EntityData): void => {
-    const data = this.props.data
+  public handleFetch = (response: any /* EntityData */): void => {
+    let data = this.props.data
     for (let name in response) {
       if (!response.hasOwnProperty(name))
         continue
@@ -220,10 +229,13 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
         continue
       data[name] = response[name]
     }
+    if (this.props.onFetchMakeData) {
+      data = this.props.onFetchMakeData(data)
+    }
     this.props.onUpdateData(data, () => this.setState({
       loading: false,
       success: true
-    }))
+    }, () => this.props.onAfterFetch && this.props.onAfterFetch()))
   }
 
   private extractFieldName = (e: any): string | null => {
@@ -235,22 +247,25 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     if (!fieldName)
       return
 
+
     const
-      data: EntityData = this.props.data,
-      targetElement: HTMLElement = e.target
+      data: any /* EntityData */ = this.props.data,
+      target: HTMLElement | any = e.target
     let value: any = undefined
 
     if (e.type === 'null') {
       value = null
     } else {
-      if (targetElement.tagName === 'INPUT') {
-        switch ((targetElement as HTMLInputElement).type) {
+      if (target.tagName === 'INPUT') {
+        switch ((target as HTMLInputElement).type) {
           case 'checkbox':
-            value = Boolean((targetElement as HTMLInputElement).checked)
+            value = Boolean((target as HTMLInputElement).checked)
             break
           default:
-            value = (targetElement as HTMLInputElement).value
+            value = (target as HTMLInputElement).value
         }
+      } else if (target.name && target.value) {
+        value = target.value
       }
     }
 
@@ -298,13 +313,11 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
         }
       }
 
-      const component = React.cloneElement(
+      return React.cloneElement(
         child,
         childProps,
         children
       )
-      // component.key = childProps['key']
-      return component
     })
 
     return results.length === 1 ? results[0] : results
@@ -325,7 +338,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
   render() {
     if (this.state.loading)
       return (
-        <LoadingLinear />
+        <LoadingLinear/>
       )
 
     if (!this.state.success)
@@ -339,7 +352,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
         p={variantOutlined ? 2 : 0}
         mt={1}
         style={{
-          borderRadius: variantOutlined ? '7px' : undefined,
+          borderRadius: variantOutlined ? '.5vmax' : undefined,
           backgroundColor: variantOutlined ? '#f1f1f1' : undefined,
           border: variantOutlined ? '1px solid #e5e5e5' : undefined
         }}
@@ -350,58 +363,93 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
 
     const Controls = (
       <React.Fragment>
-      {(this.props.close ?? true) && (
-        <Box>
-          <Button
-            color={'primary'}
-            onClick={this.close}
-            // variant={'outlined'}
-            startIcon={<BackIcon />}
-            // size={this.props.windowed ? 'small' : undefined}
-          >{
-            (typeof this.props.close == 'string')
-              ? String(this.props.close)
-              : this.props.windowed
-                ? gettext("Close")
-                : gettext("Back")
-          }</Button>
-        </Box>
-      )}
-      <Box>
-        {(this.props.delete ?? false) && (
+        {(this.props.submit ?? false) && (this.props.windowed) && (
           <Box>
-            <Tooltip title={gettext("Delete")}>
-              <Button
-                color={'secondary'}
-                onClick={this.remove}
-                // variant={'outlined'}
-              ><DeleteIcon /* fontSize={this.props.windowed ? 'small' : undefined} */ /></Button>
-            </Tooltip>
+            <Button
+              color={'primary'}
+              disabled={
+                (this.props.submitDisabled ?? false)
+                || (requiredForSubmit.length === 0 || (!this.requiredIsSatisfying()))
+              }
+              onClick={this.submit}
+              variant={'outlined'}
+              startIcon={this.state.submitting ? <CircularProgress size={20}/> : <SubmitIcon/>}
+            >{(typeof this.props.submit == 'string') ? String(this.props.submit) : gettext("Save")}</Button>
           </Box>
         )}
-      </Box>
-      {(this.props.submit ?? false) && (
+        {(this.props.close ?? true) && (!this.props.windowed) && (
+          <Box>
+            <Button
+              color={'primary'}
+              onClick={this.close}
+              startIcon={this.props.windowed ? <CloseIcon /> : <BackIcon />}
+            >{
+              (typeof this.props.close == 'string')
+                ? String(this.props.close)
+                : this.props.entityKey === null
+                  ? gettext("Cancel")
+                  : this.props.windowed
+                    ? gettext("Close")
+                    : gettext("Back")
+            }</Button>
+          </Box>
+        )}
+
         <Box>
-          <Button
-            color={'primary'}
-            disabled={
-              (this.props.submitDisabled ?? false)
-              || (requiredForSubmit.length === 0 || (!this.requiredIsSatisfying()))
-            }
-            onClick={this.submit}
-            // variant={'contained'}
-            variant={'outlined'}
-            // size={this.props.windowed ? 'small' : undefined}
-            startIcon={this.state.submitting ? <CircularProgress size={20} /> : <SubmitIcon />}
-          >{(typeof this.props.submit == 'string') ? String(this.props.submit) : gettext("Save")}</Button>
+          {this.props.controls !== undefined && this.props.controls}
+          {(this.props.delete ?? false) && (
+            <Box>
+              <Tooltip title={gettext("Delete")}>
+                <Button
+                  color={'secondary'}
+                  onClick={this.remove}
+                  // variant={'outlined'}
+                ><DeleteIcon /* fontSize={this.props.windowed ? 'small' : undefined} */ /></Button>
+              </Tooltip>
+            </Box>
+          )}
         </Box>
-      )}
+
+        {(this.props.submit ?? false) && (!this.props.windowed) && (
+          <Box>
+            <Button
+              color={'primary'}
+              disabled={
+                (this.props.submitDisabled ?? false)
+                || (requiredForSubmit.length === 0 || (!this.requiredIsSatisfying()))
+              }
+              onClick={this.submit}
+              variant={'outlined'}
+              startIcon={this.state.submitting ? <CircularProgress size={20}/> : <SubmitIcon/>}
+            >{(typeof this.props.submit == 'string') ? String(this.props.submit) : gettext("Save")}</Button>
+          </Box>
+        )}
+        {(this.props.close ?? true) && (this.props.windowed) && (
+          <Box>
+            <Button
+              color={'primary'}
+              onClick={this.close}
+              startIcon={this.props.windowed ? <CloseIcon /> : <BackIcon />}
+            >{
+              (typeof this.props.close == 'string')
+                ? String(this.props.close)
+                : this.props.entityKey === null
+                  ? gettext("Cancel")
+                  : this.props.windowed
+                    ? gettext("Close")
+                    : gettext("Back")
+            }</Button>
+          </Box>
+        )}
       </React.Fragment>
     )
 
     const ControlsBar = this.props.windowed
       ? (
-        <DialogActions>
+        <DialogActions style={{
+          backgroundColor: '#eee',
+          borderTop: '1px solid #c7c7c7'
+        }}>
           {Controls}
         </DialogActions>
       )
@@ -429,7 +477,14 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
                 backgroundColor: '#eee',
                 borderBottom: '1px solid #e0e0e0'
               }}>
-                <Typography color={'primary'}>{this.props.title}</Typography>
+                <Box display={'flex'} alignItems={'center'}>
+                  <IconButton size={'small'} style={{marginRight: '16px'}} onClick={this.close}>
+                    <WindowCloseIcon style={{
+                      color: '#c52', width: '20px', height: '20px'
+                    }} />
+                  </IconButton>
+                  <Typography color={'primary'} style={{flexGrow: 1}}>{this.props.title}</Typography>
+                </Box>
               </DialogTitle>
             )}
             <DialogContent>
@@ -451,7 +506,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
           bottom: 0,
           zIndex: 65535,
           backgroundColor: '#ffffff11'
-        }} />
+        }}/>
       </React.Fragment>
     )
   }

@@ -34,7 +34,6 @@ ScreensSchema = Dict[str, IScreen]
 ScreensRuntime = Dict[str, IScreenRuntime]
 
 
-# class BaseScreen(metaclass=_ScreenMetaclass):
 class BaseScreen:
     _root_component: str
     _route_url: str

@@ -2,6 +2,7 @@ import config
 from . import settings, aaa, ui, ds, l10n
 from .ui import screens
 from .settings.props import NumberProp, NumberMMProp, BooleanProp
+from .demo import build as demo
 from .const import *
 
 

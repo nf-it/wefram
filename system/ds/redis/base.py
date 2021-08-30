@@ -1,7 +1,7 @@
 import aioredis
 from aioredis import Redis as RedisConnection
 import config
-from ...requests import context
+from ...runtime import context
 
 
 __all__ = [

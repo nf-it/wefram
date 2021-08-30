@@ -1,6 +1,7 @@
 from typing import *
 from abc import ABC, abstractmethod
 from starlette.responses import Response
+from dataclasses import dataclass
 from .. import logger
 from ..requests import routing, Route, Request
 from ..requests.responses import (
@@ -104,6 +105,13 @@ class EntityCRUD(ABC):
         raise NotImplementedError
 
 
+@dataclass
+class EntityAPIControllerRoute:
+    path: str
+    endpoint: Callable
+    methods: List[Literal['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']]
+
+
 class EntityAPI(EntityCRUD, ABC):
     """
     The API ready entity abstract class. Implements much of logics for the HTTP
@@ -121,6 +129,19 @@ class EntityAPI(EntityCRUD, ABC):
     allow_options: [bool, List[str]] = True
     allow_update: [bool, List[str]] = True
     allow_delete: [bool, List[str]] = True
+
+    @staticmethod
+    def route(path: str, methods: Optional[List[str]] = None) -> Callable:
+        def decorator(endpoint: Callable) -> EntityAPIControllerRoute:
+            request_methods = methods or ['GET']
+            if not isinstance(request_methods, (list, tuple)):
+                request_methods = [request_methods, ]
+            return EntityAPIControllerRoute(
+                path=path,
+                methods=request_methods,
+                endpoint=endpoint
+            )
+        return decorator
 
     @classmethod
     def path_base(cls) -> str:
@@ -275,6 +296,12 @@ class EntityAPI(EntityCRUD, ABC):
 def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
     from ..aaa import wrappers
 
+    def _make_instanced_endpoint(_endpoint: Callable) -> Callable:
+        async def _f(*args, **kwargs):
+            _instance = cls()
+            return await _endpoint(cls, *args, **kwargs)
+        return _f
+
     name: str = cls.__name__
 
     cls: EntityAPI
@@ -289,6 +316,9 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
     allow_options: [bool, List[str]] = cls.allow_options
     allow_update: [bool, List[str]] = cls.allow_update
     allow_delete: [bool, List[str]] = cls.allow_delete
+    all_cls_attrs: Dict[str, Any] = {
+        k: getattr(cls, k) for k in dir(cls)
+    }
 
     if version:
         version = f"v{version}"
@@ -306,6 +336,16 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
         f"registered API entity {CSTYLE['red']}{app_name}.{name}{CSTYLE['clear']}"
     )
 
+    controllers: List[EntityAPIControllerRoute] = [
+        a for a in all_cls_attrs.values() if isinstance(a, EntityAPIControllerRoute)
+    ]
+    for ctrl in controllers:
+        endpoint: Callable = _make_instanced_endpoint(ctrl.endpoint)
+        if requires:
+            endpoint = wrappers.requires(_permissions_by_app(requires))(endpoint)
+        path = routing.format_path(path_base, prefix, version, _suffix(ctrl.path))
+        routing.append(Route(path, endpoint, methods=ctrl.methods))
+
     # Routing the OPTIONS operation (used to return dict with keys
     # and representation)
     if allow_options:
@@ -313,8 +353,8 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
         if isinstance(allow_options, (str, list, tuple, set)) or requires:
             required: List[str] = \
                 array_from(allow_options) \
-                    if not isinstance(allow_options, bool) \
-                    else requires
+                if not isinstance(allow_options, bool) \
+                else requires
             endpoint = wrappers.requires(_permissions_by_app(required))(endpoint)
 
         # Routing non-key path (fetches entities list)
@@ -333,8 +373,8 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
         if isinstance(allow_create, (str, list, tuple, set)) or requires:
             required: List[str] = \
                 array_from(allow_create) \
-                    if not isinstance(allow_create, bool) \
-                    else requires
+                if not isinstance(allow_create, bool) \
+                else requires
             endpoint = wrappers.requires(_permissions_by_app(required))(endpoint)
         path = routing.format_path(path_base, prefix, version, path_suffix)
         paths['create'] = path
@@ -346,8 +386,8 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
         if isinstance(allow_read, (str, list, tuple, set)) or requires:
             required: List[str] = \
                 array_from(allow_read) \
-                    if not isinstance(allow_read, bool) \
-                    else requires
+                if not isinstance(allow_read, bool) \
+                else requires
             endpoint = wrappers.requires(_permissions_by_app(required))(endpoint)
 
         # Routing non-key path (fethes entities list)
@@ -366,8 +406,8 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
         if isinstance(allow_update, (str, list, tuple, set)) or requires:
             required: List[str] = \
                 array_from(allow_update) \
-                    if not isinstance(allow_update, bool) \
-                    else requires
+                if not isinstance(allow_update, bool) \
+                else requires
             endpoint = wrappers.requires(_permissions_by_app(required))(endpoint)
 
         # Routing non-key path
@@ -388,8 +428,8 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
         if isinstance(allow_delete, (str, list, tuple, set)) or requires:
             required: List[str] = \
                 array_from(allow_delete) \
-                    if not isinstance(allow_delete, bool) \
-                    else requires
+                if not isinstance(allow_delete, bool) \
+                else requires
             endpoint = wrappers.requires(_permissions_by_app(required))(endpoint)
 
         # Routing non-key path

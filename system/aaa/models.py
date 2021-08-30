@@ -56,6 +56,8 @@ class User(ds.Model):
     locale = ds.Column(ds.String(8), nullable=True, default=None)
     avatar = ds.Column(ds.Image('system.users'), nullable=True, default=None)
     properties = ds.Column(ds.JSONB(), default=lambda: dict())
+    comments = ds.Column(ds.Text(), nullable=False, default='')
+    email = ds.Column(ds.Email(), nullable=False, default='')
     roles = ds.relationship(
         ds.ModelName('Role'),
         secondary='systemUsersRoles',

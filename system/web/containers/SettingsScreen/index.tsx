@@ -5,6 +5,7 @@ import {
   CircularProgress,
   Divider,
   Grid,
+  FormCommonField,
   LoadingLinear,
   Paper,
   Tab,
@@ -12,7 +13,6 @@ import {
   TitlebarControl,
   Typography
 } from 'system/components'
-import {FormCommonField} from 'system/containers/FormCommonField'
 import SubmitIcon from '@material-ui/icons/DoneRounded'
 import DefaultsIcon from '@material-ui/icons/RotateLeftRounded'
 import {
@@ -76,8 +76,8 @@ class SectionCaption extends React.Component<SectionCaptionProps> {
           fontWeight: 400,
           textTransform: 'uppercase',
           padding: '.5vmax',
-          backgroundColor: '#ddf',
-          borderRadius: '4px'
+          backgroundColor: '#dde',
+          borderRadius: '.5vmax'
         }}
       >{this.props.caption}</Typography>
     )

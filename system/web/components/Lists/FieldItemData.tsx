@@ -2,28 +2,30 @@ import React from 'react'
 import CheckCircleOutlineOutlinedIcon from '@material-ui/icons/CheckCircleOutlineOutlined'
 import RemoveCircleOutlineOutlinedIcon from '@material-ui/icons/RemoveCircleOutlineOutlined';
 import {
-  ListField,
+  ListsField,
   FieldType,
-  ListFieldType,
-  ListFieldStruct, ListFieldValueVisualize
+  ListsFieldType,
+  ListsFieldStruct
 } from './types'
-import {gettext} from '../../l10n'
+import {gettext} from 'system/l10n'
 
 
-type ItemProps = {
+export type FieldItemDataProps = {
   item: any
-  field: ListField
+  field: ListsField
+  disableCaption?: boolean
 }
 
 
-type InnerProps = {
+type FieldItemDataInnerProps = {
   item: any
-  field: ListFieldType
+  field: ListsFieldType
   className?: string
+  disableCaption?: boolean
 }
 
 
-class ListFieldItemInner extends React.Component<InnerProps> {
+class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
   private guessFieldType = (value: any): FieldType => {
     if (typeof value == 'boolean')
       return 'boolean'
@@ -32,8 +34,14 @@ class ListFieldItemInner extends React.Component<InnerProps> {
     return 'string'
   }
 
-  private makeRenderingElement = (itemValue: any, field: ListFieldStruct): JSX.Element | null =>
+  private makeRenderingElement = (itemValue: any, field: ListsFieldStruct): JSX.Element | null =>
   {
+    if (field.hidden)
+      return null
+
+    if (field.render)
+      return field.render(itemValue, this.props.item);
+
     let value: null | string | JSX.Element
 
     if (field.valueVisualize !== undefined && typeof field.valueVisualize == 'function') {
@@ -125,7 +133,7 @@ class ListFieldItemInner extends React.Component<InnerProps> {
     const captionClassName: string = field.captionClassName || 'SystemUI-Lists ItemCaption'
 
     return <span style={field.style} className={field.className}>
-      {field.caption !== undefined && (
+      {(field.caption !== undefined && !this.props.disableCaption) && (
         <span style={field.captionStyle} className={captionClassName}>{field.caption}:</span>
       )}
       {value}
@@ -133,68 +141,23 @@ class ListFieldItemInner extends React.Component<InnerProps> {
   }
 
   render() {
-    const field: ListFieldType = this.props.field
-    let fieldType: FieldType
-    let fieldName: string
-    let style: object | undefined
-    let className: string | undefined
-    let caption: string | undefined
-    let captionStyle: object | undefined
-    let captionClassName: string | undefined
-    let textual: boolean | undefined
-    let nullText: string | boolean | undefined
-    let itemValue: any
-    let valueVisualize: ListFieldValueVisualize | undefined
-
-    if (typeof field == 'string') {
-      fieldName = String(field)
-      itemValue = this.props.item[fieldName]
-      fieldType = this.guessFieldType(itemValue)
-      style = undefined
-      className = undefined
-      caption = undefined
-      captionStyle = undefined
-      captionClassName = undefined
-      textual = undefined
-      nullText = false
-      valueVisualize = undefined
-    } else {
-      fieldName = field.fieldName
-      itemValue = this.props.item[fieldName]
-      fieldType = field.fieldType ?? this.guessFieldType(itemValue)
-      style = field.style
-      className = field.className
-      caption = field.caption
-      captionStyle = field.captionStyle
-      captionClassName = field.captionClassName
-      textual = field.textual
-      nullText = field.nullText
-      valueVisualize = field.valueVisualize
-    }
-
-    const fieldStruct: ListFieldStruct = {
-      fieldType,
-      fieldName,
-      style,
-      className,
-      caption,
-      captionStyle,
-      captionClassName,
-      textual,
-      nullText,
-      valueVisualize
-    }
+    const field: ListsFieldType = typeof this.props.field == 'string'
+      ? { fieldName: this.props.field, fieldType: this.guessFieldType(this.props.item[this.props.field]) }
+      : this.props.field
+    const itemValue: any = field.getter
+      ? field.getter(this.props.item)
+      : this.props.item[field.fieldName]
 
     return (
       <div className={this.props.className || 'mr-3'}>
-        {this.makeRenderingElement(itemValue, fieldStruct)}
+        {this.makeRenderingElement(itemValue, field)}
       </div>
     )
   }
 }
 
 
-export class ListFieldItem extends React.Component<ItemProps> {
+export class FieldItemData extends React.Component<FieldItemDataProps> {
   render() {
     if (Array.isArray(this.props.field))
       return (
@@ -204,18 +167,18 @@ export class ListFieldItem extends React.Component<ItemProps> {
               return (
                 <div className={'d-flex align-items-center'}>
                   {f.map(subf => (
-                    <ListFieldItemInner field={subf} item={this.props.item} />
+                    <FieldItemDataInner field={subf} item={this.props.item} disableCaption={this.props.disableCaption} />
                   ))}
                 </div>
               )
             else
               return (
-                <ListFieldItemInner field={f} item={this.props.item} />
+                <FieldItemDataInner field={f} item={this.props.item} disableCaption={this.props.disableCaption} />
               )
           })}
         </React.Fragment>
       )
 
-    return <ListFieldItemInner field={this.props.field} item={this.props.item} />
+    return <FieldItemDataInner field={this.props.field} item={this.props.item} disableCaption={this.props.disableCaption} />
   }
 }

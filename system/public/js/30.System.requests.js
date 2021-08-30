@@ -31,9 +31,9 @@ System.requests = {
     return new Request(_url, requestOptions);
   },
 
-  axiosOptions: function (params) {
+  axiosOptions: function (params, headers) {
     const authorizationHeader = System.aaa.getCurrentAuthorizationHeader();
-    const headers = { };
+    headers = headers ?? {};
 
     authorizationHeader && (headers.Authorization = authorizationHeader);
 
@@ -43,24 +43,24 @@ System.requests = {
     }
   },
 
-  get: function (url, params) {
-    return axios.get(url, System.requests.axiosOptions(params));
+  get: function (url, params, headers) {
+    return axios.get(url, System.requests.axiosOptions(params, headers));
   },
 
-  post: function (url, data, params) {
-    return axios.post(url, data, System.requests.axiosOptions(params));
+  post: function (url, data, params, headers) {
+    return axios.post(url, data, System.requests.axiosOptions(params, headers));
   },
 
-  put: function (url, data, params) {
-    return axios.put(url, data, System.requests.axiosOptions(params));
+  put: function (url, data, params, headers) {
+    return axios.put(url, data, System.requests.axiosOptions(params, headers));
   },
 
-  delete: function (url, params) {
-    return axios.delete(url, System.requests.axiosOptions(params));
+  delete: function (url, params, headers) {
+    return axios.delete(url, System.requests.axiosOptions(params, headers));
   },
 
-  options: function (url, params) {
-    return axios.options(url, System.requests.axiosOptions(params));
+  options: function (url, params, headers) {
+    return axios.options(url, System.requests.axiosOptions(params, headers));
   }
 
 };

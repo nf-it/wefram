@@ -43,10 +43,10 @@ interface NotificationContentProps {
 }
 
 const styles = (theme: any) => ({
-  success: {backgroundColor: theme.palette.notifications.success},
-  error: {backgroundColor: theme.palette.notifications.error},
-  info: {backgroundColor: theme.palette.notifications.info},
-  warning: {backgroundColor: theme.palette.notifications.warning},
+  success: {backgroundColor: theme.notifications.success},
+  error: {backgroundColor: theme.notifications.error},
+  info: {backgroundColor: theme.notifications.info},
+  warning: {backgroundColor: theme.notifications.warning},
   icon: {fontSize: 20},
   iconVariant: {opacity: 0.9},
   message: {display: 'flex', alignItems: 'center'}

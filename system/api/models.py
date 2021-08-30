@@ -5,7 +5,7 @@ from sqlalchemy.sql.elements import (
     UnaryExpression,
     ClauseList,
     ClauseElement)
-from sqlalchemy import sql, and_, or_, Column
+from sqlalchemy import sql, and_, or_, Column, INT, BIGINT, Integer, BigInteger
 from sqlalchemy.orm.attributes import QueryableAttribute
 from sqlalchemy.exc import IntegrityError
 from .. import ds
@@ -54,17 +54,20 @@ class ModelAPI(EntityAPI):
         if not keys:
             return None
         c: Column = self.model.Meta.primary_key[0]
+        if isinstance(c.type, (Integer, BigInteger, INT, BIGINT)):
+            keys = [int(k) for k in keys]
+        else:
+            keys = [str(k) for k in keys]
         return c.in_(keys)
 
     @classmethod
     async def create(cls, **with_values) -> Union[bool, object]:
-        # with_values: dict = {k: await cls.encode_value(k, v) for k, v in with_values.items()}
         with_values: dict = {
             k: v for k, v in {
                 k: await cls.encode_value(k, v) for k, v in with_values.items()
             }.items() if v is not ...
         }
-        instance: Model = cls.model.create(**with_values)
+        instance: Model = await cls.model.create(**with_values)
         try:
             await db.flush()
         except IntegrityError as e:
@@ -91,10 +94,11 @@ class ModelAPI(EntityAPI):
         for name, value in filters.items():
             c: QueryableAttribute = getattr(self.model, name, None)
             if c is None or not isinstance(c, QueryableAttribute):
-                # If the model has no column with given name - raise exception
-                raise KeyError(
-                    f"Model '{self.model.__name__}' has no column '{name}' which participates in the ModelAPI filter"
-                )
+                # If the model has no column with given name - skip this filter
+                # raise KeyError(
+                #     f"Model '{self.model.__name__}' has no column '{name}' which participates in the ModelAPI filter"
+                # )
+                continue
             clause: Optional[ClauseElement] = self.handle_read_filter(c, value)
             if clause is None:
                 continue
@@ -181,6 +185,7 @@ class ModelAPI(EntityAPI):
             stmt = stmt.order_by(*_order)
         else:
             _order: List[Union[str, Column]] = self.model.Meta.get_defalt_order()
+            stmt = stmt.order_by(*_order)
 
         instances: List[Model] = await db.all(stmt)
         items: List[dict] = await self.items_as_json(instances, deep=deep)
@@ -276,8 +281,8 @@ class ModelAPI(EntityAPI):
         stmt = sql.delete(self.model.__table__).where(clause)
         await db.execute(stmt)
 
-        try:
-            await db.commit()  # TODO! Is there COMMIT really needed?, or just FLUSH is enought for that
-
-        except IntegrityError as e:
-            raise HTTPException(400, str(e.orig))
+        # try:
+        #     await db.commit()  # TODO! Is there COMMIT really needed?, or just FLUSH is enought for that
+        #
+        # except IntegrityError as e:
+        #     raise HTTPException(400, str(e.orig))

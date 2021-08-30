@@ -6,7 +6,7 @@ import config
 from ..requests import Request, Response, routing, templates
 from ..aaa import IPermissions
 from ..tools import CSTYLE, get_calling_app, array_from
-from .. import logger
+from .. import logger, features
 
 
 __all__ = [
@@ -40,14 +40,17 @@ class View:
 
     name: str
     app: str
-    route: str = None
+    route: Union[str, List[str]] = None
     requires: Optional[IPermissions] = None
+
+    ctx_loaders: Optional[List[Callable]] = None
 
     def __init__(self, request: Request):
         self.request: Request = request
         self.ctx: dict = {
             'request': self.request,
             'config': config,
+            'features': features.all_features(),
             'assets_uuid': self.assets_uuid,
             'public_statics': self.public_statics,
             'public_css': self.public_css,
@@ -56,10 +59,17 @@ class View:
             'public_fonts': self.public_fonts
         }
 
+    @classmethod
+    def append_context_loader(cls, loader: Callable) -> None:
+        if cls.ctx_loaders is None:
+            cls.ctx_loaders = []
+        cls.ctx_loaders.append(loader)
+
     async def use_context_loaders(self) -> None:
         if not context_loaders:
             return
-        for f in context_loaders:
+        loaders: List[Callable] = context_loaders + (self.ctx_loaders or [])
+        for f in loaders:
             if asyncio.iscoroutinefunction(f):
                 ctx: Optional[dict] = await f(self)
             else:
@@ -143,18 +153,20 @@ def register(cls: ClassVar[View]) -> ClassVar[View]:
             return None
         if not _path:
             _path = name.lower()
-        if _path.startswith('//'):
-            return _path[1:]
-        if _path == '/':
-            _path = ''
-        return '/' + '/'.join([s for s in (_app, _path) if s])
+        return routing.abs_url(_path, _app)
 
     app_name: str = get_calling_app()
     view_name: str = '_'.join([app_name, name])
     requires: Optional[IPermissions] = getattr(cls, 'requires', None)
-    route_url: Optional[str] = _make_routeurl(app_name, getattr(cls, 'route', None))
 
-    setattr(cls, '_route_url', route_url)
+    route_s: Optional[Union[str, List[str]]] = getattr(cls, 'route', None)
+    route_urls: Optional[List[str]]
+    if not route_s:
+        route_urls = None
+    else:
+        route_urls = [_make_routeurl(app_name, r) for r in array_from(route_s)]
+
+    setattr(cls, '_route_urls', route_urls)
     setattr(cls, '_requires', _make_requires(requires))
     setattr(cls, 'app', app_name)
     setattr(cls, 'name', view_name)
@@ -162,9 +174,9 @@ def register(cls: ClassVar[View]) -> ClassVar[View]:
     registered[view_name] = cls
     logger.debug(f"registered view {CSTYLE['green']}{view_name}{CSTYLE['clear']}")
 
-    if route_url:
+    if route_urls:
         endpoint: Callable = getattr(cls, 'endpoint')
-        routing.append(Route(route_url, endpoint, methods=['GET']))
+        [routing.append(Route(r, endpoint, methods=['GET'])) for r in route_urls]
 
     return cls
 

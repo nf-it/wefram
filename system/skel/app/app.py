@@ -1,6 +1,7 @@
 from typing import *
 from system.l10n import lazy_gettext
 from system import aaa, ds, settings
+from . import demo
 
 
 # Note that you about to use 'lazy_gettext' for localization support in

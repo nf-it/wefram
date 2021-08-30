@@ -1,6 +1,7 @@
 from typing import *
 import types
 import importlib
+import config
 from .l10n import L10nStr
 from .tools import CSTYLE, app_path, app_has_module
 from . import logger
@@ -11,6 +12,8 @@ __all__ = [
     'IAppsMains',
     'modules',
     'mains',
+    'has',
+    'is_enabled',
     'load',
     'initialize',
     'get_app_caption',
@@ -25,6 +28,14 @@ IAppsMains = Dict[str, types.ModuleType]
 
 modules: IAppsModules = {}
 mains: IAppsMains = {}
+
+
+def has(app: str) -> bool:
+    return app in modules
+
+
+def is_enabled(app: str) -> bool:
+    return app in config.APPS_ENABLED or app in modules
 
 
 def load(apps: List[str]) -> Dict[str, types.ModuleType]:

@@ -3,7 +3,7 @@ import jwt
 import datetime
 import config
 from ..exceptions import AuthenticationFailed
-from ..requests import context
+from ..runtime import context
 from ..tools import all_in
 from .. import settings, logger
 from .models import User, Session, RefreshToken, SessionUser
@@ -17,7 +17,8 @@ __all__ = [
     'create_session',
     'refresh_with_token',
     'permitted',
-    'get_current_user'
+    'get_current_user',
+    'is_logged_in'
 ]
 
 
@@ -58,7 +59,7 @@ async def _create_jwt_token(user: User, session: Session) -> Tuple[str, datetime
 
 async def _create_refresh_token(user: User, session: Session) -> str:
     token: str = random_token(strong=True)
-    RefreshToken.create(
+    await RefreshToken.create(
         token=token,
         user_id=user.id,
         session=session.token
@@ -121,3 +122,6 @@ def get_current_user() -> Optional[SessionUser]:
         return None
     return context['user']
 
+
+def is_logged_in() -> bool:
+    return get_current_user() is not None

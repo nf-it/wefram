@@ -92,11 +92,12 @@ def clause_eq_for_c(c: QueryableAttribute, value: Any, allow_text_aliases: bool 
 
 
 class ModelName:
-    def __init__(self, name: str):
+    def __init__(self, name: str, app: Optional[str] = None):
         self.name: str = name
+        self.app: Optional[str] = app
 
     def __call__(self) -> ClassVar['Model']:
-        return get_model(self.name)
+        return get_model(self.name, self.app)
 
 
 class ModelColumn:

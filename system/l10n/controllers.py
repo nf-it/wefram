@@ -1,6 +1,7 @@
 import os.path
 from .. import api
-from ..requests import Request, PrebuiltFile, Response, JSONResponse, context
+from ..requests import Request, PrebuiltFile, Response, JSONResponse
+from ..runtime import context
 from .locales import Locale
 from .catalog import locate_dictionary_json
 

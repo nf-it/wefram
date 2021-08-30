@@ -1,50 +1,62 @@
 import React from 'react'
-import {IApiEntityComplexResponse, IApiEntityResponse} from '../../types'
-import {RequestApiPath} from '../../routing'
+import {IApiEntityComplexResponse, IApiEntityResponse} from 'system/types'
+import {RequestApiPath} from 'system/routing'
+import {Size as TableSize} from '@material-ui/core/Table'
 
 
-export type ListSorting = {
+export type ListsSorting = {
   value: string
   direction: 'asc' | 'desc'
 }
 
-export type ListSortingOption = {
+export type ListsSortingOption = {
   value: string
   caption: string
 }
 
-export type ListSortingOptions = ListSortingOption[]
+export type ListsSortingOptions = ListsSortingOption[]
 
-export type ListSelection = string[] | number[]
+export type ListsSelection = string[] | number[]
 
-export type ListProvidedFilters = Record<string, any>
+export type ListsProvidedFilters = Record<string, any>
 
-export type FieldType = 'string' | 'number' | 'boolean' | 'icon' | 'date' | 'dateTime' | 'dateNice' | 'dateTimeNice'
+export type FieldType =
+  | 'string'
+  | 'number'
+  | 'boolean'
+  | 'icon'
+  | 'date'
+  | 'dateTime'
+  | 'dateNice'
+  | 'dateTimeNice'
 
-export type ListFieldValueVizualizator = (value: any) => any
+export type ListsFieldValueVizualizator = (value: any) => any
 
-export type ListFieldValueVisualize = Record<any, any> | ListFieldValueVizualizator
+export type ListsFieldValueVisualize = Record<any, any> | ListsFieldValueVizualizator
 
-export type ListFieldStruct = {
+export type ListsFieldStruct = {
   fieldType?: FieldType
   fieldName: string
   style?: object
   className?: string
-  caption?: string
+  caption?: string | JSX.Element
   captionStyle?: object
   captionClassName?: string
   textual?: boolean
   nullText?: string | boolean
-  valueVisualize?: ListFieldValueVisualize
+  valueVisualize?: ListsFieldValueVisualize
+  hidden?: boolean
+  render?: ((value: any, item?: any) => any) | null
+  getter?: ((item: any) => any) | null  // used to return a value from the every item instead of item[fieldName]
 }
 
-export type ListFieldType = string | ListFieldStruct
+export type ListsFieldType = string | ListsFieldStruct
 
-export type ListRowFields = ListFieldType[]
+export type ListsRowFields = ListsFieldType[]
 
-export type ListRowField = ListFieldType | ListFieldType[]
+export type ListsRowField = ListsFieldType | ListsFieldType[]
 
-export type ListField = ListFieldType | ListRowFields | ListRowField[]
+export type ListsField = ListsFieldType | ListsRowFields | ListsRowField[]
 
 export type UrlStateStorage = {
   sort?: string
@@ -63,14 +75,14 @@ export type ProvListProps = {
   onFetchDone?: (success?: boolean) => void
   onItemClick?: (item: any) => void
   onProvidedFiltersUpdateReq?: (filters: Record<string, any>) => void
-  onSelection?: (items: ListSelection) => void
+  onSelection?: (items: ListsSelection) => void
   onPageChange?: (page: number, fetchCallback: any) => void
-  onSortChange?: (sort: ListSorting | null, fetchCallback: any) => void
+  onSortChange?: (sort: ListsSorting | null, fetchCallback: any) => void
 
   avatarField?: string
-  defaultSort?: ListSorting
+  defaultSort?: ListsSorting
   emptyListText?: boolean | string
-  providedFilters?: ListProvidedFilters
+  providedFilters?: ListsProvidedFilters
   filtersEmptyAllowed?: string[]
   forbidUrlStateUpdate?: boolean
   itemAction?: (item: any) => void
@@ -80,12 +92,12 @@ export type ProvListProps = {
   pagination?: boolean
   primaryField?: string
   primaryComponent?: React.ElementType
-  secondaryField?: ListField
+  secondaryField?: ListsField
   secondaryComponent?: React.ElementType
   requestPath: RequestApiPath | string
   selectable?: boolean
   separated?: boolean
-  sortOptions?: ListSortingOptions
+  sortOptions?: ListsSortingOptions
   textTotalCount?: string | boolean
   textTotalCountAll?: string | boolean
   unsortedOption?: boolean | string
@@ -95,15 +107,74 @@ export type ProvListProps = {
   itemsCount?: number
   itemsCountAll?: number
 
-  selected?: ListSelection
-  sort?: ListSorting | null
+  selected?: ListsSelection
+  sort?: ListsSorting | null
 
   offset?: number
   limit?: number
 }
 
 export type ProvListOverridedParams = {
-  sort?: ListSorting
+  sort?: ListsSorting
+  offset?: number
+  limit?: number
+}
+
+export type ProvTableColumn = ListsFieldStruct & {
+  fieldAlign?: 'inherit' | 'left' | 'center' | 'right' | 'justify';
+  size?: TableSize
+}
+
+export type ProvTableColumns = ProvTableColumn[]
+
+export type ProvTableProps = {
+  onError?: (err: any) => void
+  onErrorShowMsg?: boolean | string
+  onFetch?: (response: IApiEntityResponse | IApiEntityComplexResponse) => void
+  onFetchDone?: (success?: boolean) => void
+  onItemClick?: (item: any) => void
+  onProvidedFiltersUpdateReq?: (filters: Record<string, any>) => void
+  onSelection?: (items: ListsSelection) => void
+  onPageChange?: (page: number, fetchCallback: any) => void
+  onSortChange?: (sort: ListsSorting | null, fetchCallback: any) => void
+
+  columns: ProvTableColumns
+
+  avatarField?: string
+  entityCaption?: string
+  defaultSort?: ListsSorting
+  emptyListText?: boolean | string
+  providedFilters?: ListsProvidedFilters
+  filtersEmptyAllowed?: string[]
+  forbidUrlStateUpdate?: boolean
+  itemAction?: (item: any) => void
+  itemComponent?: React.ElementType
+  itemControlsRender?: (item: any) => JSX.Element | null
+  itemKeyField?: string
+  itemsRoute?: string | ItemRouteCallback
+  pagination?: boolean
+  requestPath: RequestApiPath | string
+  selectable?: boolean
+  separated?: boolean
+  sortOptions?: ListsSortingOptions
+  textTotalCount?: string | boolean
+  textTotalCountAll?: string | boolean
+  unsortedOption?: boolean | string
+  urlStateStorage?: UrlStateStorage
+
+  items?: any[]
+  itemsCount?: number
+  itemsCountAll?: number
+
+  selected?: ListsSelection
+  sort?: ListsSorting | null
+
+  offset?: number
+  limit?: number
+}
+
+export type ProvTableOverridedParams = {
+  sort?: ListsSorting
   offset?: number
   limit?: number
 }

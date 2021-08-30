@@ -5,6 +5,7 @@ import {
   AccordionDetails,
   Box,
   Checkbox,
+  EntityForm,
   FormControlLabel,
   LoadingLinear,
   OptionsList,
@@ -15,7 +16,6 @@ import {
 } from 'system/components'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import {ScreenProps} from 'system/types'
-import {EntityForm, EntityData} from '../EntityForm'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath, routing} from 'system/routing'
@@ -50,7 +50,7 @@ type ScreenDef = {
 
 type ScreenState = {
   loading: boolean
-  data: EntityData
+  data: any
   screendef?: ScreenDef
 }
 

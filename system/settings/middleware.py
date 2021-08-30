@@ -1,14 +1,29 @@
 from typing import *
 from starlette.types import ASGIApp, Receive, Scope, Send
 import config
-from ..requests import context, routing
+from .. import middlewares
+from ..cli import CliMiddleware
+from ..requests import routing
+from ..runtime import context
 from .models import SettingsCatalog
 from .routines import get
 
 
 __all__ = [
-    'SettingsMiddleware'
+    'SettingsMiddleware',
+    'SettingsCliMiddleware'
 ]
+
+
+@middlewares.register_for_cli
+class SettingsCliMiddleware(CliMiddleware):
+    async def __call__(self, call_next: Callable) -> None:
+        context['settings']: Dict[str, SettingsCatalog] = {}
+
+        for entity_name in config.SETTINGS_ALWAYS_LOADED:
+            await get(entity_name)
+
+        await call_next()
 
 
 class SettingsMiddleware:

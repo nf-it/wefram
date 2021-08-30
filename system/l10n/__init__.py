@@ -1,6 +1,6 @@
 from .locales import *
 from .funcs import *
-from .catalog import L10nStr, pack_dictionary
+from .catalog import L10nStr, pack_dictionary, ui_locale_json
 from . import build, middleware, catalog, controllers
 
 

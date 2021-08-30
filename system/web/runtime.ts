@@ -4,7 +4,7 @@ import {Localization} from '@material-ui/core/locale'
 import {IAppInstantiation, IScreenRuntimes, ISitemap} from './types'
 import {projectAppProvider} from './provider'
 import {aaa} from './aaa'
-import {localization} from './l10n'
+import {localization, Locale} from './l10n'
 
 
 export interface IRuntime {
@@ -22,6 +22,12 @@ class _Runtime {
   rememberUsername: boolean = false
   sitemap: ISitemap = []
   screens: IScreenRuntimes = {}
+  locale: Locale = {
+    name: 'en_US',
+    weekStartsOn: 0,
+    firstWeekContainsDate: 1,
+    dateFormat: 'MM/dd/yyyy'
+  }
   muiLocalization: Localization = {}
 
   scrollPositions: ScrollPositions = {}
@@ -50,16 +56,13 @@ class _Runtime {
   saveScrollPosition = (id?: string | Location) => {
     const scrollID: string = this.locationToString(id)
       ?? [window.location.pathname, window.location.search].join('')
-    const scrollY: number = window.scrollY
-    console.log('save scroll position', scrollID)
-    this.scrollPositions[scrollID] = scrollY
+    this.scrollPositions[scrollID] = window.scrollY
   }
 
   restoreScrollPosition = (id?: string | Location) => {
     const scrollID: string = this.locationToString(id)
       ?? [window.location.pathname, window.location.search].join('')
     let scrollY: number | null = this.scrollPositions[scrollID]
-    console.log('resore scroll position:', scrollID)
     if (!scrollY)
       return
     window.scrollTo({
@@ -80,6 +83,7 @@ export const appInterface: AppInterface = {
       runtime.title = res.data.title
       runtime.sitemap = res.data.sitemap
       runtime.screens = res.data.screens
+      runtime.locale = res.data.locale
       runtime.loginScreenUrl = res.data.urlConfiguration.loginScreenUrl
       runtime.defaultAuthenticatedUrl = res.data.urlConfiguration.defaultAuthenticatedUrl
       runtime.defaultGuestUrl = res.data.urlConfiguration.defaultGuestUrl

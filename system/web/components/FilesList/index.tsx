@@ -14,6 +14,9 @@ import RemoveIcon from '@material-ui/icons/DeleteOutline'
 import UploadIcon from '@material-ui/icons/Publish'
 import OpenIcon from '@material-ui/icons/OpenInNew'
 import EditIcon from '@material-ui/icons/Edit'
+import RearrangeIcon from '@material-ui/icons/SwapVert'
+import ArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
+import ArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import {StoredFiles, StoredFile} from 'system/types'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
@@ -30,20 +33,26 @@ export type FilesListProps = {
   permitDelete?: boolean
   permitEdit?: boolean
   permitUpload?: boolean
+  permitRearrange?: boolean
 }
 
 type FilesListState = {
   loading: boolean,
   items: StoredFiles,
   selected: number[]
+  rearrangeMode: boolean
 }
+
+
+type RearrangeSortData = Record<number, number>
 
 
 export class FilesList extends React.Component<FilesListProps, FilesListState> {
   state: FilesListState = {
     loading: true,
     items: [],
-    selected: []
+    selected: [],
+    rearrangeMode: false
   }
 
   replacingId: number | null
@@ -76,14 +85,27 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
     })
   }
 
-  private requestPath = (id?: number | null): RequestApiPath => {
+  private requestPath = (id?: number | null, suffix?: string): RequestApiPath => {
     let app: string
     let path: string
     [app, path] = this.props.apiEntity.split('.', 2)
     return {
       app,
-      path: (id ? `${path}/${id}` : path)
+      path: (id ? `${path}/${id}` : path) + (suffix ? suffix : '')
     }
+  }
+
+  public postRearragement = (): void => {
+    runtime.busy = true
+    const data: RearrangeSortData = {}
+    this.state.items.forEach(el => data[el.id] = el.sort)
+    api.put(this.requestPath(null, '/reorder'), data).then(res => {
+      runtime.busy = false
+      notifications.showRequestSuccess(res)
+    }).catch(err => {
+      runtime.busy = false
+      notifications.showRequestError(err)
+    })
   }
 
   public removeFile = (id: number): void => {
@@ -199,9 +221,12 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
           />
         )}
 
-        {((this.props.permitUpload ?? true) || (this.props.permitDelete ?? true)) && (
+        {((this.props.permitUpload ?? true)
+            || (this.props.permitDelete ?? true)
+            || (this.props.permitRearrange ?? true)
+        ) && (
           <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
-            {(this.props.permitDelete ?? true) && (
+            {(this.props.permitDelete ?? true) && (!this.state.rearrangeMode) && (
               <Tooltip title={gettext("Delete selected files")}>
                 <IconButton
                   color={'secondary'}
@@ -214,7 +239,7 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
                 </IconButton>
               </Tooltip>
             )}
-            {(this.props.permitUpload ?? true) && (
+            {(this.props.permitUpload ?? true) && (!this.state.rearrangeMode) && (
               <Tooltip title={gettext("Delete selected files")}>
                 <Button
                   color={'primary'}
@@ -229,9 +254,30 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
                 </Button>
               </Tooltip>
             )}
+            {(this.props.permitRearrange ?? true) && (
+              <React.Fragment>
+                {this.state.rearrangeMode && (
+                  <Typography>{gettext("Rearrange files and click the button again", 'system.ui')}</Typography>
+                )}
+                <Tooltip title={gettext("Rearrange files", 'system.ui')}>
+                  <IconButton
+                    color={this.state.rearrangeMode ? 'secondary' : 'default'}
+                    onClick={() => this.setState(
+                      {rearrangeMode: !this.state.rearrangeMode},
+                      () => this.postRearragement()
+                    )}
+                    style={{
+                      marginLeft: '24px'
+                    }}
+                  >
+                    <RearrangeIcon />
+                  </IconButton>
+                </Tooltip>
+              </React.Fragment>
+            )}
           </Box>
         )}
-        {this.state.items.map((item: StoredFile) => (
+        {this.state.items.map((item: StoredFile, index: number, arr: any) => (
           <Box pt={1} pb={1} borderTop={'1px solid #bbb'}>
             <Grid container alignItems={'center'}>
               {(this.props.permitDelete ?? true) && (
@@ -258,14 +304,16 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
               </Grid>
               <Grid item xs={2}>
                 <Box display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
-                  <Tooltip title={gettext("Open file", 'system.ui')}>
-                    <IconButton
-                      onClick={() => {
-                        window.open(storage.urlFor(this.props.storageEntity, item.file), '_blank')
-                      }}
-                    ><OpenIcon /></IconButton>
-                  </Tooltip>
-                  {(this.props.permitEdit ?? true) && (
+                  {(!this.state.rearrangeMode) && (
+                    <Tooltip title={gettext("Open file", 'system.ui')}>
+                      <IconButton
+                        onClick={() => {
+                          window.open(storage.urlFor(this.props.storageEntity, item.file), '_blank')
+                        }}
+                      ><OpenIcon /></IconButton>
+                    </Tooltip>
+                  )}
+                  {(this.props.permitEdit ?? true) && (!this.state.rearrangeMode) && (
                     <React.Fragment>
                     <Tooltip title={gettext("Rename file", 'system.ui')}>
                       <IconButton
@@ -291,7 +339,7 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
                     </Tooltip>
                     </React.Fragment>
                   )}
-                  {(this.props.permitDelete ?? true) && (
+                  {(this.props.permitDelete ?? true) && (!this.state.rearrangeMode) && (
                     <Tooltip title={gettext("Delete file", 'system.ui')}>
                       <IconButton
                         onClick={() => {
@@ -300,6 +348,32 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
                       ><RemoveIcon /></IconButton>
                     </Tooltip>
                   )}
+                  {(this.state.rearrangeMode) && ([
+                    <Tooltip key={`file-rearr-dn-${item.id}`} title={gettext("Move down", 'system.ui')}>
+                      <IconButton
+                        onClick={() => {
+                          const items = this.state.items
+                          items.splice(index, 1)
+                          items.splice(index + 1, 0, item)
+                          items.forEach((el: StoredFile, inx: number) => el.sort = inx)
+                          this.setState({items})
+                        }}
+                        disabled={index === arr.length - 1}
+                      ><ArrowDownIcon /></IconButton>
+                    </Tooltip>,
+                    <Tooltip key={`file-rearr-up-${item.id}`} title={gettext("Move up", 'system.ui')}>
+                      <IconButton
+                        onClick={() => {
+                          const items = this.state.items
+                          items.splice(index, 1)
+                          items.splice(index - 1, 0, item)
+                          items.forEach((el: StoredFile, inx: number) => el.sort = inx)
+                          this.setState({items})
+                        }}
+                        disabled={index === 0}
+                      ><ArrowUpIcon /></IconButton>
+                    </Tooltip>
+                  ])}
                 </Box>
               </Grid>
             </Grid>

@@ -3,7 +3,7 @@ from sqlalchemy.sql import Select, Executable
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.engine import ScalarResult, Row, Result
 from sqlalchemy.util import EMPTY_DICT
-from ...requests import context
+from ...runtime import context
 
 
 __all__ = [
@@ -92,3 +92,9 @@ async def scalar(statement: Select, **kwargs) -> Optional[Any]:
 async def scalars(statement: Select, index: int, **kwargs) -> ScalarResult:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalars()
+
+
+def add(*instances):
+    session: AsyncSession = _get_context_connection()
+    [session.add(i) for i in instances]
+

@@ -2,7 +2,7 @@ from sqlalchemy import *
 from sqlalchemy.orm import *
 from sqlalchemy.sql.expression import func
 from sqlalchemy.ext.hybrid import *
-from . import engine, db
+from . import engine, db, migrate
 from .ops import *
 from .model import *
 from .types import *

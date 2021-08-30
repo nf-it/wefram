@@ -1,6 +1,6 @@
 import {ISitemap} from './sitemap'
 import {ISession} from 'system/aaa'
-import {TLocaleDicrionary} from 'system/l10n'
+import {TLocaleDicrionary, Locale} from 'system/l10n'
 import {IScreenRuntimes} from 'system/types/screens'
 
 
@@ -18,6 +18,7 @@ export interface IAppInstantiation {
   session: ISession
   sitemap: ISitemap
   screens: IScreenRuntimes
+  locale: Locale
   title: string
   localization: TLocaleDicrionary
   urlConfiguration: IUrlConfiguration

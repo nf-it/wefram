@@ -103,3 +103,4 @@ export function isEqual(object1: any, object2: any): boolean {
   }
   return deepEqual(object1, object2)
 }
+

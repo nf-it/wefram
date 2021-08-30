@@ -8,6 +8,7 @@ __all__ = [
     'registered',
     'route',
     'append',
+    'abs_url',
     'format_path',
     'static_routes_prefixes',
     'is_static_path'
@@ -24,6 +25,15 @@ def append(r: Route) -> None:
     _methods: str = ','.join(str(s) for s in r.methods)
     logger.debug(f"routed {CSTYLE['white']}{_methods}{CSTYLE['clear']} {CSTYLE['pink']}{r.path}{CSTYLE['clear']}")
     registered.append(r)
+
+
+def abs_url(path: str, app: Optional[str] = None) -> str:
+    app = app or get_calling_app()
+    if path.startswith('//'):
+        return path[1:]
+    if path == '/':
+        path = ''
+    return '/' + ('/'.join([s for s in (app, path.lstrip('/')) if s])).lstrip('/')
 
 
 def format_path(

@@ -2,7 +2,7 @@ from typing import *
 import os.path
 import json
 from json.decoder import JSONDecodeError
-from ..requests import context
+from ..runtime import context
 from ..tools import CSTYLE, get_calling_app
 from .. import logger
 from .locales import Locale
@@ -16,7 +16,8 @@ __all__ = [
     'L10nStr',
     'translate',
     'translate_pluralizable',
-    'pack_dictionary'
+    'pack_dictionary',
+    'ui_locale_json'
 ]
 
 
@@ -284,6 +285,23 @@ def pack_dictionary(
 ) -> Dict[str, dict]:
     dictionary: Dictionary = _get_current_dictionary() if locale is None else _get_dictionary(locale)
     return dictionary.as_dict()
+
+
+def ui_locale_json() -> dict:
+    locale: Locale = context['locale']
+    date_format: str = str(locale.datetime_skeletons['yMd']) \
+        .replace('MM', 'M') \
+        .replace('dd', 'd') \
+        .replace('yy', 'y') \
+        .replace('M', 'MM') \
+        .replace('d', 'dd') \
+        .replace('y', 'yyyy')
+    return {
+        'name': str(locale),
+        'weekStartsOn': locale.first_week_day,
+        'firstWeekContainsDate': 1,
+        'dateFormat': date_format
+    }
 
 
 def translate(

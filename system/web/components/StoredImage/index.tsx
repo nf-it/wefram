@@ -187,7 +187,7 @@ export class StoredImage extends React.Component<StoredImageProps, S> {
                 overflow: 'hidden',
                 maxWidth: '100%',
                 maxHeight: '100%',
-                borderRadius: '5px'
+                borderRadius: '.5vmax'
               }}
               cover={this.props.cover}
             />
@@ -262,7 +262,7 @@ export class StoredImage extends React.Component<StoredImageProps, S> {
                       overflow: 'hidden',
                       maxWidth: '100%',
                       maxHeight: '100%',
-                      borderRadius: '5px'
+                      borderRadius: '.5vmax'
                     }}
                   />
                 </Box>

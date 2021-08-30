@@ -26,19 +26,21 @@ const System = {
   },
 
   setLoadingBackdrop: (state) => {
-    const domLoadingBackdrop = document.getElementById('System-loadingAnimationBackdrop');
+    let domLoadingBackdrop = document.getElementById('System-loadingAnimationBackdrop');
     if (state) {
       if (domLoadingBackdrop)
         return;
-      UI.newDiv(null, {
+      domLoadingBackdrop = UI.newDiv(null, {
         id: "System-loadingAnimationBackdrop"
       }, [
         UI.newDiv()
       ]).appendTo(document.body);
+      setTimeout(() => domLoadingBackdrop.classList.add('open'), 200);
     } else {
       if (!domLoadingBackdrop)
         return;
       domLoadingBackdrop.remove();
+      domLoadingBackdrop.classList.remove('open');
     }
   }
   

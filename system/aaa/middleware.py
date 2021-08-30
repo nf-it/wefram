@@ -8,13 +8,23 @@ from starlette.authentication import (
     UnauthenticatedUser
 )
 from starlette.requests import HTTPConnection
-from starlette.middleware import Middleware
 from starlette.middleware.authentication import AuthenticationMiddleware
 import config
-from .. import middlewares, logger
-from ..requests import context, is_static_path
+from .. import middlewares, logger, cli
+from ..requests import is_static_path
+from ..runtime import context
 from .types import IPermissions
 from .models import Session, SessionUser
+
+
+@middlewares.register_for_cli
+class AuthenticationCliMiddleware(cli.CliMiddleware):
+    async def __call__(self, call_next: Callable) -> None:
+        context['is_authenticated'] = False
+        context['user']: BaseUser = UnauthenticatedUser()
+        context['permissions']: IPermissions = []
+        context['session']: Optional[Session] = None
+        await call_next()
 
 
 class ProjectAuthenticationBackend(AuthenticationBackend):
@@ -83,7 +93,6 @@ class ProjectAuthenticationBackend(AuthenticationBackend):
         try:
             session: Optional[Session] = await Session.fetch(user_id, session_token)
         except FileNotFoundError:
-            # raise AuthenticationError("Invalid or expired session")
             logger.debug("expired session for the given jwt token")
             return
 
@@ -104,7 +113,7 @@ class ProjectAuthenticationBackend(AuthenticationBackend):
         return AuthCredentials(auth_scopes), auth_user
 
 
-middlewares.register(Middleware(
+middlewares.register(
     AuthenticationMiddleware,
     backend=ProjectAuthenticationBackend(
         secret=config.AUTH['secret'],
@@ -112,4 +121,4 @@ middlewares.register(Middleware(
         schema='Bearer',
         algorithm='HS256'
     )
-))
+)

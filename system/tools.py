@@ -198,7 +198,9 @@ def term_floatinput(caption: str, default: Optional[float] = None) -> float:
     return answer
 
 
-def isostr_2_date(s: str) -> Optional[datetime.date]:
+def isostr_2_date(s: Union[str, datetime.date]) -> Optional[datetime.date]:
+    if isinstance(s, datetime.date):
+        return s
     if not isinstance(s, str):
         return None
     try:

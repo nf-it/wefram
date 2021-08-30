@@ -1,7 +1,7 @@
 .SystemUI-LayoutAppbar {
     display: flex;
     z-index: 1201 !important;
-    max-width: 18vw !important;
+    max-width: 19vw !important;
     margin-left: 0;
     right: auto !important;
     justify-content: center;

@@ -21,29 +21,29 @@ System.api = {
     return new URL(window.location.origin.concat(urlPath));
   },
 
-  get: function ({app, path, version, params}={}) {
+  get: function ({app, path, version, params, headers}={}) {
     const url = System.api.urlFromPath(app, path, version);
-    return System.requests.get(url, params);
+    return System.requests.get(url, params, headers);
   },
 
-  post: function ({app, path, version, data, params}={}) {
+  post: function ({app, path, version, data, params, headers}={}) {
     const url = System.api.urlFromPath(app, path, version);
-    return System.requests.post(url, data, params);
+    return System.requests.post(url, data, params, headers);
   },
 
-  put: function ({app, path, version, data, params}={}) {
+  put: function ({app, path, version, data, params, headers}={}) {
     const url = System.api.urlFromPath(app, path, version);
-    return System.requests.put(url, data, params);
+    return System.requests.put(url, data, params, headers);
   },
 
-  delete: function({app, path, version, params}) {
+  delete: function({app, path, version, params, headers}) {
     const url = System.api.urlFromPath(app, path, version);
-    return System.requests.delete(url, params);
+    return System.requests.delete(url, params, headers);
   },
 
-  options: function({app, path, version, params}) {
+  options: function({app, path, version, params, headers}) {
     const url = System.api.urlFromPath(app, path, version);
-    return System.requests.options(url, params);
+    return System.requests.options(url, params, headers);
   }
 
 };

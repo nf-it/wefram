@@ -135,7 +135,7 @@ class SettingsCatalog(UserDict):
         )).with_for_update()
         stored_catalog: StoredSettings = (await ds.db.execute(stmt)).scalars().first()
         if stored_catalog is None:
-            stored_catalog = StoredSettings.create(
+            stored_catalog = await StoredSettings.create(
                 entity=self.entity_name,
                 user_id=self.user_id
             )

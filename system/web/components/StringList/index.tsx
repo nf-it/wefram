@@ -43,7 +43,7 @@ export class StringList extends React.Component<StringListProps, S> {
         <Box>
           <List style={{
             border: '1px solid #ccc',
-            borderRadius: '4px',
+            borderRadius: '.5vmax',
             margin: '8px 0',
             padding: '0 4px'
           }}>

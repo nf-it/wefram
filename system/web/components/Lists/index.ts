@@ -1,10 +1,15 @@
 import './index.css'
 export { ProvList } from './ProvList'
+export { ProvTable } from './ProvTable'
 export type {
-  ListSorting,
-  ListSortingOptions,
-  ListSelection,
-  ListProvidedFilters,
+  ListsSorting,
+  ListsSortingOptions,
+  ListsSelection,
+  ListsProvidedFilters,
   ProvListProps,
-  ProvListOverridedParams
+  ProvListOverridedParams,
+  ProvTableColumn,
+  ProvTableColumns,
+  ProvTableProps,
+  ProvTableOverridedParams
 } from './types'

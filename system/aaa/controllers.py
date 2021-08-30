@@ -2,7 +2,8 @@ from typing import *
 import datetime
 import time
 from .. import api, logger
-from ..requests import Request, NoContentResponse, JSONResponse, HTTPException, context
+from ..requests import Request, NoContentResponse, JSONResponse, HTTPException
+from ..runtime import context
 from ..exceptions import AuthenticationFailed
 from .wrappers import requires_authenticated
 from .routines import authenticate, create_session, refresh_with_token

@@ -6,7 +6,7 @@ from starlette.middleware import Middleware
 from starlette.routing import Route, Mount
 from starlette.staticfiles import StaticFiles
 import config
-from . import apps, ds, requests, settings, l10n, middlewares, logger, ui
+from . import apps, ds, requests, settings, l10n, middlewares, logger, ui, runtime
 
 
 # Ensures the environment
@@ -29,7 +29,7 @@ def get_default_path() -> str:
     """ Returns an URL where to redirect the client browser when accesing
     the root (/) path.
     """
-    is_authenticated: bool = requests.context['is_authenticated']
+    is_authenticated: bool = runtime.context['is_authenticated']
     default_url: str = \
         (
             getattr(config, 'DEFAULT_URL_AUTHENTICATED', None)

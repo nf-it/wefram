@@ -6,11 +6,11 @@ import json
 # -- The project configuration
 # --
 
-APP_TITLE: str = "wefram"
+APP_TITLE: str = "WEFRAM workspace"
 
-DEFAULT_URL: str = '/welcome'
+DEFAULT_URL: str = '/workspace'
 DEFAULT_URL_AUTHENTICATED: str = '/workspace'
-DEFAULT_URL_GUEST: str = '/welcome'
+DEFAULT_URL_GUEST: str = '/workspace'
 
 AUTH: dict = {
     'salt': 'VJJhAVDcf8#gfq8dfguycyaergvC$Tvqwrc8к76свQWuaiudyv$e1!3gh#',
@@ -23,11 +23,15 @@ AUTH: dict = {
     'login_screen_url': '/workspace/login'
 }
 DATABASE: dict = {
-    'user': os.environ.get('DB_USER', 'beldba'),
-    'pass': os.environ.get('DB_PASS', 'bel'),
+    'user': os.environ.get('DB_USER', 'projectdba'),
+    'pass': os.environ.get('DB_PASS', 'YOUR PASSWORD HERE'),
     'host': os.environ.get('DB_HOST', '127.0.0.1'),
     'port': int(os.environ.get('DB_PORT', 5432) or 5432),
-    'name': os.environ.get('DB_NAME', 'bel')
+    'name': os.environ.get('DB_NAME', 'project'),
+    'migrate': {
+        'drop_missing_tables': True,
+        'drop_missing_columns': True
+    }
 }
 REDIS: dict = {
     'uri': os.environ.get('REDIS_URI', 'redis://localhost/0'),

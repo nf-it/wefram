@@ -4,6 +4,7 @@ import {
   Divider,
   Grid,
   Box,
+  EntityForm,
   Paper,
   PasswordSetter,
   FormControlLabel,
@@ -12,7 +13,6 @@ import {
   TextField,
   Typography
 } from 'system/components'
-import {EntityForm, EntityData} from '../EntityForm'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'
@@ -29,7 +29,7 @@ export type UserCardProps = {
 }
 
 type UserCardState = {
-  data: EntityData
+  data: any
 }
 
 export class UserCard extends React.Component<UserCardProps, UserCardState> {

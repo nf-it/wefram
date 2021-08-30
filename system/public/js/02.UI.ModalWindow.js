@@ -6,9 +6,9 @@ UI.ModalWindow = class ModalWindow {
     windowMaxWidth
   }={}) {
     this.windowMaxWidth = windowMaxWidth ?? (System.isSmartphoneScreen() ? '99vw' : '70vw');
-    this.windowMinWidth = windowMinWidth ?? '10vw';
+    this.windowMinWidth = windowMinWidth ?? (System.isSmartphoneScreen() ? '95vw' : '15vw');
     this.root = UI.newDiv(
-      ['SystemModalWindow-root', ...(Common.arrayFrom(classList) ?? [])],
+      ['SystemModalWindow-root', ...(Common.arrayFrom(classList ?? []) ?? [])],
       {style: {display: 'none'}}
     );
     this.window = UI.newDiv(['SystemModalWindow-window']).appendTo(this.root);

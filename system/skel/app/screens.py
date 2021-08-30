@@ -25,7 +25,7 @@ from system.ui import sitemap, screens, media_res_url
 
 # @screens.register(sitemap=True)
 # class MyVeryScreen(screens.Screen):
-#     component = 'screens/MyVeryScreen'
+#     component = 'frontend/containers/MyVeryScreen'
 #     route = '/veryscreen'
 #     caption = lazy_gettext("The my very screen")
 #     requires = 'some_permission'
@@ -36,7 +36,7 @@ from system.ui import sitemap, screens, media_res_url
 
 # @screens.register
 # class MyFreeScreen(screens.Screen):
-#     component = 'screens/MyFreeScreen'
+#     component = 'frontend/containers/MyFreeScreen'
 #     route = '/some-free-screen'
 #     caption = lazy_gettext("The my free-driven screen")
 #     requires = 'some_permission'
@@ -46,7 +46,7 @@ from system.ui import sitemap, screens, media_res_url
 
 # @screens.register(sitemap='my_sitemap_folder')
 # class MyChildScreen(screens.Screen):
-#     component = 'screens/MyChildScreen'
+#     component = 'frontend/containers/MyChildScreen'
 #     route = '/the-child-screen'
 #     caption = lazy_gettext("The my sub-screen")
 #     requires = 'some_permission'

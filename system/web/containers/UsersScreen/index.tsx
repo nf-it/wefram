@@ -3,11 +3,11 @@ import {
   Box,
   Dialog,
   DialogContent,
+  EntityList,
   Typography
 } from 'system/components'
 import {LockOpen, Lock} from '@material-ui/icons'
 import {ScreenProps} from 'system/types'
-import {EntityList} from '../EntityList'
 import {gettext} from 'system/l10n'
 import {runtime} from 'system/runtime'
 import {api} from 'system/api'

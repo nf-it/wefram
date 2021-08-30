@@ -1,16 +1,19 @@
+import datetime
 from typing import *
 import inspect
+import decimal
 from sqlalchemy import inspect as sa_inspect
-from sqlalchemy import Column, Table, select, delete, and_, or_
-from sqlalchemy.sql import Select, Delete
+from sqlalchemy import Column, Table, select, delete, and_, or_, cast, text
+from sqlalchemy.sql import Select, Delete, sqltypes
 from sqlalchemy.sql.elements import ClauseList, BinaryExpression, UnaryExpression
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm.decl_api import DeclarativeMeta
 from sqlalchemy.orm.collections import InstrumentedDict, InstrumentedList, InstrumentedSet
 from sqlalchemy.orm.relationships import RelationshipProperty
+from sqlalchemy.orm.attributes import InstrumentedAttribute
 import config
-from ...requests import context
+from ...runtime import context
 from ...tools import CSTYLE, get_calling_app, snakecase_to_lowercamelcase
 from ... import logger
 from .types import Attribute
@@ -126,9 +129,38 @@ class _Model:
             else default_value
 
     @classmethod
-    def create(cls, *args, **kwargs):
-        o: object = cls(*args, **kwargs)
-        context['db'].add(o)
+    async def create(cls, *args, **kwargs):
+        db = context['db']
+        columns: Dict[str, Column] = cls.Meta.get_columns_dict()
+        initial_values = {
+            k: v for k, v in cls.Meta.casted_values(**kwargs).items()
+            if k in columns
+        }
+
+        o: object = cls(*args, **initial_values)
+        db.add(o)
+
+        relationship_attrs: List[str] = []
+        for k in kwargs:
+            c: Optional[Column] = getattr(cls, k, None)
+            if c is None:
+                continue
+            if not hasattr(c, 'prop'):
+                continue
+            if isinstance(c.prop, RelationshipProperty) and getattr(c.prop, 'uselist', False):
+                relationship_attrs.append(k)
+
+        # If there are related values depending on the instance's key - have to flush
+        # the instance and only after that apply those values.
+        if len([
+            k for k in relationship_attrs
+            if k in kwargs and isinstance(kwargs[k], (list, tuple, set)) and len(kwargs[k])
+        ]):
+            await db.flush()
+            await db.refresh(o)
+            for k in relationship_attrs:
+                await (getattr(o, '_update_relationship_value'))(k, kwargs[k])
+
         return o
 
     async def delete(self) -> None:
@@ -146,7 +178,7 @@ class _Model:
         if filter_args:
             statement = statement.filter(and_(*filter_args))
         if kw:
-            statement = statement.filter_by(**kw)
+            statement = statement.filter_by(**cls.Meta.casted_values(**kw))
 
         if limit:
             statement = statement.limit(limit)
@@ -154,7 +186,7 @@ class _Model:
             statement = statement.offset(limit)
 
         if order is None and cls.Meta.order:
-            order = cls.Meta.order
+            order = cls.Meta.get_defalt_order()
         if order is not None and not isinstance(order, (list, tuple)):
             order = [order, ]
         if order is not None:
@@ -165,39 +197,45 @@ class _Model:
 
         return (await session.execute(statement)).scalars()
 
+    async def _update_relationship_value(self, key: str, value: Any):
+        c: Optional[Column] = getattr(self.__class__, key, None)
+        if not isinstance(value, (list, tuple)):
+            raise ValueError("relationship attribute must be set using array value!")
+        session: AsyncSession = context['db']
+        value: [list, tuple]
+        related_table: Table = c.prop.target
+        related_tablename: str = related_table.name
+        related_model: Optional[ClassVar[Model]] = get_model(related_tablename)
+        related_meta: Meta = related_model.Meta
+        new_ks = [
+            related_meta.pk_as_dict(e) if not isinstance(e, Model) else e.__pk__
+            for e in value
+        ]
+        relattr = getattr(self, key)
+        for o in list(relattr):
+            _pk = o.__pk__
+            if _pk in new_ks:
+                new_ks.remove(_pk)
+                continue
+            relattr.remove(o)
+        if new_ks:
+            left_objs_clause: List[ClauseList] = or_(*[
+                related_meta.primary_key_clause(_pk) for _pk in new_ks
+            ])
+            left_objs = (await session.execute(select(related_model).where(left_objs_clause))).scalars().all()
+            [relattr.append(o) for o in left_objs]
+
     async def _update(self, key: str, value: Any) -> None:
         c: Optional[Column] = getattr(self.__class__, key, None)
         if c is None:
-            setattr(self, key, value)
+            # setattr(self, key, value)
             return
         if isinstance(c.prop, RelationshipProperty) and getattr(c.prop, 'uselist', False):
-            if not isinstance(value, (list, tuple)):
-                raise ValueError("relationship attribute must be set using array value!")
-            session: AsyncSession = context['db']
-            value: [list, tuple]
-            related_table: Table = c.prop.target
-            related_tablename: str = related_table.name
-            related_model: Optional[ClassVar[Model]] = get_model(related_tablename)
-            related_meta: Meta = related_model.Meta
-            new_ks = [
-                related_meta.pk_as_dict(e) if not isinstance(e, Model) else e.__pk__
-                for e in value
-            ]
-            relattr = getattr(self, key)
-            for o in list(relattr):
-                _pk = o.__pk__
-                if _pk in new_ks:
-                    new_ks.remove(_pk)
-                    continue
-                relattr.remove(o)
-            if new_ks:
-                left_objs_clause: List[ClauseList] = or_(*[
-                    related_meta.primary_key_clause(_pk) for _pk in new_ks
-                ])
-                left_objs = (await session.execute(select(related_model).where(left_objs_clause))).scalars().all()
-                [relattr.register(o) for o in left_objs]
+            await self._update_relationship_value(key, value)
             return
-        setattr(self, key, value)
+        if not isinstance(c, InstrumentedAttribute):
+            return
+        setattr(self, key, self.Meta.casted_value(c, value))
 
     async def update(self, **values) -> None:
         [await self._update(k, v) for k, v in values.items()]
@@ -213,7 +251,10 @@ class _Model:
 
     @classmethod
     async def get(cls, *pk, update: bool = False):
-        return await cls.first(*[(c == pk[i]) for i, c in enumerate(cls.Meta.primary_key)], update=update)
+        return await cls.first(*[
+            (c == cls.Meta.casted_value(c, pk[i]))
+            for i, c in enumerate(cls.Meta.primary_key)
+        ], update=update)
 
     @classmethod
     async def delete_where(cls, *filter_args, **filter_kwargs):
@@ -228,7 +269,11 @@ class _Model:
                 where.append(c == filter_kwargs[k])
         if len(where) > 1:
             where: ClauseList = and_(*where)
-        if where:
+        elif len(where) == 1:
+            where: Any = where[0]
+        else:
+            where: Any = None
+        if where is not None:
             statement = statement.where(where)
         return await session.execute(statement)
 
@@ -256,7 +301,7 @@ class _Model:
         clause: List[Union[BinaryExpression, UnaryExpression]] = []
         for name in findable_attrs:
             c: Column = getattr(cls, name)
-            clause.append(c.like(f"%{term}%"))
+            clause.append(cast(c, sqltypes.VARCHAR).like(f"%{term}%"))
         return or_(*clause)
 
     @classmethod
@@ -267,7 +312,7 @@ class _Model:
         clause: List[Union[BinaryExpression, UnaryExpression]] = []
         for name in findable_attrs:
             c: Column = getattr(cls, name)
-            clause.append(c.ilike(f"%{term}%"))
+            clause.append(cast(c, sqltypes.VARCHAR).ilike(f"%{term}%"))
         return or_(*clause)
 
     @property
@@ -431,8 +476,6 @@ class Meta:
         self.model: ClassVar = cls
         self.module_name: str = module_name
         self.app_name: str = app_name
-        self.attributes: List[Attribute] = list()
-        self.columns: List[Column] = list()
         self.caption: str = self.model.__name__
         self.caption_plural: str = self.model.__name__
         self.caption_key: Optional[str] = None
@@ -466,8 +509,60 @@ class Meta:
 
     def primary_key_clause(self, pk_values: Dict[str, Any]) -> ClauseList:
         return and_(*[
-            getattr(self.model, k) == v for k, v in pk_values.items()
+            getattr(self.model, k) == self.casted_value(getattr(self.model, k), v)
+            for k, v in pk_values.items()
         ])
+
+    def column_type(self, attr: Union[str, Column]) -> Any:
+        c: InstrumentedAttribute = getattr(self.model, attr, None) \
+            if isinstance(attr, str) \
+            else attr
+        if c is None:
+            return None
+        try:
+            t = c.type
+        except AttributeError:
+            return None
+        if not hasattr(t, 'impl'):
+            return t
+        if t.impl is not None:
+            return t.impl
+        return t
+
+    def casted_values(self, **values):
+        return {
+            k: self.casted_value(getattr(self.model, k, None), v) for k, v in values.items()
+        }
+
+    def casted_value(self, c: Optional[Column], v: Any) -> Any:
+        if c is None:
+            return v
+        c_type = self.column_type(c)
+        if c_type is None:
+            return v
+        if isinstance(c_type, sqltypes.String):
+            return str(v)
+        elif isinstance(c_type, sqltypes.Integer):
+            return int(v)
+        elif isinstance(c_type, sqltypes.Float):
+            return float(v)
+        elif isinstance(c_type, sqltypes.Numeric):
+            return decimal.Decimal(v)
+        elif isinstance(c_type, sqltypes.DateTime):
+            if isinstance(v, str):
+                return datetime.datetime.fromisoformat(v)
+            return v
+        elif isinstance(c_type, sqltypes.Date):
+            if isinstance(v, str):
+                return datetime.date.fromisoformat(v)
+            return v
+        elif isinstance(c_type, sqltypes.Time):
+            if isinstance(v, str):
+                return datetime.time.fromisoformat(v)
+            return v
+        elif isinstance(c_type, sqltypes.LargeBinary):
+            return bytes(v.encode())
+        return v
 
     def pk_as_dict(self, value: [str, int, dict]) -> Dict[str, Any]:
         if isinstance(value, dict):
@@ -481,9 +576,36 @@ class Meta:
     def get_defalt_order(self) -> Optional[List[Union[str, Column]]]:
         if not self.order:
             return None
-        return list(self.order) \
+        order: List[Union[str, Column]] = list(self.order) \
             if isinstance(self.order, (list, tuple, set)) \
             else [self.order, ]
+        res: List[Union[str, Column]] = []
+        for c in order:
+            if isinstance(c, str):
+                if c.startswith('-'):
+                    c: str = c[1:]
+                    column: Optional[Any] = getattr(self.model, c, None)
+                    if column is None or not isinstance(column, (Column, InstrumentedAttribute)):
+                        res.append(text(' '.join([c, 'desc'])))
+                    else:
+                        res.append(column.desc())
+                else:
+                    if c.startswith('+'):
+                        c = c[1:]
+                    column: Optional[Any] = getattr(self.model, c, None)
+                    if column is None or not isinstance(column, (Column, InstrumentedAttribute)):
+                        res.append(c)
+                    else:
+                        res.append(column)
+            else:
+                res.append(c)
+        return res
+
+    def get_columns_list(self) -> List[Column]:
+        return list(sa_inspect(self.model).columns)
+
+    def get_columns_dict(self) -> Dict[str, Column]:
+        return {c.name: c for c in sa_inspect(self.model).columns}
 
 
 def get_model(name: str, app_name: str = None) -> [None, ClassVar[Model]]:

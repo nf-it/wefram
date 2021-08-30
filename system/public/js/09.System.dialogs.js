@@ -5,19 +5,15 @@ System.Dialog = class Dialog extends UI.ModalLayoutWindow {
     controls,
     contents,
     windowMaxWidth,
-    windowMinWidth
+    windowMinWidth,
+    classList
   }={}) {
-    super({windowMinWidth, windowMaxWidth});
+    classList = ['SystemDialog', ...(Common.arrayFrom(classList))];
+    super({windowMinWidth, windowMaxWidth, classList});
 
     this.title = title ?? null;
     this.contents = contents ?? null;
     this.controls = controls ?? null;
-
-    // this.header = UI.newDiv(['SystemDialog-header']);
-    // this.footer = UI.newDiv(['SystemDialog-footer']);
-    // this.content = UI.newDiv(['SystemDialog-content']);
-
-    // this.window.append(this.header, this.content, this.footer);
   }
 
   show() {
@@ -41,7 +37,7 @@ System.dialogs = {
     dialog.contents = UI.newParagraph(message);
     dialog.controls = [
       UI.newButton(
-        captionOK ?? System.gettext("Close"),
+        captionOK ?? System.gettext("OK"),
         null,
         callbackOK ?? (() => dialog.close())
       )
@@ -74,6 +70,41 @@ System.dialogs = {
     ];
     dialog.show();
     return dialog;
+  },
+
+  showChoice: (choices, {
+    message,
+    title,
+    cancelButton,
+    cancelCaption,
+    cancelCallback
+  }={}) => {
+    const classList = ['SystemDialogChoice']
+    const dialog = new System.Dialog({
+      classList,
+      title
+    });
+    dialog.contents = [];
+    if (message) {
+      dialog.contents.push(UI.newParagraph(message));
+    }
+    choices.forEach(choice => {
+      const [caption, callback] = choice;
+      dialog.contents.push(UI.newButton(caption, null, () => {
+        dialog.close();
+        callback();
+      }));
+    });
+    if (cancelButton || cancelCallback) {
+      dialog.controls = [
+        UI.newButton(
+          cancelCaption ?? System.gettext('Cancel'),
+          null,
+          cancelCallback ?? (() => dialog.close())
+        )
+      ];
+    }
+    dialog.show();
   }
 
 };

@@ -13,6 +13,13 @@ const translationsPath: RequestApiPath = {
 }
 
 
+export type Locale = {
+  name: string
+  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6
+  firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7
+  dateFormat: string
+}
+
 export type TLocaleDictDomain = Record<string, string>
 export type TLocaleDicrionary = Record<string, TLocaleDictDomain>
 let translations: TLocaleDicrionary = { }

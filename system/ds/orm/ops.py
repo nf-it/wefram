@@ -2,7 +2,7 @@ import typing
 from sqlalchemy import delete, and_
 from sqlalchemy.sql.base import Executable
 from sqlalchemy.engine.result import ChunkedIteratorResult
-from ...requests import context
+from ...runtime import context
 from .model import Model
 
 

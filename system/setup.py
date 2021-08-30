@@ -1,6 +1,6 @@
 import types
 from typing import *
-from .tools import app_has_module, load_app_module, term_input, term_choice
+from .tools import app_has_module, load_app_module
 from . import aaa, ds, apps, logger
 
 
@@ -11,15 +11,20 @@ __all__ = [
 ]
 
 
-async def rebuild_db() -> None:
+async def dropall() -> None:
     logger.warning("Flushing REDIS database!")
     redis_cn: ds.redis.RedisConnection = await ds.redis.create_connection()
     await redis_cn.flushall()
 
-    logger.warning("Dropping and creating tables in the PostgreSQL database!")
-    async with ds.orm.engine.engine.begin() as cn:
-        await cn.run_sync(ds.Model.metadata.drop_all)
-        await cn.run_sync(ds.Model.metadata.create_all)
+    logger.warning("Dropping tables in the PostgreSQL database!")
+    await ds.migrate.dropall()
+
+
+async def rebuild_db() -> None:
+    await dropall()
+
+    logger.warning("Creating tables in the PostgreSQL database!")
+    await ds.migrate.migrate()
 
     logger.warning("Uploading initial AAA data to the PostgreSQL database")
     async with ds.orm.engine.Session() as cn:
@@ -73,8 +78,6 @@ async def upload_initial_data() -> None:
 
 
 async def build_demo() -> None:
-    from . import demo
-
-    await rebuild_db()
-    await demo.build()
+    from manage import demos
+    await demos.build()
 

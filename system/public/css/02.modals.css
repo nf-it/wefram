@@ -42,6 +42,10 @@
     transition: background-color .2s ease, color .2s ease;
 }
 
+.SystemModalWindow-root .SystemModalWindow-window button:active {
+    transform: scale(.95);
+}
+
 .SystemModalWindow-root .SystemModalWindow-window button.accent {
     background-color: #600;
     color: #f6b15c;
@@ -112,5 +116,29 @@
 @media screen and (min-width: 575px) {
     .SystemModalWindow-root {
         padding: 2vmax;
+    }
+}
+
+
+@media screen and (max-width: 750px) {
+    .SystemModalWindow-root .SystemModalWindow-window {
+        max-height: 99vh;
+    }
+
+    .SystemModalWindow-root > div.SystemModalWindow-window > div.header {
+        font-size: 1.3em;
+    }
+
+    .SystemModalWindow-root .SystemModalWindow-window button {
+        border: 2px solid #0002;
+        padding:  1.05vmax 1.5vmax;
+        font-size: 1.2em;
+        color: #520;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+    .SystemModalWindow-root > div.SystemModalWindow-window > div.paper p {
+        font-size: 1.1em;
     }
 }
