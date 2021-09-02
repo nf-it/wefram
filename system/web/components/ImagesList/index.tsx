@@ -5,19 +5,21 @@ import {
   Checkbox,
   Grid,
   IconButton,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
   LoadingCircular,
   Tooltip,
   Typography
 } from 'system/components'
-import FileIcon from '@material-ui/icons/AttachFile'
 import RemoveIcon from '@material-ui/icons/DeleteOutline'
 import UploadIcon from '@material-ui/icons/Publish'
 import OpenIcon from '@material-ui/icons/OpenInNew'
 import EditIcon from '@material-ui/icons/Edit'
-import RearrangeIcon from '@material-ui/icons/SwapVert'
-import ArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
-import ArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import {StoredFiles, StoredFile} from 'system/types'
+import RearrangeIcon from '@material-ui/icons/SwapHoriz'
+import ArrowBeforeIcon from '@material-ui/icons/ArrowBack'
+import ArrowAfterIcon from '@material-ui/icons/ArrowForward'
+import {StoredImages, StoredImage} from 'system/types'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
 import {gettext} from 'system/l10n'
@@ -27,18 +29,23 @@ import {storage} from 'system/storage'
 import {dialog} from 'system/dialog'
 
 
-export type FilesListProps = {
+export type ImagesListProps = {
   apiEntity: string
   storageEntity: string
+  columns?: number
+  rowHeight?: 'auto' | number
+  gap?: number
   permitDelete?: boolean
   permitEdit?: boolean
   permitUpload?: boolean
   permitRearrange?: boolean
+  showCaption?: boolean
+  showControls?: boolean
 }
 
-type FilesListState = {
+type ImagesListState = {
   loading: boolean,
-  items: StoredFiles,
+  items: StoredImages,
   selected: number[]
   rearrangeMode: boolean
 }
@@ -47,8 +54,8 @@ type FilesListState = {
 type RearrangeSortData = Record<number, number>
 
 
-export class FilesList extends React.Component<FilesListProps, FilesListState> {
-  state: FilesListState = {
+export class ImagesList extends React.Component<ImagesListProps, ImagesListState> {
+  state: ImagesListState = {
     loading: true,
     items: [],
     selected: [],
@@ -57,7 +64,7 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
 
   replacingId: number | null
 
-  constructor(props: FilesListProps, state: FilesListState) {
+  constructor(props: ImagesListProps, state: ImagesListState) {
     super(props, state);
     this.replacingId = null
   }
@@ -71,8 +78,8 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
   public load = (): void => {
     const path: RequestApiPath = this.requestPath()
     api.get(path).then(res => {
-      const items: StoredFiles = res.data
-      const ids: number[] = items.map((el: StoredFile) => el.id)
+      const items: StoredImages = res.data
+      const ids: number[] = items.map((el: StoredImage) => el.id)
       const selected: number[] = this.state.selected.filter((el: number) => ids.includes(el))
       this.setState({
         items,
@@ -279,108 +286,146 @@ export class FilesList extends React.Component<FilesListProps, FilesListState> {
             )}
           </Box>
         )}
-        {this.state.items.map((item: StoredFile, index: number, arr: any) => (
-          <Box pt={1} pb={1} borderTop={'1px solid #bbb'}>
-            <Grid container alignItems={'center'}>
-              {(this.props.permitDelete ?? true) && (
-                <Grid item xs={1}>
-                  <Checkbox
-                    checked={this.state.selected.includes(item.id)}
-                    onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
-                      let selected: number[] = this.state.selected
-                      if (ev.target.checked) {
-                        selected.push(item.id)
-                      } else {
-                        selected = selected.filter((el: number) => el != item.id)
-                      }
-                      this.setState({selected})
-                    }}
+
+        <ImageList cols={this.props.columns} gap={this.props.gap} rowHeight={this.props.rowHeight}>
+          {this.state.items.map((item: StoredImage, index: number, arr: any[]) => {
+            const showControls: boolean = this.state.rearrangeMode || (this.props.showControls !== undefined
+                ? Boolean(this.props.showControls)
+                : (this.props.permitDelete ?? true)
+            )
+
+            return (
+              <ImageListItem>
+                <img src={storage.urlFor(this.props.storageEntity, item.file)} alt={item.caption} />
+                {(this.props.showCaption ?? true) && item.caption !== undefined && item.caption !== '' && (
+                  <ImageListItemBar
+                    position={'bottom'}
+                    title={item.caption}
                   />
-                </Grid>
-              )}
-              {!(this.props.permitDelete ?? true) && (
-                <Grid item xs={1}><FileIcon /></Grid>
-              )}
-              <Grid item xs={9}>
-                <Typography>{item.caption || item.file}</Typography>
-              </Grid>
-              <Grid item xs={2}>
-                <Box display={'flex'} alignItems={'center'} justifyContent={'flex-end'}>
-                  {(!this.state.rearrangeMode) && (
-                    <Tooltip title={gettext("Open file", 'system.ui')}>
-                      <IconButton
-                        onClick={() => {
-                          window.open(storage.urlFor(this.props.storageEntity, item.file), '_blank')
-                        }}
-                      ><OpenIcon /></IconButton>
-                    </Tooltip>
-                  )}
-                  {(this.props.permitEdit ?? true) && (!this.state.rearrangeMode) && (
-                    <React.Fragment>
-                    <Tooltip title={gettext("Rename file", 'system.ui')}>
-                      <IconButton
-                        onClick={() => {
-                          dialog.prompt({
-                            defaultValue: item.caption,
-                            okCallback: (value: string) => {
-                              dialog.hide()
-                              if (!value)
-                                return
-                              this.renameFile(item.id, value)
-                            }
-                          })
-                        }}
-                      ><EditIcon /></IconButton>
-                    </Tooltip>
-                    <Tooltip title={gettext("Replace file", 'system.ui')}>
-                      <IconButton
-                        onClick={() => {
-                          this.selectFileForUpload(item.id)
-                        }}
-                      ><UploadIcon /></IconButton>
-                    </Tooltip>
-                    </React.Fragment>
-                  )}
-                  {(this.props.permitDelete ?? true) && (!this.state.rearrangeMode) && (
-                    <Tooltip title={gettext("Delete file", 'system.ui')}>
-                      <IconButton
-                        onClick={() => {
-                          this.removeFile(item.id)
-                        }}
-                      ><RemoveIcon /></IconButton>
-                    </Tooltip>
-                  )}
-                  {(this.state.rearrangeMode) && ([
-                    <Tooltip key={`file-rearr-dn-${item.id}`} title={gettext("Move down", 'system.ui')}>
-                      <IconButton
-                        onClick={() => {
-                          const items = this.state.items
-                          items.splice(index, 1)
-                          items.splice(index + 1, 0, item)
-                          items.forEach((el: StoredFile, inx: number) => el.sort = inx)
-                          this.setState({items})
-                        }}
-                        disabled={index === arr.length - 1}
-                      ><ArrowDownIcon /></IconButton>
-                    </Tooltip>,
-                    <Tooltip key={`file-rearr-up-${item.id}`} title={gettext("Move up", 'system.ui')}>
-                      <IconButton
-                        onClick={() => {
-                          const items = this.state.items
-                          items.splice(index, 1)
-                          items.splice(index - 1, 0, item)
-                          items.forEach((el: StoredFile, inx: number) => el.sort = inx)
-                          this.setState({items})
-                        }}
-                        disabled={index === 0}
-                      ><ArrowUpIcon /></IconButton>
-                    </Tooltip>
-                  ])}
-                </Box>
-              </Grid>
-            </Grid>
-          </Box>
-        ))}
+                )}
+                {showControls && (
+                  <ImageListItemBar
+                    position={'top'}
+                    actionIcon={
+                      <React.Fragment>
+                        {(!this.state.rearrangeMode) && (
+                          <Tooltip title={gettext("Open file", 'system.ui')}>
+                            <IconButton
+                              style={{
+                                color: '#eee'
+                              }}
+                              onClick={() => {
+                                window.open(storage.urlFor(this.props.storageEntity, item.file), '_blank')
+                              }}
+                            ><OpenIcon /></IconButton>
+                          </Tooltip>
+                        )}
+
+                        {(this.props.permitEdit ?? true) && (!this.state.rearrangeMode) && (
+                          <React.Fragment>
+                          <Tooltip title={gettext("Rename file", 'system.ui')}>
+                            <IconButton
+                              style={{
+                                color: '#eee'
+                              }}
+                              onClick={() => {
+                                dialog.prompt({
+                                  defaultValue: item.caption,
+                                  okCallback: (value: string) => {
+                                    dialog.hide()
+                                    if (!value)
+                                      return
+                                    this.renameFile(item.id, value)
+                                  }
+                                })
+                              }}
+                            ><EditIcon /></IconButton>
+                          </Tooltip>
+                          <Tooltip title={gettext("Replace file", 'system.ui')}>
+                            <IconButton
+                              style={{
+                                color: '#eee'
+                              }}
+                              onClick={() => {
+                                this.selectFileForUpload(item.id)
+                              }}
+                            ><UploadIcon /></IconButton>
+                          </Tooltip>
+                          </React.Fragment>
+                        )}
+
+                        {(this.props.permitDelete ?? true) && (!this.state.rearrangeMode) && (
+                          <Tooltip title={gettext("Delete file", 'system.ui')}>
+                            <IconButton
+                              style={{
+                                color: '#eee'
+                              }}
+                              onClick={() => {
+                                this.removeFile(item.id)
+                              }}
+                            ><RemoveIcon /></IconButton>
+                          </Tooltip>
+                        )}
+
+                        {(this.state.rearrangeMode) && ([
+                          <Tooltip key={`file-rearr-up-${item.id}`} title={gettext("Move before", 'system.ui')}>
+                            <IconButton
+                              style={{
+                                color: index === 0 ? '#eee3' : '#eee'
+                              }}
+                              onClick={() => {
+                                const items = this.state.items
+                                items.splice(index, 1)
+                                items.splice(index - 1, 0, item)
+                                items.forEach((el: StoredImage, inx: number) => el.sort = inx)
+                                this.setState({items})
+                              }}
+                              disabled={index === 0}
+                            ><ArrowBeforeIcon /></IconButton>
+                          </Tooltip>,
+                          <Tooltip key={`file-rearr-dn-${item.id}`} title={gettext("Move after", 'system.ui')}>
+                            <IconButton
+                              style={{
+                                color: index === arr.length - 1 ? '#eee3' : '#eee'
+                              }}
+                              onClick={() => {
+                                const items = this.state.items
+                                items.splice(index, 1)
+                                items.splice(index + 1, 0, item)
+                                items.forEach((el: StoredImage, inx: number) => el.sort = inx)
+                                this.setState({items})
+                              }}
+                              disabled={index === arr.length - 1}
+                            ><ArrowAfterIcon /></IconButton>
+                          </Tooltip>
+                        ])}
+
+                        {(!this.state.rearrangeMode) && (this.props.permitDelete ?? true) && (
+                          <Checkbox
+                            style={{
+                              color: '#fa0'
+                            }}
+                            checked={this.state.selected.includes(item.id)}
+                            onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+                              let selected: number[] = this.state.selected
+                              if (ev.target.checked) {
+                                selected.push(item.id)
+                              } else {
+                                selected = selected.filter((el: number) => el != item.id)
+                              }
+                              this.setState({selected})
+                            }}
+                          />
+                        )}
+                      </React.Fragment>
+                    }
+                  />
+                )}
+              </ImageListItem>
+            )
+          })}
+        </ImageList>
+
       </Box>
     )
   }

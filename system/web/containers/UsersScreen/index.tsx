@@ -29,10 +29,6 @@ export default class UsersScreen extends React.Component<ScreenProps> {
 
   private listRef = createRef<EntityList>()
 
-  restoreScrollPosition = (): void => {
-    runtime.restoreScrollPosition()
-  }
-
   render() {
     return (
       <React.Fragment>
@@ -78,7 +74,6 @@ export default class UsersScreen extends React.Component<ScreenProps> {
           textTotalCount
           urlStateOffset
           urlStateSearch
-          onFetchDone={this.restoreScrollPosition}
           onItemClick={(item: any) => {
             this.setState({entityKey: item.id})
           }}

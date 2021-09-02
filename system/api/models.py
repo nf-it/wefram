@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from .. import ds
 from ..ds import db, clause_eq_for_c, Model
 from ..requests import HTTPException
+from ..l10n import gettext
 from ..tools import camelcase_to_snakecase
 from .entities import EntityAPI
 
@@ -22,7 +23,7 @@ class ModelAPI(EntityAPI):
 
     model: ClassVar[Model] = None
     set_name: Optional[str] = None
-    return_created_id: bool = True
+    return_created_id: bool = False
 
     @classmethod
     def path_base(cls) -> str:
@@ -135,6 +136,9 @@ class ModelAPI(EntityAPI):
         # Returning the single entity object
         return await self.item_as_json(instance, deep=deep)
 
+    async def sort(self, **kwargs) -> Optional[Union[Any, List[Any]]]:
+        return kwargs.get('order', None)
+
     async def read_many(
             self,
             keys: List[Union[str, int]],
@@ -150,6 +154,28 @@ class ModelAPI(EntityAPI):
         keys: List[str, int]
         keys_clause: Optional[Union[ClauseList, ClauseElement]] = \
             self.key_clause if not keys else self.keys_clause(list(keys))
+
+        order = await self.sort(
+            keys=keys,
+            count=count,
+            offset=offset,
+            limit=limit,
+            order=order,
+            deep=deep,
+            like=like,
+            ilike=ilike,
+            filters=filters
+        )
+        if order:
+            order: List[str] = list(order) if isinstance(order, (list, tuple, set)) else [order, ]
+            order = [camelcase_to_snakecase(k) for k in order]
+            order_clause: List[str] = [
+                (getattr(self.model, k) if not k.startswith('-') else getattr(self.model, k[1:]).desc())
+                for k in order
+            ]
+        else:
+            order_clause: List[Union[str, Column, None]] = self.model.Meta.get_defalt_order()
+
         filter_clause: Optional[ClauseList] = await self.filter_read(
             like=like,
             ilike=ilike,
@@ -175,17 +201,8 @@ class ModelAPI(EntityAPI):
         if limit:
             stmt = stmt.limit(limit)
 
-        if order:
-            order: List[str] = list(order) if isinstance(order, (list, tuple, set)) else [order, ]
-            order = [camelcase_to_snakecase(k) for k in order]
-            _order: List[str] = [
-                (getattr(self.model, k) if not k.startswith('-') else getattr(self.model, k[1:]).desc())
-                for k in order
-            ]
-            stmt = stmt.order_by(*_order)
-        else:
-            _order: List[Union[str, Column]] = self.model.Meta.get_defalt_order()
-            stmt = stmt.order_by(*_order)
+        if order_clause:
+            stmt = stmt.order_by(*order_clause)
 
         instances: List[Model] = await db.all(stmt)
         items: List[dict] = await self.items_as_json(instances, deep=deep)
@@ -273,7 +290,11 @@ class ModelAPI(EntityAPI):
             await db.flush()
 
         except IntegrityError as e:
-            raise HTTPException(400, str(e.orig))
+            print(e.orig)
+            raise HTTPException(
+                409,
+                gettext("Changes cannot be made because they conflict with other existing properties or objects.", 'system.messages')
+            )
 
     async def delete(self, *keys: [str, int]) -> None:
         keys: List[str, int]
@@ -281,8 +302,12 @@ class ModelAPI(EntityAPI):
         stmt = sql.delete(self.model.__table__).where(clause)
         await db.execute(stmt)
 
-        # try:
-        #     await db.commit()  # TODO! Is there COMMIT really needed?, or just FLUSH is enought for that
-        #
-        # except IntegrityError as e:
-        #     raise HTTPException(400, str(e.orig))
+        try:
+            await db.flush()
+
+        except IntegrityError as e:
+            print(e.orig)
+            raise HTTPException(
+                409,
+                gettext("The object cannot be deleted because others depend on it.", 'system.messages')
+            )

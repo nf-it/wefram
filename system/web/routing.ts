@@ -36,6 +36,7 @@ type Routing = {
   mediaAssetAbspath(filename: string): string
   screenPath(screenName: string): string | null
   gotoDefault(): void
+  gotoOnLogoff(): void
   gotoScreen(screenName: string): void
   gotoPath(path: string): void
   back(): void
@@ -68,6 +69,10 @@ export const routing: Routing = {
 
   gotoDefault() {
     routingHistory.push(routing.defaultPath())
+  },
+
+  gotoOnLogoff() {
+    routingHistory.push(runtime.onLogoffUrl)
   },
 
   gotoScreen(screenName) {

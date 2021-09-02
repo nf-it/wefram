@@ -42,7 +42,7 @@ export const defaultTheme: IWorkspaceTheme = {
     MuiAppBar: {
       root: {
         margin: '.5vmax',
-        borderRadius: '.25vmax'
+        borderRadius: '.5vmax'
       }
     },
 
@@ -106,6 +106,12 @@ export const defaultTheme: IWorkspaceTheme = {
       },
       h6: {
         fontSize: '.9rem'
+      }
+    },
+
+    MuiImageListItem: {
+      item: {
+        borderRadius: '2px'
       }
     }
   }

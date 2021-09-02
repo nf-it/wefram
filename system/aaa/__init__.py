@@ -5,6 +5,6 @@ from .tools import *
 from .const import *
 from .middleware import UnauthenticatedUser, SessionUser
 from .types import *
-from . import controllers, middleware, api, permissions
+from . import controllers, middleware, api, permissions, auth
 
 __version__ = 1

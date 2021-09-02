@@ -14,6 +14,8 @@
     "Do not show any more": "Больше не показывать",
     "Card": "Карточка",
     "Cards": "Карточки",
+    "Order": "Порядок",
+    "Name": "Название",
     "Type here to find...": "Введите текст для поиска...",
     "Add": "Добавить",
     "Back": "Назад",
@@ -28,6 +30,10 @@
   "*": {
     "System": "Система",
     "Workspace": "Рабочий стол"
+  },
+  "messages": {
+    "The object cannot be deleted because others depend on it.": "Невозможно удалить объект, так как от него зависят другие.",
+    "Changes cannot be made because they conflict with other existing properties or objects.": "Невозможно внести изменения, так как они конфликтуют с другими свойствами существующими или объектами."
   },
   "datetime-months": {
     "Jan": "Янв",
@@ -103,7 +109,9 @@
     "Rearrange files": "Переставить файлы",
     "Rearrange files and click the button again": "Переставьте файлы и кликните эту кнопку снова",
     "Move up": "Переместить вверх",
-    "Move down": "Переместить вниз"
+    "Move down": "Переместить вниз",
+    "Move before": "Переместить до",
+    "Move after": "Переместить после"
   },
   "ui-common": {
     "An error occurred while fetching data from the server": "Возникла ошибка при загрузке данных с сервера"
@@ -152,7 +160,15 @@
     "Permit to remember an username at log on screen": "Разрешить запоминать логин во время входа",
     "Max session idle time (minutes)": "Макс. время простоя сессии (минут)",
     "Security token lifetime (minutes)": "Время жизни токена безопасности (минут)",
-    "click here to sign in": "нажмите здесь, чтобы войти в систему"
+    "click here to sign in": "нажмите здесь, чтобы войти в систему",
+    "Active Directory": "Active Directory",
+    "New domain": "Новый домен",
+    "The domain is in use": "Домен используется",
+    "Domain": "Домен",
+    "Server": "Сервер",
+    "Domains list": "Список доменов",
+    "Active Directory server (optional)": "Сервер Active Directory (опционально)",
+    "Administrate Active Directory domains": "Управление доменами Active Directory"
   },
   "aaa-form": {
     "New user": "Новый пользователь",

@@ -43,6 +43,7 @@ async def instantiate(request: Request) -> JSONResponse:
             'loginScreenUrl': config.AUTH.get('login_screen_url', '/login'),
             'defaultAuthenticatedUrl': getattr(config, 'DEFAULT_URL_AUTHENTICATED', None) or str(config.DEFAULT_URL),
             'defaultGuestUrl': getattr(config, 'DEFAULT_URL_GUEST', None) or str(config.DEFAULT_URL),
+            'onLogoffUrl': getattr(config, 'ON_LOGOFF_URL', getattr(config, 'DEFAULT_URL_GUEST', None) or str(config.DEFAULT_URL))
         },
         'aaaConfiguration': {
             'rememberUsername': bool(aaa_settings[aaa.SETTINGS_REMEMBER_USERNAME])

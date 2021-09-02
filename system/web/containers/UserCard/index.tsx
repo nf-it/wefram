@@ -10,8 +10,7 @@ import {
   FormControlLabel,
   StaticText,
   Switch,
-  TextField,
-  Typography
+  TextField
 } from 'system/components'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'

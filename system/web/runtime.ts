@@ -19,6 +19,7 @@ class _Runtime {
   loginScreenUrl: string = '/login'
   defaultGuestUrl: string = '/'
   defaultAuthenticatedUrl: string = '/'
+  onLogoffUrl: string = '/'
   rememberUsername: boolean = false
   sitemap: ISitemap = []
   screens: IScreenRuntimes = {}
@@ -87,6 +88,7 @@ export const appInterface: AppInterface = {
       runtime.loginScreenUrl = res.data.urlConfiguration.loginScreenUrl
       runtime.defaultAuthenticatedUrl = res.data.urlConfiguration.defaultAuthenticatedUrl
       runtime.defaultGuestUrl = res.data.urlConfiguration.defaultGuestUrl
+      runtime.onLogoffUrl = res.data.urlConfiguration.onLogoffUrl
       runtime.rememberUsername = res.data.aaaConfiguration.rememberUsername
       aaa.initializeFromStruct(res.data.session)
       localization.initializeFromStruct(res.data.localization)

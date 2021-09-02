@@ -49,14 +49,47 @@ export const screensSchema: ScreensSchema = {
     ],
     "params": {}
   },
-  "reserve_ReservationsList": {
-    "name": "reserve_ReservationsList",
-    "rootComponentPath": "project/reserve/frontend/containers/ReservationsList",
-    "rootComponent": React.lazy(() => import('project/reserve/frontend/containers/ReservationsList')),
+  "system_AuthBackendAdDomainsScreen": {
+    "name": "system_AuthBackendAdDomainsScreen",
+    "rootComponentPath": "system/containers/AuthBackendAdDomains",
+    "rootComponent": React.lazy(() => import('system/containers/AuthBackendAdDomains')),
+    "requires": [
+      "system.adminUsersRoles"
+    ],
+    "routeUrl": "/settings/system/auth/domains",
+    "routeParams": [],
+    "params": {}
+  },
+  "reserve_ReservationsActuals": {
+    "name": "reserve_ReservationsActuals",
+    "rootComponentPath": "project/reserve/frontend/containers/ReservationsActuals",
+    "rootComponent": React.lazy(() => import('project/reserve/frontend/containers/ReservationsActuals')),
     "requires": [
       "reserve.reservations_actuals"
     ],
-    "routeUrl": "/reserve/reservationslist",
+    "routeUrl": "/reserve/reservationsactuals",
+    "routeParams": [],
+    "params": {}
+  },
+  "reserve_ReservationsHistory": {
+    "name": "reserve_ReservationsHistory",
+    "rootComponentPath": "project/reserve/frontend/containers/ReservationsHistory",
+    "rootComponent": React.lazy(() => import('project/reserve/frontend/containers/ReservationsHistory')),
+    "requires": [
+      "reserve.reservations_history"
+    ],
+    "routeUrl": "/reserve/reservationshistory",
+    "routeParams": [],
+    "params": {}
+  },
+  "services_ReservationsActuals": {
+    "name": "services_ReservationsActuals",
+    "rootComponentPath": "project/services/frontend/containers/Services",
+    "rootComponent": React.lazy(() => import('project/services/frontend/containers/Services')),
+    "requires": [
+      "services.manage"
+    ],
+    "routeUrl": "/services/reservationsactuals",
     "routeParams": [],
     "params": {}
   },
@@ -73,6 +106,24 @@ export const screensSchema: ScreensSchema = {
       "apiEntity": "club.Document",
       "storageEntity": "club.documents",
       "updatable": null
+    }
+  },
+  "club_Gallery": {
+    "name": "club_Gallery",
+    "rootComponentPath": "system/containers/StoredImagesScreen",
+    "rootComponent": React.lazy(() => import('system/containers/StoredImagesScreen')),
+    "requires": [
+      "club.gallery"
+    ],
+    "routeUrl": "/club/gallery",
+    "routeParams": [],
+    "params": {
+      "apiEntity": "club.Picture",
+      "storageEntity": "club.gallery",
+      "updatable": null,
+      "columns": 4,
+      "rowHeight": 240,
+      "gap": 4
     }
   },
   "system_Workspace": {

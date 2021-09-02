@@ -35,3 +35,12 @@ export type IAuthorizationSession = IAuthorization | null
 
 export const localStorageAuthorizationKeyname: string = 'system.aaa.authorization'
 export const localStorageUsernameRememberKeyname: string = "system.aaa.rememberedUsername"
+
+export type ActiveDirectoryDomainModel = {
+  id: string | null
+  enabled: boolean
+  sort: number
+  name: string
+  domain: string
+  server: string
+}

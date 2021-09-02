@@ -134,6 +134,25 @@ class FilesScreen(BaseScreen):
         return schema
 
 
+class ImagesScreen(FilesScreen):
+    component: str = '/system/containers/StoredImagesScreen'
+    icon: str = ui.media_res_url('icons/images.svg')
+    columns: Optional[int] = None
+    row_height: Optional[int] = None
+    gap: Optional[int] = None
+
+    @classmethod
+    def schema_json(cls) -> IScreen:
+        schema: IScreen = super().schema_json()
+        if cls.columns:
+            schema['params']['columns'] = int(cls.columns)
+        if cls.row_height:
+            schema['params']['rowHeight'] = int(cls.row_height)
+        if cls.gap:
+            schema['params']['gap'] = int(cls.gap)
+        return schema
+
+
 registered: Dict[str, Any] = {}
 
 

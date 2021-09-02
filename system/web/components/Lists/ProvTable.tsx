@@ -1,7 +1,9 @@
 import React, {createRef} from 'react'
-import {Link} from 'react-router-dom'
 import {
-  Box, Checkbox,
+  Box,
+  Checkbox,
+  Collapse,
+  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -13,6 +15,8 @@ import {
   ListsSelection,
   ProvTableProps,
 } from './types'
+import ExpandIcon from '@material-ui/icons/KeyboardArrowDown'
+import CollapseIcon from '@material-ui/icons/KeyboardArrowUp'
 import {ProvListsHoc} from './ProvListsHoc'
 import {FieldItemData} from './FieldItemData'
 import {CommonKey} from 'system/types'
@@ -23,12 +27,14 @@ type ProvTableState = {
   loading: boolean
   items?: any[]
   selected?: ListsSelection
+  expanded: Record<number, boolean>
 }
 
 
 export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
   state: ProvTableState = {
     loading: true,
+    expanded: {}
   }
 
   private hocRef = createRef<ProvListsHoc>()
@@ -75,6 +81,13 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
     const
       items = (this.props.items ?? this.state.items) || []
 
+    const
+      colSpan: number = this.props.columns.length + 1
+        + (this.props.selectable ? 1 : 0)
+        + (this.props.renderRowPrefix ? 1 : 0)
+        + (this.props.renderRowSuffix ? 1 : 0)
+
+
     return (
       <ProvListsHoc
         ref={this.hocRef}
@@ -90,6 +103,9 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
       >
         <Table>
           <TableHead>
+            {this.props.renderRowExpandedChild && (
+              <TableCell padding={'checkbox'} />
+            )}
             {this.props.selectable && (
               <TableCell align={'center'} padding={'checkbox'}>
                 <Tooltip title={gettext("Invert selection", 'system.ui')}>
@@ -102,15 +118,18 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
                 </Tooltip>
               </TableCell>
             )}
+            {this.props.renderRowPrefix && (
+              <TableCell padding={'checkbox'} />
+            )}
             {this.props.columns.filter(column => !column.hidden).map(column => (
               <TableCell size={column.size} align={column.fieldAlign}>{column.caption}</TableCell>
             ))}
-            {this.props.itemControlsRender && (
+            {this.props.renderRowSuffix && (
               <TableCell padding={'checkbox'} />
             )}
           </TableHead>
           <TableBody>
-            {items.map(item => {
+            {items.map((item, index, arr) => {
               const
                 keyRe = /{key}/g,
                 key: number | string | undefined = this.props.itemKeyField
@@ -129,47 +148,86 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
                   ? selection.includes(key)
                   : false
 
+              const
+                expandedChild: JSX.Element | JSX.Element[] | null = this.props.renderRowExpandedChild
+                  ? this.props.renderRowExpandedChild(item)
+                  : null
+
               return (
-                <TableRow
-                  hover={this.props.onItemClick !== undefined}
-                  style={{
-                    cursor: this.props.onItemClick ? 'pointer' : 'default'
-                  }}
-                  selected={selected}
-                  onClick={() => this.props.onItemClick && this.props.onItemClick(item)}
-                >
-                  {this.props.selectable === true && (
-                    <TableCell align={'center'} padding={'checkbox'}>
-                      {key !== undefined && (
-                        <Checkbox
-                          checked={selected}
-                          tabIndex={-1}
-                          disableRipple
-                          inputProps={{'aria-labelledby': String(key)}}
-                          value={key}
-                          onClick={e => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            this.handleCheckboxChange(key)
-                          }}
-                        />
-                      )}
-                    </TableCell>
-                  )}
-                  {this.props.columns.filter(column => !column.hidden).map(column => (
-                    <TableCell
-                      size={column.size}
-                      align={column.fieldAlign}
-                    >
-                      <FieldItemData item={item} field={column} disableCaption/>
-                    </TableCell>
-                  ))}
-                  {this.props.itemControlsRender && (
-                    <TableCell padding={'checkbox'}>
-                      {this.props.itemControlsRender(item)}
-                    </TableCell>
-                  )}
-                </TableRow>
+                [
+                  <TableRow
+                    key={`row-${index}`}
+                    hover={this.props.onItemClick !== undefined}
+                    style={{
+                      cursor: this.props.onItemClick ? 'pointer' : 'default'
+                    }}
+                    selected={selected}
+                    onClick={() => this.props.onItemClick && this.props.onItemClick(item)}
+                  >
+                    {this.props.renderRowExpandedChild && (
+                      <TableCell align={'center'} padding={'checkbox'}>
+                        {expandedChild !== null && (
+                          <IconButton onClick={() => {
+                            const expanded = this.state.expanded
+                            expanded[index] = !Boolean(expanded[index])
+                            this.setState({expanded})
+                          }}>
+                            {this.state.expanded[index] ? (
+                              <CollapseIcon />
+                            ) : (
+                              <ExpandIcon />
+                            )}
+                          </IconButton>
+                        )}
+                      </TableCell>
+                    )}
+                    {this.props.selectable === true && (
+                      <TableCell align={'center'} padding={'checkbox'}>
+                        {key !== undefined && (
+                          <Checkbox
+                            checked={selected}
+                            tabIndex={-1}
+                            disableRipple
+                            inputProps={{'aria-labelledby': String(key)}}
+                            value={key}
+                            onClick={e => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              this.handleCheckboxChange(key)
+                            }}
+                          />
+                        )}
+                      </TableCell>
+                    )}
+                    {this.props.renderRowPrefix && (
+                      <TableCell padding={'checkbox'}>
+                        {this.props.renderRowPrefix(item, index, arr)}
+                      </TableCell>
+                    )}
+                    {this.props.columns.filter(column => !column.hidden).map(column => (
+                      <TableCell
+                        size={column.size}
+                        align={column.fieldAlign}
+                      >
+                        <FieldItemData item={item} field={column} disableCaption/>
+                      </TableCell>
+                    ))}
+                    {this.props.renderRowSuffix && (
+                      <TableCell padding={'checkbox'}>
+                        {this.props.renderRowSuffix(item, index, arr)}
+                      </TableCell>
+                    )}
+                  </TableRow>,
+                  (this.props.renderRowExpandedChild ? (
+                    <TableRow key={`row-${index}-collapse`}>
+                      <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={colSpan}>
+                        <Collapse in={Boolean(this.state.expanded[index])} timeout="auto" unmountOnExit>
+                          {expandedChild}
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  ) : null)
+                ]
               )
             })}
           </TableBody>

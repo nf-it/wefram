@@ -23,7 +23,7 @@ export default class Workspace extends React.Component<ScreenProps> {
     notifications.showSuccess(gettext('You have been logged out. Good bye.', 'system.aaa-messages'))
     appInterface.initializeApp().then(() => {
       runtime.busy = false
-      routing.gotoDefault()
+      routing.gotoOnLogoff()
     })
   }
 

@@ -44,7 +44,7 @@ export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppba
     notifications.showSuccess(gettext('You have been logged out. Good bye.', 'system.aaa-messages'))
     appInterface.initializeApp().then(() => {
       runtime.busy = false
-      routing.gotoDefault()
+      routing.gotoOnLogoff()
     })
   }
 

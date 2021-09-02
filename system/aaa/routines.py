@@ -1,3 +1,4 @@
+import importlib
 from typing import *
 import jwt
 import datetime
@@ -22,19 +23,29 @@ __all__ = [
 ]
 
 
+_auth_backends_configured: List[str] = config.AUTH.get('backends', None)
+if not _auth_backends_configured:
+    _auth_backends_configured = ['plain']
+if not isinstance(_auth_backends_configured, (list, tuple)):
+    raise RuntimeError("config.AUTH.backends must be List[str] of authentication backend names")
+
+backends = {
+    _n: importlib.import_module('.'.join(['system', 'aaa', 'auth', _n])) for _n in _auth_backends_configured
+}
+
+
 async def authenticate(username: str, password: str) -> User:
-    user: Optional[User] = await User.first(login=username)
-    if user is None:
-        raise AuthenticationFailed
-    if not test_password(password, user.secret):
-        raise AuthenticationFailed
-    user.last_login = datetime.datetime.now()
-    return user
+    user: Optional[User]
+    for backend in backends.values():
+        user = await backend.authenticate(username, password)
+        if user is not None:
+            user.last_login = datetime.datetime.now()
+            return user
+    raise AuthenticationFailed
 
 
 async def _create_jwt_token(user: User, session: Session) -> Tuple[str, datetime.datetime]:
     settings_: settings.SettingsCatalog = await settings.get('aaa')
-    print(settings_)
     jwt_expire: int = settings_[SETTINGS_JWT_EXPIRE] * 60
     logger.debug(f"settings[SETTINGS_JWT_EXPIRE] = {jwt_expire}", "_create_jwt_token")
 

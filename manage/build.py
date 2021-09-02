@@ -108,7 +108,3 @@ async def execute() -> None:
     from .make import make
     await make()
 
-
-async def first_install_prepare() -> None:
-    await resolve_deps(False)
-

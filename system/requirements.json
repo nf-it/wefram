@@ -24,7 +24,8 @@
     "jinja2": "latest",
     "csscompressor": "latest",
     "jsmin": "latest",
-    "rfc6266": "latest"
+    "rfc6266": "latest",
+    "ldap3": "latest"
   },
   "yarn": {
     "@babel/core": "latest",

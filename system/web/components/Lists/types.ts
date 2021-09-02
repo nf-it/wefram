@@ -149,10 +149,12 @@ export type ProvTableProps = {
   forbidUrlStateUpdate?: boolean
   itemAction?: (item: any) => void
   itemComponent?: React.ElementType
-  itemControlsRender?: (item: any) => JSX.Element | null
   itemKeyField?: string
   itemsRoute?: string | ItemRouteCallback
   pagination?: boolean
+  renderRowPrefix?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
+  renderRowSuffix?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
+  renderRowExpandedChild?: (item: any) => JSX.Element | JSX.Element[] | null
   requestPath: RequestApiPath | string
   selectable?: boolean
   separated?: boolean

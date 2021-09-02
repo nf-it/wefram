@@ -90,11 +90,6 @@ async def _main():
         appman.create_app()
         exit(0)
 
-    elif command == 'first-install-prepare':
-        from manage import build
-        await build.first_install_prepare()
-        exit(0)
-
     elif command == 'upgrade-system':
         from manage import platman
         if not yesno(

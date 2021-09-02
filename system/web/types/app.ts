@@ -12,6 +12,7 @@ export interface IUrlConfiguration {
   loginScreenUrl: string
   defaultAuthenticatedUrl: string
   defaultGuestUrl: string
+  onLogoffUrl: string
 }
 
 export interface IAppInstantiation {

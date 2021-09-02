@@ -120,6 +120,7 @@ class EntityAPI(EntityCRUD, ABC):
 
     app: str
     paths: dict
+    name: Optional[str] = None
     version: Optional[Union[str, int]] = None
     path_prefix: Optional[str] = None
     path_suffix: Optional[str] = None
@@ -302,7 +303,7 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
             return await _endpoint(cls, *args, **kwargs)
         return _f
 
-    name: str = cls.__name__
+    name: str = cls.name or cls.__name__
 
     cls: EntityAPI
     app_name: str = get_calling_app()

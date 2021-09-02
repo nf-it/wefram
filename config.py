@@ -11,6 +11,7 @@ APP_TITLE: str = "WEFRAM workspace"
 DEFAULT_URL: str = '/workspace'
 DEFAULT_URL_AUTHENTICATED: str = '/workspace'
 DEFAULT_URL_GUEST: str = '/workspace'
+ON_LOGOFF_URL: str = '/workspace'
 
 AUTH: dict = {
     'salt': 'VJJhAVDcf8#gfq8dfguycyaergvC$Tvqwrc8к76свQWuaiudyv$e1!3gh#',
@@ -20,7 +21,11 @@ AUTH: dict = {
     'session_timeout_mins': 720,
     'failed_auth_delay': 2,
     'remember_username': True,
-    'login_screen_url': '/workspace/login'
+    'login_screen_url': '/workspace/login',
+    'backends': [
+        'plain',
+        'ad'
+    ]
 }
 DATABASE: dict = {
     'user': os.environ.get('DB_USER', 'projectdba'),

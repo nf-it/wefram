@@ -11,6 +11,15 @@ from .const import (
 )
 
 
+__all__ = [
+    'SettingsScreen',
+    'UsersScreen',
+    'RolesScreen',
+    'RoleScreen',
+    'AuthBackendAdDomainsScreen'
+]
+
+
 SITEMAP_FOLDER_ID: str = APP_ID
 
 sitemap.append(
@@ -61,3 +70,14 @@ class RoleScreen(screens.Screen):
     parent = APP_ID
     route = '/roles/{key}'
     requires = aaa.PERMISSION_ADMINUSERSROLES
+
+
+@screens.register(sitemap=SITEMAP_FOLDER_ID)
+class AuthBackendAdDomainsScreen(screens.Screen):
+    component = 'containers/AuthBackendAdDomains'
+    route = '/auth/domains'
+    parent = APP_ID
+    icon = aaa.ICON_DOMAINS
+    requires = aaa.PERMISSION_ADMINUSERSROLES
+    caption = aaa.MSG_DOMAINS
+    order = 40
