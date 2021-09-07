@@ -30,6 +30,12 @@ async def _auth_response(
     }
 
 
+@api.handle_get('/check', API_VER)
+@requires_authenticated()
+async def check(request: Request) -> NoContentResponse:
+    return NoContentResponse()
+
+
 @api.handle_post('/authenticate', API_VER)
 async def login(request: Request) -> JSONResponse:
     payload: Dict[str, str] = request.scope['payload']

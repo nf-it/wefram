@@ -17,6 +17,8 @@ __all__ = [
     'authenticate',
     'create_session',
     'refresh_with_token',
+    'drop_user_sessions_by_id',
+    'drop_user_sessions_by_login',
     'permitted',
     'get_current_user',
     'is_logged_in'
@@ -114,6 +116,18 @@ async def refresh_with_token(refresh_token: str) -> Tuple[User, str, str, dateti
     refresh_token = await _create_refresh_token(user, session)
 
     return user, jwt_token, refresh_token, exp
+
+
+async def drop_user_sessions_by_id(user_id: str) -> None:
+    sessions: List[Session] = await Session.fetch_all_for_user(user_id)
+    [await sess.drop() for sess in sessions]
+
+
+async def drop_user_sessions_by_login(login: str) -> None:
+    user: Optional[User] = await User.first(login=login)
+    if user is None:
+        raise KeyError(f"aaa.User with login={login} does not exists")
+    await drop_user_sessions_by_id(user.id)
 
 
 def permitted(scopes: [str, Sequence[str]]) -> bool:

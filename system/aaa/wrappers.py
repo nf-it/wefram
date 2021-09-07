@@ -50,12 +50,17 @@ def requires(
     redirect: str = None
 ) -> Callable:
     def _ensure_app_prefix(scope: str) -> str:
+        if scope in ['authenticated', 'guest']:
+            return scope
         if '.' in scope:
             return scope
         return f"{app}.{scope}"
 
     app: str = get_calling_app()
-    scopes_list = [_ensure_app_prefix(scope) for scope in ([scopes] if isinstance(scopes, str) else list(scopes))]
+    scopes_list = [
+        _ensure_app_prefix(scope)
+        for scope in ([scopes] if isinstance(scopes, str) else list(scopes))
+    ]
 
     def decorator(func: Callable) -> Callable:
         # This part of code is just a copy from upper 'requires' Starlette default

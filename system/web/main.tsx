@@ -12,14 +12,18 @@ import {LayoutSitemap} from './containers/LayoutSitemap'
 import {LayoutScreens} from './containers/LayoutScreens'
 import {NotificationBar} from './containers/GlobalNotify'
 import {GlobalDialog} from './containers/GlobalDialog'
+import {Relogin} from 'system/containers/Relogin'
 import {LoadingGlobal} from './components'
 import {Loading} from './components'
 import {runtime, appInterface} from './runtime'
 import {notifications} from './notification'
 import {routingHistory} from 'system/routing'
 import {LoginScreen} from 'system/containers/LoginScreen'
+import {aaa} from 'system/aaa'
 import './main.css'
 
+
+const AAA_CHECK_INTERVAL: number = 30000
 
 type AppProps = { }
 type AppState = {
@@ -33,6 +37,10 @@ class Main extends React.Component<AppProps, AppState> {
 
   componentDidMount() {
     this.initializeApp()
+
+    setInterval(() => {
+      aaa.check().finally()
+    }, AAA_CHECK_INTERVAL)
   }
 
   initializeApp = () => {
@@ -69,6 +77,7 @@ class Main extends React.Component<AppProps, AppState> {
             </Box>
           </Switch>
         </Router>
+        <Relogin open={runtime.reloginFormOpen} />
         <LoadingGlobal runtime={runtime} />
         <GlobalDialog store={dialogsStore} />
         <NotificationBar store={notificationsStore} />

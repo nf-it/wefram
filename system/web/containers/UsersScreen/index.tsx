@@ -54,9 +54,7 @@ export default class UsersScreen extends React.Component<ScreenProps> {
               {
                 fieldType: 'boolean',
                 fieldName: 'locked',
-                hidden: (value: boolean): boolean => {
-                  return !value
-                },
+                hidden: (value: any): boolean => (!Boolean(value)),
                 valueVisualize: (value: any): any => {
                   return value
                     ? (<Lock fontSize={'small'} style={{color: 'red'}}/>)

@@ -1,7 +1,9 @@
 import React from 'react'
 import {
   Box,
+  Button,
   Checkbox,
+  DividerRuler,
   FormControl,
   MenuItem,
   Select,
@@ -26,6 +28,7 @@ import {api} from 'system/api'
 import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
 import {IApiEntityResponse, IApiEntityComplexResponse} from 'system/types'
+import {responses} from 'system/response'
 
 
 export type ProvHocFetchResult = {
@@ -275,7 +278,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
     api.get(props.requestPath, {
       params
     }).then(res => {
-      this.setState({loading: false})
+      this.setState({loading: false, error: null})
       props.onFetch ? props.onFetch(res.data) : this.handleFetch(res.data)
     }).catch(err => {
       this.setState({loading: false}, () => {
@@ -294,6 +297,8 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
             : `${gettext('An error occurred while fetching data from the server', 'system.ui-common')}`
         notifications.showError(msg)
       }
+      const error: string = responses.responseErrorMessage(err)
+      this.setState({error})
     })
   }
 
@@ -375,6 +380,23 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
   }
 
   render() {
+    if (this.state.error !== null)
+      return (
+        <Box mt={3} mb={3} pb={3} textAlign={'center'}>
+          <Typography variant={'body2'} style={{color: '#b30'}}>
+            {this.state.error}
+          </Typography>
+          <DividerRuler vspace={2} />
+          <Box display={'flex'} justifyContent={'center'}>
+            <Button
+              color={'primary'}
+              variant={'outlined'}
+              onClick={() => this.fetch()}
+            >{gettext("Try again", 'system.ui')}</Button>
+          </Box>
+        </Box>
+      )
+
     if (this.props.items === undefined)
       return (
         <LoadingLinear />

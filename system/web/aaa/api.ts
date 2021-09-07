@@ -16,6 +16,8 @@ export type AaaInterface = {
   getRefreshToken(): string | null
   authenticate(username: string, password: string): Promise<IAuthorizationSession>
   logout(): void
+  isLoggedIn(): boolean
+  check(): Promise<any>
 }
 
 
@@ -87,5 +89,13 @@ export const aaa: AaaInterface = {
     session.user = null
     session.permissions = []
     request.defaults.headers.common['Authorization'] = null
+  },
+
+  isLoggedIn() {
+    return session.user !== null
+  },
+
+  check() {
+    return aaaProvider.check()
   }
 }

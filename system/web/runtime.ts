@@ -30,6 +30,7 @@ class _Runtime {
     dateFormat: 'MM/dd/yyyy'
   }
   muiLocalization: Localization = {}
+  reloginFormOpen: boolean = false
 
   scrollPositions: ScrollPositions = {}
 
@@ -42,7 +43,8 @@ class _Runtime {
       defaultAuthenticatedUrl: observable,
       rememberUsername: observable,
       sitemap: observable,
-      muiLocalization: observable
+      muiLocalization: observable,
+      reloginFormOpen: observable
     })
   }
 

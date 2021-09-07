@@ -173,7 +173,7 @@ class Session:
         await session.save()
         return session
 
-    def as_json(self) -> ISession:
+    def as_json(self) -> dict:
         return {
             'user': rerekey_snakecase_to_lowercamelcase(self.user),
             'permissions': self.permissions
@@ -220,6 +220,21 @@ class Session:
     @classmethod
     def redis_key_for(cls, user_id: str, token: str) -> str:
         return ':'.join(['aaa', 'session', user_id, token])
+
+    @classmethod
+    async def get_all_sessrks_for_user(cls, user_id: str) -> List[str]:
+        rk: str = ':'.join(['aaa', 'session', user_id, '*'])
+        cn: ds.redis.RedisConnection = await ds.redis.get_connection()
+        return [k.decode('utf-8') for k in await cn.keys(rk)]
+
+    @classmethod
+    async def fetch_all_for_user(cls, user_id: str) -> List['Session']:
+        rks: List[str] = await cls.get_all_sessrks_for_user(user_id)
+        if not rks:
+            return []
+        return [
+            (await cls.fetch(user_id, rk.split(':')[-1])) for rk in rks
+        ]
 
 
 class SessionUser(BaseUser):

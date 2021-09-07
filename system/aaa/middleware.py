@@ -65,7 +65,10 @@ class ProjectAuthenticationBackend(AuthenticationBackend):
         token_hash: str
         payload: dict
 
-        schema, token_hash = authorization.split(' ', 2)
+        try:
+            schema, token_hash = authorization.split(' ', 1)
+        except ValueError:
+            return
         if token_hash == 'null':
             return
 
@@ -108,6 +111,7 @@ class ProjectAuthenticationBackend(AuthenticationBackend):
         context['session']: Session = session
 
         if 'X-Avoid-Session-Touch' not in conn.headers:
+            logger.debug(f"touching the session's last activity")
             await session.touch()
 
         return AuthCredentials(auth_scopes), auth_user

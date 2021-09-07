@@ -1,7 +1,9 @@
-import {AxiosRequestConfig} from 'axios'
+import {AxiosError, AxiosRequestConfig} from 'axios'
 import {request} from './requests'
+import {routing} from './routing'
 import {RequestApiPath, RequestPathParams} from './routing'
 import {EntityKey, TApiSubmitMethod} from './types'
+import {responses} from 'system/response'
 
 
 function _formatURL(path: RequestApiPath): string {
@@ -148,53 +150,88 @@ export const api: API = {
 
   get(path, config?) {
     const url: string = _formatURL(path)
-    return request.get(url, config)
+    return request.get(url, config).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
+    })
   },
 
   post(path, data?, config?) {
     const url: string = _formatURL(path)
-    return request.post(url, data, config)
+    return request.post(url, data, config).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
+    })
   },
 
   put(path, data?, config?) {
     const url: string = _formatURL(path)
-    return request.put(url, data, config)
+    return request.put(url, data, config).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
+    })
   },
 
   submit(method, path, data?, config?) {
     const url: string = _formatURL(path)
-    return method === 'POST' ? request.post(url, data, config) : request.put(url, data, config)
+    return method === 'POST'
+      ? request.post(url, data, config).catch((err: AxiosError) => {
+          responses.handleCathedResponse(err)  // handle error with global logics
+          throw err  // forwarding the error state futher
+        })
+      : request.put(url, data, config).catch((err: AxiosError) => {
+          responses.handleCathedResponse(err)  // handle error with global logics
+          throw err  // forwarding the error state futher
+        })
   },
 
   patch(path, data?, config?) {
     const url: string = _formatURL(path)
-    return request.patch(url, data, config)
+    return request.patch(url, data, config).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
+    })
   },
 
   delete(path, config?) {
     const url: string = _formatURL(path)
-    return request.delete(url, config)
+    return request.delete(url, config).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
+    })
   },
 
   deleteObject(path, key) {
     const url: string = api.pathWithParams(path, { key })
-    return request.delete(url)
+    return request.delete(url).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
+    })
   },
 
   deleteObjects(path, keys) {
     const url: string = _formatURL(path)
     return request.delete(url, {
       params: { keys }
+    }).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
     })
   },
 
   head(path, config?) {
     const url: string = _formatURL(path)
-    return request.head(url, config)
+    return request.head(url, config).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
+    })
   },
 
   options(path, config?) {
     const url: string = _formatURL(path)
-    return request.options(url, config)
+    return request.options(url, config).catch((err: AxiosError) => {
+      responses.handleCathedResponse(err)  // handle error with global logics
+      throw err  // forwarding the error state futher
+    })
   }
 }

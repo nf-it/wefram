@@ -1,6 +1,7 @@
 import {makeObservable, observable} from 'mobx'
 import {AxiosResponse, AxiosError} from 'axios'
 import {VariantIcon} from './components'
+import {responses} from 'system/response'
 import {gettext} from './l10n'
 
 
@@ -57,27 +58,11 @@ export const notifications: NotificationInterface = {
   },
 
   showRequestSuccess(res) {
-    const responseText: string =
-      res?.status === 204
-      ? gettext("Succeed")
-      : (res?.data || gettext("Succeed"))
-    notifications.showSuccess(responseText)
+    notifications.showSuccess(responses.responseSuccessMessage(res))
   },
 
   showRequestError(err) {
-    const serverErrorMsg: string = gettext(
-      "There is an error on the server, please try again a little later!"
-    )
-    const responseText: string =
-      err?.response?.status === 500
-      ? serverErrorMsg
-      : (err?.response?.data || serverErrorMsg)
-    const statusCode: number = err?.response?.status || 400
-    if (statusCode >= 500) {
-      notifications.showError(serverErrorMsg)
-    } else {
-      notifications.showError(responseText || gettext("Failed"))
-    }
+    notifications.showError(responses.responseErrorMessage(err))
   },
 
   showSomeServerError() {

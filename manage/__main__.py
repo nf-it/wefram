@@ -10,10 +10,11 @@ sys.path.insert(0, os.getcwd())
 
 
 async def _main():
-    parser = argparse.ArgumentParser()
+    parser: argparse.ArgumentParser = argparse.ArgumentParser()
     parser.add_argument('command', metavar='command')
+    parser.add_argument('--login')
     parser.add_argument('--pre-release', choices=['y', 'n'], default='n', required=False)
-    args = parser.parse_args()
+    args: argparse.Namespace = parser.parse_args()
 
     command = args.command
 
@@ -107,6 +108,13 @@ async def _main():
             exit(1)
         pre_release: bool = args.pre_release == 'y'
         await platman.upgrade_system(pre_release)
+        exit(0)
+
+    elif command.startswith('aaa.'):
+        from manage import aaa
+        from system import runtime
+        await runtime.within_cli(aaa.runcmd, command.split('.', 1)[1], args)
+        # await aaa.runcmd(command.split('.', 1)[1], args)
         exit(0)
 
     print(f"Unknown command: {command}")

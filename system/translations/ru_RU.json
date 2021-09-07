@@ -111,7 +111,8 @@
     "Move up": "Переместить вверх",
     "Move down": "Переместить вниз",
     "Move before": "Переместить до",
-    "Move after": "Переместить после"
+    "Move after": "Переместить после",
+    "Try again": "Повторить"
   },
   "ui-common": {
     "An error occurred while fetching data from the server": "Возникла ошибка при загрузке данных с сервера"
@@ -139,7 +140,14 @@
     "Go to next page": "Перейти к следующей странице",
     "Go to previous page": "Перейти к предыдущей странице"
   },
+  "responses": {
+    "Invalid request": "Неправильный запрос",
+    "You must be signed in": "Вы должны войти в систему",
+    "The access is denied": "Доступ закрыт"
+  },
   "aaa": {
+    "Authentication": "Аутентификация",
+    "Another user": "Другой пользователь",
     "Security": "Безопасность",
     "Administrate users & roles": "Администрирование пользователей & групп",
     "Control security settings": "Управление настройками безопасноси",
@@ -168,7 +176,8 @@
     "Server": "Сервер",
     "Domains list": "Список доменов",
     "Active Directory server (optional)": "Сервер Active Directory (опционально)",
-    "Administrate Active Directory domains": "Управление доменами Active Directory"
+    "Administrate Active Directory domains": "Управление доменами Active Directory",
+    "Your session is over. Please enter your password to continue.": "Ваша сессия закончилась. Пожалуйста введите Ваш пароль для продолжения."
   },
   "aaa-form": {
     "New user": "Новый пользователь",

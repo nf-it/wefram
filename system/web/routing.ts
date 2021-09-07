@@ -35,6 +35,7 @@ type Routing = {
   mediaAssetPath(app: string, filename: string): string
   mediaAssetAbspath(filename: string): string
   screenPath(screenName: string): string | null
+  gotoLogin(): void
   gotoDefault(): void
   gotoOnLogoff(): void
   gotoScreen(screenName: string): void
@@ -65,6 +66,10 @@ export const routing: Routing = {
     if (!(screenName in screensSchema))
       return null
     return screensSchema[screenName].routeUrl
+  },
+
+  gotoLogin() {
+    routingHistory.push(runtime.loginScreenUrl)
   },
 
   gotoDefault() {
