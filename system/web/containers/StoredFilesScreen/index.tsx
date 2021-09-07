@@ -2,7 +2,7 @@ import React from 'react'
 import {ScreenProps} from 'system/types'
 import {
   Box,
-  FilesList,
+  StoredFilesList,
   Typography
 } from 'system/components'
 import {runtime} from 'system/runtime'
@@ -26,7 +26,7 @@ export default class StoredFilesScreen extends React.Component<ScreenProps, Stor
           <Typography variant={'h4'}>{screenCaption || 'Files'}</Typography>
         </Box>
         <Box>
-          <FilesList
+          <StoredFilesList
             apiEntity={this.props.params['apiEntity']}
             storageEntity={this.props.params['storageEntity']}
           />

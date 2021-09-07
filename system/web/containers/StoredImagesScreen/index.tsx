@@ -2,7 +2,7 @@ import React from 'react'
 import {ScreenProps} from 'system/types'
 import {
   Box,
-  ImagesList,
+  StoredImagesList,
   Typography
 } from 'system/components'
 import {runtime} from 'system/runtime'
@@ -26,7 +26,7 @@ export default class StoredImagesScreen extends React.Component<ScreenProps, Sto
           <Typography variant={'h4'}>{screenCaption || 'Images'}</Typography>
         </Box>
         <Box>
-          <ImagesList
+          <StoredImagesList
             apiEntity={this.props.params['apiEntity']}
             storageEntity={this.props.params['storageEntity']}
             columns={this.props.params.columns}

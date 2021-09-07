@@ -76,8 +76,9 @@ class SectionCaption extends React.Component<SectionCaptionProps> {
           fontWeight: 400,
           textTransform: 'uppercase',
           padding: '.5vmax',
-          backgroundColor: '#dde',
-          borderRadius: '.5vmax'
+          backgroundColor: '#333',
+          borderRadius: '.5vmax',
+          color: '#fff'
         }}
       >{this.props.caption}</Typography>
     )
@@ -149,14 +150,6 @@ export default class SettingsScreen extends React.Component<ScreenProps> {
     return (
       <Box mt={2} mb={3}>
         <TitlebarControl title={gettext("Properties and settings", 'system.settings')} mb={3}>
-          {/*<Tooltip title={gettext("Reset settings to defaults", 'system.settings')}>*/}
-          {/*  <Button*/}
-          {/*    color={'secondary'}*/}
-          {/*    variant={'outlined'}*/}
-          {/*    startIcon={<DefaultsIcon/>}*/}
-          {/*    style={{marginLeft: '8px'}}*/}
-          {/*  >{gettext("Reset", 'system.settings')}</Button>*/}
-          {/*</Tooltip>*/}
           <Button
             color={'primary'}
             disabled={!Object.keys(this.state.values).length}

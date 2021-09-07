@@ -4,7 +4,10 @@ import {
   Box,
   FormControlLabel,
   Grid,
-  Slider, StoredImage, StringList,
+  MenuItem,
+  Slider,
+  StoredImage,
+  StringList,
   Switch,
   TextField,
   Typography
@@ -184,7 +187,36 @@ export class FormCommonField extends React.Component<FormCommonFieldProps, FormC
       // ------------------------------------------------
 
       case 'choice':
-        break
+        return (
+          <Grid container>
+            <Grid item xs={5} style={{alignSelf: 'center'}}>
+              <FormCommonFieldCaption caption={caption}/>
+            </Grid>
+            <Grid item xs={7}>
+              <TextField
+                select
+                value={String(value ?? '')}
+                fullWidth
+                variant={'outlined'}
+                margin={'dense'}
+                style={{
+                  marginTop: '4px',
+                  marginBottom: '4px'
+                }}
+                onChange={(ev: React.ChangeEvent<HTMLInputElement>) => {
+                  this.props.onChange(
+                    name,
+                    ev.target.value
+                  )
+                }}
+              >
+                {field.options?.map(el => (
+                  <MenuItem value={el.key}>{el.caption}</MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+          </Grid>
+        )
 
       // ------------------------------------------------
 

@@ -102,6 +102,7 @@ export class StoredImage extends React.Component<StoredImageProps, S> {
           fileId: newFileId
         }, () => {this.props.onChange !== undefined && this.props.onChange(newFileId)})
       }).catch(err => {
+        runtime.busy = false
         notifications.showRequestError(err)
       })
 
@@ -113,6 +114,7 @@ export class StoredImage extends React.Component<StoredImageProps, S> {
           fileId: newFileId
         }, () => {this.props.onChange !== undefined && this.props.onChange(newFileId)})
       }).catch(err => {
+        runtime.busy = false
         notifications.showRequestError(err)
       })
     }

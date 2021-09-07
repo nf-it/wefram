@@ -16,6 +16,7 @@ from ..tools import (
     get_calling_app,
     array_from,
     remove_from_array)
+from .mixins import EntityAPIControllerRoute
 
 
 __all__ = [
@@ -105,13 +106,6 @@ class EntityCRUD(ABC):
         raise NotImplementedError
 
 
-@dataclass
-class EntityAPIControllerRoute:
-    path: str
-    endpoint: Callable
-    methods: List[Literal['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']]
-
-
 class EntityAPI(EntityCRUD, ABC):
     """
     The API ready entity abstract class. Implements much of logics for the HTTP
@@ -130,19 +124,6 @@ class EntityAPI(EntityCRUD, ABC):
     allow_options: [bool, List[str]] = True
     allow_update: [bool, List[str]] = True
     allow_delete: [bool, List[str]] = True
-
-    @staticmethod
-    def route(path: str, methods: Optional[List[str]] = None) -> Callable:
-        def decorator(endpoint: Callable) -> EntityAPIControllerRoute:
-            request_methods = methods or ['GET']
-            if not isinstance(request_methods, (list, tuple)):
-                request_methods = [request_methods, ]
-            return EntityAPIControllerRoute(
-                path=path,
-                methods=request_methods,
-                endpoint=endpoint
-            )
-        return decorator
 
     @classmethod
     def path_base(cls) -> str:
@@ -221,7 +202,7 @@ class EntityAPI(EntityCRUD, ABC):
         offset: Optional[int] = int_or_none(args.pop('offset', None))
         limit: Optional[int] = int_or_none(args.pop('limit', None))
         order: Optional[str, List[str]] = args.pop('order', None)
-        deep: bool = str(args.pop('deep', 'false')).lower() == 'true'
+        deep: Optional[bool] = str(args.pop('deep', 'false')).lower() == 'true' if 'deep' in args else None
         like: Optional[str] = args.pop('like', None)
         ilike: Optional[str] = args.pop('ilike', None)
 
@@ -298,9 +279,9 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
     from ..aaa import wrappers
 
     def _make_instanced_endpoint(_endpoint: Callable) -> Callable:
-        async def _f(*args, **kwargs):
+        async def _f(request: Request, *args, **kwargs):
             _instance = cls()
-            return await _endpoint(cls, *args, **kwargs)
+            return await _endpoint(cls, request, *args, **kwargs)
         return _f
 
     name: str = cls.name or cls.__name__

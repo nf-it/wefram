@@ -45,7 +45,7 @@ export type ListsFieldStruct = {
   textual?: boolean
   nullText?: string | boolean
   valueVisualize?: ListsFieldValueVisualize
-  hidden?: boolean
+  hidden?: boolean | ((value: any, field?: ListsFieldStruct) => boolean)
   render?: ((value: any, item?: any) => any) | null
   getter?: ((item: any) => any) | null  // used to return a value from the every item instead of item[fieldName]
 }

@@ -2,6 +2,7 @@ import os
 import sys
 import asyncio
 import argparse
+import subprocess
 from routines import yesno
 
 
@@ -37,6 +38,10 @@ async def _main():
     elif command == 'make-statics':
         from manage import make
         make.make_statics_only()
+        exit(0)
+
+    elif command == 'fmake':
+        subprocess.run(['yarn', 'build-devel'])
         exit(0)
 
     elif command == 'setup':

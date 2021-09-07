@@ -67,7 +67,11 @@ def test_required(entity_name: str) -> bool:
     entity: entities.StorageEntity = entities.registered[entity_name]
     if not entity.requires:
         return True
-    return permitted(entity.requires)
+    requires: List[str] = list(entity.requires) if isinstance(entity.requires, (list, tuple)) else [entity.requires]
+    requires = [(
+        r if '.' in r else '.'.join([entity.app, r])
+    ) for r in requires]
+    return permitted(requires)
 
 
 def test_readable(entity_name: str) -> bool:

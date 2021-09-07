@@ -242,11 +242,13 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     return e.name || e.key || e.id || null
   }
 
-  private handleFieldValueChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | null>): void => {
+  private handleFieldValueChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | null>,
+    newValue: any
+  ): void => {
     const fieldName: string | null = this.extractFieldName(e.target)
     if (!fieldName)
       return
-
 
     const
       data: any /* EntityData */ = this.props.data,
@@ -255,6 +257,8 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
 
     if (e.type === 'null') {
       value = null
+    } else if (newValue !== undefined) {
+      value = newValue
     } else {
       if (target.tagName === 'INPUT') {
         switch ((target as HTMLInputElement).type) {

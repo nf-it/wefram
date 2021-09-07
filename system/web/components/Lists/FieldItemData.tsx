@@ -36,11 +36,16 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
 
   private makeRenderingElement = (itemValue: any, field: ListsFieldStruct): JSX.Element | null =>
   {
+    const hidden: boolean = field.hidden === undefined
+      ? false
+      : typeof field.hidden == 'boolean'
+      ? Boolean(field.hidden)
+      : field.hidden(itemValue, field)
     if (field.hidden)
       return null
 
     if (field.render)
-      return field.render(itemValue, this.props.item);
+      return field.render(itemValue, this.props.item)
 
     let value: null | string | JSX.Element
 
@@ -148,9 +153,13 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
       ? field.getter(this.props.item)
       : this.props.item[field.fieldName]
 
+    const rendered: JSX.Element | null = this.makeRenderingElement(itemValue, field)
+    if (rendered === null)
+      return null
+
     return (
       <div className={this.props.className || 'mr-3'}>
-        {this.makeRenderingElement(itemValue, field)}
+        {rendered}
       </div>
     )
   }

@@ -16,6 +16,11 @@ from ..tools import camelcase_to_snakecase
 from .entities import EntityAPI
 
 
+__all__ = [
+    'ModelAPI'
+]
+
+
 class ModelAPI(EntityAPI):
     """ The special case of the EntityAPI class, implementing the ORM model
     CRUD operations.
@@ -24,6 +29,7 @@ class ModelAPI(EntityAPI):
     model: ClassVar[Model] = None
     set_name: Optional[str] = None
     return_created_id: bool = False
+    default_deep: bool = False
 
     @classmethod
     def path_base(cls) -> str:
@@ -113,14 +119,22 @@ class ModelAPI(EntityAPI):
 
         return and_(*conditions)
 
-    async def item_as_json(self, instance: Model, deep: bool = False) -> dict:
+    async def item_as_json(self, instance: Model, deep: bool = None) -> dict:
         return {
             k: await self.decode_value(k, v)
-            for k, v in instance.as_json(set_name=self.set_name, deep=deep).items()
+            for k, v in instance.as_json(
+                set_name=self.set_name,
+                deep=(deep if isinstance(deep, bool) else self.default_deep)
+            ).items()
         }
 
-    async def items_as_json(self, instances: List[Model], deep: bool = False) -> List[dict]:
-        jsoned_items: List[dict] = [i.as_json(set_name=self.set_name, deep=deep) for i in instances]
+    async def items_as_json(self, instances: List[Model], deep: bool = None) -> List[dict]:
+        jsoned_items: List[dict] = [
+            i.as_json(
+                set_name=self.set_name,
+                deep=(deep if isinstance(deep, bool) else self.default_deep)
+            ) for i in instances
+        ]
         ready_items: List[dict] = []
         for i in jsoned_items:
             ready_items.append({
@@ -128,7 +142,7 @@ class ModelAPI(EntityAPI):
             })
         return ready_items
 
-    async def read_single(self, key: [str, int], deep: bool = False) -> Dict[str, Any]:
+    async def read_single(self, key: [str, int], deep: bool = None) -> Dict[str, Any]:
         instance: Optional[Model] = await self.model.get(key)
         # If the entity object has not been found - raise 404
         if instance is None:
@@ -146,7 +160,7 @@ class ModelAPI(EntityAPI):
             offset: Optional[int] = None,
             limit: Optional[int] = None,
             order: Optional[Union[str, List[str]]] = None,
-            deep: bool = False,
+            deep: bool = None,
             like: Optional[str] = None,
             ilike: Optional[str] = None,
             filters: Optional[Dict[str, Union[str, int, None, Sequence]]] = None
@@ -219,7 +233,7 @@ class ModelAPI(EntityAPI):
             offset: Optional[int] = None,
             limit: Optional[int] = None,
             order: Optional[Union[str, List[str]]] = None,
-            deep: bool = False,
+            deep: bool = None,
             like: Optional[str] = None,
             ilike: Optional[str] = None,
             **filters: Any
@@ -311,3 +325,4 @@ class ModelAPI(EntityAPI):
                 409,
                 gettext("The object cannot be deleted because others depend on it.", 'system.messages')
             )
+

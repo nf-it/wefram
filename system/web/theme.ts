@@ -101,6 +101,9 @@ export const defaultTheme: IWorkspaceTheme = {
     },
 
     MuiTypography: {
+      h4: {
+        fontSize: '1.85rem'
+      },
       h5: {
         fontSize: '1.1rem'
       },

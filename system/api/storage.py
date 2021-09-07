@@ -2,7 +2,8 @@ from typing import *
 import os.path
 from starlette.datastructures import UploadFile
 from .models import ModelAPI
-from ..requests import HTTPException, Request, NoContentResponse
+from .mixins import SortedModelMixin
+from ..requests import HTTPException
 from .. import ds, logger
 
 
@@ -12,7 +13,7 @@ __all__ = [
 ]
 
 
-class FilesModelAPI(ModelAPI):
+class FilesModelAPI(SortedModelMixin, ModelAPI):
     storage_entity: str = None
 
     @classmethod
@@ -66,20 +67,6 @@ class FilesModelAPI(ModelAPI):
             )
             ds.storages.remove_file(self.storage_entity, file.file_id)
         await super().delete(*keys)
-
-    @ModelAPI.route('/reorder', methods=['PUT'])
-    async def reorder(self, request: Request) -> NoContentResponse:
-        payload: dict = request.scope['payload']
-        if not isinstance(payload, dict):
-            raise HTTPException(400)
-        files: dict = {i.id: i for i in await self.model.all()}
-        for file_id, file_sort in payload.items():
-            file_id = int(file_id)
-            file_sort = int(file_sort)
-            if file_id not in files:
-                continue
-            await files[file_id].update(sort=file_sort)
-        return NoContentResponse(204)
 
 
 class ImagesModelAPI(FilesModelAPI):

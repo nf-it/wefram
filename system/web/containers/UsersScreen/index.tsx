@@ -2,14 +2,12 @@ import React, {createRef} from 'react'
 import {
   Box,
   Dialog,
-  DialogContent,
   EntityList,
   Typography
 } from 'system/components'
 import {LockOpen, Lock} from '@material-ui/icons'
 import {ScreenProps} from 'system/types'
 import {gettext} from 'system/l10n'
-import {runtime} from 'system/runtime'
 import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'
 import {UserCard} from '../UserCard'
@@ -56,6 +54,9 @@ export default class UsersScreen extends React.Component<ScreenProps> {
               {
                 fieldType: 'boolean',
                 fieldName: 'locked',
+                hidden: (value: boolean): boolean => {
+                  return !value
+                },
                 valueVisualize: (value: any): any => {
                   return value
                     ? (<Lock fontSize={'small'} style={{color: 'red'}}/>)
