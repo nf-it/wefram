@@ -23,14 +23,15 @@
     "baseUrl": "./",
     "paths": {
       "system/*": [
-        "./system/web/*"
+        "./system/frontend/*"
       ],
-      "project/*": [
+      "*": [
         "./project/*"
       ]
     }
   },
   "exclude": [
-    "system/web/templates"
+    "system/frontend/templates",
+    "system/skel"
   ]
 }

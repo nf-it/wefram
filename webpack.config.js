@@ -13,7 +13,7 @@ const coreDir = buildConfig.coreDir
 module.exports = {
   mode: process.env.NODE_ENV || 'production',
   context: __dirname,
-  entry: `./${coreDir}/web/main.tsx`,
+  entry: `./${coreDir}/frontend/main.tsx`,
   output: {
     path: path.resolve(__dirname, buildConfig.staticsDir),
     publicPath: `${buildConfig.staticsUrl}/`,
@@ -21,6 +21,13 @@ module.exports = {
     chunkFilename: '[name].[chunkhash].js'
   },
   target: 'web',
+  performance: {
+    hints: false
+  },
+  stats: {
+    chunks: false,
+    chunkModules: false
+  },
   resolve: {
     extensions: ['.js', '.ts', '.tsx'],
     mainFields: ['module', 'browser', 'main'],
@@ -28,7 +35,7 @@ module.exports = {
       new TsconfigPathsPlugin({ configFile: "./tsconfig.json" })
     ],
     alias: {
-      system: path.resolve(__dirname, coreDir, 'web'),
+      system: path.resolve(__dirname, coreDir, 'frontend'),
       project: path.resolve(__dirname, appsDir)
     }
   },
@@ -123,7 +130,7 @@ module.exports = {
         filename: 'app.[contenthash].css'
     }),
     new HtmlWebpackPlugin({
-      template: `${coreDir}/web/dist/index.html`,
+      template: `${coreDir}/frontend/dist/index.html`,
       minify: {
           minifyJS: true,
           minifyCSS: true,

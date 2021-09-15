@@ -58,7 +58,7 @@ export class FormSelect extends React.Component<FormSelectProps> {
       } else {
         optionsEnum = []
         for (let value in this.props.options) {
-          if (!this.props.options.hasOwnProperty(value))K
+          if (!this.props.options.hasOwnProperty(value))
             continue
           const caption = options[value]
           optionsEnum.push({value, caption})

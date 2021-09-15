@@ -27,7 +27,7 @@ __all__ = [
 
 _auth_backends_configured: List[str] = config.AUTH.get('backends', None)
 if not _auth_backends_configured:
-    _auth_backends_configured = ['plain']
+    _auth_backends_configured = ['local']
 if not isinstance(_auth_backends_configured, (list, tuple)):
     raise RuntimeError("config.AUTH.backends must be List[str] of authentication backend names")
 
