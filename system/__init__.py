@@ -10,6 +10,7 @@ from . import (
     api,
     aaa,
     settings,
+    mail
 )
 from .main import asgi
 from .const import *

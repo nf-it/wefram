@@ -8,6 +8,7 @@
     "OK": "OK",
     "Cancel": "Отмена",
     "Close": "Закрыть",
+    "Create": "Создать",
     "Success": "Успешно",
     "Error": "Ошибка",
     "Are you sure?": "Вы уверены?",
@@ -112,7 +113,9 @@
     "Move down": "Переместить вниз",
     "Move before": "Переместить до",
     "Move after": "Переместить после",
-    "Try again": "Повторить"
+    "Try again": "Повторить",
+    "Don't save": "Не сохранять",
+    "You have unsaved changes on your form. Are you sure you want to close it?": "У вас есть несохраненные изменения в форме. Вы уверены, что хотите закрыть её?"
   },
   "ui-common": {
     "An error occurred while fetching data from the server": "Возникла ошибка при загрузке данных с сервера"
@@ -177,7 +180,9 @@
     "Domains list": "Список доменов",
     "Active Directory server (optional)": "Сервер Active Directory (опционально)",
     "Administrate Active Directory domains": "Управление доменами Active Directory",
-    "Your session is over. Please enter your password to continue.": "Ваша сессия закончилась. Пожалуйста введите Ваш пароль для продолжения."
+    "Your session is over. Please enter your password to continue.": "Ваша сессия закончилась. Пожалуйста введите Ваш пароль для продолжения.",
+    "Set password to empty": "Установить пустой пароль",
+    "Empty password": "Пустой пароль"
   },
   "aaa-form": {
     "New user": "Новый пользователь",
@@ -221,5 +226,19 @@
     "Access properties of the project": "Доступ к настройкам проекта",
     "Settings & properties": "Настройки и свойства",
     "Properties and settings": "Настройки и свойства"
+  },
+  "mail": {
+    "Mails": "Почта",
+    "Administer mails": "Администрирование почты",
+    "Mail accounts": "Учетные записи почты",
+    "New account": "Новая учетная запись",
+    "Port": "Порт",
+    "Server for mail sending (SMTP)": "Сервер для отправки почты (SMTP)",
+    "Server for mail receiving (IMAP/POP3)": "Сервер для получения почты (IMAP/POP3)",
+    "Use IMAP protocol": "Использовать протокол IMAP",
+    "Use TLS encryption": "Использовать шифрование TLS",
+    "Username": "Имя пользователя",
+    "Password": "Пароль",
+    "Password confirmation": "Подтверждение пароля"
   }
 }

@@ -1,4 +1,6 @@
 const System = {
+  features: [],
+
   isMobileDevice: () => {
     let check = false;
     (function (userAgent) {
@@ -42,6 +44,16 @@ const System = {
       domLoadingBackdrop.remove();
       domLoadingBackdrop.classList.remove('open');
     }
+  },
+
+  registerFeature: (name) => {
+    if (name in System.features)
+      return;
+    System.features.push(name);
+  },
+
+  hasFeature: (name) => {
+    return System.features.includes(name)
   }
   
 };

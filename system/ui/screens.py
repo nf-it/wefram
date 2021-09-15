@@ -236,7 +236,7 @@ def register(
             app_module_path: List[str] = app_module.split('.')
             path_prefix: str = app_module_path[0] \
                 if app_module_path[0] != config.APPSDIR \
-                else os.path.join(*app_module_path[:2])
+                else os.path.join(*app_module_path[1:2])
             if _epath:
                 if _epath.startswith('/'):
                     return _epath[1:]

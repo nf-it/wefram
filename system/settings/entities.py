@@ -82,7 +82,7 @@ registered: Dict[str, SettingsEntity] = dict()
 
 
 def register(
-        properties: Dict[str, PropBase],
+        properties: Union[Dict[str, PropBase], List[Tuple[str, PropBase]]],
         defaults: Optional[Dict[str, Any]] = None,
         name: Optional[str] = None,
         caption: Optional[Union[str, L10nStr]] = None,
@@ -96,6 +96,25 @@ def register(
     logger.debug(
         f"declared settings entity {CSTYLE['green']}{entity_name}{CSTYLE['clear']}"
     )
+    if isinstance(properties, (list, tuple)):
+        _properties = {}
+        for ix, p in enumerate(properties):
+            if len(p) != 2:
+                raise ValueError(
+                    "system.settings.register() -> properties must be type of dict or list,"
+                    " consisting of tuples (<prop_name>, <prop>)!"
+                )
+            prop_name: str
+            prop: PropBase
+            prop_name, prop = p
+            if not isinstance(prop_name, str) or not isinstance(prop, PropBase):
+                raise ValueError(
+                    "system.settings.register() -> properties must be type of dict or list,"
+                    " consisting of tuples (<prop_name>, <prop>)!"
+                )
+            prop.order = prop.order if prop.order is not None else (ix + 1001)
+            _properties[prop_name] = prop
+        properties = _properties
     registered[entity_name] = SettingsEntity(
         app_name=app_name,
         name=entity_name,

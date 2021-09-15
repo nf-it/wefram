@@ -1,5 +1,5 @@
 import config
-from . import settings, aaa, ui, ds, l10n
+from . import settings, aaa, ui, ds, l10n, mail
 from .ui import screens
 from .settings.props import NumberProp, NumberMMProp, BooleanProp
 from .demo import build as demo
@@ -18,6 +18,7 @@ ds.storages.register('users')
 # Defining the permissions model
 aaa.permissions.register(aaa.PERMISSION_ADMINUSERSROLES, aaa.MSG_PERMISSIONS_USERSROLES)
 aaa.permissions.register(aaa.PERMISSION_ADMINSETTINGS, aaa.MSG_PERMISSIONS_SETTINGS)
+aaa.permissions.register(mail.PERMISSION, mail.MSG_PERMISSION)
 aaa.permissions.register(settings.PERMISSION_ADMINISTERING, settings.PERMISSION_ADMINISTERING_CAPTION)
 aaa.permissions.register(settings.PERMISSION_PROPS, settings.PERMISSION_PROPS_CAPTION)
 

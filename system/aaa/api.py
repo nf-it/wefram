@@ -13,6 +13,9 @@ class User(ModelAPI):
     @staticmethod
     async def encode_value(key: str, s: Any) -> Any:
         if key == 'secret':
+            print(s, type(s))
+            if s is None:
+                return ''
             return hash_password(s) if s else ...
         return s
 

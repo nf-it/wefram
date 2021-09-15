@@ -1,13 +1,16 @@
 from typing import *
 import urllib.parse
-from starlette.types import ASGIApp, Receive, Scope, Send
 from starlette.requests import Request, Headers
-from starlette.requests import HTTPConnection
+from starlette.requests import HTTPConnection, Scope
 from starlette.responses import PlainTextResponse, Response
 from starlette_context.middleware import RawContextMiddleware as ContextMiddleware
+from starlette.middleware.base import (
+    BaseHTTPMiddleware,
+    RequestResponseEndpoint,
+)
+from starlette.requests import Request, Headers
 from system import exceptions
 from system.tools import rerekey_camelcase_to_snakecase
-import config
 
 
 __all__ = [
@@ -16,16 +19,11 @@ __all__ = [
 ]
 
 
-class RequestMiddleware:
-    def __init__(self, app: ASGIApp) -> None:
-        self.app = app
-
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
-        if scope['type'] not in ('http', 'websocket'):
-            await self.app(scope, receive, send)
-            return
-
-        request = Request(scope, receive=receive, send=send)
+class RequestMiddleware(BaseHTTPMiddleware):
+    async def dispatch(
+            self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
+        scope: Scope = request.scope
         headers: Headers = request.headers
 
         # Parsing URL query string
@@ -71,14 +69,10 @@ class RequestMiddleware:
         scope['payload_type'] = payload_type
 
         try:
-            await self.app(scope, receive, send)
+            return await call_next(request)
 
-        except exceptions.AccessDenied as exc:
-            await PlainTextResponse("Access denied", status_code=403)(scope, receive, send)
-            if not config.PRODUCTION:
-                raise exc
+        except exceptions.AccessDenied:
+            return PlainTextResponse("Access denied", status_code=403)
 
-        except exceptions.NotAuthenticated as exc:
-            await PlainTextResponse("Not authorized", status_code=401)(scope, receive, send)
-            if not config.PRODUCTION:
-                raise exc
+        except exceptions.NotAuthenticated:
+            return PlainTextResponse("Not authorized", status_code=401)

@@ -12,8 +12,8 @@ from system.tools import CSTYLE, json_encode_custom, app_dir, app_root
 from system import logger, ui, apps, l10n
 
 
-TS_TEMPLATES_ROOT: str = os.path.join(config.COREROOT, 'web', 'templates')
-TS_PREPARED_ROOT: str = os.path.join(config.COREROOT, 'web', 'prepared')
+TS_TEMPLATES_ROOT: str = os.path.join(config.COREROOT, 'frontend', 'templates')
+TS_PREPARED_ROOT: str = os.path.join(config.COREROOT, 'frontend', 'prepared')
 STATICS_URL: str = config.STATICS_URL
 STATICS_ROOT: str = config.STATICS_ROOT
 STATICS_CSS_ROOT: str = os.path.join(STATICS_ROOT, 'css')

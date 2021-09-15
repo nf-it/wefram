@@ -1,6 +1,27 @@
+"""
+Used to log different messages to the stdout for the, mainly, debugging and
+development purposes.
+"""
+
 from typing import *
 import config
 from .tools import CSTYLE, get_calling_app
+
+
+__all__ = [
+    'VERBOSE_LEVEL',
+    'DEBUG',
+    'INFO',
+    'WARNING',
+    'ERROR',
+    'FATAL',
+    'set_level',
+    'debug',
+    'info',
+    'warning',
+    'error',
+    'fatal'
+]
 
 
 VERBOSE_LEVEL: Dict[str, int] = {

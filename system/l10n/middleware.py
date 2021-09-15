@@ -1,6 +1,10 @@
 from typing import *
-from starlette.types import ASGIApp, Receive, Scope, Send
-from starlette.requests import HTTPConnection
+from starlette.middleware.base import (
+    BaseHTTPMiddleware,
+    RequestResponseEndpoint,
+)
+from starlette.requests import Request, HTTPConnection
+from starlette.responses import Response
 import babel
 import config
 from ..requests import is_static_path
@@ -23,26 +27,19 @@ class LocalizationCliMiddleware(CliMiddleware):
         await call_next()
 
 
-class LocalizationMiddleware:
-    def __init__(self, app: ASGIApp):
-        self.app = app
-
-    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+class LocalizationMiddleware(BaseHTTPMiddleware):
+    async def dispatch(
+            self, request: Request, call_next: RequestResponseEndpoint
+    ) -> Response:
         from ..aaa import UnauthenticatedUser, SessionUser
         from ..requests import routing
 
-        if scope['type'] not in ('http', 'websocket'):  # pragma: no cover
-            await self.app(scope, receive, send)
-            return
-
         for prefix in routing.static_routes_prefixes:
-            if scope['path'].startswith(prefix):
-                await self.app(scope, receive, send)
-                return
+            if request.scope['path'].startswith(prefix):
+                return await call_next(request)
 
-        if is_static_path(scope['path']):
-            await self.app(scope, receive, send)
-            return
+        if is_static_path(request.scope['path']):
+            return await call_next(request)
 
         selected_locale: Optional[Locale] = None
         if 'user' in context and not isinstance(context['user'], UnauthenticatedUser):
@@ -54,7 +51,7 @@ class LocalizationMiddleware:
                     pass
 
         if not selected_locale:
-            conn = HTTPConnection(scope)
+            conn = HTTPConnection(request.scope)
             if 'accept-language' in conn.headers and conn.headers['accept-language']:
                 locales_preferred: List[str] = await self.parse_accept_language(conn.headers['accept-language'])
                 locale_preferred: Optional[babel.Locale] = best_matching_locale(locales_preferred)
@@ -69,7 +66,7 @@ class LocalizationMiddleware:
 
         # selected_locale = Locale.parse(config.DEFAULT_LOCALE)
         context['locale']: Locale = selected_locale
-        await self.app(scope, receive, send)
+        return await call_next(request)
 
     async def parse_accept_language(self, header: str) -> List[str]:
         """ 

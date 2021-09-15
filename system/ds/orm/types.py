@@ -81,6 +81,15 @@ class StringChoice(TypeDecorator):
         self.choices_items = choices
 
 
+class IntegerChoice(TypeDecorator):
+    impl = Integer
+    cache_ok = True
+
+    def __init__(self, choices: Union[List[int], tuple, Dict[int, Any]], **kwargs):
+        super().__init__(**kwargs)
+        self.choices_items = choices
+
+
 class Email(TypeDecorator):
     impl = String
     cache_ok = True

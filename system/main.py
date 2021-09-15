@@ -12,7 +12,6 @@ from . import apps, ds, requests, settings, l10n, middlewares, logger, ui, runti
 # Ensures the environment
 os.makedirs(config.ASSETS_ROOT, exist_ok=True)
 os.makedirs(config.STATICS_ROOT, exist_ok=True)
-# os.makedirs(config.FILES_ROOT, exist_ok=True)
 
 # Collecting the list of loading apps. The first one is core 'system' app.
 apps_to_load: List[str] = [config.COREDIR]
@@ -83,6 +82,11 @@ _middlewares: List[Middleware] = [
 _middlewares.extend(middlewares.registered)
 
 
+logger.debug(
+    "middlewares in use (ordered):\n" + '\n'.join([str(m) for m in _middlewares])
+)
+
+
 _routes: List[Union[Route, Mount]] = requests.routing.registered
 _routes.insert(0, requests.Route('/', root_route, methods=['GET']))
 _routes.append(Route(config.AUTH.get('login_screen_url', '/login'), ui.screens.Screen.endpoint, methods=['GET']))
@@ -95,6 +99,6 @@ asgi = Starlette(
     on_startup=[start],
     middleware=_middlewares,
     routes=_routes,
-    debug=not config.PRODUCTION
+    debug=False
 )
 

@@ -37,6 +37,19 @@ backends = {
 
 
 async def authenticate(username: str, password: str) -> User:
+    """ Tries to authenticate the user using given username and password, with all available backends.
+
+    :param username: the user, with or without '@' and a domain part
+    :type username: str
+
+    :param password: the password for the user
+    :type password: str
+
+    :return: a :class:`system.aaa.models.User` instance if succeed
+
+    :raises AuthenticationFailed: if failed to authenticate
+    """
+
     user: Optional[User]
     for backend in backends.values():
         user = await backend.authenticate(username, password)
@@ -119,18 +132,41 @@ async def refresh_with_token(refresh_token: str) -> Tuple[User, str, str, dateti
 
 
 async def drop_user_sessions_by_id(user_id: str) -> None:
+    """ Drops all user's sessions, whetever active or not, preventing the user to
+    continue using the system immediately.
+
+    :param user_id: the ID (:class:`User`->id) of the user
+    :type user_id: str
+    """
+
     sessions: List[Session] = await Session.fetch_all_for_user(user_id)
     [await sess.drop() for sess in sessions]
 
 
 async def drop_user_sessions_by_login(login: str) -> None:
+    """ Drops all user's sessions, whetever active or not, preventing the user to
+    continue using the system immediately.
+
+    :param login: the user's login (:class:`User`->login)
+    :type login: str
+    """
+
     user: Optional[User] = await User.first(login=login)
     if user is None:
         raise KeyError(f"aaa.User with login={login} does not exists")
     await drop_user_sessions_by_id(user.id)
 
 
-def permitted(scopes: [str, Sequence[str]]) -> bool:
+def permitted(scopes: Union[str, Sequence[str]]) -> bool:
+    """ Checks the current user has given permission scopes in his/her session.
+
+    :param scopes: the scope (or scopes) required to be permitted for the user
+    :type scopes: str, List(str)
+
+    :return: True if the user has all permissions, False otherwise
+    :rtype: bool
+    """
+
     permissions: IPermissions = context['permissions']
     if not permissions:
         return False
@@ -139,6 +175,8 @@ def permitted(scopes: [str, Sequence[str]]) -> bool:
 
 
 def get_current_user() -> Optional[SessionUser]:
+    """ Returns the currently logged in user, if logged in, or None instead. """
+
     if not context:
         return None
     if 'user' not in context:
@@ -149,4 +187,6 @@ def get_current_user() -> Optional[SessionUser]:
 
 
 def is_logged_in() -> bool:
+    """ Returns True if the current request client is logged in, and False otherwise. """
+
     return get_current_user() is not None

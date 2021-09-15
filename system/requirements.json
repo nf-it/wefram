@@ -25,7 +25,8 @@
     "csscompressor": "latest",
     "jsmin": "latest",
     "rfc6266": "latest",
-    "ldap3": "latest"
+    "ldap3": "latest",
+    "aiosmtplib": "latest"
   },
   "yarn": {
     "@babel/core": "latest",

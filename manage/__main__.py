@@ -114,7 +114,12 @@ async def _main():
         from manage import aaa
         from system import runtime
         await runtime.within_cli(aaa.runcmd, command.split('.', 1)[1], args)
-        # await aaa.runcmd(command.split('.', 1)[1], args)
+        exit(0)
+
+    elif command.startswith('front.'):
+        from manage import front
+        from system import runtime
+        await runtime.within_cli(front.runcmd, command.split('.', 1)[1], args)
         exit(0)
 
     print(f"Unknown command: {command}")

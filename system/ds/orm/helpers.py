@@ -4,8 +4,10 @@ from sqlalchemy.orm.attributes import QueryableAttribute
 from sqlalchemy.sql.elements import ClauseElement
 from sqlalchemy.orm.properties import ColumnProperty
 from sqlalchemy.sql.sqltypes import TypeEngine
+from sqlalchemy.dialects.postgresql import UUID, JSONB, JSON
 import inspect
 from .model import *
+from ...tools import get_calling_app
 
 
 __all__ = [
@@ -26,7 +28,11 @@ def clause_eq_for_c(c: QueryableAttribute, value: Any, allow_text_aliases: bool 
 
     comparator: ColumnProperty.Comparator = c.comparator
     comparator_type: TypeEngine = comparator.type
-    python_type: Any = comparator_type.python_type
+    python_type: Any
+    if isinstance(comparator_type, UUID):
+        python_type = str
+    else:
+        python_type: Any = comparator_type.python_type
     invert: bool = False
 
     if allow_text_aliases and isinstance(value, str) and value.startswith('~'):
@@ -100,16 +106,12 @@ class ModelName:
         return get_model(self.name, self.app)
 
 
-class ModelColumn:
-    def __init__(self, model_name: str, column_name: str):
-        self.model_name: str = model_name
-        self.column_name: str = column_name
+def model_column(model: str, column: str, app: Optional[str] = None) -> str:
+    app = app or get_calling_app()
+    return f"{app}{model}.{column}"
 
-    def __call__(self) -> [ClassVar[Column], None]:
-        model: [ClassVar['Model'], None] = get_model(self.model_name)
-        if model is None:
-            return None
-        return getattr(model, self.column_name, None)
+
+ModelColumn = model_column
 
 
 class TableNameOf:

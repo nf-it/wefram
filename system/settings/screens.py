@@ -1,5 +1,5 @@
 from system.ui import screens, sitemap
-from .. import aaa
+from .. import aaa, mail
 from .const import (
     APP_ID,
     APP_ICON,
@@ -81,3 +81,14 @@ class AuthBackendAdDomainsScreen(screens.Screen):
     requires = aaa.PERMISSION_ADMINUSERSROLES
     caption = aaa.MSG_DOMAINS
     order = 40
+
+
+@screens.register(sitemap=SITEMAP_FOLDER_ID)
+class MailAccountsScreen(screens.Screen):
+    component = 'containers/MailAccounts'
+    route = '/mail/accounts'
+    parent = APP_ID
+    icon = mail.APP_ICON
+    requires = mail.PERMISSION
+    caption = mail.MSG_APP_CAPTION
+    order = 50

@@ -1,5 +1,5 @@
 from typing import *
-from system import ds, aaa
+from system import ds, aaa, logger
 from .routines import *
 
 
@@ -40,6 +40,10 @@ async def make_random_users(qty: int) -> None:
         n += 1
         logins.append(user.login)
         users.append(user)
+        logger.info(
+            f"created new demo user: {user.display_name} [{user.login}]"
+        )
+
     [ds.db.add(o) for o in users]
 
 
