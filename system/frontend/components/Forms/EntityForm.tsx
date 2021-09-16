@@ -290,37 +290,47 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
   }
 
   private handleFieldValueChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | null> | string | null,
-    newValue: any
+    ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | null> | string | null,
+    valarg: any
   ): void => {
-    if (e === null)
+    if (ev === null)
       return
 
     const
       data: any = this.props.data,
-      target: HTMLElement | any | null = typeof e == 'string' ? null : e.target
+      target: HTMLElement | any | null = typeof ev == 'string' ? null : ev.target
 
-    const fieldName: string | null = typeof e == 'string' ? e : this.extractFieldName(target)
+    const fieldName: string | null = typeof ev == 'string' ? ev : this.extractFieldName(target)
     if (!fieldName)
       return
 
     let value: any = undefined
 
-    if (typeof e !== 'string' && e.type === 'null') {
-      value = null
-    } else if (newValue !== undefined) {
-      value = newValue
-    } else if (target !== null) {
-      if (target.tagName === 'INPUT') {
-        switch ((target as HTMLInputElement).type) {
-          case 'checkbox':
-            value = Boolean((target as HTMLInputElement).checked)
-            break
-          default:
-            value = (target as HTMLInputElement).value
+    if (typeof valarg == 'object' && '$$typeof' in valarg) {
+      if ('props' in valarg && 'value' in valarg.props) {
+        value = valarg.props.value
+      } else {
+        valarg = undefined
+      }
+    }
+
+    if (value === undefined) {
+      if (typeof ev !== 'string' && ev.type === 'null') {
+        value = null
+      } else if (valarg !== undefined) {
+        value = valarg
+      } else if (target !== null) {
+        if (target.tagName === 'INPUT') {
+          switch ((target as HTMLInputElement).type) {
+            case 'checkbox':
+              value = Boolean((target as HTMLInputElement).checked)
+              break
+            default:
+              value = (target as HTMLInputElement).value
+          }
+        } else if (target.name && target.value) {
+          value = target.value
         }
-      } else if (target.name && target.value) {
-        value = target.value
       }
     }
 
@@ -345,8 +355,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     const results: ReactElements = React.Children.map(this.elementsFrom(elements), (child: any) => {
       if (typeof child != 'object' || child === null || child === undefined)
         return child
-      const childElement = child as Record<string, any>
-      const childProps = Object.assign({}, childElement.props)
+      const childProps: any = Object.assign({}, (child as any).props)
       if (childProps === undefined)
         return child
 
