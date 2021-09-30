@@ -1,7 +1,7 @@
-import {Localization} from '@material-ui/core/locale'
 import {Response} from './response'
 import {api} from './api'
 import {RequestApiPath} from './routing'
+import {TranslatedTextVariant, LocaleDicrionary, TranslatedTextResponse} from './types'
 
 
 export const appName: string = 'l10n'
@@ -12,26 +12,16 @@ const translationsPath: RequestApiPath = {
   version: apiVersion
 }
 
-
-export type Locale = {
-  name: string
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6
-  firstWeekContainsDate?: 1 | 2 | 3 | 4 | 5 | 6 | 7
-  dateFormat: string
-}
-
-export type TLocaleDictDomain = Record<string, string>
-export type TLocaleDicrionary = Record<string, TLocaleDictDomain>
-let translations: TLocaleDicrionary = { }
+let translations: LocaleDicrionary = { }
 
 export type LocalizationAPI = {
   _tryToTranslate(s: string, domain: string): string | null
-  load(): Response<TLocaleDicrionary>
-  initializeFromStruct(s: TLocaleDicrionary): void
+  load(): Response<LocaleDicrionary>
+  initializeFromStruct(s: LocaleDicrionary): void
   initializeFromServer(): Promise<any>
-  createMuiLocalization(): Localization
   gettext(s: string, domain?: string | undefined): string
   ngettext(n: number, singular: string, plural: string, domain?: string | undefined): string
+  getTranslationText(app: string, textId: string, variant?: TranslatedTextVariant): Promise<TranslatedTextResponse | null>
 }
 
 export const localization: LocalizationAPI = {
@@ -43,11 +33,11 @@ export const localization: LocalizationAPI = {
     return translations[domain][s]
   },
 
-  async load(): Response<TLocaleDicrionary> {
+  async load(): Response<LocaleDicrionary> {
     return await api.get(translationsPath)
   },
 
-  initializeFromStruct(s: TLocaleDicrionary) {
+  initializeFromStruct(s: LocaleDicrionary) {
     translations = s
   },
 
@@ -55,73 +45,6 @@ export const localization: LocalizationAPI = {
     await localization.load().then(res => {
       localization.initializeFromStruct(res.data)
     })
-  },
-
-  createMuiLocalization(): Localization {
-    return {
-      props: {
-        MuiBreadcrumbs: {
-          expandText: gettext("Show path", 'system.ui-mui')
-        },
-        MuiTablePagination: {
-          backIconButtonText: gettext("Previous page", 'system.ui-mui'),
-          labelRowsPerPage: gettext("Rows on page:", 'system.ui-mui'),
-          labelDisplayedRows: function labelDisplayedRows(_ref) {
-            const
-              from = _ref.from,
-              to = _ref.to,
-              count = _ref.count
-            return ""
-              .concat(String(from), "-")
-              .concat(String(to), gettext(" of ", 'system.ui-mui'))
-              .concat(count !== -1 ? String(count) : gettext("more than ", 'system.ui-mui').concat(String(to)))
-          },
-          nextIconButtonText: gettext("Next page", 'system.ui-mui')
-        },
-        MuiRating: {
-          getLabelText: function getLabelText(value) {
-            return "".concat(String(value), (value !== 1 ? gettext(" stars", 'system.ui-mui') : gettext(" star", 'system.ui-mui')))
-          },
-          emptyLabelText: gettext("None", 'system.ui-mui')
-        },
-        MuiAutocomplete: {
-          clearText: gettext("Clear", 'system.ui-mui'),
-          closeText: gettext("Close", 'system.ui-mui'),
-          loadingText: gettext("Loading…", 'system.ui-mui'),
-          noOptionsText: gettext("No options available", 'system.ui-mui'),
-          openText: gettext("Open", 'system.ui-mui')
-        },
-        MuiAlert: {
-          closeText: gettext("Close", 'system.ui-mui')
-        },
-        MuiPagination: {
-          'aria-label': gettext("Pagination navigation", 'system.ui-mui'),
-          getItemAriaLabel: function getItemAriaLabel(type, page, selected) {
-            if (type === 'page') {
-              return `${selected ? gettext("Page", 'system.ui-mui') : gettext("Go to page", 'system.ui-mui')} ${page}`
-            }
-
-            if (type === 'first') {
-              return gettext("Go to first page", 'system.ui-mui')
-            }
-
-            if (type === 'last') {
-              return gettext("Go to last page", 'system.ui-mui')
-            }
-
-            if (type === 'next') {
-              return gettext("Go to next page", 'system.ui-mui')
-            }
-
-            if (type === 'previous') {
-              return gettext("Go to previous page", 'system.ui-mui')
-            }
-
-            return undefined;
-          }
-        }
-      }
-    }
   },
 
   gettext(s: string, domainName?: string | undefined): string {
@@ -159,6 +82,26 @@ export const localization: LocalizationAPI = {
 
   ngettext(n: number, singular: string, plural: string, domain?: string | undefined): string {
     return (n > 1 || n < -1 || n === 0) ? localization.gettext(plural, domain) : localization.gettext(singular, domain)
+  },
+
+  getTranslationText(app, textId, variant) {
+    return api.get({
+      app: 'system',
+      path: `translations/text/${app}/${textId}`
+    }, {
+      params: {
+        variant
+      }
+    }).then(res => {
+      const variant: TranslatedTextVariant = res.headers['x-text-variant']
+      const content: string = String(res.data)
+      return {
+        content,
+        variant
+      }
+    }).catch(() => {
+      return null
+    })
   }
 }
 

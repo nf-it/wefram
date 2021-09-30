@@ -6,25 +6,17 @@ import {
   ButtonLink,
   Typography
 } from 'system/components'
-import LoginIcon from '@material-ui/icons/LockOpen'
-import LogoffIcon from '@material-ui/icons/ExitToApp'
-import {appInterface, runtime} from 'system/runtime'
-import {aaa, session} from 'system/aaa'
+import LoginIcon from '@mui/icons-material/LockOpen'
+import LogoffIcon from '@mui/icons-material/ExitToApp'
+import {runtime} from 'system/runtime'
+import {session} from 'system/aaa'
 import {gettext} from 'system/l10n'
-import {notifications} from 'system/notification'
-import {routing} from 'system/routing'
+import './index.css'
 
 
-export default class Workspace extends React.Component<ScreenProps> {
+export default class Desktop extends React.Component<ScreenProps> {
   handleProfileLogout = () => {
-    runtime.busy = true
-    aaa.logout()
-    this.setState({anchorProfileMenu: null})
-    notifications.showSuccess(gettext('You have been logged out. Good bye.', 'system.aaa-messages'))
-    appInterface.initializeApp().then(() => {
-      runtime.busy = false
-      routing.gotoOnLogoff()
-    })
+    runtime.logoff()
   }
 
   render() {
@@ -37,7 +29,12 @@ export default class Workspace extends React.Component<ScreenProps> {
               borderBottom: '2px solid #1976d2',
               paddingBottom: '8px'
             }}
-          >{gettext("Welcome")}</Typography>
+          >
+            {gettext("Welcome")}
+            <span className={'SystemUI-Desktop-appTitle'}>
+              {runtime.title}
+            </span>
+          </Typography>
           <Box mt={1} display={'flex'} alignItems={'center'}>
             {session.authenticated ? (
               <React.Fragment>

@@ -85,7 +85,7 @@ export class FormSwitchField extends React.Component<FormSwitchFieldProps> {
       justify,
       style: fieldStyle
     }
-    formItemProps.align = formItemProps.align ?? 'bottom'
+    formItemProps.align = formItemProps.align ?? 'center'
     return (
       <FormItem {...formItemProps} >
         <FormSwitch {...elementProps} />

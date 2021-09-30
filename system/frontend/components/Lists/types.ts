@@ -1,7 +1,6 @@
 import React from 'react'
 import {IApiEntityComplexResponse, IApiEntityResponse} from 'system/types'
 import {RequestApiPath} from 'system/routing'
-import {Size as TableSize} from '@material-ui/core/Table'
 
 
 export type ListsSorting = {
@@ -122,7 +121,6 @@ export type ProvListOverridedParams = {
 
 export type ProvTableColumn = ListsFieldStruct & {
   fieldAlign?: 'inherit' | 'left' | 'center' | 'right' | 'justify';
-  size?: TableSize
 }
 
 export type ProvTableColumns = ProvTableColumn[]

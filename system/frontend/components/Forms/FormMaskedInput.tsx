@@ -6,6 +6,7 @@ import {FormFieldCommon} from './types'
 export type FormMaskedInputProps = FormFieldCommon & MaskedTextFieldProps & {
   ref?: React.LegacyRef<FormMaskedInput>
   dense?: boolean
+  small?: boolean
 }
 
 export type FormMaskedInputFieldProps = FormMaskedInputProps & FormItemProps & {
@@ -30,11 +31,12 @@ export class FormMaskedInput extends React.Component<FormMaskedInputProps> {
       defaultValue,   // we defaults the defaultValue to the corresponding _formData
       dense,          // simplificates dense from 'margin=dense' to boolean 'dense'
       fullWidth,      // we overrides fullWidth defaults in forms from 'false' to 'true'
+      small,
       ...elementProps
     } = this.props
 
     elementProps.onChange = elementProps.onChange ?? this.handleOnChange
-    elementProps.margin = elementProps.margin ?? (dense ? 'dense' : 'normal')
+    elementProps.margin = elementProps.margin ?? ((dense ?? true) ? 'dense' : 'normal')
 
     return (
       <MaskedTextField
@@ -45,6 +47,7 @@ export class FormMaskedInput extends React.Component<FormMaskedInputProps> {
               : ''
           )
         }
+        size={small ? 'small' : 'medium'}
         fullWidth={fullWidth ?? true}
         {...elementProps}
       />

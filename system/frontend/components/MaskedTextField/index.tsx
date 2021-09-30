@@ -1,6 +1,6 @@
 import React from 'react'
 import MaskedInput, {maskArray} from 'react-text-mask'
-import {TextField, TextFieldProps} from '@material-ui/core'
+import {TextField, TextFieldProps} from 'system/components'
 
 
 export type MaskedTextFieldProps = TextFieldProps & {
@@ -11,7 +11,7 @@ export type MaskedTextFieldProps = TextFieldProps & {
 
 
 interface TextMaskCustomProps {
-  inputRef: (ref: HTMLInputElement | null) => void
+  // inputRef: (ref: HTMLInputElement | null) => void
   mask: maskArray | ((value: string) => maskArray)
   guide?: boolean
   keepCharPositions?: boolean
@@ -19,14 +19,14 @@ interface TextMaskCustomProps {
 
 
 function TextMaskCustom(props: TextMaskCustomProps) {
-  const { inputRef, mask, guide, keepCharPositions, ...other } = props;
+  const { mask, guide, keepCharPositions, ...other } = props;
 
   return (
     <MaskedInput
       {...other}
-      ref={(ref: any) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
+      // ref={(ref: any) => {
+      //   inputRef(ref ? ref.inputElement : null);
+      // }}
       mask={mask}
       guide={guide}
       placeholderChar={'\u2000'}
@@ -52,6 +52,7 @@ export class MaskedTextField extends React.Component<MaskedTextFieldProps> {
     return (
       <TextField
         {...otherProps}
+        InputLabelProps={{ shrink: true }}
         inputProps={inputProps}
         InputProps={InputProps}
       />

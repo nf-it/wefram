@@ -5,7 +5,7 @@ import {
   EntityList,
   Typography
 } from 'system/components'
-import {LockOpen, Lock} from '@material-ui/icons'
+import {LockOpen, Lock} from '@mui/icons-material'
 import {ScreenProps} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
@@ -31,7 +31,7 @@ export default class UsersScreen extends React.Component<ScreenProps> {
     return (
       <React.Fragment>
       <Box mt={2}>
-        <Typography variant={'h4'}>{gettext("Administrate users", 'system.aaa')}</Typography>
+        <Typography variant={'h4'} paddingBottom={2}>{gettext("Administrate users", 'system.aaa')}</Typography>
         <EntityList
           ref={this.listRef}
 

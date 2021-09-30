@@ -1,8 +1,10 @@
-import {IAuthorizationSession, localStorageAuthorizationKeyname} from "../types/aaa";
+import {runInAction} from 'mobx'
+import {IAuthorizationSession, localStorageAuthorizationKeyname, IAuthorization} from "../types/aaa";
 import {aaaProvider} from "./provider";
-import {IAuthorization} from "../types/aaa";
 import {ISessionResponse, session} from './session'
-import {request} from '../requests'
+import {request} from 'system/requests'
+import {runtime} from 'system/runtime'
+import {notifications} from 'system/notification'
 
 
 export type AaaInterface = {
@@ -32,17 +34,21 @@ export const aaa: AaaInterface = {
   },
 
   initializeFromStruct(authsession: ISessionResponse) {
-    session.user = authsession?.user || null
-    session.permissions = authsession?.permissions || []
-    if (authsession === null || authsession?.user === null) {
-      aaa.dropAuthorizationSession()
-    }
+    runInAction(() => {
+      session.user = authsession?.user || null
+      session.permissions = authsession?.permissions || []
+      if (authsession === null || authsession?.user === null) {
+        aaa.dropAuthorizationSession()
+      }
+    })
   },
 
   dropSession() {
-    session.user = null
-    session.permissions = []
-    aaa.dropAuthorizationSession()
+    runInAction(() => {
+      session.user = null
+      session.permissions = []
+      aaa.dropAuthorizationSession()
+    })
   },
 
   getAuthorizationSession(): IAuthorizationSession {
@@ -85,10 +91,12 @@ export const aaa: AaaInterface = {
   },
 
   logout() {
-    aaa.dropAuthorizationSession()
-    session.user = null
-    session.permissions = []
-    request.defaults.headers.common['Authorization'] = null
+    runInAction(() => {
+      aaa.dropAuthorizationSession()
+      session.user = null
+      session.permissions = []
+      request.defaults.headers.common['Authorization'] = null
+    })
   },
 
   isLoggedIn() {

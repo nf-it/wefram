@@ -9,13 +9,11 @@ import {
   Typography,
   Tooltip,
 } from 'system/components'
-import {AccountCircle} from '@material-ui/icons'
-import {appInterface, runtime} from 'system/runtime'
-import {aaa, session} from 'system/aaa'
+import {AccountCircle} from '@mui/icons-material'
+import {runtime} from 'system/runtime'
+import {session} from 'system/aaa'
 import {gettext} from 'system/l10n'
-import {notifications} from 'system/notification'
-import {routingHistory, routing} from 'system/routing'
-import './index.css'
+import {routingHistory} from 'system/routing'
 
 
 type LayoutAppbarProps = { }
@@ -37,15 +35,9 @@ export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppba
     this.setState({anchorProfileMenu: null})
   }
 
-  handleProfileLogout = () => {
-    runtime.busy = true
-    aaa.logout()
+  handleProfileLogout = (): void => {
+    runtime.logoff()
     this.setState({anchorProfileMenu: null})
-    notifications.showSuccess(gettext('You have been logged out. Good bye.', 'system.aaa-messages'))
-    appInterface.initializeApp().then(() => {
-      runtime.busy = false
-      routing.gotoOnLogoff()
-    })
   }
 
   handleProfileSignin = () => {
@@ -54,12 +46,12 @@ export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppba
 
   render() {
     return [
-      <AppBar
-        position="fixed"
-        className={'SystemUI-LayoutAppbar'}
-      >
+      <AppBar position="fixed" key={'__systemAppBar'}>
         <Toolbar>
-          <Typography variant="h6" noWrap className={'SystemUI-LayoutAppbar-title'}>
+          <Typography variant="h6" noWrap style={{
+            flexGrow: 1,
+            textShadow: '0 1px 1px #000D'
+          }}>
             {runtime.title}
           </Typography>
           <ClockTime />
@@ -79,6 +71,7 @@ export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppba
       </AppBar>,
 
       <Menu
+        key={'__systemAppBarMenu'}
         anchorEl={this.state.anchorProfileMenu}
         anchorOrigin={{vertical: 'top', horizontal: 'right'}}
         id="profileMenu"
@@ -91,15 +84,15 @@ export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppba
         }}
       >
         {session.authenticated && ([
-          <MenuItem key={'appbar-menu-displayName'}>
+          <MenuItem key={'__systemAppBarUserDisplayname'}>
             {session.user?.displayName}
           </MenuItem>,
-          <MenuItem key={'appbar-menu-logout'} onClick={this.handleProfileLogout}>
+          <MenuItem key={'__systemAppBarUserLogoutButton'} onClick={this.handleProfileLogout}>
             {gettext('Logout', 'system.aaa')}
           </MenuItem>
         ])}
         {!session.authenticated && (
-          <MenuItem key={'appbar-menu-login'} onClick={this.handleProfileSignin}>
+          <MenuItem key={'__systemAppBarUserLoginButton'} onClick={this.handleProfileSignin}>
             {gettext('Sign In', 'system.aaa')}
           </MenuItem>
         )}

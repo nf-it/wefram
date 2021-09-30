@@ -13,9 +13,9 @@ class _NotificationBar extends React.Component<GlobalNotifyProps> {
     return (
       <Notification
         open={this.props.store.open}
-        type={this.props.store.type}
+        variant={this.props.store.variant}
         message={this.props.store.message}
-        closeCallback={() => notifications.hide()}
+        onClose={() => notifications.hide()}
       />
     )
   }

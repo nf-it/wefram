@@ -16,23 +16,12 @@ class IAaaConfiguration(TypedDict):
     rememberUsername: bool
 
 
-class IAppInstantiationResponse(TypedDict):
-    session: Optional[aaa.ISession]
-    sitemap: sitemap.ISitemapResponse
-    screens: screens.ScreensRuntime
-    locale: dict
-    title: str
-    localization: Dict[str, dict]
-    urlConfiguration: IUrlConfigurationResponse
-    aaaConfiguration: IAaaConfiguration
-
-
 @api.handle_get('instantiate')
 async def instantiate(request: Request) -> JSONResponse:
     session: aaa.Session = context['session']
     aaa_settings: settings.SettingsCatalog = await settings.get('system.aaa')
 
-    response: IAppInstantiationResponse = {
+    response: dict = {
         'session': session.as_json() if session is not None else None,
         'sitemap': sitemap.as_json(),
         'screens': screens.runtime_json(),
@@ -40,10 +29,10 @@ async def instantiate(request: Request) -> JSONResponse:
         'title': config.APP_TITLE,
         'localization': l10n.pack_dictionary(),
         'urlConfiguration': {
-            'loginScreenUrl': config.AUTH.get('login_screen_url', '/login'),
-            'defaultAuthenticatedUrl': getattr(config, 'DEFAULT_URL_AUTHENTICATED', None) or str(config.DEFAULT_URL),
-            'defaultGuestUrl': getattr(config, 'DEFAULT_URL_GUEST', None) or str(config.DEFAULT_URL),
-            'onLogoffUrl': getattr(config, 'ON_LOGOFF_URL', getattr(config, 'DEFAULT_URL_GUEST', None) or str(config.DEFAULT_URL))
+            'loginScreenUrl': config.URL['login_screen'],
+            'defaultAuthenticatedUrl': config.URL['default_authenticated'] or config.URL['default'],
+            'defaultGuestUrl': config.URL['default_guest'] or config.URL['default'],
+            'onLogoffUrl': config.URL['on_logoff'] or config.URL['default_guest'] or config.URL['default']
         },
         'aaaConfiguration': {
             'rememberUsername': bool(aaa_settings[aaa.SETTINGS_REMEMBER_USERNAME])

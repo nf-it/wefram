@@ -1,19 +1,16 @@
-import {makeObservable, observable} from 'mobx'
+import {makeObservable, observable, runInAction} from 'mobx'
 import {Location} from 'history'
-import {Localization} from '@material-ui/core/locale'
-import {IAppInstantiation, IScreenRuntimes, ISitemap} from './types'
-import {projectAppProvider} from './provider'
+import {Localization} from '@mui/material/locale'
+import {IProjectInstantiation, IScreenRuntimes, ISitemap, Locale} from './types'
+import {projectProvider} from './provider'
 import {aaa} from './aaa'
-import {localization, Locale} from './l10n'
+import {localization, gettext} from './l10n'
+import {notifications} from 'system/notification'
 
-
-export interface IRuntime {
-  busy: boolean
-}
 
 type ScrollPositions = Record<string, number>
 
-class _Runtime {
+class ProjectRuntime {
   busy: boolean = false
   title: string = '(devel)'
   loginScreenUrl: string = '/login'
@@ -48,6 +45,34 @@ class _Runtime {
     })
   }
 
+  public initialize = async (): Promise<IProjectInstantiation | null> => {
+    return projectProvider.instantiate().then(res => {
+      runInAction(() => {
+        runtime.title = res.data.title
+        runtime.sitemap = res.data.sitemap
+        runtime.screens = res.data.screens
+        runtime.locale = res.data.locale
+        runtime.loginScreenUrl = res.data.urlConfiguration.loginScreenUrl
+        runtime.defaultAuthenticatedUrl = res.data.urlConfiguration.defaultAuthenticatedUrl
+        runtime.defaultGuestUrl = res.data.urlConfiguration.defaultGuestUrl
+        runtime.onLogoffUrl = res.data.urlConfiguration.onLogoffUrl
+        runtime.rememberUsername = res.data.aaaConfiguration.rememberUsername
+      })
+      aaa.initializeFromStruct(res.data.session)
+      localization.initializeFromStruct(res.data.localization)
+      return res.data
+    })
+  }
+
+  public logoff = (): void => {
+    aaa.logout()
+    runtime.initialize().then(() => {
+      notifications.showSuccess(gettext("You have been logged out. Good bye.", 'system.aaa-messages'))
+    }).catch(err => {
+      notifications.showRequestError(err)
+    })
+  }
+
   private locationToString = (location?: string | Location, excludeSearch?: boolean): string | undefined => {
     if (location === undefined)
       return undefined
@@ -56,13 +81,13 @@ class _Runtime {
     return excludeSearch ? location.pathname : [location.pathname, location.search].join('')
   }
 
-  saveScrollPosition = (id?: string | Location) => {
+  public saveScrollPosition = (id?: string | Location): void => {
     const scrollID: string = this.locationToString(id)
       ?? [window.location.pathname, window.location.search].join('')
     this.scrollPositions[scrollID] = window.scrollY
   }
 
-  restoreScrollPosition = (id?: string | Location) => {
+  public restoreScrollPosition = (id?: string | Location): void => {
     const scrollID: string = this.locationToString(id)
       ?? [window.location.pathname, window.location.search].join('')
     let scrollY: number | null = this.scrollPositions[scrollID]
@@ -74,35 +99,17 @@ class _Runtime {
     })
   }
 
-}
-
-export type AppInterface = {
-  initializeApp(): Promise<IAppInstantiation | null>
-}
-
-export const appInterface: AppInterface = {
-  async initializeApp(): Promise<IAppInstantiation | null> {
-    return projectAppProvider.instantiate().then(res => {
-      runtime.title = res.data.title
-      runtime.sitemap = res.data.sitemap
-      runtime.screens = res.data.screens
-      runtime.locale = res.data.locale
-      runtime.loginScreenUrl = res.data.urlConfiguration.loginScreenUrl
-      runtime.defaultAuthenticatedUrl = res.data.urlConfiguration.defaultAuthenticatedUrl
-      runtime.defaultGuestUrl = res.data.urlConfiguration.defaultGuestUrl
-      runtime.onLogoffUrl = res.data.urlConfiguration.onLogoffUrl
-      runtime.rememberUsername = res.data.aaaConfiguration.rememberUsername
-      aaa.initializeFromStruct(res.data.session)
-      localization.initializeFromStruct(res.data.localization)
-      runtime.muiLocalization = localization.createMuiLocalization()
-      return res.data
-    })
+  public setBusy = (state?: boolean): void => {
+    runInAction(() => runtime.busy = Boolean(state ?? true))
   }
+
+  public dropBusy = (): void => {
+    runtime.setBusy(false)
+  }
+
 }
 
-
-export const runtime = new _Runtime()
-
+export const runtime = new ProjectRuntime()
 
 window.addEventListener('scroll', () => {
   runtime.saveScrollPosition()

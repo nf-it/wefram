@@ -3,7 +3,9 @@ import {FormItem, FormItemProps, PasswordSetter, PasswordSetterProps} from 'syst
 import {FormFieldCommon} from './types'
 
 
-export type FormPasswordSetterProps = FormFieldCommon & PasswordSetterProps
+export type FormPasswordSetterProps = FormFieldCommon & PasswordSetterProps & {
+  small?: boolean
+}
 
 export type FormPasswordSetterFieldProps = FormPasswordSetterProps & FormItemProps & {
   ref?: React.LegacyRef<FormPasswordSetter>
@@ -24,12 +26,14 @@ export class FormPasswordSetter extends React.Component<FormPasswordSetterProps>
       _formData,
       _formOnChange,
       formName,
+      small,
       ...elementProps
     } = this.props
     elementProps.onChange = elementProps.onChange ?? this.handleOnChange
 
     return (
       <PasswordSetter
+        size={small ? 'small' : 'medium'}
         {...elementProps}
       />
     )

@@ -1,6 +1,6 @@
 import React from 'react'
 import NumberFormat from 'react-number-format'
-import {TextField, TextFieldProps} from '@material-ui/core'
+import {TextField, TextFieldProps} from 'system/components'
 
 
 export type DigitsInputFieldProps = TextFieldProps & {
@@ -88,6 +88,7 @@ export class DigitsInputField extends React.Component<DigitsInputFieldProps> {
     return (
       <TextField
         {...otherProps}
+        InputLabelProps={{ shrink: true }}
         inputProps={inputProps}
         InputProps={InputProps}
       />

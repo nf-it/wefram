@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, BoxProps} from '@material-ui/core'
+import {Box, BoxProps} from 'system/components'
 
 
 export type GridboxProps = BoxProps & {
@@ -11,47 +11,48 @@ export type GridboxProps = BoxProps & {
 }
 
 
-export class Gridbox extends React.Component<GridboxProps> {
-  render() {
-    const {
-      display,
-      columns,
-      autoHeight,
-      gap,
-      rowGap,
-      columnGap,
-      width,
-      ...other
-    } = this.props
+export const Gridbox = (props: GridboxProps) => {
+  const {
+    display,
+    columns,
+    autoHeight,
+    gap,
+    rowGap,
+    columnGap,
+    width,
+    ...other
+  } = props
 
-    return (
-      <Box
-        display={'grid'}
-        gridTemplateColumns={columns ? (
-          typeof columns == 'number' ? `repeat(${columns}, 1fr)` : String(columns)
-        ) : undefined}
-        gridGap={typeof gap == 'number'
-          ? `${gap * 8}px`
-          : typeof gap == 'string'
-            ? gap
-            : undefined
-        }
-        gridRowGap={rowGap ? (
-          typeof rowGap == 'number'
-            ? `${rowGap * 8}px`
-            : rowGap
-        ) : undefined}
-        gridColumnGap={columnGap ? (
-          typeof columnGap == 'number'
-            ? `${columnGap * 8}px`
-            : columnGap
-        ) : undefined}
-        gridAutoRows={autoHeight ? '1fr' : undefined}
-        width={width ?? '100%'}
-        {...other}
-      >
-        {this.props.children}
-      </Box>
-    )
-  }
+  const style: any = {}
+
+  style.display = 'grid'
+  style.gridTemplateColumns = columns
+    ? (typeof columns == 'number' ? `repeat(${columns}, 1fr)` : String(columns))
+    : undefined
+  style.gap = typeof gap == 'number'
+    ? `${gap * 8}px`
+    : typeof gap == 'string'
+      ? gap
+      : undefined
+  style.rowGap = rowGap ? (
+    typeof rowGap == 'number'
+      ? `${rowGap * 8}px`
+      : rowGap
+    ) : undefined
+  style.columnGap = columnGap ? (
+    typeof columnGap == 'number'
+      ? `${columnGap * 8}px`
+      : columnGap
+    ) : undefined
+  style.gridAutoRows = autoHeight ? '1fr' : undefined
+  style.width = String(width ?? '100%')
+
+  return (
+    <Box
+      sx={style}
+      {...other}
+    >
+      {props.children}
+    </Box>
+  )
 }

@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   Box,
-  Divider,
+  Ruler,
   Drawer,
   Collapse,
   List,
@@ -10,10 +10,10 @@ import {
   ListItemText,
   Toolbar
 } from 'system/components'
-import {ExpandLess, ExpandMore} from '@material-ui/icons'
+import {ExpandLess, ExpandMore} from '@mui/icons-material'
 import {Link} from 'react-router-dom'
 import {runtime} from 'system/runtime'
-import {screensSchema} from 'system/prepared/screens'
+import {screensSchema} from 'build/screens'
 import './index.css'
 
 
@@ -62,7 +62,7 @@ export class LayoutSitemap extends React.Component<LayoutSitemapProps, LayoutSit
         <Toolbar />
 
         <div className={'SystemUI-LayoutSitemap-container'}>
-          <Divider/>
+          <Ruler vspace={2} />
           <List>
             {runtime.sitemap.map(item => (
               <Box key={`sitemap-item-${item.name}`}>

@@ -8,7 +8,7 @@ from ..runtime import context
 from ..tools import all_in
 from .. import settings, logger
 from .models import User, Session, RefreshToken, SessionUser
-from .types import IJwtToken, IPermissions
+from .types import IPermissions
 from .tools import *
 from .const import SETTINGS_JWT_EXPIRE
 
@@ -21,6 +21,7 @@ __all__ = [
     'drop_user_sessions_by_login',
     'permitted',
     'get_current_user',
+    'get_current_user_id',
     'is_logged_in'
 ]
 
@@ -70,7 +71,7 @@ async def _create_jwt_token(user: User, session: Session) -> Tuple[str, datetime
     else:
         exp = datetime.datetime.now() + datetime.timedelta(seconds=jwt_expire)
 
-    payload: IJwtToken = {
+    payload: dict = {
         'user': str(user.id),
         'sess': session.token,
         'iat': datetime.datetime.now(),
@@ -184,6 +185,15 @@ def get_current_user() -> Optional[SessionUser]:
     if not isinstance(context['user'], SessionUser):
         return None
     return context['user']
+
+
+def get_current_user_id() -> Optional[str]:
+    """ Return the currently logged in user id (User.id), if logged in, or None instead. """
+
+    user: Optional[SessionUser] = get_current_user()
+    if user is None:
+        return None
+    return user.user_id
 
 
 def is_logged_in() -> bool:

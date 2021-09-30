@@ -8,14 +8,14 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   OutlinedInput,
-} from '@material-ui/core'
-import SubmitIcon from '@material-ui/icons/DoneRounded'
-import RemoveItemIcon from '@material-ui/icons/RemoveCircleTwoTone'
-import DeleteIcon from '@material-ui/icons/DeleteForever'
-import CancelIcon from '@material-ui/icons/Block'
-import UpIcon from '@material-ui/icons/ArrowUpward'
-import DownIcon from '@material-ui/icons/ArrowDownward'
-import {gettext} from '../../l10n'
+} from 'system/components'
+import SubmitIcon from '@mui/icons-material/DoneRounded'
+import RemoveItemIcon from '@mui/icons-material/RemoveCircleTwoTone'
+import DeleteIcon from '@mui/icons-material/DeleteForever'
+import CancelIcon from '@mui/icons-material/Block'
+import UpIcon from '@mui/icons-material/ArrowUpward'
+import DownIcon from '@mui/icons-material/ArrowDownward'
+import {gettext} from 'system/l10n'
 
 
 export type StringListProps = {

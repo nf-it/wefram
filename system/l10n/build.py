@@ -53,6 +53,19 @@ def make() -> None:
                 f"merged translations for {CSTYLE['bold']}{locale_name}{CSTYLE['clear']} "
                 f"from {CSTYLE['red']}{app_name}{CSTYLE['clear']}"
             )
+        if '*' not in app_name:
+            text_locales: List[str] = [
+                f for f in os.listdir(dicts_path)
+                if os.path.isdir(os.path.join(dicts_path, f)) and re.match(f"^[a-z][a-z](_[A-Z0-9][A-Z0-9])?", f)
+            ]
+            for tl in text_locales:
+                tl_src: str = os.path.join(dicts_path, tl)
+                tl_dst: str = os.path.join(BUILT_DICTS_PATH, app_name, tl)
+                os.makedirs(tl_dst, exist_ok=True)
+                shutil.copytree(tl_src, tl_dst, dirs_exist_ok=True)
+                logger.info(
+                    f"copied localized texts for {CSTYLE['bold']}{app_name}.{tl}{CSTYLE['clear']}"
+                )
 
     for d in dictionaries.values():
         d.save()

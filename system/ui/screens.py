@@ -113,7 +113,7 @@ class FilesScreen(BaseScreen):
         if isinstance(api_entity, type) and issubclass(api_entity, api.ModelAPI):
             api_entity_name = '.'.join([api_entity.app, api_entity.__name__])
         elif isinstance(api_entity, type) and issubclass(api_entity, ds.Model):
-            api_entity_name = '.'.join([api_entity.Meta.app_name, api_entity.__name__])
+            api_entity_name = '.'.join([api_entity.Meta.app_name, api_entity.__decl_cls_name__])
         else:
             api_entity_name = str(api_entity)
 

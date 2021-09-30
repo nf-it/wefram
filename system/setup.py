@@ -27,7 +27,7 @@ async def rebuild_db() -> None:
     await ds.migrate.migrate()
 
     logger.warning("Uploading initial AAA data to the PostgreSQL database")
-    async with ds.orm.engine.Session() as cn:
+    async with ds.orm.engine.AsyncSession() as cn:
         roles: dict = {
             'admins': aaa.Role(
                 name='Administrators',
@@ -62,7 +62,7 @@ async def rebuild_db() -> None:
 
 async def upload_initial_data() -> None:
     logger.warning("Uploading initial apps data to the PostgreSQL database")
-    async with ds.orm.engine.Session() as cn:
+    async with ds.orm.engine.AsyncSession() as cn:
         enabled_apps: List[str] = apps.get_apps_loaded()
         for appname in enabled_apps:
             appmodule: types.ModuleType = apps.modules[appname]

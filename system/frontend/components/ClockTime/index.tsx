@@ -1,5 +1,6 @@
 import React from 'react'
-import {Tooltip} from '@material-ui/core'
+import {Tooltip} from 'system/components'
+import {Typography} from '@mui/material'
 
 export type ClockTimeProps = {}
 
@@ -42,9 +43,9 @@ export class ClockTime extends React.Component<ClockTimeProps, S> {
   render() {
     return (
       <Tooltip title={this.state.clockTimeFull}>
-        <div>
+        <Typography variant={'subtitle1'}>
           {this.state.clockTimeShort}
-        </div>
+        </Typography>
       </Tooltip>
     )
   }

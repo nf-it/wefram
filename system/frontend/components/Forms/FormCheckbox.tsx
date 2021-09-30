@@ -85,7 +85,7 @@ export class FormCheckboxField extends React.Component<FormCheckboxFieldProps> {
       justify,
       style: fieldStyle
     }
-    formItemProps.align = formItemProps.align ?? 'bottom'
+    formItemProps.align = formItemProps.align ?? 'center'
     return (
       <FormItem {...formItemProps} >
         <FormCheckbox {...elementProps} />

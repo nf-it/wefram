@@ -14,6 +14,7 @@ export type FormSelectFieldOption = {
 
 export type FormSelectProps = FormFieldCommon & TextFieldProps & {
   dense?: boolean
+  small?: boolean
   options?: FormSelectFieldOption[] | FormSelectFieldOptionTuple[] | FormSelectFieldOptionsDict
 }
 
@@ -41,6 +42,7 @@ export class FormSelect extends React.Component<FormSelectProps> {
       dense,  // simplificates dense from 'margin=dense' to boolean 'dense'
       options,  // allows to specify options as Dict or List in addition to usage of children <MenuItem>
       fullWidth,  // we overrides fullWidth defaults in forms from 'false' to 'true'
+      small,
       ...elementProps
     } = this.props
     elementProps.onChange = elementProps.onChange ?? this.handleOnChange
@@ -79,6 +81,7 @@ export class FormSelect extends React.Component<FormSelectProps> {
               : ''
           )
         }
+        size={small ? 'small' : 'medium'}
         fullWidth={this.props.fullWidth ?? true}
         {...elementProps}
       >

@@ -1,9 +1,9 @@
 import React from 'react'
-import {Box, IconButton, TextField, Tooltip} from '@material-ui/core'
+import {Box, IconButton, TextField, Tooltip} from 'system/components'
 import {gettext} from 'system/l10n'
-import UnmaskPasswordIcon from '@material-ui/icons/Visibility'
-import MaskPasswordIcon from '@material-ui/icons/VisibilityOff'
-import ClearIcon from '@material-ui/icons/HighlightOff'
+import UnmaskPasswordIcon from '@mui/icons-material/Visibility'
+import MaskPasswordIcon from '@mui/icons-material/VisibilityOff'
+import ClearIcon from '@mui/icons-material/HighlightOff'
 
 
 export type PasswordSetterProps = {
@@ -17,6 +17,7 @@ export type PasswordSetterProps = {
   spacing?: number
   unhidable?: boolean  // default = true
   variant?: 'standard' | 'filled' | 'outlined'
+  size?: 'small' | 'medium'
   onChange?: ((name: string | undefined, newValue: any) => void)
 }
 
@@ -70,7 +71,7 @@ export class PasswordSetter extends React.Component<PasswordSetterProps, Passwor
   }
 
   render() {
-    const alignItems = (this.props.variant ?? 'standard') === 'standard' ? 'flex-end' : 'center'
+    const alignItems = (this.props.variant ?? 'outlined') === 'standard' ? 'flex-end' : 'center'
     return (
       <React.Fragment>
         <Box display={'flex'} alignItems={alignItems} justifyContent={'space-between'} width={'100%'}>
@@ -81,7 +82,8 @@ export class PasswordSetter extends React.Component<PasswordSetterProps, Passwor
             error={this.state.invalid || this.props.error}
             label={this.state.clear ? gettext("Empty password", 'system.aaa') : this.props.labelPassword}
             name={this.props.name}
-            margin={this.props.dense ? 'dense' : 'normal'}
+            margin={this.props.dense ? 'dense' : undefined}
+            size={this.props.size}
             onChange={this.handlePasswordChange}
             fullWidth
             variant={this.props.variant}
@@ -93,7 +95,8 @@ export class PasswordSetter extends React.Component<PasswordSetterProps, Passwor
             error={this.state.invalid || this.props.error}
             label={this.state.clear ? gettext("Empty password", 'system.aaa') : this.props.labelConfirmation}
             name={this.props.name}
-            margin={this.props.dense ? 'dense' : 'normal'}
+            margin={this.props.dense ? 'dense' : undefined}
+            size={this.props.size}
             onChange={this.handleConfirmationChange}
             fullWidth
             variant={this.props.variant}

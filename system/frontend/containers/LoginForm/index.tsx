@@ -13,10 +13,10 @@ import {
   Paper,
   Typography
 } from 'system/components'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
-import {runtime, appInterface} from 'system/runtime'
+import {runtime} from 'system/runtime'
 import {routing} from 'system/routing'
 import {aaa} from 'system/aaa/api'
 import {session} from 'system/aaa/session'
@@ -76,10 +76,10 @@ class _LoginForm extends React.Component<Props, State> {
       localStorage.setItem(localStorageUsernameRememberKeyname, this.state.username)
     }
 
-    runtime.busy = true
+    runtime.setBusy()
     aaa.authenticate(this.state.username, this.state.password).then(() => {
-      appInterface.initializeApp().then(() => {
-        runtime.busy = false
+      runtime.initialize().then(() => {
+        runtime.dropBusy()
         notifications.showSuccess(
           `${gettext("Welcome")}, ${session.displayName}`
         )
@@ -88,7 +88,7 @@ class _LoginForm extends React.Component<Props, State> {
         }
       })
     }).catch((err) => {
-      runtime.busy = false
+      runtime.dropBusy()
       const statusCode: number = err.response.status
       if (statusCode === 400 || statusCode === 401) {
         notifications.showError(
@@ -121,7 +121,7 @@ class _LoginForm extends React.Component<Props, State> {
           display: 'flex',
           alignItems: 'center'
         }}>
-          <div className={'UI-LoginForm-paper'}>
+          <Box className={'UI-LoginForm-paper'}>
             <Avatar className={'UI-LoginForm-avatar'} color="secondary">
               <LockOutlinedIcon />
             </Avatar>
@@ -168,22 +168,22 @@ class _LoginForm extends React.Component<Props, State> {
                   label={gettext("Remember me", 'system.aaa')}
                 />
               )}
-              <div className={'UI-LoginForm-submit'}>
+              <Box className={'UI-LoginForm-submit'}>
                 <Button
                   type="submit"
                   fullWidth
-                  variant="contained"
+                  // variant="contained"
                   color="primary"
                   className={'css.submitbtn'}
                 >
                   {gettext("Sign In", 'system.aaa')}
                 </Button>
-              </div>
+              </Box>
               <Box mt={5}>
                 <Copyright />
               </Box>
             </form>
-          </div>
+          </Box>
         </Grid>
       </Grid>
     );

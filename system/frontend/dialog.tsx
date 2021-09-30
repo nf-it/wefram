@@ -1,14 +1,17 @@
 import React from 'react'
 import {MouseEventHandler} from 'react'
 import {makeObservable, observable} from 'mobx'
-import {Box, DialogContentText, TextField, Typography, PropTypes} from 'system/components'
+import {Box, DialogContentText, TextField, Typography} from 'system/components'
 import {gettext} from './l10n'
+
+
+type Color = 'error' | 'inherit' | 'primary' | 'secondary' | 'success' | 'info' | 'warning' | undefined
 
 
 export type DialogButton = {
   caption: string
   autoFocus: boolean
-  color: PropTypes.Color
+  color: Color
   variant: 'text' | 'outlined' | 'contained'
   onClick: MouseEventHandler
 }
@@ -52,8 +55,8 @@ type DialogInterface = {
     }: {
       message?: string, title?: string, captionOK?: string, captionCancel?: string,
       okCallback?: any, cancelCallback?: any, defaultOK?: boolean,
-      highlightOK?: boolean, highlightCancel?: boolean, colorOK?: PropTypes.Color,
-      colorCancel?: PropTypes.Color
+      highlightOK?: boolean, highlightCancel?: boolean, colorOK?: Color,
+      colorCancel?: Color
     }): void
   prompt({
     defaultValue, message, title, captionOK, captionCancel, okCallback, cancelCallback
@@ -109,8 +112,8 @@ export const dialog: DialogInterface = {
     }: {
       message?: string, title?: string, captionOK?: string, captionCancel?: string,
       okCallback?: any, cancelCallback?: any, defaultOK?: boolean,
-      highlightOK?: boolean, highlightCancel?: boolean, colorOK?: PropTypes.Color,
-      colorCancel?: PropTypes.Color
+      highlightOK?: boolean, highlightCancel?: boolean, colorOK?: Color,
+      colorCancel?: Color
   }) {
     const
       buttonCaptionOK: string = captionOK ?? gettext("OK"),

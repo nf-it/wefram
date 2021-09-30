@@ -15,8 +15,8 @@ import {
   ListsSelection,
   ProvTableProps,
 } from './types'
-import ExpandIcon from '@material-ui/icons/KeyboardArrowDown'
-import CollapseIcon from '@material-ui/icons/KeyboardArrowUp'
+import ExpandIcon from '@mui/icons-material/KeyboardArrowDown'
+import CollapseIcon from '@mui/icons-material/KeyboardArrowUp'
 import {ProvListsHoc} from './ProvListsHoc'
 import {FieldItemData} from './FieldItemData'
 import {CommonKey} from 'system/types'
@@ -122,7 +122,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
               <TableCell padding={'checkbox'} />
             )}
             {this.props.columns.filter(column => !column.hidden).map(column => (
-              <TableCell size={column.size} align={column.fieldAlign}>{column.caption}</TableCell>
+              <TableCell align={column.fieldAlign}>{column.caption}</TableCell>
             ))}
             {this.props.renderRowSuffix && (
               <TableCell padding={'checkbox'} />
@@ -206,7 +206,6 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
                     )}
                     {this.props.columns.filter(column => !column.hidden).map(column => (
                       <TableCell
-                        size={column.size}
                         align={column.fieldAlign}
                       >
                         <FieldItemData item={item} field={column} disableCaption/>

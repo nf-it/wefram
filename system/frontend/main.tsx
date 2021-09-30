@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {observer} from 'mobx-react'
-import {Link, Switch, Route, Router} from 'react-router-dom'
-import {createTheme, ThemeProvider} from '@material-ui/core/styles'
-import {Box} from '@material-ui/core'
-import {defaultTheme} from './theme'
+import {Switch, Route, Router} from 'react-router-dom'
+import {createTheme, ThemeProvider} from '@mui/material/styles'
+import {workspaceTheme} from './theme'
 import {notificationsStore} from './notification'
 import {dialogsStore} from './dialog'
 import {LayoutAppbar} from './containers/LayoutAppbar'
@@ -15,7 +14,7 @@ import {GlobalDialog} from './containers/GlobalDialog'
 import {Relogin} from 'system/containers/Relogin'
 import {LoadingGlobal} from './components'
 import {Loading} from './components'
-import {runtime, appInterface} from './runtime'
+import {runtime} from './runtime'
 import {notifications} from './notification'
 import {routingHistory} from 'system/routing'
 import {LoginScreen} from 'system/containers/LoginScreen'
@@ -36,22 +35,22 @@ class Main extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount() {
-    this.initializeApp()
+    this.initializeProject()
 
-    setInterval(() => {
-      aaa.check()
-        .then(() => { /* really do nother on success */ })
-        .catch(() => { /* really do nothing on error */ })
-    }, AAA_CHECK_INTERVAL)
+    // setInterval(() => {
+    //   aaa.check()
+    //     .then(() => { /* really do nother on success */ })
+    //     .catch(() => { /* really do nothing on error */ })
+    // }, AAA_CHECK_INTERVAL)
   }
 
-  initializeApp = () => {
-    appInterface.initializeApp().then(() => {
+  private initializeProject = (): void => {
+    runtime.initialize().then(() => {
       document.title = runtime.title
       this.setState({loading: false})
     }).catch(() => {
       notifications.showError('An server error occured: could not load application. Will try again in few seconds.')
-      setTimeout(() => this.initializeApp(), 5000)
+      setTimeout(() => this.initializeProject(), 5000)
       return null
     })
   }
@@ -63,7 +62,7 @@ class Main extends React.Component<AppProps, AppState> {
       )
 
     return (
-      <ThemeProvider theme={createTheme(defaultTheme, runtime.muiLocalization)}>
+      <ThemeProvider theme={createTheme(workspaceTheme)}>
         <Router history={routingHistory}>
           <Switch>
             <Route
@@ -72,15 +71,15 @@ class Main extends React.Component<AppProps, AppState> {
               component={LoginScreen}
               path={runtime.loginScreenUrl}
             />
-            <Box className={'SystemUI-Layout-root'}>
+            <div className={'SystemUI-Layout-root'}>
               <LayoutAppbar />
               <LayoutSitemap />
               <LayoutScreens />
-            </Box>
+            </div>
           </Switch>
         </Router>
         <Relogin open={runtime.reloginFormOpen} />
-        <LoadingGlobal runtime={runtime} />
+        <LoadingGlobal busy={runtime.busy} />
         <GlobalDialog store={dialogsStore} />
         <NotificationBar store={notificationsStore} />
       </ThemeProvider>

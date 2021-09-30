@@ -6,7 +6,7 @@ from .. import ds, settings
 from ..tools import json_decode, json_encode, rerekey_snakecase_to_lowercamelcase
 from .tools import random_token
 from .const import SETTINGS_SESSION_LIFETIME
-from .types import ISessionUser, IPermissions, ISession, ICachedSession
+from .types import IPermissions
 
 
 __all__ = [
@@ -76,8 +76,11 @@ class User(ds.Model):
         include = ['full_name', 'display_name']
         findable = ['full_name', 'login']
         attributes_sets = {
-            'session': list(ISessionUser.__annotations__.keys())
+            'session': [
+                'id', 'login', 'first_name', 'middle_name', 'last_name', 'display_name', 'full_name', 'locale', 'timezone'
+            ]
         }
+        history = ds.History(enable=True, ignore=['last_login'], exclude=['last_login', 'secret'])
 
     @ds.hybrid_property
     def full_name(self) -> str:
@@ -153,10 +156,17 @@ class Role(ds.Model):
         findable = ['name']
 
 
+class SessionLog(ds.Model):
+    id = ds.BigAutoIncrement()
+    user_id = ds.Column(ds.UUID(), ds.ForeignKey(User.id, ondelete='CASCADE'), nullable=False)
+    ts = ds.Column(ds.DateTime(), nullable=False, default=datetime.datetime.now)
+    extra = ds.Column(ds.JSONB())
+
+
 @dataclass
 class Session:
     token: str
-    user: ISessionUser
+    user: dict
     permissions: IPermissions
     start_timestamp: datetime.datetime
     touch_timestamp: datetime.datetime
@@ -180,7 +190,7 @@ class Session:
         }
 
     def jsonify(self) -> str:
-        response: ICachedSession = {
+        response: dict = {
             'token': self.token,
             'user': self.user,
             'permissions': self.permissions,
@@ -211,7 +221,7 @@ class Session:
         jsoned: Optional[str] = await cn.get(rk)
         if jsoned is None:
             raise FileNotFoundError(token)
-        cached: ICachedSession = json_decode(jsoned)
+        cached: dict = json_decode(jsoned)
         values: Dict[str, Any] = cached
         values['start_timestamp'] = datetime.datetime.fromisoformat(values['start_timestamp'])
         values['touch_timestamp'] = datetime.datetime.fromisoformat(values['touch_timestamp'])
@@ -244,7 +254,7 @@ class SessionUser(BaseUser):
             scopes: IPermissions
     ) -> None:
         self.session: Session = session
-        self.user: ISessionUser = self.session.user
+        self.user: dict = self.session.user
         self.scopes: IPermissions = scopes
 
         self.user_id: str = str(self.user.get('id', ''))

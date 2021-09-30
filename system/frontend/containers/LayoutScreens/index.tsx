@@ -1,7 +1,7 @@
 import React from 'react'
 import {Route, Switch, Redirect} from 'react-router-dom'
 import {Box} from 'system/components'
-import {screensSchema} from 'system/prepared/screens'
+import {screensSchema} from 'build/screens'
 import {Screen} from 'system/containers/Screen'
 import {LoginScreen} from 'system/containers/LoginScreen'
 import {routing} from 'system/routing'

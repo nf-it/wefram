@@ -4,17 +4,22 @@ import {
   Box,
   Button,
   CircularProgress,
+  Dialog,
   DialogActions,
   DialogContent,
   DialogWindowTitle,
+  DialogTitle,
+  DividerRuler,
   LoadingLinear,
   Toolbar,
-  Tooltip
+  Tooltip,
+  Typography
 } from 'system/components'
-import BackIcon from '@material-ui/icons/ArrowBackRounded'
-import CloseIcon from '@material-ui/icons/CancelTwoTone'
-import SubmitIcon from '@material-ui/icons/DoneRounded'
-import DeleteIcon from '@material-ui/icons/DeleteRounded'
+import BackIcon from '@mui/icons-material/ArrowBackRounded'
+import CloseIcon from '@mui/icons-material/CancelTwoTone'
+import SubmitIcon from '@mui/icons-material/DoneRounded'
+import DeleteIcon from '@mui/icons-material/DeleteRounded'
+import HelpIcon from '@mui/icons-material/LiveHelpOutlined'
 import {api} from 'system/api'
 import {CommonKey, IApiEntityComplexResponse, IApiEntityResponse, TApiSubmitMethod} from 'system/types'
 import {RequestApiPath, RequestMethod, routing} from 'system/routing'
@@ -40,10 +45,12 @@ export type EntityFormProps = {
   deleteRequres?: Permissions
   entityName?: string
   entityKey?: string | null
+  help?: JSX.Element
   stateDataName?: string
   requestDeep?: boolean
   requestPath?: RequestApiPath | string
   requiredForSubmit?: string[]
+  skipUnsavedAttrsWarn?: string[]
   submit?: string | boolean
   submitDisabled?: boolean
   submitPath?: RequestApiPath | string
@@ -52,35 +59,51 @@ export type EntityFormProps = {
   submitFieldsModel?: string[]
   title?: string
   variant?: 'outlined' | 'embedded'
+  warnOnUnsaved?: boolean | string[]
   windowed?: boolean
 
+  /** Calls after API->delete succeed, but before form closed **/
   onAfterDelete?: () => void
+  /** Calls after fetch done and loaded data being set up **/
   onAfterFetch?: () => void
+  /** Calls after successful submit, but before form closed **/
   onAfterSubmit?: () => void
+  /** Calls on every controlled field value change **/
+  onChange?: (fieldName: string, newValue: any) => void
+  /** Calls when form about to be closed to close the form from host component **/
   onClose?: () => void
-  onUpdateData: (data: any, cb?: any) => void
+  /** Calls on initial data (fetched) needs to be set up (EntityForm cannot set up data itself **/
+  onInitiateData?: (data: any, cb?: any) => void
+  /** Calls on every controlled field value change, giving entire data with updated value too **/
+  onUpdateData?: (data: any, cb?: any) => void
+  /** Calls on error occured **/
   onError?: (err: any) => void
+  /** The error message (string) or default message (if true); error will not be shown on false **/
   onErrorShowMsg?: boolean | string
+  /** Calls on fetch done, overriding the default EntityForm fetched data handling at all **/
   onFetch?: (response: IApiEntityResponse | IApiEntityComplexResponse) => void
+  /** Calls on fetch done, but before initial data to be set up; useful to handle fetched data **/
   onFetchMakeData?: (data: any) => any
 }
 
 type EntityFormState = {
-  dirty: boolean
-  loading: boolean
-  success: boolean
-  submitting: boolean
   dataInitial: any
+  dirty: boolean
+  helpOpen: boolean
+  loading: boolean
+  submitting: boolean
+  success: boolean
 }
 
 
 export class EntityForm extends React.Component<EntityFormProps, EntityFormState> {
   state: EntityFormState = {
+    dataInitial: {},
     dirty: false,
+    helpOpen: false,
     loading: true,
-    success: false,
     submitting: false,
-    dataInitial: {}
+    success: false
   }
 
   componentDidMount() {
@@ -100,6 +123,8 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     for (let k in dataCurrent) {
       if (!dataCurrent.hasOwnProperty(k))
         continue
+      if (this.props.skipUnsavedAttrsWarn && this.props.skipUnsavedAttrsWarn.includes(k))
+        continue
       if (!(k in dataInitial))
         return true
       const currentValue: any = dataCurrent[k]
@@ -117,7 +142,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
   }
 
   public reqClose = (): void => {
-    if (!this.isDirty()) {
+    if (!this.isDirty() || !(this.props.warnOnUnsaved ?? true)) {
       this.close()
     } else {
       dialog.showConfirm({
@@ -279,10 +304,22 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     }
     this.setState({dataInitial})
 
-    this.props.onUpdateData(data, () => this.setState({
-      loading: false,
-      success: true
-    }, () => this.props.onAfterFetch && this.props.onAfterFetch()))
+    if (this.props.onInitiateData) {
+      this.props.onInitiateData(data, () => this.setState({
+        loading: false,
+        success: true
+      }, () => this.props.onAfterFetch && this.props.onAfterFetch()))
+    } else if (this.props.onUpdateData) {
+      this.props.onUpdateData(data, () => this.setState({
+        loading: false,
+        success: true
+      }, () => this.props.onAfterFetch && this.props.onAfterFetch()))
+    } else {
+      this.setState({
+        loading: false,
+        success: true
+      }, () => this.props.onAfterFetch && this.props.onAfterFetch())
+    }
   }
 
   private extractFieldName = (e: any): string | null => {
@@ -337,7 +374,12 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     if (value === undefined)
       return
     data[fieldName] = value
-    this.props.onUpdateData(data)
+    if (this.props.onChange) {
+      this.props.onChange(fieldName, value)
+    }
+    if (this.props.onUpdateData) {
+      this.props.onUpdateData(data)
+    }
   }
 
   private elementsFrom = (elements: any | any[]): any[] => {
@@ -438,8 +480,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
             <Button
               color={'primary'}
               disabled={
-                (this.props.submitDisabled ?? false)
-                || (requiredForSubmit.length === 0 || (!this.requiredIsSatisfying()))
+                (this.props.submitDisabled ?? false) || !this.requiredIsSatisfying()
               }
               onClick={this.submit}
               variant={'outlined'}
@@ -465,16 +506,33 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
           </Box>
         )}
 
-        <Box>
+        <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} gap={'4px'}>
           {this.props.controls !== undefined && this.props.controls}
+          {this.props.help !== undefined && (!this.props.windowed) && (
+            <Box>
+              <Tooltip title={gettext("Help")}>
+                <Button
+                  onClick={() => this.setState({helpOpen: true})}
+                  variant={'outlined'}
+                  style={{
+                    color: '#181',
+                    borderColor: '#181'
+                  }}
+                >
+                  <HelpIcon style={{color: '#181'}} />
+                </Button>
+              </Tooltip>
+            </Box>
+          )}
           {(this.props.delete ?? false) && (
             <Box>
               <Tooltip title={gettext("Delete")}>
                 <Button
                   color={'secondary'}
                   onClick={this.remove}
-                  // variant={'outlined'}
-                ><DeleteIcon /* fontSize={this.props.windowed ? 'small' : undefined} */ /></Button>
+                >
+                  <DeleteIcon />
+                </Button>
               </Tooltip>
             </Box>
           )}
@@ -485,8 +543,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
             <Button
               color={'primary'}
               disabled={
-                (this.props.submitDisabled ?? false)
-                || (requiredForSubmit.length === 0 || (!this.requiredIsSatisfying()))
+                (this.props.submitDisabled ?? false) || (!this.requiredIsSatisfying())
               }
               onClick={this.submit}
               variant={'outlined'}
@@ -542,7 +599,11 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
         {(this.props.windowed ?? false) ? (
           <React.Fragment>
             {Boolean(this.props.title) && (
-              <DialogWindowTitle title={this.props.title ?? ''} onClose={this.reqClose} />
+              <DialogWindowTitle
+                title={this.props.title ?? ''}
+                onClose={this.reqClose}
+                onHelp={this.props.help !== undefined ? () => this.setState({helpOpen: true}) : undefined}
+              />
             )}
             <DialogContent>
               {Contents}
@@ -554,6 +615,21 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
             {ControlsBar}
             {Contents}
           </React.Fragment>
+        )}
+        {this.props.help !== undefined && (
+          <Dialog open={this.state.helpOpen}>
+            <DialogWindowTitle title={gettext("Help")} onClose={() => this.setState({helpOpen: false})} />
+            <DialogContent>
+              {this.state.helpOpen && (
+                <Box>
+                  {this.props.help}
+                </Box>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => this.setState({helpOpen: false})}>{gettext("Close")}</Button>
+            </DialogActions>
+          </Dialog>
         )}
         <Backdrop open={this.state.submitting} style={{
           position: 'fixed',

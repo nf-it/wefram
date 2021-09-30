@@ -9,3 +9,4 @@ from .types import *
 from .helpers import *
 from .stmt import *
 from .storage import *
+from .history import *

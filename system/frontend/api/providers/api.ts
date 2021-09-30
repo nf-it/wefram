@@ -1,9 +1,8 @@
-import {AxiosError, AxiosRequestConfig} from 'axios'
-import {request} from './requests'
-import {routing} from './routing'
-import {RequestApiPath, RequestPathParams} from './routing'
-import {EntityKey, TApiSubmitMethod} from './types'
+import {AxiosError} from 'axios'
+import {RequestApiPath} from 'system/routing'
+import {request} from 'system/requests'
 import {responses} from 'system/response'
+import {API} from '../types'
 
 
 function _formatURL(path: RequestApiPath): string {
@@ -15,93 +14,6 @@ function _formatURL(path: RequestApiPath): string {
   return `/api/${path.app}/${_ver}${_path}`.replace(/\/\//g, '/').replace(/\/$/, '')
 }
 
-
-interface IApiRequestConfig extends AxiosRequestConfig { }
-
-
-export type API = {
-  path(
-    app: string,
-    path: string,
-    version?: number
-  ): RequestApiPath
-
-  entityPath(
-    appName: string,
-    entityName: string,
-    version?: number
-  ): RequestApiPath
-
-  entityObjectPath(
-    appName: string,
-    entityName: string,
-    version?: number
-  ): RequestApiPath
-
-  pathToUrl(
-    path: RequestApiPath
-  ): string
-
-  pathWithParams(
-    path: RequestApiPath,
-    params: RequestPathParams
-  ): string
-
-  get(
-    path: RequestApiPath,
-    config?: IApiRequestConfig
-  ): Promise<any>
-
-  post(
-    path: RequestApiPath,
-    data?: any,
-    config?: IApiRequestConfig
-  ): Promise<any>
-
-  put(
-    path: RequestApiPath,
-    data?: any,
-    config?: IApiRequestConfig
-  ): Promise<any>
-
-  submit(
-    method: TApiSubmitMethod,
-    path: RequestApiPath,
-    data?: any,
-    config?: IApiRequestConfig
-  ): Promise<any>
-
-  patch(
-    path: RequestApiPath,
-    data?: any,
-    config?: IApiRequestConfig
-  ): Promise<any>
-
-  delete(
-    path: RequestApiPath,
-    config?: IApiRequestConfig
-  ): Promise<any>
-
-  deleteObject(
-    path: RequestApiPath,
-    key: EntityKey
-  ): Promise<any>
-
-  deleteObjects(
-    path: RequestApiPath,
-    keys: string[] | number[]
-  ): Promise<any>
-
-  head(
-    path: RequestApiPath,
-    config?: IApiRequestConfig
-  ): Promise<any>
-
-  options(
-    path: RequestApiPath,
-    config?: IApiRequestConfig
-  ): Promise<any>
-}
 
 export const api: API = {
   path(app, path, version?) {
@@ -235,3 +147,5 @@ export const api: API = {
     })
   }
 }
+
+

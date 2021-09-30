@@ -1,5 +1,5 @@
 
-export type StoredFile = {
+export type StoredFileModel = {
   id: number
   createdAt: string
   sort: number
@@ -7,9 +7,9 @@ export type StoredFile = {
   file: string
 }
 
-export type StoredFiles = StoredFile[]
+export type StoredFilesModel = StoredFileModel[]
 
-export type StoredImage = {
+export type StoredImageModel = {
   id: number
   createdAt: string
   sort: number
@@ -17,4 +17,4 @@ export type StoredImage = {
   file: string
 }
 
-export type StoredImages = StoredImage[]
+export type StoredImagesModel = StoredImageModel[]

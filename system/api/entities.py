@@ -276,6 +276,8 @@ class EntityAPI(EntityCRUD, ABC):
 
 
 def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
+    """ Registers the EntityAPI-based class to handle entity based API logics. """
+
     from ..aaa import wrappers
 
     def _make_instanced_endpoint(_endpoint: Callable) -> Callable:

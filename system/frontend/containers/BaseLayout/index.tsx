@@ -21,18 +21,18 @@ import {
   AccountCircle,
   ExpandLess,
   ExpandMore
-} from '@material-ui/icons'
+} from '@mui/icons-material'
 import {Link, Redirect, Route, Switch} from 'react-router-dom'
 import {observer} from 'mobx-react'
 import {LoginScreen} from '../LoginScreen'
 import {aaa, session} from 'system/aaa'
 import {gettext} from 'system/l10n'
 import {ClockTime} from 'system/components'
-import {screensSchema} from 'system/prepared/screens'
+import {screensSchema} from 'build/screens'
 import {Screen} from '../Screen'
 import {notifications} from 'system/notification'
 import {routingHistory, routing} from 'system/routing'
-import {runtime, appInterface} from 'system/runtime'
+import {runtime} from 'system/runtime'
 import './index.css'
 
 
@@ -59,12 +59,12 @@ class _BaseLayout extends React.Component<P, S> {
   }
 
   handleProfileLogout = () => {
-    runtime.busy = true
+    runtime.setBusy()
     aaa.logout()
     this.setState({anchorProfileMenu: null})
     notifications.showSuccess(gettext('You have been logged out. Good bye.', 'system.aaa-messages'))
-    appInterface.initializeApp().then(() => {
-      runtime.busy = false
+    runtime.initialize().then(() => {
+      runtime.dropBusy()
       routing.gotoDefault()
     })
   }

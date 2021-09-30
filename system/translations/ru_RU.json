@@ -3,11 +3,13 @@
     "Welcome": "Добро пожаловать",
     "Login": "Вход",
     "Logout": "Выход",
+    "Help": "Помощь",
     "User": "Пользователь",
     "Home": "Домой",
     "OK": "OK",
     "Cancel": "Отмена",
     "Close": "Закрыть",
+    "Clear": "Сброс",
     "Create": "Создать",
     "Success": "Успешно",
     "Error": "Ошибка",
@@ -18,23 +20,32 @@
     "Order": "Порядок",
     "Name": "Название",
     "Type here to find...": "Введите текст для поиска...",
+    "Find": "Найти",
     "Add": "Добавить",
     "Back": "Назад",
     "Save": "Сохранить",
     "Delete": "Удалить",
     "Succeed": "Успешно",
     "Failed": "Неудачно",
+    "Today": "Сегодня",
     "Created at": "Дата создания",
     "Are you sure you want to delete?": "Вы уверены, что хотите выполнить удаление?",
-    "There is an error on the server, please try again a little later!": "Произошла ошибка на сервере, пожалуйста попробуйте еще раз позже!"
+    "There is an error on the server, please try again a little later!": "Произошла ошибка на сервере, пожалуйста попробуйте еще раз позже!",
+    "Something went wrong while downloading data from the server for this location. Please try to visit this page again later.": "Что-то пошло не так при загрузке данных с сервера для этого места. Попробуйте зайти на эту страницу позже снова.",
+    "Something went wrong": "Что-то пошло не так"
   },
   "*": {
     "System": "Система",
-    "Workspace": "Рабочий стол"
+    "Desktop": "Рабочий стол",
+    "Users": "Пользователи"
   },
   "messages": {
     "The object cannot be deleted because others depend on it.": "Невозможно удалить объект, так как от него зависят другие.",
     "Changes cannot be made because they conflict with other existing properties or objects.": "Невозможно внести изменения, так как они конфликтуют с другими свойствами существующими или объектами."
+  },
+  "datetime": {
+    "Previous month": "Предыдущий месяц",
+    "Next month": "Следующий месяц"
   },
   "datetime-months": {
     "Jan": "Янв",
@@ -156,6 +167,7 @@
     "Control security settings": "Управление настройками безопасноси",
     "Running development tests": "Выполнение тестов разработки",
     "Delay when login has failed (secs)": "Задержка при неудачной попытке входа (сек)",
+    "Delay when login has succeed (secs)": "Задержка при удачной попытке входа (сек)",
     "Username (Login)": "Имя пользователя (Логин)",
     "Password": "Пароль",
     "Remember me": "Запомнить меня",

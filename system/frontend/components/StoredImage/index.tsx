@@ -1,22 +1,22 @@
 import React from 'react'
-import Image from 'material-ui-image'
 import {
   Backdrop,
   Box,
   Button,
   IconButton,
+  Image,
   Modal
-} from '@material-ui/core'
-import CloseIcon from '@material-ui/icons/CloseRounded'
-import ClearIcon from '@material-ui/icons/DeleteForeverRounded'
-import UploadIcon from '@material-ui/icons/CloudUploadRounded'
-import {storage} from '../../storage'
-import {RequestApiPath, routing} from '../../routing'
-import {api} from '../../api'
-import {notifications} from '../../notification'
-import {runtime} from '../../runtime'
-import {gettext} from '../../l10n'
-import {dialog} from '../../dialog'
+} from 'system/components'
+import CloseIcon from '@mui/icons-material/CloseRounded'
+import ClearIcon from '@mui/icons-material/DeleteForeverRounded'
+import UploadIcon from '@mui/icons-material/CloudUploadRounded'
+import {storage} from 'system/storage'
+import {RequestApiPath, routing} from 'system/routing'
+import {api} from 'system/api'
+import {notifications} from 'system/notification'
+import {runtime} from 'system/runtime'
+import {gettext} from 'system/l10n'
+import {dialog} from 'system/dialog'
 import './index.css'
 
 
@@ -68,11 +68,11 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
         app: 'system',
         path: `storage/${this.props.entity}/file/${currentFileId}`
       }
-      runtime.busy = true
+      runtime.setBusy()
       api.delete(url).then(() => {
-        runtime.busy = false
+        runtime.dropBusy()
       }).catch(err => {
-        runtime.busy = false
+        runtime.dropBusy()
         notifications.showRequestError(err)
       })
     }
@@ -89,7 +89,7 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
     const form: FormData = new FormData()
     form.append('file', data.target.files[0])
 
-    runtime.busy = true
+    runtime.setBusy()
     this.setState({openViewer: false})
 
     if (update) {
@@ -97,24 +97,24 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
         const newFileId: string = (res.statusCode !== 204 && res.data)
           ? res.data
           : currentFileId
-        runtime.busy = false
+        runtime.dropBusy()
         this.setState({
           fileId: newFileId
         }, () => {this.props.onChange !== undefined && this.props.onChange(newFileId)})
       }).catch(err => {
-        runtime.busy = false
+        runtime.dropBusy()
         notifications.showRequestError(err)
       })
 
     } else {
       api.post(url, form).then(res => {
         const newFileId: string = res.data
-        runtime.busy = false
+        runtime.dropBusy()
         this.setState({
           fileId: newFileId
         }, () => {this.props.onChange !== undefined && this.props.onChange(newFileId)})
       }).catch(err => {
-        runtime.busy = false
+        runtime.dropBusy()
         notifications.showRequestError(err)
       })
     }
@@ -178,13 +178,13 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
               src={storage.urlFor(this.props.entity, fileId)}
               style={{
                 backgroundColor: 'transparent',
-                padding: null,
-                paddingTop: null,
+                padding: undefined,
+                paddingTop: undefined,
                 position: 'absolute'
               }}
               imageStyle={{
-                width: null,
-                height: null,
+                width: undefined,
+                height: undefined,
                 position: 'relative',
                 overflow: 'hidden',
                 maxWidth: '100%',
@@ -253,13 +253,13 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
                     src={storage.urlFor(this.props.entity, fileId)}
                     style={{
                       backgroundColor: 'transparent',
-                      padding: null,
-                      paddingTop: null,
+                      padding: undefined,
+                      paddingTop: undefined,
                       position: 'absolute'
                     }}
                     imageStyle={{
-                      width: null,
-                      height: null,
+                      width: undefined,
+                      height: undefined,
                       position: 'relative',
                       overflow: 'hidden',
                       maxWidth: '100%',

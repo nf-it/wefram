@@ -5,14 +5,13 @@ import {api} from 'system/api'
 import {ScreenProps, ActiveDirectoryDomainModel} from 'system/types'
 import {
   Box,
-  Checkbox,
   Dialog,
-  DigitsInputField,
   EntityForm,
   EntityTable,
-  Grid,
-  FormControlLabel,
-  TextField,
+  FormPaper,
+  FormCheckboxField,
+  FormDigitsInputField,
+  FormTextInputField,
   Typography
 } from 'system/components'
 
@@ -77,56 +76,43 @@ class DomainCard extends React.Component<DomainCardProps, DomainCardState> {
         onAfterSubmit={this.props.onAfterSubmit}
         onClose={this.props.onClose}
       >
-        <Box mt={2} mb={2}>
-          <Grid container spacing={1}>
-            <Grid item xs={8}>
-              <FormControlLabel control={
-                <Checkbox
-                  id={'enabled'}
-                  defaultChecked={this.state.data.enabled}
-                />
-              } label={gettext("The domain is in use", 'system.aaa')} />
-            </Grid>
-            <Grid item xs={4}>
-              <DigitsInputField
-                name={'sort'}
-                label={gettext("Order")}
-                required
-                fullWidth
-                defaultValue={this.state.data.sort}
-              />
-            </Grid>
-          </Grid>
+        <FormPaper spacingAfter={2}>
+          <FormCheckboxField
+            formName={'enabled'}
+            label={gettext("The domain is in use", 'system.aaa')}
+            width={8}
+          />
+          <FormDigitsInputField
+            formName={'sort'}
+            label={gettext("Order")}
+            required
+            width={4}
+          />
+        </FormPaper>
 
-        </Box>
-        <Box mt={2} mb={2}>
-          <TextField
+        <FormPaper spacingBefore={2} spacingAfter={1}>
+          <FormTextInputField
             error={this.state.data.name === ''}
-            name={'name'}
+            formName={'name'}
             label={gettext("Name")}
             required
-            fullWidth
-            defaultValue={this.state.data.name} />
-        </Box>
-        <Box mt={2} mb={2}>
-          <TextField
+            width={12}
+          />
+          <FormTextInputField
             error={this.state.data.domain === ''}
-            name={'domain'}
+            formName={'domain'}
             label={gettext("Domain", 'system.aaa')}
             required
-            fullWidth
             placeholder={'mydomain.ru'}
-            defaultValue={this.state.data.domain} />
-        </Box>
-        <Box mt={2} mb={2}>
-          <TextField
-            name={'server'}
+            width={12}
+          />
+          <FormTextInputField
+            formName={'server'}
             label={gettext("Active Directory server (optional)", 'system.aaa')}
-            required
-            fullWidth
             placeholder={'dc.mydomain.ru'}
-            defaultValue={this.state.data.server} />
-        </Box>
+            width={12}
+          />
+        </FormPaper>
       </EntityForm>
     )
   }

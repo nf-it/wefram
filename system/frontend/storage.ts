@@ -1,5 +1,5 @@
 import {RequestApiPath, routing} from 'system/routing'
-import {StoredFile, StoredFiles} from 'system/types'
+import {StoredFileModel, StoredFilesModel} from 'system/types'
 
 
 export type Storage = {

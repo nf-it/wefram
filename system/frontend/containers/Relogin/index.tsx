@@ -1,7 +1,8 @@
-import React, {createRef} from 'react'
+import React from 'react'
+import {runInAction} from 'mobx'
 import {gettext} from 'system/l10n'
 import {aaa, session} from 'system/aaa'
-import {appInterface, runtime} from 'system/runtime'
+import {runtime} from 'system/runtime'
 import {routing} from 'system/routing'
 import {
   Box,
@@ -42,17 +43,17 @@ export class Relogin extends React.Component<ReloginProps, ReloginState> {
 
     this.setState({password: ''})
 
-    runtime.busy = true
+    runtime.setBusy()
     aaa.authenticate(username, this.state.password).then(() => {
-      appInterface.initializeApp().then(() => {
-        runtime.busy = false
+      runtime.initialize().then(() => {
+        runtime.dropBusy()
         notifications.showSuccess(
           `${gettext("Welcome")}, ${session.displayName}`
         )
-        runtime.reloginFormOpen = false
+        runInAction(() => runtime.reloginFormOpen = false)
       })
     }).catch((err) => {
-      runtime.busy = false
+      runtime.dropBusy()
       const statusCode: number = err.response.status
       if (statusCode === 400 || statusCode === 401) {
         notifications.showError(
@@ -98,7 +99,7 @@ export class Relogin extends React.Component<ReloginProps, ReloginState> {
           <Button
             color={'secondary'}
             onClick={() => {
-              runtime.reloginFormOpen = false
+              runInAction(() => runtime.reloginFormOpen = false)
               routing.gotoLogin()
             }}
           >

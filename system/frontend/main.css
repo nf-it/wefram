@@ -6,6 +6,8 @@ html {
 
 body {
     background-color: #f8f8f8;
+    font-family: "Roboto","Helvetica","Arial",sans-serif;
+    font-weight: 400;
 }
 
 div {
@@ -23,8 +25,9 @@ div {
 
 
 .SystemUI-Box-GrayPanel {
-    padding: 2px;
-    border-radius: .5vmax;
-    background-color: #eee;
-    border: 1px solid #e7e7e7;
+    padding: .6vmax 2px;
+    border-radius: .6vmax;
+    background: linear-gradient(to right bottom, #e5e5e5, #fff 120%) !important;
+    border: 1px solid #444;
+    box-shadow: 0 .25vmax 1vmax #0005;
 }

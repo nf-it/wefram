@@ -8,7 +8,7 @@ export type FormPaperProps = {
   spacing?: GridSpacing  // default = 2
   spacingAfter?: number  // default = 2
   spacingBefore?: number  // default = 8 or 4
-  variant?: 'standard' | 'outlined' | 'depadded'  // default = 'standard'
+  variant?: 'standard' | 'outlined' | 'padded'  // default = 'standard'
   padding?: number  // default = 2
 }
 
@@ -19,7 +19,7 @@ export class FormPaper extends React.Component<FormPaperProps> {
       <Box
         mt={this.props.spacingBefore ?? (this.props.title !== undefined ? 4 : 2)}
         mb={this.props.spacingAfter ?? 8}
-        p={this.props.padding ?? (this.props.variant !== 'depadded' ? 2 : 0)}
+        p={this.props.padding ?? ((this.props.variant ?? 'standard') !== 'standard' ? 2 : 0)}
         boxSizing={'border-box'}
         borderRadius={'.5vmax'}
         border={this.props.variant === 'outlined' ? '1px solid #ddd' : undefined}
@@ -28,11 +28,11 @@ export class FormPaper extends React.Component<FormPaperProps> {
           <Typography
             variant={'h4'}
             color={'primary'}
-            style={{
-              paddingLeft: this.props.titlePadding === true || (this.props.variant === 'depadded' && this.props.titlePadding !== false)
-                ? '16px'
-                : undefined
-            }}
+            // style={{
+            //   paddingLeft: this.props.titlePadding === true || (this.props.variant === 'padded' && this.props.titlePadding !== false)
+            //     ? '16px'
+            //     : undefined
+            // }}
             gutterBottom
           >{this.props.title}</Typography>
         )}

@@ -1,5 +1,5 @@
 import React, {createRef} from 'react'
-import DeleteIcon from '@material-ui/icons/Delete'
+import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Box,
   Button,
@@ -14,8 +14,8 @@ import {
   ProvListProps,
   Tooltip
 } from 'system/components'
-import RefreshIcon from '@material-ui/icons/Refresh'
-import ClearIcon from '@material-ui/icons/BackspaceRounded'
+import RefreshIcon from '@mui/icons-material/Refresh'
+import ClearIcon from '@mui/icons-material/BackspaceRounded'
 import {gettext} from 'system/l10n'
 import {dialog} from 'system/dialog'
 import {api} from 'system/api'
@@ -129,13 +129,15 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
           <Box display={'flex'} flexDirection={'row'} justifyContent={'flex-end'} p={2} mt={2} mb={2}>
             {this.props.search !== undefined && (
               <LazyTextField
+                label={gettext("Find")}
                 placeholder={this.props.search === true ? gettext("Type here to find...") : String(this.props.search)}
                 value={this.state.searchValue}
                 fullWidth
                 variant={'outlined'}
-                margin={'dense'}
+                size={'small'}
                 onChange={event => this.setState({searchValue: event.target.value})}
                 onChangeLazy={event => this.setState({searchLazyValue: event.target.value})}
+                color={this.state.searchValue ? 'success' : undefined}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position={'end'}>

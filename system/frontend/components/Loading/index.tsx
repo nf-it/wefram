@@ -1,7 +1,6 @@
 import React from 'react'
-import {Backdrop, CircularProgress, LinearProgress} from '@material-ui/core'
+import {Backdrop, CircularProgress, LinearProgress} from 'system/components'
 import {observer} from 'mobx-react'
-import {IRuntime} from 'system/runtime'
 
 
 export type LoadingProps = {
@@ -9,7 +8,7 @@ export type LoadingProps = {
 }
 
 export type LoadingGlobalProps = {
-  runtime: IRuntime
+  busy: boolean
 }
 
 
@@ -49,12 +48,13 @@ export class LoadingLinear extends React.Component<any> {
 }
 
 
-export class _LoadingGlobal extends React.Component<LoadingGlobalProps> {
+class _LoadingGlobal extends React.Component<LoadingGlobalProps> {
   render() {
     return (
-      <Loading open={this.props.runtime.busy} />
+      <Loading open={this.props.busy} />
     )
   }
 }
+
 
 export const LoadingGlobal = observer(_LoadingGlobal)

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, BoxProps, Divider} from '@material-ui/core'
+import {Box, BoxProps, Divider} from 'system/components'
 import './index.css'
 
 

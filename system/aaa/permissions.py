@@ -7,11 +7,9 @@ from ..l10n import L10nStr
 
 __all__ = [
     'Permission',
-    'IPermissionItem',
     'TPermissions',
     'TPermissionsItems',
     'IPermissionsSet',
-    'IAppPermissionsSchema',
     'IPermissionsSchema',
     'registered',
     'register',
@@ -34,23 +32,10 @@ class Permission:
         return self.key
 
 
-class IPermissionItem(TypedDict):
-    key: str
-    caption: str
-
-
 TPermissions = List[Permission]
-TPermissionsItems = List[IPermissionItem]
+TPermissionsItems = List[dict]
 IPermissionsSet = Dict[str, TPermissions]
-
-
-class IAppPermissionsSchema(TypedDict):
-    app: str
-    caption: Union[str, L10nStr]
-    permissions: TPermissionsItems
-
-
-IPermissionsSchema = List[IAppPermissionsSchema]
+IPermissionsSchema = List[dict]
 
 
 registered: TPermissions = []
@@ -92,7 +77,7 @@ def get_schema() -> IPermissionsSchema:
     app_name: str
     app_permissions: TPermissions
     for app_name, app_permissions in perms.items():
-        permsset: IAppPermissionsSchema = {
+        permsset: dict = {
             'app': app_name,
             'caption': apps.get_app_caption(app_name),
             'permissions': [{

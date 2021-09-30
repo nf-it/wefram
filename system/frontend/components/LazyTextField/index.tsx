@@ -4,7 +4,7 @@ import {
   StandardTextFieldProps,
   OutlinedTextFieldProps,
   FilledTextFieldProps
-} from '@material-ui/core'
+} from 'system/components'
 
 
 const defaultTriggerTimeout: number = 1000

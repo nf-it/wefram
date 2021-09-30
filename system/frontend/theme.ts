@@ -1,7 +1,8 @@
-import {ThemeOptions} from '@material-ui/core'
+import {ThemeOptions} from '@mui/material'
+import {number} from 'prop-types'
 
 
-interface IWorkspaceTheme extends ThemeOptions {
+interface WorkspaceTheme extends ThemeOptions {
   notifications: {
     success: string
     error: string
@@ -10,14 +11,32 @@ interface IWorkspaceTheme extends ThemeOptions {
   }
 }
 
-export const defaultTheme: IWorkspaceTheme = {
+
+export interface ThemeBreakpoints {
+  xs: number
+  sm: number
+  md: number
+  lg: number
+  xl: number
+}
+
+
+export const breakpoints: ThemeBreakpoints = {
+  xs: 0,
+  sm: 600,
+  md: 800,
+  lg: 1440,
+  xl: 1920
+}
+
+
+export const workspaceTheme: WorkspaceTheme = {
   palette: {
-    type: 'light',
     primary: {
-      main: '#1976d2'
+      main: '#0070f0'
     },
     secondary: {
-      main: '#bd3302'
+      main: '#dd2f00'
     }
   },
 
@@ -29,101 +48,198 @@ export const defaultTheme: IWorkspaceTheme = {
   },
 
   breakpoints: {
+    keys: ['xs', 'sm', 'md', 'lg', 'xl'],
     values: {
       xs: 0,
-      sm: 600,
-      md: 800,
+      sm: 700,
+      md: 960,
       lg: 1440,
       xl: 1920
     }
   },
 
-  overrides: {
+  components: {
+    MuiAlert: {
+      styleOverrides: {
+        root: {
+          padding: '.5vmax 1.5vmax',
+          borderRadius: '.4vmax',
+          alignItems: 'center'
+        }
+      }
+    },
+
     MuiAppBar: {
-      root: {
-        margin: '.5vmax',
-        borderRadius: '.5vmax'
+      styleOverrides: {
+        root: {
+          display: 'flex',
+          margin: '.5vmax 0',
+          borderRadius: '.5vmax',
+          zIndex: 1201,
+          maxWidth: '19.3vw',
+          marginLeft: 0,
+          marginTop: '5px',
+          right: 'auto',
+          justifyContent: 'center',
+          background: 'linear-gradient(to left top, #0077FF, #0059B2 120%)',
+          color: '#eee',
+          boxShadow: '0 0 1vmax #0007',
+          border: '1px solid #0009'
+        }
       }
     },
 
     MuiAccordion: {
-      root: {
-        '&::before': {
-          display: 'none'
+      styleOverrides: {
+        root: {
+          '&::before': {
+            display: 'none'
+          },
+          marginBottom: '.2vmax'
         },
-        marginBottom: '.2vmax'
-      },
-      rounded: {
-        borderRadius: '.5vmax'
+        rounded: {
+          borderRadius: '.6vmax',
+          '&:last-of-type': {
+            borderRadius: '.6vmax',
+          }
+        }
       }
     },
 
     MuiButton: {
-      root: {
-        borderRadius: '.5vmax'
+      styleOverrides: {
+        root: {
+          borderRadius: '.5vmax',
+          padding: '7px 15px 6px'
+        },
+        sizeSmall: {
+          padding: '3px 9px'
+        },
+        sizeMedium: {
+          padding: '7px 15px 6px'
+        },
+        sizeLarge: {
+          padding: '14px 21px'
+        }
       }
     },
 
     MuiDialogActions: {
-      root: {
-        padding: '8px 24px'
+      styleOverrides: {
+        root: {
+          padding: '8px 24px'
+        }
       }
     },
 
     MuiFormControl: {
-      marginDense: {
-        marginTop: 0,
-        marginBottom: 0
+      styleOverrides: {
+        marginDense: {
+          marginTop: 0,
+          marginBottom: 0
+        }
+      }
+    },
+
+    MuiFormControlLabel: {
+      styleOverrides: {
+        root: {
+          marginBottom: 0
+        }
+      }
+    },
+
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          borderRadius: '.3vmax !important'
+        }
       }
     },
 
     MuiOutlinedInput: {
-      root: {
-        borderRadius: '.5vmax',
-        backgroundColor: '#aaa1'
-      },
-      inputMarginDense: {
-        paddingTop: '9px',
-        paddingBottom: '9px'
+      styleOverrides: {
+        root: {
+          borderRadius: '.5vmax',
+          backgroundColor: '#aaa1',
+          letterSpacing: 'normal'
+        }
       }
     },
 
     MuiPaper: {
-      rounded: {
-        borderRadius: '.5vmax'
+      styleOverrides: {
+        rounded: {
+          borderRadius: '.6vmax'
+        }
       }
     },
 
-    MuiSnackbarContent: {
-      root: {
-        borderRadius: '.4vmax'
+    MuiSnackbar: {
+      styleOverrides: {
+        root: {
+          borderRadius: '.45vmax'
+        }
+      }
+    },
+
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          padding: '7px'
+        },
+        track: {
+          borderRadius: '14px'
+        },
+        thumb: {
+          backgroundColor: 'white'
+        },
+        switchBase: {
+          '&.Mui-checked': {
+            '& + .MuiSwitch-track': {
+              backgroundColor: '#27c',
+              opacity: 1
+            }
+          }
+        }
+      },
+    },
+
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          width: '3px',
+          borderRadius: '4px'
+        }
       }
     },
 
     MuiTypography: {
-      h1: {
-        fontSize: '2.2rem'
-      },
-      h2: {
-        fontSize: '1.9rem'
-      },
-      h3: {
-        fontSize: '1.8rem'
-      },
-      h4: {
-        fontSize: '1.6rem'
-      },
-      h5: {
-        fontSize: '1.1rem'
-      },
-      h6: {
-        fontSize: '.9rem'
+      styleOverrides: {
+        h1: {
+          fontSize: '2.2rem'
+        },
+        h2: {
+          fontSize: '1.9rem'
+        },
+        h3: {
+          fontSize: '1.8rem'
+        },
+        h4: {
+          fontSize: '1.6rem'
+        },
+        h5: {
+          fontSize: '1.1rem'
+        },
+        h6: {
+          fontSize: '.9rem'
+        }
       }
     },
 
     MuiImageListItem: {
-      item: {
-        borderRadius: '2px'
+      styleOverrides: {
+
       }
     }
   }

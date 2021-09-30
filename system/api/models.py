@@ -33,7 +33,7 @@ class ModelAPI(EntityAPI):
 
     @classmethod
     def path_base(cls) -> str:
-        return cls.model.__name__
+        return cls.model.__decl_cls_name__
 
     @property
     def key_clause(self) -> Optional[ClauseList]:
@@ -79,7 +79,7 @@ class ModelAPI(EntityAPI):
             await db.flush()
         except IntegrityError as e:
             raise HTTPException(400, str(e.orig))
-        return instance.pk if cls.return_created_id else True
+        return instance.key if cls.return_created_id else True
 
     def handle_read_filter(self, c: QueryableAttribute, value: Any) -> Optional[ClauseElement]:
         if isinstance(value, str) and ')||(' in value and value.startswith('(') and value.endswith(')'):

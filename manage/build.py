@@ -108,3 +108,8 @@ async def execute() -> None:
     from .make import make
     await make()
 
+    print(f"running {CSTYLE['yellow']}migrate{CSTYLE['clear']}")
+    from system.ds import migrate
+    await migrate.migrate()
+
+    print("All Done!")

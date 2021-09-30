@@ -6,6 +6,7 @@ import {FormFieldCommon} from './types'
 export type FormTextInputProps = FormFieldCommon & TextFieldProps & {
   inputType?: string
   dense?: boolean
+  small?: boolean
 }
 
 export type FormTextInputFieldProps = FormTextInputProps & FormItemProps & {
@@ -31,11 +32,12 @@ export class FormTextInput extends React.Component<FormTextInputProps> {
       dense,  // simplificates dense from 'margin=dense' to boolean 'dense'
       inputType,  // simplicates the 'type' attribute of the <input> element
       fullWidth,  // we overrides fullWidth defaults in forms from 'false' to 'true'
+      small,
       ...elementProps
     } = this.props
 
     elementProps.onChange = elementProps.onChange ?? this.handleOnChange
-    elementProps.margin = elementProps.margin ?? (dense ? 'dense' : 'normal')
+    elementProps.margin = elementProps.margin ?? ((dense ?? true) ? 'dense' : 'normal')
     elementProps.inputProps = elementProps.inputProps ?? {}
     if (inputType) {
       elementProps.inputProps.type = inputType
@@ -50,6 +52,7 @@ export class FormTextInput extends React.Component<FormTextInputProps> {
               : ''
           )
         }
+        size={small ? 'small' : 'medium'}
         fullWidth={fullWidth ?? true}
         {...elementProps}
       />

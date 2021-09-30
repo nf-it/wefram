@@ -1,5 +1,5 @@
 import React from 'react'
-import {Divider as MuiDivider, DividerProps as MuiDividerProps} from '@material-ui/core'
+import {Divider as MuiDivider, DividerProps as MuiDividerProps} from 'system/components'
 
 
 export type DividerRulerProps = MuiDividerProps & {
@@ -7,12 +7,10 @@ export type DividerRulerProps = MuiDividerProps & {
   hspace?: number
 }
 
-
-export class DividerRuler extends React.Component<DividerRulerProps> {
-  render() {
-    const {
+export const DividerRuler = (props: DividerRulerProps) => {
+  const {
       vspace, hspace, ...other
-    } = this.props
+    } = props
     return (
       <MuiDivider style={{
         marginTop: vspace ? `${vspace * 8}px` : undefined,
@@ -21,5 +19,4 @@ export class DividerRuler extends React.Component<DividerRulerProps> {
         marginRight: hspace ? `${hspace * 8}px` : undefined,
       }} {...other} />
     )
-  }
 }

@@ -1,9 +1,10 @@
 import uvicorn
+import env
 import config
-from system import asgi
 
 
 if __name__ == '__main__':
+    from system import asgi
     if not config.PRODUCTION:
         from system import ui
         from manage import make

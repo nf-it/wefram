@@ -1,7 +1,6 @@
 import React from 'react'
-import {Box, FormItem, FormItemProps, Slider, SliderProps} from 'system/components'
+import {Box, FormItem, FormItemProps, Slider, SliderProps, Typography} from 'system/components'
 import {FormFieldCommon} from './types'
-import {Typography} from '@material-ui/core'
 
 
 export type FormSliderProps = FormFieldCommon & SliderProps & {

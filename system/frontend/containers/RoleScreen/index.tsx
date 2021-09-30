@@ -13,15 +13,21 @@ import {
   LoadingLinear,
   OptionsList,
   Paper,
-  Typography
+  Typography, TranslatedChapter, Chapters
 } from 'system/components'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {RoleEditModel, ScreenProps} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath, routing} from 'system/routing'
 import {notifications} from 'system/notification'
 
+
+const Help = () => (
+  <Chapters>
+    <TranslatedChapter appName={'system'} caption={gettext("Roles", 'system')} textId={'help_rolecard'} />
+  </Chapters>
+)
 
 const apiVersion: number = 1
 const screendefPath: RequestApiPath = {
@@ -105,6 +111,7 @@ export default class RoleCard extends React.Component<ScreenProps, ScreenState> 
         requestPath={objectPath}
 
         data={this.state.data}
+        help={<Help />}
         onUpdateData={(data, cb) => this.setState({data}, cb)}
         requiredForSubmit={['name']}
 
@@ -115,7 +122,7 @@ export default class RoleCard extends React.Component<ScreenProps, ScreenState> 
           {key === null ? gettext("New role", 'system.aaa-form') : this.state.data.name}
         </Typography>
 
-        <FormPaper spacing={4} variant={'depadded'}>
+        <FormPaper spacing={4}>
 
           {/* Left (general) side */}
           <FormItem width={7}>
@@ -133,7 +140,7 @@ export default class RoleCard extends React.Component<ScreenProps, ScreenState> 
               </Box>
               {this.state.screendef?.permissions.map(app => (
                 <Accordion defaultExpanded={false}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon/>}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon color={'primary'} />}>
                     <Typography>{app.caption}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>

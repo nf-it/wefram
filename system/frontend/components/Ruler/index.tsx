@@ -1,35 +1,24 @@
 import React from 'react'
-import {withTheme, WithTheme} from '@material-ui/core'
+import {breakpoints, ThemeBreakpoints} from 'system/theme'
 import {Box} from 'system/components'
 
 
-export interface RulerProps extends WithTheme {
+export type RulerProps = {
   width?: 'sm' | 'md' | 'lg' | 'xl' | number
   vspace?: number
   hspace?: number
 }
 
 
-export class _Ruler extends React.Component<RulerProps> {
+export class Ruler extends React.Component<RulerProps> {
   render() {
     let width: undefined | string = undefined
     if (this.props.width) {
       let widthPx: number
-      switch (this.props.width) {
-        case 'sm':
-          widthPx = Number(this.props.theme.breakpoints.values.sm)
-          break
-        case 'md':
-          widthPx = Number(this.props.theme.breakpoints.values.md)
-          break
-        case 'lg':
-          widthPx = Number(this.props.theme.breakpoints.values.lg)
-          break
-        case 'xl':
-          widthPx = Number(this.props.theme.breakpoints.values.xl)
-          break
-        default:
-          widthPx = Number(this.props.width)
+      if (typeof this.props.width == 'string') {
+        widthPx = Number(breakpoints[this.props.width as keyof ThemeBreakpoints])
+      } else {
+        widthPx = Number(this.props.width)
       }
       width = `${widthPx}px`
     }
@@ -43,5 +32,3 @@ export class _Ruler extends React.Component<RulerProps> {
     )
   }
 }
-
-export const Ruler = withTheme(_Ruler)

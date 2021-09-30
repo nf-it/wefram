@@ -8,8 +8,7 @@ from .const import *
 
 CAPTION = MSG_APP_CAPTION
 
-_CONFIG = getattr(config, 'WORKSPACE') or {}
-_CONFIG_REQUIRES = _CONFIG.get('requires', None)
+_CONFIG_REQUIRES = config.DESKTOP['requires']
 
 
 # Storage
@@ -27,27 +26,29 @@ settings.register(
     name='aaa',
     caption=aaa.MSG_APP_CAPTION,
     requires=aaa.PERMISSION_ADMINSETTINGS,
-    properties={
-        aaa.SETTINGS_REMEMBER_USERNAME: BooleanProp(aaa.MSG_SETTINGS_REMEMBER_USERNAME, inline=True, order=10),
-        aaa.SETTINGS_SESSION_LIFETIME: NumberProp(aaa.MSG_SETTINGS_SESSION_LIFETIME, order=20),
-        aaa.SETTINGS_JWT_EXPIRE: NumberProp(aaa.MSG_SETTINGS_JWT_LIFETIME, order=30),
-        aaa.SETTINGS_FAILEDAUTH_DELAY: NumberMMProp(aaa.MSG_SETTINGS_FAILEDAUTH_DELAY, 0, 5, 1, order=40),
-    },
+    properties=[
+        (aaa.SETTINGS_REMEMBER_USERNAME, BooleanProp(aaa.MSG_SETTINGS_REMEMBER_USERNAME, inline=True)),
+        (aaa.SETTINGS_SESSION_LIFETIME, NumberProp(aaa.MSG_SETTINGS_SESSION_LIFETIME)),
+        (aaa.SETTINGS_JWT_EXPIRE, NumberProp(aaa.MSG_SETTINGS_JWT_LIFETIME)),
+        (aaa.SETTINGS_FAILEDAUTH_DELAY, NumberMMProp(aaa.MSG_SETTINGS_FAILEDAUTH_DELAY, 0, 5, 1)),
+        (aaa.SETTINGS_SUCCEEDAUTH_DELAY, NumberMMProp(aaa.MSG_SETTINGS_SUCCEEDAUTH_DELAY, 0, 5, 1)),
+    ],
     defaults={
         aaa.SETTINGS_REMEMBER_USERNAME: config.AUTH[aaa.SETTINGS_REMEMBER_USERNAME],
         aaa.SETTINGS_SESSION_LIFETIME: config.AUTH[aaa.SETTINGS_SESSION_LIFETIME],
         aaa.SETTINGS_JWT_EXPIRE: config.AUTH[aaa.SETTINGS_JWT_EXPIRE],
         aaa.SETTINGS_FAILEDAUTH_DELAY: config.AUTH[aaa.SETTINGS_FAILEDAUTH_DELAY],
+        aaa.SETTINGS_SUCCEEDAUTH_DELAY: config.AUTH[aaa.SETTINGS_SUCCEEDAUTH_DELAY],
     },
 )
 
 
 # Declaring the default workspace screen
 @screens.register(sitemap=-1)
-class Workspace(ui.screens.Screen):
-    component = 'containers/DefaultWorkspace'
+class Desktop(ui.screens.Screen):
+    component = 'containers/Desktop'
     icon = ui.media_res_url('icons/workspace.svg')
-    caption = l10n.lazy_gettext("Workspace")
+    caption = l10n.lazy_gettext("Desktop")
     route = '//workspace'
     requires = _CONFIG_REQUIRES
 

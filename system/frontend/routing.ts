@@ -1,6 +1,6 @@
 import {createBrowserHistory} from 'history'
 import {runtime} from './runtime'
-import {screensSchema} from './prepared/screens'
+import {screensSchema} from 'build/screens'
 import {session} from './aaa'
 import buildConfig from '../../build.json'
 

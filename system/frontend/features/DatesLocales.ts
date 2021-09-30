@@ -1,6 +1,24 @@
 import {gettext} from 'system/l10n'
 import {runtime} from 'system/runtime'
 
+
+export type DateFormat = {
+  full: string
+  long: string
+  medium: string
+  short: string
+}
+
+export type TimeFormats = {
+  full: string
+  long: string
+  medium: string
+  short: string
+}
+
+export type DateMask = string
+
+
 export type DateLocale = {
   // code?: string
   // formatDistance?: (...args: Array<any>) => any
@@ -41,6 +59,20 @@ const dayValues = {
   abbreviated: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
   wide: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 }
+
+//
+// var dateFormats = {
+//   full: "EEEE, d MMMM y 'г.'",
+//   long: "d MMMM y 'г.'",
+//   medium: "d MMM y 'г.'",
+//   short: 'dd.MM.y'
+// };
+// var timeFormats = {
+//   full: 'H:mm:ss zzzz',
+//   long: 'H:mm:ss z',
+//   medium: 'H:mm:ss',
+//   short: 'H:mm'
+// };
 
 // const monthValues = {
 //   narrow: ['Я', 'Ф', 'М', 'А', 'М', 'И', 'И', 'А', 'С', 'О', 'Н', 'Д'],
@@ -96,7 +128,9 @@ const localize = (): DateLocale => {
       }
     },
     formatLong: {
-
+      date: (...args: Array<any>): any => {
+        return runtime.locale.dateFormat
+      }
     },
     options: {
       weekStartsOn,

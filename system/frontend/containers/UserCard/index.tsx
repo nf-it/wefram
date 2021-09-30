@@ -1,5 +1,7 @@
 import React from 'react'
 import {
+  Chapters,
+  TranslatedChapter,
   DateTimeText,
   EntityForm,
   FormPaper,
@@ -16,8 +18,14 @@ import {RequestApiPath} from 'system/routing'
 import {session, UserEditModel} from 'system/aaa'
 
 
-const objectPath: RequestApiPath = api.entityObjectPath('system', 'User')
+const Help = () => (
+  <Chapters>
+    <TranslatedChapter appName={'system'} caption={gettext("Users", 'system')} textId={'help_usercard'} />
+  </Chapters>
+)
 
+
+const objectPath: RequestApiPath = api.entityObjectPath('system', 'User')
 
 export type UserCardProps = {
   entityKey: string | null
@@ -29,6 +37,7 @@ export type UserCardProps = {
 type UserCardState = {
   data: UserEditModel
 }
+
 
 export class UserCard extends React.Component<UserCardProps, UserCardState> {
   state: UserCardState = {
@@ -61,6 +70,7 @@ export class UserCard extends React.Component<UserCardProps, UserCardState> {
         requestPath={objectPath}
 
         data={this.state.data}
+        help={<Help />}
         onUpdateData={(data, cb) => this.setState({data}, cb)}
         requiredForSubmit={requiredForSubmit}
         submitFieldsModel={[

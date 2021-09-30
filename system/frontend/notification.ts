@@ -1,6 +1,6 @@
 import {makeObservable, observable} from 'mobx'
 import {AxiosResponse, AxiosError} from 'axios'
-import {VariantIcon} from './components'
+import {NotificationVariant} from 'system/components'
 import {responses} from 'system/response'
 import {gettext} from './l10n'
 
@@ -8,13 +8,13 @@ import {gettext} from './l10n'
 class Store {
   open: boolean = false
   message: string = ''
-  type: keyof VariantIcon = 'info'
+  variant: NotificationVariant = 'info'
 
   constructor() {
     makeObservable(this, {
       open: observable,
       message: observable,
-      type: observable
+      variant: observable
     })
   }
 }
@@ -35,25 +35,25 @@ type NotificationInterface = {
 export const notifications: NotificationInterface = {
   showInfo(msg) {
     notificationsStore.message = msg
-    notificationsStore.type = 'info'
+    notificationsStore.variant = 'info'
     notificationsStore.open = true
   },
 
   showSuccess(msg?) {
     notificationsStore.message = msg ?? gettext("Success")
-    notificationsStore.type = 'success'
+    notificationsStore.variant = 'success'
     notificationsStore.open = true
   },
 
   showWarning(msg) {
     notificationsStore.message = msg
-    notificationsStore.type = 'warning'
+    notificationsStore.variant = 'warning'
     notificationsStore.open = true
   },
 
   showError(msg) {
     notificationsStore.message = msg
-    notificationsStore.type = 'error'
+    notificationsStore.variant = 'error'
     notificationsStore.open = true
   },
 
@@ -69,7 +69,7 @@ export const notifications: NotificationInterface = {
     notificationsStore.message = gettext(
       "There is an error on the server, please try again a little later!"
     )
-    notificationsStore.type = 'error'
+    notificationsStore.variant = 'error'
     notificationsStore.open = true
   },
 
@@ -82,6 +82,6 @@ export const notifications: NotificationInterface = {
 export interface INotification {
   open: boolean
   message: string
-  type: keyof VariantIcon
+  variant: NotificationVariant
 }
 

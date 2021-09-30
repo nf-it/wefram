@@ -19,6 +19,7 @@ __all__ = [
     'json_encode',
     'json_encode_custom',
     'json_decode',
+    'for_jsonify',
     'term_input',
     'term_choice',
     'term_intinput',
@@ -150,6 +151,36 @@ def json_encode_custom(o: Any, **kwargs) -> str:
 
 def json_decode(src: str, **kwargs) -> Any:
     return json.loads(src, **kwargs)
+
+
+def for_jsonify(o: Any, deep: bool = False) -> Any:
+    from system.l10n import L10nStr
+    from system.ds import StoredFile, Model
+
+    if isinstance(o, JSONcustom):
+        return o.packed
+    if o is None:
+        return None
+    elif isinstance(o, dict):
+        return {k: for_jsonify(i) for k, i in o.items()}
+    elif isinstance(o, (list, tuple, set)):
+        return [for_jsonify(e) for e in o]
+    elif isinstance(o, L10nStr):
+        return str(o)
+    elif isinstance(o, datetime.datetime):
+        return o.replace(microsecond=0).isoformat(timespec='seconds')
+    elif isinstance(o, datetime.date):
+        return str(o.isoformat())
+    elif isinstance(o, datetime.time):
+        return str(o.replace(microsecond=0).isoformat(timespec='seconds'))
+    elif isinstance(o, set):
+        o = list(o)
+    elif isinstance(o, StoredFile):
+        return str(o.file_id)
+    elif isinstance(o, Model):
+        return o.as_json(deep=deep)
+
+    return o
 
 
 def term_choice(caption: str, options: dict, default: Optional[str] = None) -> str:

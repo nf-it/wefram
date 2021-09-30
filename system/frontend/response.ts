@@ -1,9 +1,9 @@
+import {runInAction} from 'mobx'
 import {AxiosError, AxiosResponse} from 'axios'
 import {gettext} from 'system/l10n'
 import {routing} from 'system/routing'
 import {aaa} from 'system/aaa'
 import {runtime} from 'system/runtime'
-import {IntegerKey, UuidKey} from 'system/types'
 
 export type AnyResponse = Promise<AxiosResponse<any>>
 
@@ -27,7 +27,7 @@ export const responses: ResponsesRoutines = {
     const statusCode: number = err.response?.status || 500
     if (statusCode === 401) {
       aaa.isLoggedIn()
-        ? (runtime.reloginFormOpen = true)
+        ? (runInAction(() => runtime.reloginFormOpen = true))
         : routing.gotoLogin()
     }
   },

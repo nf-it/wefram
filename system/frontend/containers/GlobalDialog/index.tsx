@@ -1,12 +1,13 @@
 import React from 'react'
 import {observer} from 'mobx-react'
 import {
+  Button,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
   DialogActions,
-  CircularProgress, Button
+  CircularProgress
 } from 'system/components'
 import {IDialog, DialogButton} from 'system/dialog'
 
@@ -32,7 +33,9 @@ class _Dialog extends React.Component<GlobalDialogProps> {
         )}
         {this.props.store.buttons !== undefined && (
           <DialogActions>
-            <CircularProgress size={20} hidden={!this.props.store.busy}/>
+            {this.props.store.busy && (
+              <CircularProgress size={20} hidden={!this.props.store.busy}/>
+            )}
             {this.props.store.buttons.map((button: DialogButton) => (
               <Button
                 autoFocus={button.autoFocus}

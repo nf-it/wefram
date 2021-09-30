@@ -1,7 +1,7 @@
 import React from 'react'
-import {ScreensSchema} from '../types'
+import {ScreensSchema} from 'system/types'
 
 
 export const screensSchema: ScreensSchema = {
-  /* (%%items%%) */
+/* (%%items%%) */
 }

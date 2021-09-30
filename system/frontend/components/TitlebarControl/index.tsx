@@ -1,5 +1,5 @@
 import React from 'react'
-import {Box, Typography, TypographyVariant} from '@material-ui/core'
+import {Box, Typography, TypographyVariant} from 'system/components'
 
 
 export type TitlebarControlProps = {

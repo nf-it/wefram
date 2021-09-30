@@ -13,8 +13,7 @@ import {
   TitlebarControl,
   Typography
 } from 'system/components'
-import SubmitIcon from '@material-ui/icons/DoneRounded'
-import DefaultsIcon from '@material-ui/icons/RotateLeftRounded'
+import SubmitIcon from '@mui/icons-material/DoneRounded'
 import {
   ScreenProps,
   SettingsSchema,
@@ -175,7 +174,8 @@ export default class SettingsScreen extends React.Component<ScreenProps> {
                   disableFocusRipple
                   wrapped
                   style={{
-                    maxWidth: 'none'
+                    maxWidth: 'none',
+                    alignItems: 'flex-start'
                   }}
                 />
               ))}

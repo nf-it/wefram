@@ -1,18 +1,18 @@
 from typing import *
 import datetime
-import time
-from .. import api, logger
+from asyncio import sleep
+from .. import api, logger, settings
 from ..requests import Request, NoContentResponse, JSONResponse, HTTPException
 from ..runtime import context
 from ..exceptions import AuthenticationFailed
 from .wrappers import requires_authenticated
 from .routines import authenticate, create_session, refresh_with_token
-from .models import User, Session
-from .types import ISession, IAuthorizationResponse
+from .models import User, Session, SessionLog
 from .middleware import SessionUser
+from .const import SETTINGS_FAILEDAUTH_DELAY, SETTINGS_SUCCEEDAUTH_DELAY
 
 
-API_VER: int = 1
+API_V1: int = 1
 
 
 async def _auth_response(
@@ -20,7 +20,7 @@ async def _auth_response(
         token: str,
         refresh_token: str,
         expire: datetime.datetime
-) -> IAuthorizationResponse:
+) -> dict:
     return {
         'token': token,
         'refreshToken': refresh_token,
@@ -30,14 +30,14 @@ async def _auth_response(
     }
 
 
-@api.handle_get('/check', API_VER)
+@api.handle_get('/check', API_V1)
 @requires_authenticated()
-async def check(request: Request) -> NoContentResponse:
+async def v1_check(request: Request) -> NoContentResponse:
     return NoContentResponse()
 
 
-@api.handle_post('/authenticate', API_VER)
-async def login(request: Request) -> JSONResponse:
+@api.handle_post('/authenticate', API_V1)
+async def v1_login(request: Request) -> JSONResponse:
     payload: Dict[str, str] = request.scope['payload']
     username: str = payload.get('username', None)
     password: str = payload.get('password', None)
@@ -49,8 +49,8 @@ async def login(request: Request) -> JSONResponse:
     try:
         user: User = await authenticate(username, password)
     except AuthenticationFailed:
-        time.sleep(2)
         logger.info(f"authentication failed for '{username}'", 'login')
+        await sleep((await settings.get('aaa'))[SETTINGS_FAILEDAUTH_DELAY] * 1.0)
         raise HTTPException(401)
 
     token: str
@@ -59,31 +59,43 @@ async def login(request: Request) -> JSONResponse:
     token, refresh_token, expire = await create_session(user)
     logger.info(f"successfully authenticated '{username}'", 'login')
 
+    await sleep((await settings.get('aaa'))[SETTINGS_SUCCEEDAUTH_DELAY] * 1.0)
+
+    await SessionLog.create(
+        user_id=user.id,
+        ts=datetime.datetime.now(),
+        extra={
+            'from': request.client.host,
+            'host': request.headers.get('host', None),
+            'user_agent': request.headers.get('user-agent', None)
+        }
+    )
+
     return JSONResponse(await _auth_response(
         user, token, refresh_token, expire
     ))
 
 
-@api.handle_get('/authenticate', API_VER)
+@api.handle_get('/authenticate', API_V1)
 @requires_authenticated()
-async def touch(request: Request) -> JSONResponse:
+async def v1_touch(request: Request) -> JSONResponse:
     session: Session = request.user.session
     await session.touch()
     user: SessionUser = context['user']
-    response: ISession = user.session.as_json()
+    response: dict = user.session.as_json()
     return JSONResponse(response)
 
 
-@api.handle_delete('/authenticate', API_VER)
+@api.handle_delete('/authenticate', API_V1)
 @requires_authenticated()
-async def logoff(request: Request) -> NoContentResponse:
+async def v1_logoff(request: Request) -> NoContentResponse:
     session: Session = request.user.session
     await session.drop()
     return NoContentResponse()
 
 
-@api.handle_put('/authenticate', API_VER)
-async def refresh(request: Request) -> JSONResponse:
+@api.handle_put('/authenticate', API_V1)
+async def v1_refresh(request: Request) -> JSONResponse:
     payload = request.scope['payload']
     given_token: str = payload['token']
 

@@ -109,7 +109,7 @@ export class FormCommonField extends React.Component<FormCommonFieldProps, FormC
                 getAriaValueText={(value: any) => {
                   return String(value)
                 }}
-                onChange={(ev: React.ChangeEvent<{}>, newValue: number | number[]) => {
+                onChange={(ev: Event, newValue: number | number[]) => {
                   this.props.onChange(name, Number(newValue))
                 }}
               />

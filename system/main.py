@@ -25,17 +25,12 @@ apps_main: apps.IAppsMains = apps.initialize(project_apps)
 
 
 def get_default_path() -> str:
-    """ Returns an URL where to redirect the client browser when accesing
-    the root (/) path.
-    """
+    """ Returns an URL where to redirect the client browser when accesing the root (/) path. """
+
     is_authenticated: bool = runtime.context['is_authenticated']
-    default_url: str = \
-        (
-            getattr(config, 'DEFAULT_URL_AUTHENTICATED', None)
-            if is_authenticated
-            else getattr(config, 'DEFAULT_URL_GUEST', None)
-        ) or config.DEFAULT_URL
-    return default_url
+    return (
+        config.URL['default_authenticated'] if is_authenticated else config.URL['default_guest']
+    ) or config.URL['default']
 
 
 async def default_route(request: requests.Request) -> requests.Response:
@@ -68,6 +63,8 @@ async def start():
             continue
         (await _start()) if asyncio.iscoroutinefunction(_start) else _start()
 
+    await ds.history.start()
+
 
 # The place where ASGI about to be prepared to start
 
@@ -89,7 +86,7 @@ logger.debug(
 
 _routes: List[Union[Route, Mount]] = requests.routing.registered
 _routes.insert(0, requests.Route('/', root_route, methods=['GET']))
-_routes.append(Route(config.AUTH.get('login_screen_url', '/login'), ui.screens.Screen.endpoint, methods=['GET']))
+_routes.append(Route(config.URL['login_screen'], ui.screens.Screen.endpoint, methods=['GET']))
 _routes.append(Mount(config.STATICS_URL, app=StaticFiles(directory=config.STATICS_ROOT), name='static'))
 _routes.append(requests.Route('/{rest_of_path:path}', default_route, methods=['GET']))
 

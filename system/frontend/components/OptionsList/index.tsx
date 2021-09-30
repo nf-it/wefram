@@ -12,13 +12,13 @@ import {
   LazyTextField,
   LoadingCircular,
   Typography
-} from '../../components'
-import AddIcon from '@material-ui/icons/AddCircleOutline'
-import {gettext} from '../../l10n'
-import {CommonKey} from '../../types'
-import {RequestApiPath} from '../../routing'
-import {api} from '../../api'
-import {notifications} from '../../notification'
+} from 'system/components'
+import AddIcon from '@mui/icons-material/AddCircleOutline'
+import {gettext} from 'system/l10n'
+import {CommonKey} from 'system/types'
+import {RequestApiPath} from 'system/routing'
+import {api} from 'system/api'
+import {notifications} from 'system/notification'
 import './index.css'
 
 
@@ -288,10 +288,12 @@ export class OptionsList extends React.Component<OptionsListProps, OptionsListSt
                 justifyContent={'center'}
                 minWidth={'32px'}
             >
-              <CircularProgress
-                size={20}
-                hidden={!this.state.dialogOptionsRequesting}
-              />
+              {this.state.dialogOptionsRequesting && (
+                <CircularProgress
+                  size={20}
+                  hidden={!this.state.dialogOptionsRequesting}
+                />
+              )}
             </Box>
             <Button
               color={'primary'}

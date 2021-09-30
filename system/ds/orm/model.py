@@ -2,6 +2,7 @@ import datetime
 from typing import *
 import inspect
 import decimal
+from dataclasses import dataclass
 from sqlalchemy import inspect as sa_inspect
 from sqlalchemy import Column, Table, select, delete, and_, or_, cast, text
 from sqlalchemy.sql import Select, Delete, sqltypes
@@ -21,6 +22,7 @@ from .types import Attribute
 
 __all__ = [
     'Model',
+    'History',
     'app_models',
     'models_by_name',
     'models_by_modulename',
@@ -41,8 +43,17 @@ class _ModelMetaclass(DeclarativeMeta):
         tablename: Optional[str] = None
 
         app_name: Optional[str] = cls.__modelapp__()
+        if not app_name:
+            super().__init__(name, bases, clsdict)
+            return
+
         if app_name:
             tablename = cls.__inittablename__(app_name)
+
+        if app_name:
+            cls.__decl_cls_name__ = name
+            name = tablename
+            cls.__name__ = name
 
         super().__init__(name, bases, clsdict)
         if not app_name:
@@ -61,13 +72,16 @@ class _ModelMetaclass(DeclarativeMeta):
         cls.Meta = meta
         if app_name not in app_models:
             app_models[app_name] = dict()
-        app_models[app_name][cls.__name__] = cls
-        models_by_name['.'.join([app_name, cls.__name__])] = cls
-        models_by_modulename['.'.join([cls.__module__, cls.__name__])] = cls
+        app_models[app_name][cls.__decl_cls_name__] = cls
+        models_by_name['.'.join([app_name, cls.__decl_cls_name__])] = cls
+        models_by_modulename['.'.join([cls.__module__, cls.__decl_cls_name__])] = cls
         models_by_tablename[tablename] = cls
 
+        cls.__app__ = app_name
+
         logger.debug(
-            f"registered ds.Model [{CSTYLE['red']}{name}=`{tablename}`{CSTYLE['clear']}]"
+            f"registered ds.Model [{CSTYLE['red']}{name}=`{tablename}`{CSTYLE['clear']}]",
+            'ds'
         )
 
     def __modelapp__(cls) -> Optional[str]:
@@ -80,7 +94,8 @@ class _ModelMetaclass(DeclarativeMeta):
         clspath: str = '.'.join([cls.__module__, cls.__name__])
         if clspath in ('sqlalchemy.orm.decl_api.Base', f'{config.COREDIR}.ds.orm.model.Base'):
             return None
-        if clspath.startswith('ds.') or clspath.startswith(f'{config.COREDIR}.ds.'):
+        if (not clspath.startswith('ds.orm.history.') and not clspath.startswith(f'{config.COREDIR}.ds.orm.history.')) \
+                and (clspath.startswith('ds.') or clspath.startswith(f'{config.COREDIR}.ds.')):
             return None
         if clspath.startswith(f'{config.APPSDIR}.'):
             clspath = '.'.join(clspath.split('.')[1:])
@@ -289,7 +304,13 @@ class _Model:
         return getattr(self, caption_key, self.__repr__())
 
     @property
-    def pk(self) -> Union[Any, Dict[str, Any]]:
+    def key(self) -> Union[Any, Dict[str, Any]]:
+        """ Returns the this model instance's primary key.
+
+        Returns a plain value if the primary key is simple (one column), or a dict
+        contains columns' names and corresponding values if the model has a complex
+        primary key (two or more columns in the primary key constraint).
+        """
         value: dict = self.__pk__
         return value if len(value) > 1 else value.popitem()[1]
 
@@ -317,13 +338,24 @@ class _Model:
 
     @property
     def __pk__(self) -> Dict[str, Any]:
+        """ Returns a dict containing the model instance's primary key column names and
+        corresponding values. Always returns a dict even if simple primary key
+        constraint is defined.
+        """
         return {c.name: getattr(self, c.name, None) for c in self.Meta.primary_key}
 
     @property
     def __pk1__(self) -> Any:
-        pk: Any = self.pk
+        """ Always returns a single primary key value. If there is a simple primary key
+        constraint defined for the model - the simple plain value will be returned. Otherwise,
+        the complex primary key value will be returned as a (str) joined using '&' symbol,
+        sorted by key name.
+        For example, if the primary key constraint is (id1, id2) and, for example, if the
+        model instance has id1=100, id2=10, then the result will be "100&10".
+        """
+        pk: Any = self.key
         if isinstance(pk, dict):
-            pk = list(pk.keys())[0]
+            pk = '&'.join([str(pk[k]) for k in sorted(pk.keys())])
         return pk
 
     def _attr_for_dict(
@@ -337,7 +369,7 @@ class _Model:
         from .storage import StoredImage, StoredFile
 
         if isinstance(value, Model):
-            return value.as_dict(jsonify_names=jsonify_names) if deep else value.pk
+            return value.as_dict(jsonify_names=jsonify_names) if deep else value.key
         if isinstance(value, InstrumentedList):
             return [self._attr_for_dict(..., _e, deep, jsonify_names) for _e in value]
         if isinstance(value, InstrumentedDict):
@@ -351,20 +383,30 @@ class _Model:
     def as_dict(
             self,
             attributes: Optional[List[str]] = None,
+            exclude: Optional[List[str]] = None,
             deep: Optional[Union[bool, List[str]]] = False,
             set_name: Optional[str] = None,
             jsonify_names: bool = False,
-            fq_urls: bool = True
+            fq_urls: bool = True,
+            for_history: bool = False
     ) -> Dict[str, Any]:
         def _name(_srcname: str) -> str:
             return _srcname if not jsonify_names else snakecase_to_lowercamelcase(_srcname)
+
+        def _is_key_for_include(__k: str) -> bool:
+            if __k.startswith('_'):
+                return False
+            column_type: Any = self.Meta.column_type(__k)
+            if for_history and column_type is None:
+                return False
+            return True
 
         def _keys_for_result(_vdkeys: KeysView[str]) -> Sequence[str]:
             if attributes:
                 return attributes
             if keys_set:
                 return keys_set
-            _keys: List[str] = [_k for _k in _vdkeys if not _k.startswith('_')]
+            _keys: List[str] = [_k for _k in _vdkeys if _is_key_for_include(_k)]
             _include: Optional[List[str]] = self.__metaattr__('include')
             if _include is not None and not isinstance(_include, (list, tuple)):
                 if not isinstance(_include, str):
@@ -376,7 +418,7 @@ class _Model:
                 _keys.extend(_include)
             return _keys
 
-        hidden: List[str] = self.__metaattr__('hidden') or []
+        excluding: List[str] = self.__metaattr__('hidden') or []
 
         if set_name:
             attributes_sets: Dict[str, List[str]] = self.__metaattr__('attributes_sets') or {}
@@ -391,14 +433,19 @@ class _Model:
         else:
             keys_set: None = None
 
-        if not isinstance(hidden, (list, tuple)):
+        if not isinstance(excluding, (list, tuple)):
             raise TypeError("ds.Model.Meta.hidden must be [list] of [str] type")
+
+        if exclude and isinstance(exclude, (list, tuple, set)):
+            excluding.extend(list(exclude))
+        elif exclude:
+            raise TypeError("exclude must be [list] of [str] type")
 
         values_dict = self.__dict__
         keys = _keys_for_result(values_dict.keys())
 
         result: Dict[str, Any] = dict()
-        for k in [k for k in keys if k not in hidden]:
+        for k in [k for k in keys if k not in excluding]:
             if k in values_dict:
                 v = values_dict.get(k, None)
             elif hasattr(self, k):
@@ -413,11 +460,13 @@ class _Model:
     def as_json(
             self,
             attributes: Optional[List[str]] = None,
+            exclude: Optional[List[str]] = None,
             set_name: Optional[str] = None,
             deep: Optional[Union[bool, List[str]]] = False,
     ) -> Dict[str, Any]:
         return self.as_dict(
             attributes=attributes,
+            exclude=exclude,
             deep=deep,
             set_name=set_name,
             jsonify_names=True,
@@ -428,9 +477,19 @@ class _Model:
 Model = declarative_base(cls=_Model, metaclass=_ModelMetaclass)
 
 
+@dataclass
+class History:
+    enable: bool = False
+    model: ClassVar = None
+    ignore: List[Union[str, Column]] = None
+    attributes: List[Union[str, Column]] = None
+    exclude: List[Union[str, Column]] = None
+
+
 class Meta:
-    def __init__(self, cls: _ModelMetaclass, app_name: str, module_name: str):
-        """
+    """ The model's subclass describing some optionals and service methods for the ORM class.
+
+    Attributes:
         model:
             the class of the corresponding ORM model
         module_name:
@@ -472,7 +531,12 @@ class Meta:
         order:
             the default sorting rule, in the format used by SQLAclhemy
             with default 'sort'
-        """
+        history:
+            (History)
+
+    """
+
+    def __init__(self, cls: _ModelMetaclass, app_name: str, module_name: str):
         self.model: ClassVar = cls
         self.module_name: str = module_name
         self.app_name: str = app_name
@@ -481,27 +545,37 @@ class Meta:
         self.caption_key: Optional[str] = None
         self.hidden: Optional[List[str]] = None
         self.include: Optional[List[str]] = None
+        self.attributes: list = []
+        self.columns: list = []
         self.attributes_sets: Optional[Dict[str, Sequence[str]]] = None
         self.repr_by: Optional[List[str]] = None
         self.findable: Optional[List[str]] = None
         self.order: Optional[Union[str, List[str], Column, List[Column]]] = None
+        self.history: History = History()
 
         meta: Optional[dict, ClassVar] = getattr(cls, 'Meta', None)
         if meta:
             if isinstance(meta, dict):
                 for k, v in meta:
-                    setattr(self, k, v)
+                    self._instantiate_attribute(k, v)
             elif inspect.isclass(meta):
                 for k in dir(meta):
                     if k.startswith('_') or k.endswith('__'):
                         continue
-                    setattr(self, k, getattr(meta, k))
+                    self._instantiate_attribute(k, getattr(meta, k))
 
         if self.findable and not isinstance(self.findable, (list, tuple)):
             raise TypeError(
                 f"Model.Meta.findable must be type of (list|tuple)"
                 f" of str, {type(self.findable)} given instead"
             )
+
+    def _instantiate_attribute(self, key: str, value: Any) -> None:
+        if key == 'history':
+            if value is True:
+                self.history.enable = True
+                return
+        setattr(self, key, value)
 
     @property
     def primary_key(self) -> Sequence[Column]:

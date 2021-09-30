@@ -1,5 +1,5 @@
 import {Response} from './response'
-import {IAppInstantiation} from './types'
+import {IProjectInstantiation} from './types'
 import {api} from './api'
 import {RequestApiPath} from './routing'
 
@@ -8,11 +8,11 @@ const instantiatePath: RequestApiPath = api.path('system', 'instantiate')
 
 
 export type ProjectAppProvider = {
-  instantiate(): Response<IAppInstantiation>
+  instantiate(): Response<IProjectInstantiation>
 }
 
-export const projectAppProvider: ProjectAppProvider = {
-  instantiate(): Response<IAppInstantiation> {
+export const projectProvider: ProjectAppProvider = {
+  instantiate(): Response<IProjectInstantiation> {
     return api.get(instantiatePath)
   }
 }

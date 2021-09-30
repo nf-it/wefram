@@ -4,13 +4,11 @@ import {
   Button,
   Checkbox,
   DividerRuler,
-  FormControl,
   MenuItem,
-  Select,
   Tooltip,
-  Typography
+  Typography,
+  Pagination
 } from 'system/components'
-import Pagination from '@material-ui/lab/Pagination'
 import {
   ListsProvidedFilters,
   ListsSelection,
@@ -29,6 +27,7 @@ import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
 import {IApiEntityResponse, IApiEntityComplexResponse} from 'system/types'
 import {responses} from 'system/response'
+import {TextField} from '@mui/material'
 
 
 export type ProvHocFetchResult = {
@@ -49,7 +48,6 @@ type ProvHocState = {
   loading: boolean
   pagination: boolean
 
-  // items?: any[]
   itemsCount?: number
   itemsCountAll?: number
   error: string | null
@@ -355,7 +353,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
     }, cb)
   }
 
-  private handleSortChange = (e: React.ChangeEvent<{ value: unknown }>): void => {
+  private handleSortChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value: string = e.target.value as string
     const sort: ListsSorting | null = value === 'null' ? null : {
       value: value.startsWith('-') ? value.substr(1) : value,
@@ -462,31 +460,29 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
           )}
 
           {sortOptions.length > 0 && (
-            <React.Fragment>
-              <Box component={'span'} mr={2}>{gettext("Sort by", 'system.ui')}:</Box>
-              <FormControl variant={'outlined'} size={'small'}>
-                <Select
-                  autoWidth
-                  className={'mr-4'}
-                  onChange={this.handleSortChange}
-                  value={sortValue}
-                >
-                  {this.props.unsortedOption !== undefined && (
-                    <MenuItem value={'null'}>
-                      {typeof this.props.unsortedOption == 'string' ? this.props.unsortedOption : gettext("Unsorted", 'system.ui')}
-                    </MenuItem>
-                  )}
-                  {sortOptions.map(option => ([
-                    <MenuItem value={String(option.value)}>
-                      {option.caption} {'\u2191'}
-                    </MenuItem>,
-                    <MenuItem value={String(`-${option.value}`)}>
-                     {option.caption} {'\u2193'}
-                    </MenuItem>
-                  ]))}
-                </Select>
-              </FormControl>
-            </React.Fragment>
+            <Box mr={4}>
+              <TextField
+                select
+                label={gettext("Sort by", 'system.ui')}
+                onChange={this.handleSortChange}
+                value={sortValue}
+                size={'small'}
+              >
+                {this.props.unsortedOption !== undefined && (
+                  <MenuItem value={'null'}>
+                    {typeof this.props.unsortedOption == 'string' ? this.props.unsortedOption : gettext("Unsorted", 'system.ui')}
+                  </MenuItem>
+                )}
+                {sortOptions.map(option => ([
+                  <MenuItem value={String(option.value)}>
+                    {option.caption} {'\u2191'}
+                  </MenuItem>,
+                  <MenuItem value={String(`-${option.value}`)}>
+                   {option.caption} {'\u2193'}
+                  </MenuItem>
+                ]))}
+              </TextField>
+            </Box>
           )}
 
           {this.props.pagination === true && pages !== null && (pages > 2) && page !== null && (

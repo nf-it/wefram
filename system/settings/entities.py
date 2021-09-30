@@ -13,13 +13,6 @@ __all__ = [
 ]
 
 
-class ISettingsEntitySchema(TypedDict):
-    appName: str
-    name: str
-    caption: Optional[str]
-    properties: list
-
-
 @dataclass
 class SettingsEntity:
     app_name: str
@@ -53,7 +46,7 @@ class SettingsEntity:
         ]
         return aaa.permitted(requires) if requires else True
 
-    def schemadef(self, **values: Any) -> Optional[ISettingsEntitySchema]:
+    def schemadef(self, **values: Any) -> Optional[dict]:
         # If the current user has no rights on this entity - return None instead
         # of real schema.
         if not self.is_permitted:

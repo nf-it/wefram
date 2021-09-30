@@ -125,3 +125,8 @@ export function isArraysEqual(arr1: any[], arr2: any[]): boolean {
   }
   return true
 }
+
+
+export function arrayFrom<T>(s: T | T[]): T[] {
+  return Array.isArray(s) ? s : [s, ]
+}

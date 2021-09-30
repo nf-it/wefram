@@ -5,12 +5,6 @@ from . import routines, entities
 from .. import aaa, api, settings, apps
 
 
-class ITabSettingsSchema(TypedDict):
-    tabName: str
-    tabCaption: str
-    entities: List
-
-
 @api.handle_get('/settings/properties', version=1)
 @aaa.requires(PERMISSION_ADMINISTERING)
 async def get_settings_schema(request: Request) -> JSONResponse:
@@ -69,14 +63,14 @@ async def get_settings_schema(request: Request) -> JSONResponse:
     for tab in tabs_order:
         tab_entities: List[dict] = []
         for entity in _ordered_entities(tab[0]):
-            entity_schema: Optional[entities.ISettingsEntitySchema] = \
+            entity_schema: Optional[dict] = \
                 entity.schemadef(**values.get(entity.name, {}))
             if entity_schema is None:
                 continue
             tab_entities.append(entity_schema)
         if not tab_entities:
             continue
-        tab_schema: ITabSettingsSchema = {
+        tab_schema: dict = {
             'tabName': tab[0],
             'tabCaption': tab[1],
             'entities': tab_entities

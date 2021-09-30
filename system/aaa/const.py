@@ -15,6 +15,7 @@ __all__ = [
     'MSG_SETTINGS_SESSION_LIFETIME',
     'MSG_SETTINGS_JWT_LIFETIME',
     'MSG_SETTINGS_FAILEDAUTH_DELAY',
+    'MSG_SETTINGS_SUCCEEDAUTH_DELAY',
     'MSG_USERS',
     'MSG_ROLES',
     'MSG_DOMAINS',
@@ -25,7 +26,8 @@ __all__ = [
     'SETTINGS_REMEMBER_USERNAME',
     'SETTINGS_SESSION_LIFETIME',
     'SETTINGS_JWT_EXPIRE',
-    'SETTINGS_FAILEDAUTH_DELAY'
+    'SETTINGS_FAILEDAUTH_DELAY',
+    'SETTINGS_SUCCEEDAUTH_DELAY'
 ]
 
 
@@ -41,6 +43,7 @@ MSG_SETTINGS_REMEMBER_USERNAME = lazy_gettext("Permit to remember an username at
 MSG_SETTINGS_SESSION_LIFETIME = lazy_gettext("Max session idle time (minutes)", 'system.aaa')
 MSG_SETTINGS_JWT_LIFETIME = lazy_gettext("Security token lifetime (minutes)", 'system.aaa')
 MSG_SETTINGS_FAILEDAUTH_DELAY = lazy_gettext("Delay when login has failed (secs)", 'system.aaa')
+MSG_SETTINGS_SUCCEEDAUTH_DELAY = lazy_gettext("Delay when login has succeed (secs)", 'system.aaa')
 MSG_USERS = lazy_gettext("Users", 'system.aaa')
 MSG_ROLES = lazy_gettext("Roles", 'system.aaa')
 MSG_DOMAINS = lazy_gettext("Active Directory", 'system.aaa')
@@ -52,3 +55,4 @@ SETTINGS_REMEMBER_USERNAME: str = 'remember_username'
 SETTINGS_SESSION_LIFETIME: str = 'session_timeout_mins'
 SETTINGS_JWT_EXPIRE: str = 'jwt_expire_mins'
 SETTINGS_FAILEDAUTH_DELAY: str = 'failed_auth_delay'
+SETTINGS_SUCCEEDAUTH_DELAY: str = 'succeed_auth_delay'

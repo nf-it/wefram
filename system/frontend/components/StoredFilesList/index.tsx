@@ -9,15 +9,15 @@ import {
   Tooltip,
   Typography
 } from 'system/components'
-import FileIcon from '@material-ui/icons/AttachFile'
-import RemoveIcon from '@material-ui/icons/DeleteOutline'
-import UploadIcon from '@material-ui/icons/Publish'
-import OpenIcon from '@material-ui/icons/OpenInNew'
-import EditIcon from '@material-ui/icons/Edit'
-import RearrangeIcon from '@material-ui/icons/SwapVert'
-import ArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
-import ArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
-import {StoredFiles, StoredFile} from 'system/types'
+import FileIcon from '@mui/icons-material/AttachFile'
+import RemoveIcon from '@mui/icons-material/DeleteOutline'
+import UploadIcon from '@mui/icons-material/Publish'
+import OpenIcon from '@mui/icons-material/OpenInNew'
+import EditIcon from '@mui/icons-material/Edit'
+import RearrangeIcon from '@mui/icons-material/SwapVert'
+import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import {StoredFilesModel, StoredFileModel} from 'system/types'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
 import {gettext} from 'system/l10n'
@@ -38,7 +38,7 @@ export type StoredFilesListProps = {
 
 type StoredFilesListState = {
   loading: boolean,
-  items: StoredFiles,
+  items: StoredFilesModel,
   selected: number[]
   rearrangeMode: boolean
 }
@@ -71,8 +71,8 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
   public load = (): void => {
     const path: RequestApiPath = this.requestPath()
     api.get(path).then(res => {
-      const items: StoredFiles = res.data
-      const ids: number[] = items.map((el: StoredFile) => el.id)
+      const items: StoredFilesModel = res.data
+      const ids: number[] = items.map((el: StoredFileModel) => el.id)
       const selected: number[] = this.state.selected.filter((el: number) => ids.includes(el))
       this.setState({
         items,
@@ -96,14 +96,14 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
   }
 
   public postRearragement = (): void => {
-    runtime.busy = true
+    runtime.setBusy()
     const data: RearrangeSortData = {}
     this.state.items.forEach(el => data[el.id] = el.sort)
     api.put(this.requestPath(null, '/reorder'), data).then(res => {
-      runtime.busy = false
+      runtime.dropBusy()
       notifications.showRequestSuccess(res)
     }).catch(err => {
-      runtime.busy = false
+      runtime.dropBusy()
       notifications.showRequestError(err)
     })
   }
@@ -112,13 +112,13 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
     dialog.showConfirm({
       okCallback: () => {
         dialog.hide()
-        runtime.busy = true
+        runtime.setBusy()
         api.delete(this.requestPath(id)).then(() => {
-          runtime.busy = false
+          runtime.dropBusy()
           notifications.showSuccess()
           this.load()
         }).catch(err => {
-          runtime.busy = false
+          runtime.dropBusy()
           notifications.showRequestError(err)
         })
       }
@@ -132,13 +132,13 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
     dialog.showConfirm({
       okCallback: () => {
         dialog.hide()
-        runtime.busy = true
+        runtime.setBusy()
         api.delete(this.requestPath(), {params: {keys}}).then(() => {
-          runtime.busy = false
+          runtime.dropBusy()
           notifications.showSuccess()
           this.load()
         }).catch(err => {
-          runtime.busy = false
+          runtime.dropBusy()
           notifications.showRequestError(err)
         })
       }
@@ -154,38 +154,38 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
     } else {
       form.append('file', data.target.files[0])
     }
-    runtime.busy = true
+    runtime.setBusy()
 
     const requestPath: RequestApiPath = this.requestPath(this.replacingId)
     if (this.replacingId !== null) {
       api.put(requestPath, form).then(() => {
-        runtime.busy = false
+        runtime.dropBusy()
         notifications.showSuccess()
         this.load()
       }).catch(err => {
-        runtime.busy = false
+        runtime.dropBusy()
         notifications.showRequestError(err)
       })
     } else {
       api.post(requestPath, form).then(() => {
-        runtime.busy = false
+        runtime.dropBusy()
         notifications.showSuccess()
         this.load()
       }).catch(err => {
-        runtime.busy = false
+        runtime.dropBusy()
         notifications.showRequestError(err)
       })
     }
   }
 
   public renameFile = (id: number, caption: string): void => {
-    runtime.busy = true
+    runtime.setBusy()
     api.put(this.requestPath(id), {caption}).then(() => {
-      runtime.busy = false
+      runtime.dropBusy()
       notifications.showSuccess()
       this.load()
     }).catch(err => {
-      runtime.busy = false
+      runtime.dropBusy()
       notifications.showRequestError(err)
     })
   }
@@ -279,7 +279,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
             )}
           </Box>
         )}
-        {this.state.items.map((item: StoredFile, index: number, arr: any) => (
+        {this.state.items.map((item: StoredFileModel, index: number, arr: any) => (
           <Box pt={1} pb={1} borderTop={'1px solid #bbb'}>
             <Grid container alignItems={'center'}>
               {(this.props.permitDelete ?? true) && (
@@ -357,7 +357,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                           const items = this.state.items
                           items.splice(index, 1)
                           items.splice(index - 1, 0, item)
-                          items.forEach((el: StoredFile, inx: number) => el.sort = inx)
+                          items.forEach((el: StoredFileModel, inx: number) => el.sort = inx)
                           this.setState({items})
                         }}
                         disabled={index === 0}
@@ -369,7 +369,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                           const items = this.state.items
                           items.splice(index, 1)
                           items.splice(index + 1, 0, item)
-                          items.forEach((el: StoredFile, inx: number) => el.sort = inx)
+                          items.forEach((el: StoredFileModel, inx: number) => el.sort = inx)
                           this.setState({items})
                         }}
                         disabled={index === arr.length - 1}

@@ -25,6 +25,9 @@
       "system/*": [
         "./system/frontend/*"
       ],
+      "build/*": [
+        "./build/frontend/*"
+      ],
       "*": [
         "./project/*"
       ]
