@@ -106,6 +106,7 @@ async def install_system_release(version: str) -> None:
     todeploy: List[str] = [
         'manage',
         'system',
+        'config.py',
         'build.json',
         'init.sh',
         'server.py',
