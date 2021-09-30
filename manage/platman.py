@@ -112,7 +112,6 @@ async def install_system_release(version: str) -> None:
         'server.py',
         'tsconfig.json',
         'webpack.config.js',
-        '__init__.py',
         'env.py'
     ]
     for dfn in todeploy:
