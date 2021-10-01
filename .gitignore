@@ -3,6 +3,7 @@
 .pnp.cjs
 .DS_Store
 *.log*
+.venv
 /.venv
 /.idea
 /.cache
