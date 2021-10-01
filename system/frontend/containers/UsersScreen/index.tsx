@@ -78,7 +78,7 @@ export default class UsersScreen extends React.Component<ScreenProps> {
           }}
         />
       </Box>
-      <Dialog open={this.state.entityKey !== undefined} maxWidth={'md'}>
+      <Dialog open={this.state.entityKey !== undefined} maxWidth={'sm'}>
         {this.state.entityKey !== undefined && (
           <UserCard
             entityKey={this.state.entityKey}

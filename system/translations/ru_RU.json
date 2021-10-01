@@ -210,7 +210,9 @@
     "Type a new password to change it for the user": "Введите новый пароль, чтобы изменить его для пользователя",
     "Password required to be set for the new user": "Для нового пользователя необходимо установить пароль",
     "Last logon time": "Время последнего входа",
-    "Permissions for the role": "Разрешения для роли"
+    "Permissions for the role": "Разрешения для роли",
+    "Details": "Детали",
+    "Comments": "Комментарии"
   },
   "aaa-messages": {
     "Username (Login) or password is incorrect, please try again!": "Имя пользователя или пароль неверны, пожалуйста попробуйте еще раз",

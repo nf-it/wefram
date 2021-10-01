@@ -17,6 +17,8 @@ import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'
 import {session, UserEditModel} from 'system/aaa'
 
+import {TextField} from '@mui/material'
+
 
 const Help = () => (
   <Chapters>
@@ -53,6 +55,7 @@ export class UserCard extends React.Component<UserCardProps, UserCardState> {
       lastName: "",
       timezone: null,
       locale: null,
+      comments: '',
       fullName: ""
     }
   }
@@ -81,7 +84,8 @@ export class UserCard extends React.Component<UserCardProps, UserCardState> {
           'middleName',
           'lastName',
           'timezone',
-          'locale'
+          'locale',
+          'comments'
         ]}
 
         submit
@@ -171,6 +175,15 @@ export class UserCard extends React.Component<UserCardProps, UserCardState> {
               </Typography>
             </FormItem>
           )}
+        </FormPaper>
+
+        <FormPaper title={gettext("Details", 'system.aaa-form')}>
+          <FormTextInputField
+            formName={'comments'}
+            label={gettext("Comments", 'system.aaa-form')}
+            multiline
+            width={12}
+          />
         </FormPaper>
       </EntityForm>
     )

@@ -357,7 +357,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
       } else if (valarg !== undefined) {
         value = valarg
       } else if (target !== null) {
-        if (target.tagName === 'INPUT') {
+        if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
           switch ((target as HTMLInputElement).type) {
             case 'checkbox':
               value = Boolean((target as HTMLInputElement).checked)

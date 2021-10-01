@@ -50,8 +50,8 @@ export const workspaceTheme: WorkspaceTheme = {
   breakpoints: {
     keys: ['xs', 'sm', 'md', 'lg', 'xl'],
     values: {
-      xs: 0,
-      sm: 700,
+      xs: 575,
+      sm: 800,
       md: 960,
       lg: 1440,
       xl: 1920
@@ -178,7 +178,8 @@ export const workspaceTheme: WorkspaceTheme = {
     MuiSnackbar: {
       styleOverrides: {
         root: {
-          borderRadius: '.45vmax'
+          borderRadius: '.45vmax',
+          zIndex: 65535
         }
       }
     },

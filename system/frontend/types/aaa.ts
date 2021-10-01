@@ -50,6 +50,7 @@ export type UserEditModel = {
   lastName: string
   timezone: string | null
   locale: string | null
+  comments: string
   fullName: string
 }
 
