@@ -8,7 +8,10 @@ Welcome to Wefram's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :titlesonly:
    :caption: Contents:
+
+   ds
 
 
 
