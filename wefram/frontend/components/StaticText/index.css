@@ -1,0 +1,21 @@
+.SystemUI-StaticText-container {
+    padding-bottom: .3em;
+    box-sizing: border-box;
+    border-bottom: 1px solid transparent;
+}
+
+.SystemUI-StaticText-containerBordered {
+    padding-bottom: .3em;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.42);
+}
+
+.SystemUI-StaticText-caption {
+    font-size: .75rem;
+    color: rgba(0, 0, 0, 0.54);
+    padding-bottom: .3em;
+}
+
+.SystemUI-StaticText-content {
+    font-size: 1.15em;
+}

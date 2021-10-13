@@ -1,0 +1,47 @@
+
+.SystemModalWindow-root.SystemDialog > div.SystemModalWindow-window > div.paper {
+    padding: 1vmax;
+}
+
+.SystemModalWindow-root.SystemDialogChoice > div.SystemModalWindow-window > div.paper {
+    display: flex;
+    flex-flow: column;
+}
+
+.SystemModalWindow-root.SystemDialogChoice > div.SystemModalWindow-window > div.paper > *:first-child {
+    margin-top: 0 !important;
+}
+
+.SystemModalWindow-root.SystemDialogChoice > div.SystemModalWindow-window > div.paper > *:last-child {
+    margin-bottom: 0 !important;
+}
+
+@media screen and (min-width: 576px){
+    .SystemModalWindow-root.SystemDialogChoice > div.SystemModalWindow-window > div.paper > p {
+        max-width: 30vw;
+    }
+
+    .SystemModalWindow-root.SystemDialogChoice > div.SystemModalWindow-window > div.paper button {
+        padding: .8vmax 2vmax;
+    }
+
+    .SystemModalWindow-root.SystemDialogChoice > div.SystemModalWindow-window > div.paper > * {
+        margin: .3vmax 0;
+    }
+}
+
+@media screen and (max-width: 575px){
+    .SystemModalWindow-root.SystemDialogChoice > div.SystemModalWindow-window > div.paper > * {
+        margin: .5vmax 0;
+    }
+
+    .SystemModalWindow-root.SystemDialogChoice > div.SystemModalWindow-window > div.paper > p {
+        margin-bottom: 2vmax;
+    }
+}
+
+@media screen and (min-width: 751px) {
+    .SystemModalWindow-root.SystemDialog > div.SystemModalWindow-window > div.paper {
+        max-width: 50vw;
+    }
+}

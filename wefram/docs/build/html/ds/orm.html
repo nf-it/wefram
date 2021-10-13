@@ -1,0 +1,909 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="More about Models &amp; Model.Meta" href="models.html" /><link rel="prev" title="Data storage" href="../ds.html" />
+
+    <meta name="generator" content="sphinx-4.2.0, furo 2021.09.22"/>
+        <title>ORM basics - Wefram 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?digest=150e365fa939648e89c22f6d7d13c72a1657915a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/furo-extensions.css?digest=16fb25fabf47304eee183a5e9af80b1ba98259b1" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../index.html"><div class="brand">Wefram 1.0 documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../index.html">
+  
+  
+  <span class="sidebar-brand-text">Wefram 1.0 documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../ds.html">Data storage</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle child pages in navigation</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">ORM basics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models.html">More about Models &amp; Model.Meta</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reserved.html">Reserved ORM attribute names</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="orm-basics">
+<span id="ds-orm"></span><h1>ORM basics<a class="headerlink" href="#orm-basics" title="Permalink to this headline">¶</a></h1>
+<p>As been said before in the <em>Introduction</em>, Wefram-based project
+uses <em>SQLAlchemy ORM</em>.</p>
+<p>Every storing in the relational database entity describes as
+Python-class. All those classes directly maps to the corresponding
+database tables. When the project programmer about to read objects
+from the database, about to create or update corresponding
+object, delete and deal with relationships - he or she deals not
+with database itself with raw SQL queries (it is not prohibitted
+at all, but strongly not recommended to), but uses corresponding
+method of Python classes.</p>
+<p>It is great that Wefram project uses one of the most popular
+ORM library, so programmer easely can find answers on most
+questions on how to deal with it.</p>
+<p>For better understanding <em>what is ORM</em> it is best to read corresponding
+documentation not here, but on the SQLAlchemy documentation site.</p>
+<section id="the-library">
+<h2>The library<a class="headerlink" href="#the-library" title="Permalink to this headline">¶</a></h2>
+<p>To use ORM, the programmer about to import [ds] module from the
+[system] one:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+</pre></div>
+</div>
+<p>The [ds] module has much of needed for ORM operation. Most of the
+SQLAlchemy types, classes and functions transparently re-exported
+within [ds] module.</p>
+</section>
+<section id="models">
+<h2>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h2>
+<p>The every entity about to be defined as python classes, basing
+on the <code class="xref py py-class docutils literal notranslate"><span class="pre">ds.Model</span></code> parent class:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">UUIDPrimaryKey</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">some_value</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">MyAnotherModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">BigAutoIncrement</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">60</span><span class="p">))</span>
+    <span class="n">jsoned_data</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">JSONB</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>As you see here - we have defined two models. Each of them
+consists of several attributes. Most of them bases on the
+[ds.Column] whose defines the corresponding representation
+in the database. So, each attribute which is defined as
+[ds.Column(<em>something</em>)] - will be created as the corresponding
+column in the database with corresponding type and type
+parameters.</p>
+<p>The very important part of the each model is a <em>primary key</em>. As you
+can notice - both of example models have first attribute named
+[id]. The exact name is not important - you may name this attribute
+(as any other) as you with, except of reserved SQL or
+PostgreSQL words.</p>
+<p>We will not describe the relational database logics here, this is
+not the topic of the Wefram. But, we will show you how to make
+it simplier.</p>
+<p>Defaultly, with SQLAlchemy, a primary key defines as any another
+column - using [ ds.Column(…) ]. The Wefram suggests you
+to use one of two primary key types:</p>
+<ol class="arabic simple">
+<li><p><strong>UUID</strong> which is, as we think, the best way to identify
+objects in the relational database. It is best to identify
+single objects when their quantity is not very much.</p></li>
+<li><p><strong>Integer</strong> or <strong>BigInteger</strong> as an alternative. This type
+is best to identify objects when their quantity is much more
+than several. For example, when we storing history records (logs),
+or kind of orders.</p></li>
+</ol>
+<p>And, to avoid misspelling, errors in declaration of primary keys and so
+on, Wefram offers helper functions.</p>
+<section id="uuid-primary-keys">
+<h3>UUID primary keys<a class="headerlink" href="#uuid-primary-keys" title="Permalink to this headline">¶</a></h3>
+<p>The example of models with UUID primary key usage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">UUIDPrimaryKey</span><span class="p">()</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+<p>The PostgreSQL nativelly supports UUIDs and the Wefram
+uses the PostgreSQL-based UUID as primary key. Additionally,
+Wefram <em>cares about default</em> primary key value.</p>
+</section>
+<section id="integer-primary-keys">
+<h3>Integer primary keys<a class="headerlink" href="#integer-primary-keys" title="Permalink to this headline">¶</a></h3>
+<p>Integer primary keys usually called <code class="docutils literal notranslate"><span class="pre">auto-increment</span></code> types. The
+PostgreSQL does not knows <em>auto-increment</em>, instead it uses own
+special types: <code class="docutils literal notranslate"><span class="pre">serial</span></code> or <code class="docutils literal notranslate"><span class="pre">generated</span> <span class="pre">by</span> <span class="pre">default</span> <span class="pre">as</span> <span class="pre">identity</span></code>.
+Let’s not flow deep into PostgreSQL logics and etc, but instead
+Wefram offers more usual type <code class="docutils literal notranslate"><span class="pre">AutoIncrement</span></code> and
+<code class="docutils literal notranslate"><span class="pre">BigAutoIncrement</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+<span class="k">class</span> <span class="nc">MyIntPkModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">""" This is model with Integer auto-increment key """</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">AutoIncrement</span><span class="p">()</span>
+    <span class="o">...</span>
+
+<span class="k">class</span> <span class="nc">MyBigIntPkModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">""" This is model with BigInteger auto-increment key """</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">BigAutoIncrement</span><span class="p">()</span>
+    <span class="o">...</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="crud-basics">
+<h2>CRUD basics<a class="headerlink" href="#crud-basics" title="Permalink to this headline">¶</a></h2>
+<p>CRUD, or <strong>Create</strong>, <strong>Read</strong>, <strong>Update</strong>, <strong>Delete</strong>, like any other
+operations on ORM, are handled by SQLAlchemy logics. While the project
+programmer is free and, speaking more, advised to use SQLAlchemy v2.0 query
+writing for complex requests, Wefram offers helper methods on the [ds.Model]
+class to make work with simple cases much easier.</p>
+<section id="fetching-objects-from-database">
+<h3>Fetching objects from database<a class="headerlink" href="#fetching-objects-from-database" title="Permalink to this headline">¶</a></h3>
+<p>Reading from the database - is the most often operation we about to do
+while speaking about relation databases. There are two approaches to this
+operation:</p>
+<ol class="arabic simple">
+<li><p>Using the default SQLAlchemy query writing algorithms;</p></li>
+<li><p>Using simple Wefram helper methods.</p></li>
+</ol>
+<p>The <strong>first</strong> approach is very useful when you have to make complex
+query. For example, when you need to create a report query fetching
+from many tables with different joins, subqueries and etc. Of cource,
+this approach is still 100 percent applicable to execute the simpliest
+query in you life, but you may make it much easier with the second
+one.</p>
+<p>The SQLAlchemy based query writing is much better to read at the
+SQLAlchemy docs site, really not here. But, for the basic example
+how to begin, let’s give an example here:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+
+<span class="c1"># Declaring the model</span>
+<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">UUIDPrimaryKey</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">some</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="c1"># And querying this model with SQLAlchemy based request</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">MyModel</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">or_</span><span class="p">(</span>
+    <span class="n">MyModel</span><span class="o">.</span><span class="n">some</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">MyModel</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+<span class="p">))</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">MyModel</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="k">await</span><span class="p">(</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">scalars</span><span class="p">()</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The <strong>second</strong> approach is very useful when you using simple queries. We do not
+have to use complex query modelling, we want to just call a single, simple
+method of the corresponding model. This approach uses Wefram extensions to
+the SQLAlchemy ORM model. When you declare your model with parent [ds.Model]
+class - you declare with extended logics already.</p>
+<p>Lets repeat the example above with the simplier variant.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+
+<span class="c1"># Declaring the model</span>
+<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">UUIDPrimaryKey</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">some</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="c1"># Using a simplier helper method</span>
+<span class="n">results</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">or_</span><span class="p">(</span>
+    <span class="n">MyModel</span><span class="o">.</span><span class="n">some</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="kc">False</span><span class="p">),</span>
+    <span class="n">MyModel</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">is_</span><span class="p">(</span><span class="kc">None</span><span class="p">),</span>
+    <span class="n">order</span><span class="o">=</span><span class="s1">'name'</span>
+<span class="p">))</span>
+</pre></div>
+</div>
+<p>Or even simplier, if we have an <em>AND</em> filter in the query:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="c1"># Even more simplier query</span>
+<span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MyModel</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span>
+    <span class="n">some</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="s1">'name'</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>And the last example, as simple as possible:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Whooos maximum simple</span>
+<span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MyModel</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>As we see - instead of writing a SQLAlchemy-based query we called a
+single simple method <code class="xref py py-meth docutils literal notranslate"><span class="pre">all()</span></code> of the
+corresponding <code class="xref py py-class docutils literal notranslate"><span class="pre">ds.Model</span></code>. Of cource, helper
+methods cannot be used in all cases, but them makes a simple operations
+handled simple.</p>
+</section>
+<section id="offset-and-limit">
+<h3>Offset and limit<a class="headerlink" href="#offset-and-limit" title="Permalink to this headline">¶</a></h3>
+<p>We can limit the quantity of resulting objects by using <code class="docutils literal notranslate"><span class="pre">limit</span></code>
+named argument for <code class="xref py py-meth docutils literal notranslate"><span class="pre">all()</span></code> or
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">select()</span></code> methods. This argument
+indicates maximal the quantity of objects we allow to be fetched
+from the database.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch not more than 50 objects</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Like <code class="docutils literal notranslate"><span class="pre">limit</span></code> limits the quantity of returned in the result objects,
+<code class="docutils literal notranslate"><span class="pre">offset</span></code> set the starting position of that array. In other words,
+<code class="docutils literal notranslate"><span class="pre">offset</span></code> tell the database “okey, fetch objects from X row”.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetch objects begining from 75th one only</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">75</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Using <code class="docutils literal notranslate"><span class="pre">limit</span></code> and <code class="docutils literal notranslate"><span class="pre">offset</span></code> in couple we can make pagination. Let’s
+look at example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Lets assume that every page must not exceed 50 rows</span>
+
+<span class="c1"># Fetching the first page: offset=0, limit=50</span>
+<span class="n">page1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="c1"># The second page will have offset=50 and limit still = 50</span>
+<span class="n">page2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We think that we made a point on these two great parameters.</p>
+</section>
+<section id="ordering-the-query-results">
+<h3>Ordering the query results<a class="headerlink" href="#ordering-the-query-results" title="Permalink to this headline">¶</a></h3>
+<p>To order the query results we about to use named argument <code class="docutils literal notranslate"><span class="pre">order</span></code>.
+It assumes one of the next values:</p>
+<ul class="simple">
+<li><p>The (str) name of the corresponding column</p></li>
+<li><p>The list of (str) names of the corresponding columns</p></li>
+<li><p>The column instance itself</p></li>
+<li><p>The list of column instances</p></li>
+</ul>
+<p>If the string (str) type have been used, then you may revert
+ordering by prepending the corresponding column name with minus
+sybmol (‘-‘).</p>
+<p>For the corresponding column variant, we can use SQLAlchemy’s
+approach with <code class="docutils literal notranslate"><span class="pre">.desc()</span></code> method.</p>
+<p>Let’s look at examples for better understanding:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Sorting by one column 'name'</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">'name'</span><span class="p">)</span>
+
+<span class="c1"># The same with column instance</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">MyModel</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<span class="c1"># The same but in reverse</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="s1">'-name'</span><span class="p">)</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">MyModel</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span>
+
+<span class="c1"># Sorting using two columns at a time</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="s1">'last_name'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">])</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="p">[</span><span class="n">MyModel</span><span class="o">.</span><span class="n">last_name</span><span class="p">,</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">name</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="searching-by-the-text-term">
+<h3>Searching by the text term<a class="headerlink" href="#searching-by-the-text-term" title="Permalink to this headline">¶</a></h3>
+<p>The Wefram offers one interesting automation - the search facility. This is
+not the part of SQLAlchemy itself, as must other facilities, and not a
+simplification in general. This is a kind of automation which realises the
+one of the most used cases when fetching objects from the database - the
+<strong>search</strong>.</p>
+<p>To make this happened, we need to use <code class="xref py py-class docutils literal notranslate"><span class="pre">Meta</span></code> subclass (which is described
+in the <a class="reference internal" href="models.html#ds-models"><span class="std std-ref">More about Models &amp; Model.Meta</span></a>. We will show a very short part of it here,
+just to make sense how to make some model searchable. And how to use that.</p>
+<p>The search for objects by textual term is done by calling the class method
+<code class="docutils literal notranslate"><span class="pre">like</span></code> or <code class="docutils literal notranslate"><span class="pre">ilike</span></code> for case sensetive and case insensetive, respectively,
+within corresponding fetching method, like <code class="xref py py-meth docutils literal notranslate"><span class="pre">ds.Model.all()</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+
+<span class="k">class</span> <span class="nc">Contant</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">UUIDPrimaryKey</span><span class="p">()</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">middle_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">avatar</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Image</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Phone</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Email</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="c1"># Here we declares whose columns will be findable for</span>
+        <span class="c1"># the search facility</span>
+        <span class="n">findable</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'first_name'</span><span class="p">,</span> <span class="s1">'last_name'</span><span class="p">,</span> <span class="s1">'email'</span><span class="p">,</span> <span class="s1">'phone'</span><span class="p">]</span>
+
+
+<span class="c1"># let's find something</span>
+<span class="n">found</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Contact</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">Contact</span><span class="o">.</span><span class="n">ilike</span><span class="p">(</span><span class="s2">"mike"</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="selecting-for-update-locking-objects">
+<h3>Selecting for update (locking objects)<a class="headerlink" href="#selecting-for-update-locking-objects" title="Permalink to this headline">¶</a></h3>
+<p>This is normal situation when you need to select objects whose about to
+be updated or even deleted in the request process. And you want to be
+sure that those objects may be read by other processes if only those
+processes does not wants to update them too, and guarantee that those
+processes (whose want to update the same array of objects) will wait
+until the current process finish.</p>
+<p>In the raw SQL queries this usually done by adding special modifiers
+to the SELECT query, <code class="docutils literal notranslate"><span class="pre">SELECT</span> <span class="pre">..</span> <span class="pre">FOR</span> <span class="pre">UPDATE</span></code> when we speaking about
+PostgreSQL, for example.</p>
+<p>To add this kind of modifier using Wefram helper methods such as
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">all()</span></code>,
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">select()</span></code>,
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">first()</span></code>,
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code>,
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">fetch()</span></code>,
+you may pass named argument to the corresponding method call: <code class="docutils literal notranslate"><span class="pre">update=True</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Selecting all objects with enabled=True and locking them</span>
+<span class="c1"># using update=True</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">update</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="fetching-several-objects-by-their-primary-key">
+<h3>Fetching several objects by their primary key<a class="headerlink" href="#fetching-several-objects-by-their-primary-key" title="Permalink to this headline">¶</a></h3>
+<p>The one special, but often used case is fetching several model
+objects from the database by their key (primary key). In this
+case, in general, we can write a query like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">MyModel</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">in_</span><span class="p">([</span><span class="s1">'1'</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">,</span> <span class="s1">'3'</span><span class="p">]))</span>
+<span class="c1"># resulting list will consist of objects with primary key ('id')</span>
+<span class="c1"># equals to '1', '2' or '3'... for example</span>
+</pre></div>
+</div>
+<p>But Wefram offers a simplier way (a little simplification for
+this case):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">fetch</span><span class="p">([</span><span class="s1">'1'</span><span class="p">,</span> <span class="s1">'2'</span><span class="p">,</span> <span class="s1">'3'</span><span class="p">])</span>
+<span class="c1"># resulting list will consist of objects with primary key</span>
+<span class="c1"># equals to '1', '2' or '3'... for example</span>
+</pre></div>
+</div>
+<p>As we see - we even not cares about primary key column name(s)
+in the query. Just calling the method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">fetch()</span></code>
+giving primary key values to it as arguments.</p>
+<p>Even if we need to fetch objects with <strong>complex primary key</strong>
+declared - we can do this using
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">fetch`()</span></code> method like
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code>
+method (described below). Just give not plain values, but
+tuple of primary key values instead, in order they been
+declared in the model. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+
+<span class="k">class</span> <span class="nc">MyModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">id1</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">id2</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="n">instances</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">fetch</span><span class="p">(</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">190</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">404</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="c1"># The resulting list will consist of objects with primary</span>
+<span class="c1"># key values:</span>
+<span class="c1"># (1)  id1 = 1, id2 = 101</span>
+<span class="c1"># (2)  id1 = 2, id2 = 190</span>
+<span class="c1"># (3)  id1 = 3, id2 = 404</span>
+</pre></div>
+</div>
+</section>
+<section id="fetching-a-single-object">
+<h3>Fetching a single object<a class="headerlink" href="#fetching-a-single-object" title="Permalink to this headline">¶</a></h3>
+<p>The previos section describes how to fetch objects (rows from the
+database) resuling with list of the corresponding model instances
+or a complied SQLAlchemy results. The result will always be a
+list (array) in that case.</p>
+<p>Now, let’s fetch a single object. This approach has more variants
+to use.</p>
+<p>As said before, there are two approachs for this situation: we can
+use SQLAlchemy query or we can use Wefram helper methods. This
+first one we wantn’t to describe here - because it is always best
+to read on the official site of the SQLAlchemy. The second will
+be reviewed here with several methods to use.</p>
+<p>There are two typical situations when we expects only one object
+to be returned from the query: when we want to fetch the exactly
+object (we know it’s primary key value) and when we does not
+knows the resulting object’s primary key, but knows that only
+one object about to be returned (as a maximal special case, let’s
+say we give <code class="docutils literal notranslate"><span class="pre">limit=1</span></code> in the query).</p>
+</section>
+<section id="fetching-by-primary-key-value">
+<h3>Fetching by primary key value<a class="headerlink" href="#fetching-by-primary-key-value" title="Permalink to this headline">¶</a></h3>
+<p>To do that, we about to use <code class="xref py py-meth docutils literal notranslate"><span class="pre">get()</span></code>
+method of the corresponding model:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="n">instance</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'5c9466b2-ebc1-4b76-ae89-72b7125815d8'</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If the model has complex primary key, consisting of two or more
+columns, then the method above calls with all primary key
+columns’ values, ordered by the corresponding keys been declared
+in the corresponding model. For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ComplexPkModel</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="sd">""" The very useless model, but okay for the example """</span>
+    <span class="n">id1</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">UUID</span><span class="p">(),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">id2</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="c1"># Lets assume that we want to fetch a single object which</span>
+<span class="c1"># has next primary key values:</span>
+<span class="c1"># id1 = 5c9466b2-ebc1-4b76-ae89-72b7125815d8</span>
+<span class="c1"># id2 = 1005</span>
+<span class="n">instance</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+    <span class="s1">'5c9466b2-ebc1-4b76-ae89-72b7125815d8'</span><span class="p">,</span> <span class="mi">1005</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The result will be a single object, <strong>or None</strong> if there is no
+object with given primary key. So, Wefram does not raises any
+exception when the requested object does not exists in the
+database, it returns <em>None</em> result instead.</p>
+</section>
+<section id="fetch-only-first-object">
+<h3>Fetch only first object<a class="headerlink" href="#fetch-only-first-object" title="Permalink to this headline">¶</a></h3>
+<p>There are cases when we querying for the request not by the
+object’s primary key, but by another filters (or even without
+any of them). But the case is that we expect only one object
+to be returned, while <code class="xref py py-meth docutils literal notranslate"><span class="pre">all()</span></code>
+method returns a list.</p>
+<p>Let’s assume that we have a query and we except only one
+object to be returned or nothing. While using
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">all()</span></code> general
+case we always will get a list, even empty. Not the best
+options for this vase, yea?</p>
+<p>As always, let’s look an example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+
+<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">UUIDPrimaryKey</span><span class="p">()</span>
+    <span class="n">login</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">password</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">enabled</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">try_to_login</span><span class="p">(</span><span class="n">login</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+    <span class="sd">""" We about to query the database searching for</span>
+<span class="sd">    the given login and password</span>
+<span class="sd">    """</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">login</span><span class="o">=</span><span class="n">login</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">users</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">users</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+</div>
+<p>Here we querying for the user with given login and password,
+which is enabled, and checking the resulting list for its
+length and returning the first returned user.</p>
+<p>Let’s do the same query with a little simplification:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="o">...</span>
+
+<span class="k">async</span> <span class="k">def</span> <span class="nf">try_to_login</span><span class="p">(</span><span class="n">login</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">password</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="n">User</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+    <span class="sd">""" We about to query the database searching for</span>
+<span class="sd">    the given login and password</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="k">await</span> <span class="n">User</span><span class="o">.</span><span class="n">first</span><span class="p">(</span><span class="n">login</span><span class="o">=</span><span class="n">login</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">password</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The <code class="xref py py-meth docutils literal notranslate"><span class="pre">first()</span></code> method of the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">Model</span></code> returns only first object
+from the result (it even sets <code class="docutils literal notranslate"><span class="pre">limit=1</span></code> automatically to not to
+fetch more than one row from the database), or returns <code class="docutils literal notranslate"><span class="pre">None</span></code> if
+none objects with given criteria been found.</p>
+</section>
+<section id="creating-the-object">
+<h3>Creating the object<a class="headerlink" href="#creating-the-object" title="Permalink to this headline">¶</a></h3>
+<p>We will have nothing to fetch if nothing being created, right? So, the
+<strong>create</strong> is not less important operation then the <strong>read</strong> one.</p>
+<p>To create an object we about to use <code class="xref py py-meth docutils literal notranslate"><span class="pre">create()</span></code>
+class method on the corresponding model. The created object will automatically be
+assigned to the current default database session.</p>
+<p>To create an object defining column’s values - just pass their values
+within named arguments (<em>kwargs</em>) defining the initial values.</p>
+<p>Let’s look at example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+
+<span class="k">class</span> <span class="nc">Contant</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">UUIDPrimaryKey</span><span class="p">()</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">middle_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">avatar</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Image</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Phone</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Email</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="c1"># Lets create a couple objects for this example model</span>
+<span class="n">contact1</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Contact</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">first_name</span><span class="o">=</span><span class="s1">'Mike'</span><span class="p">,</span>
+    <span class="n">last_name</span><span class="o">=</span><span class="s1">'Cooper'</span><span class="p">,</span>
+    <span class="n">phone</span><span class="o">=</span><span class="s1">'+71234561234'</span>
+<span class="p">)</span>
+<span class="n">contact2</span> <span class="o">=</span> <span class="k">await</span> <span class="n">Contact</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">first_name</span><span class="o">=</span><span class="s1">'Car service'</span><span class="p">,</span>
+    <span class="n">phone</span><span class="o">=</span><span class="s1">'+70001112233'</span>
+<span class="p">)</span>
+
+<span class="c1"># Ooh, we forgot to set email for Mike?</span>
+<span class="n">contact1</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s1">'mike.cooper@domain.com'</span>
+
+<span class="c1"># The next call IS NOT required. It is useful only if you</span>
+<span class="c1"># need the previously created objects to be flushed to the</span>
+<span class="c1"># database. Otherwise them will do that at the web request</span>
+<span class="c1"># finish.</span>
+<span class="n">ds</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="updating-the-existing-object">
+<h3>Updating the existing object<a class="headerlink" href="#updating-the-existing-object" title="Permalink to this headline">¶</a></h3>
+<p>The <strong>update</strong> operation modifies the existing object to update
+its corresponding values in the database. So, first of all, we need
+to fetch the corresponding object first.</p>
+<p>To modify the object it is best to call the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">update()</span></code> method on
+the model instance, and pass new corresponding columns’ values
+to it within named arguments (<em>kwargs</em>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">system</span> <span class="kn">import</span> <span class="n">ds</span>
+
+
+<span class="k">class</span> <span class="nc">Contant</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">UUIDPrimaryKey</span><span class="p">()</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">middle_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">last_name</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+    <span class="n">avatar</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Image</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">phone</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Phone</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">ds</span><span class="o">.</span><span class="n">Email</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="o">...</span>
+
+<span class="c1"># Lets assume that we have made some objects prior to this place</span>
+
+<span class="n">instance</span> <span class="o">=</span> <span class="k">await</span> <span class="n">ds</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'...'</span><span class="p">)</span>  <span class="c1"># We have fetched a single object</span>
+
+<span class="c1"># Now let's update its columns' values</span>
+<span class="k">await</span> <span class="n">instance</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+    <span class="n">first_name</span><span class="o">=</span><span class="s1">'Another'</span><span class="p">,</span>
+    <span class="n">phone</span><span class="o">=</span><span class="s1">''</span>
+<span class="p">)</span>
+
+<span class="c1"># That's it, we have updated the object. As been said before, we</span>
+<span class="c1"># need to fetch the corresponding object(s) first.</span>
+</pre></div>
+</div>
+</section>
+<section id="deleting-the-existing-object">
+<h3>Deleting the existing object<a class="headerlink" href="#deleting-the-existing-object" title="Permalink to this headline">¶</a></h3>
+<p>To delete the object, when we have fetched that object before, we just
+can call instance method <code class="xref py py-meth docutils literal notranslate"><span class="pre">delete()</span></code>.
+This will delete the object from the
+database.</p>
+<p>Again, the method <code class="xref py py-meth docutils literal notranslate"><span class="pre">delete`()</span></code> is an
+instance method, not the class one. This means that this method works
+with previously fetched from the database object (using any selecting
+method described before).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Fetching a single object in this example</span>
+<span class="n">instance</span> <span class="o">=</span> <span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'...'</span><span class="p">)</span>
+
+<span class="o">...</span>
+
+<span class="c1"># And deleing that object</span>
+<span class="k">await</span> <span class="n">instance</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="deleting-many-objects-or-without-fetching">
+<h3>Deleting many objects or without fetching<a class="headerlink" href="#deleting-many-objects-or-without-fetching" title="Permalink to this headline">¶</a></h3>
+<p>As been described in the section above, to use
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">delete()</span></code> method we
+have to fetch the corresponding object or objects first. This is the
+approach the SQLAlchemy tells us.</p>
+<p>This approach has one negative variant - when we need to delete many
+objetcs at a time, or even when we just do not want to fetch objects
+from the database just ot delete them (why?)</p>
+<p>In this case, Wefram offers a class method (<em>class</em>, not <em>instance</em>)
+named <code class="xref py py-meth docutils literal notranslate"><span class="pre">delete_where()</span></code>.
+This method waits a clause or filter to be given like for
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">all()</span></code> or
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">first()</span></code> methods (really the same
+syntax).</p>
+<p>For example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The first example with SQLAlchemy-based where clause</span>
+<span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">delete_where</span><span class="p">(</span>
+    <span class="n">ds</span><span class="o">.</span><span class="n">and_</span><span class="p">(</span><span class="n">MyModel</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s1">''</span><span class="p">,</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">phone</span> <span class="o">==</span> <span class="s1">''</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># The second example with filter variant</span>
+<span class="k">await</span> <span class="n">MyModel</span><span class="o">.</span><span class="n">delete_where</span><span class="p">(</span>
+    <span class="n">email</span><span class="o">=</span><span class="s1">''</span><span class="p">,</span> <span class="n">phone</span><span class="o">=</span><span class="s1">''</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition attention">
+<p class="admonition-title">Attention</p>
+<p>Please note that <code class="xref py py-meth docutils literal notranslate"><span class="pre">delete_where()</span></code>
+is not capable of triggering
+the history (because it uses the fast, direct SQL query like
+DELETE FROM … WHERE …) and the history <strong>WILL NOT</strong> be
+written on objects been deleted with this method! So, it is
+really bad idea to delete object with history logging enabled
+using exact this, maybe fast, but logging unfollowed method!</p>
+</div>
+</section>
+</section>
+<section id="orm-models-methods-summary">
+<h2>ORM models methods summary<a class="headerlink" href="#orm-models-methods-summary" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="models.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">More about Models &amp; Model.Meta</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../ds.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Data storage</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2021, NF-IT |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>. |
+            <a class="muted-link" href="../_sources/ds/orm.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">ORM basics</a><ul>
+<li><a class="reference internal" href="#the-library">The library</a></li>
+<li><a class="reference internal" href="#models">Models</a><ul>
+<li><a class="reference internal" href="#uuid-primary-keys">UUID primary keys</a></li>
+<li><a class="reference internal" href="#integer-primary-keys">Integer primary keys</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#crud-basics">CRUD basics</a><ul>
+<li><a class="reference internal" href="#fetching-objects-from-database">Fetching objects from database</a></li>
+<li><a class="reference internal" href="#offset-and-limit">Offset and limit</a></li>
+<li><a class="reference internal" href="#ordering-the-query-results">Ordering the query results</a></li>
+<li><a class="reference internal" href="#searching-by-the-text-term">Searching by the text term</a></li>
+<li><a class="reference internal" href="#selecting-for-update-locking-objects">Selecting for update (locking objects)</a></li>
+<li><a class="reference internal" href="#fetching-several-objects-by-their-primary-key">Fetching several objects by their primary key</a></li>
+<li><a class="reference internal" href="#fetching-a-single-object">Fetching a single object</a></li>
+<li><a class="reference internal" href="#fetching-by-primary-key-value">Fetching by primary key value</a></li>
+<li><a class="reference internal" href="#fetch-only-first-object">Fetch only first object</a></li>
+<li><a class="reference internal" href="#creating-the-object">Creating the object</a></li>
+<li><a class="reference internal" href="#updating-the-existing-object">Updating the existing object</a></li>
+<li><a class="reference internal" href="#deleting-the-existing-object">Deleting the existing object</a></li>
+<li><a class="reference internal" href="#deleting-many-objects-or-without-fetching">Deleting many objects or without fetching</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#orm-models-methods-summary">ORM models methods summary</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/scripts/main.js"></script>
+    </body>
+</html>

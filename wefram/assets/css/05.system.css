@@ -1,0 +1,61 @@
+#System-loadingAnimationBackdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #fff0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  transition: background-color .25s ease;
+}
+
+#System-loadingAnimationBackdrop.open {
+  background-color: #fff5;
+}
+
+@media screen and (max-width: 750px) {
+  #System-loadingAnimationBackdrop {
+    background-color: #0000;
+  }
+
+  #System-loadingAnimationBackdrop.open {
+    background-color: #0004;
+  }
+}
+
+#System-loadingAnimationBackdrop > div {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+#System-loadingAnimationBackdrop.open > div {
+  opacity: 1;
+}
+
+#System-loadingAnimationBackdrop > div:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #bd3302;
+  border-color: #bd3302 transparent #bd3302 transparent;
+  animation: System-loadingAnimation 1.2s linear infinite;
+}
+
+@keyframes System-loadingAnimation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+

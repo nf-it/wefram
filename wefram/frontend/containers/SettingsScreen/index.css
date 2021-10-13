@@ -1,0 +1,13 @@
+.Screen-system_SettingsScreen .MuiTab-wrapper {
+    align-items: flex-start;
+}
+
+.Screen-system_SettingsScreen .Prop-image {
+
+}
+
+.Screen-system_SettingsScreen .Prop-image > div:last-child {
+    border: 1px solid #0000003b;
+    border-radius: .5vmax;
+    padding: 4px;
+}

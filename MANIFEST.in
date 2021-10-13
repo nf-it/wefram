@@ -1,0 +1,16 @@
+recursive-include wefram *.py
+recursive-include wefram *.ts
+recursive-include wefram *.tsx
+recursive-include wefram *.js
+recursive-include wefram *.txt
+recursive-include wefram *.json
+recursive-include wefram *.md
+recursive-include wefram *.html
+recursive-include wefram *.svg
+recursive-include wefram *.css
+recursive-include wefram *.js
+recursive-include wefram *.ico
+recursive-include wefram *.png
+recursive-include wefram *.jpg
+recursive-include wefram *.jpeg
+recursive-include wefram frontend/*

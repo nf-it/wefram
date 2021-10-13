@@ -1,0 +1,47 @@
+.SystemUI-LayoutSitemap {
+    width: 18vw;
+    flex-shrink: 0;
+    margin-right: 1vw;
+}
+
+.SystemUI-LayoutSitemap-paper {
+    width: 19vw;
+    background: linear-gradient(to right bottom, #222, #444) !important;
+    color: #eee !important;
+    padding: .35vmax 0 !important;
+    border-right: 2px solid #0009 !important;
+    box-shadow: 0 0 1vmax #0004 !important;
+}
+
+.SystemUI-LayoutSitemap-container {
+    overflow: auto;
+}
+
+.SystemUI-LayoutSitemap-folder {
+    font-size: 0.9em;
+    border-top: 1px solid #0004;
+    border-bottom: 1px solid #0004;
+    background-color: #0002;
+}
+
+.SystemUI-LayoutSitemap a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.SystemUI-LayoutSitemap a:hover {
+    background-color: #0005 !important;
+}
+
+.SystemUI-LayoutSitemap-item {
+    text-shadow: 0 1px 1px #0009;
+}
+
+.SystemUI-LayoutSitemap-item:hover {
+    background-color: #0005 !important;
+}
+
+.SystemUI-LayoutSitemap-icon {
+    width: 1.5vw;
+    height: 1.5vw;
+}

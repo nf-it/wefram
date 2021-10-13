@@ -2,8 +2,7 @@
   "buildDir": "build",
   "staticsDir": "static",
   "staticsUrl": "/static",
-  "assetsDir": "project/assets",
-  "coreDir": "system",
+  "assetsDir": "assets",
   "appsDir": "project",
   "filesDir": "files",
   "filesUrl": "/files"

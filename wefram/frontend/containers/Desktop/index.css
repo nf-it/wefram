@@ -1,0 +1,14 @@
+.SystemUI-Desktop-appTitle {
+    position: relative;
+    color: #0077ff;
+    margin-left: 1vw;
+    padding-left: 1vw;
+    padding-right: 1vw;
+    border-left: 2px solid #07f;
+    background: linear-gradient(to right, #007FFF, #0059B2);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
