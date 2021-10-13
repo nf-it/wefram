@@ -46,12 +46,8 @@ def random_secret(length: int) -> str:
     )
 
 
-def json_from_file(filename: str, **kwargs) -> Any:
-    with open(filename, 'r') as f:
-        return json.load(f, **kwargs)
-
-
 def json_to_file(o: Any, filename: str, **kwargs) -> None:
+    kwargs.setdefault('indent', 2)
     kwargs.setdefault('ensure_ascii', False)
     with open(filename, 'w') as f:
         json.dump(o, f, **kwargs)
@@ -72,7 +68,7 @@ BUILD_JSON = {
   "filesUrl": "/files"
 }
 
-APPS_JSON = {}
+APPS_JSON = []
 
 CONFIG_JSON = {
     "project": {},
@@ -166,7 +162,7 @@ async def _main() -> None:
     print("")
 
     print("Wefram-based project uses PostgreSQL database. Please enter its credentials.")
-    db_host: str = term_input("PostgreSQL host", 'localhost')
+    db_host: str = term_input("PostgreSQL host", '127.0.0.1')
     db_name: str = term_input("Project database name", 'project')
     db_user: str = term_input("Project database user", 'projectdba')
     db_pass: str = term_input("Project database user's password", random_secret(64))
@@ -233,10 +229,10 @@ async def _main() -> None:
     json_to_file(BUILD_JSON, os.path.join(cwd, 'build.json'))
     json_to_file(CONFIG_JSON, os.path.join(cwd, 'config.json'))
 
-    os.chmod(os.path.join(cwd, 'manage'), 770)
-    os.chmod(os.path.join(cwd, 'config.json'), 660)
-    os.chmod(os.path.join(cwd, 'build.json'), 660)
-    os.chmod(os.path.join(cwd, 'apps.json'), 660)
+    os.chmod(os.path.join(cwd, 'manage'), 0o770)
+    os.chmod(os.path.join(cwd, 'config.json'), 0o660)
+    os.chmod(os.path.join(cwd, 'build.json'), 0o660)
+    os.chmod(os.path.join(cwd, 'apps.json'), 0o660)
 
     print("")
     print("=============================================================================")
