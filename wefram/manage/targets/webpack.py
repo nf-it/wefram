@@ -101,5 +101,4 @@ def run(*_) -> None:
     subprocess.run([
         f'yarn',
         f'install',
-        # f'--modules-folder={NODE_MODULES_PATH}'
     ])

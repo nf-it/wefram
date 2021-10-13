@@ -177,6 +177,11 @@ def makedocs() -> None:
     )
 
 
+def make_nodejs() -> None:
+    from .targets import webpack
+    webpack.run()
+
+
 async def run(params: List[str]) -> None:
     if not params:
         return
@@ -184,6 +189,11 @@ async def run(params: List[str]) -> None:
     command = params.pop(0)
     if command == 'makedocs':
         makedocs()
+        print("done")
+        return
+
+    elif command == 'node':
+        make_nodejs()
         print("done")
         return
 

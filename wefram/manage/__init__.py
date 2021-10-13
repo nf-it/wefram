@@ -53,12 +53,12 @@ async def main(args: list) -> None:
         print(f"Unsupported command given: {command}")
         return
 
-    try:
-        facility: types.ModuleType = importlib.import_module('.'.join(['wefram', 'manage', command]))
+    # try:
+    facility: types.ModuleType = importlib.import_module('.'.join(['wefram', 'manage', command]))
 
-    except ModuleNotFoundError:
-        print(f"Unsupported command given: {command}")
-        return
+    # except ModuleNotFoundError:
+    #     print(f"Unsupported command given: {command}")
+    #     return
 
     run: callable = getattr(facility, 'run')
     await run(args)

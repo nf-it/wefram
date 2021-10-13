@@ -89,7 +89,6 @@ def read(
     return value
 
 
-# PRJROOT: str = os.path.abspath(os.path.dirname(__file__))
 PRJ_ROOT: str = os.getcwd()
 
 
@@ -133,8 +132,8 @@ URL: dict = {
     'login_screen': read('url.loginScreen', '/workspace/login', 'str')
 }
 AUTH: dict = {
-    'salt': read('auth.salt', ..., 'str'),
-    'secret': read('auth.secret', ..., 'str'),
+    'salt': read('auth.salt', "--PLEASE-CHANGE-THIS-TO-THE-RANDOM--", 'str'),
+    'secret': read('auth.secret', "--PLEASE-CHANGE-THIS-TO-THE-RANDOM--", 'str'),
     'audience': read('auth.audience', 'localhost', 'str'),
     'jwt_expire_mins': read('auth.jwtExpireMins', 0, 'int'),
     'session_timeout_mins': read('auth.sessionTimeoutMins', 720, 'int'),
@@ -144,11 +143,11 @@ AUTH: dict = {
     'backends': read('auth.backends') or ['local']
 }
 DATABASE: dict = {
-    'user': read('db.user', ..., 'str'),
-    'pass': read('db.pass', ..., 'str'),
+    'user': read('db.user', 'projectdba', 'str'),
+    'pass': read('db.pass', 'project', 'str'),
     'host': read('db.host', '127.0.0.1', 'str'),
     'port': read('db.port', 5432, 'int'),
-    'name': read('db.name', ..., 'str'),
+    'name': read('db.name', 'project', 'str'),
     'migrate': {
         'drop_missing_tables': read('db.migrate.dropMissingTables', False, 'bool'),
         'drop_missing_columns': read('db.migrate.dropMissingColumns', False, 'bool')
@@ -170,11 +169,25 @@ DESKTOP: dict = {
 # -- The build and global system configuration
 # --
 
-with open(os.path.join(PRJ_ROOT, 'build.json')) as f:
-    _BUILD_CONF: dict = json.load(f)
 
-with open(os.path.join(PRJ_ROOT, 'apps.json')) as f:
-    APPS_ENABLED: list = json.load(f)
+if os.path.isfile(os.path.join(PRJ_ROOT, 'build.json')):
+    with open(os.path.join(PRJ_ROOT, 'build.json')) as f:
+        _BUILD_CONF: dict = json.load(f)
+else:
+    _BUILD_CONF: dict = {
+        "buildDir": "build",
+        "staticsDir": "static",
+        "staticsUrl": "/static",
+        "assetsDir": "assets",
+        "filesDir": "files",
+        "filesUrl": "/files"
+    }
+
+if os.path.isfile(os.path.join(PRJ_ROOT, 'apps.json')):
+    with open(os.path.join(PRJ_ROOT, 'apps.json')) as f:
+        APPS_ENABLED: list = json.load(f)
+else:
+    APPS_ENABLED: list = []
 
 COREPKG: str = "wefram"  # the Python Wefram package name
 CORE_ROOT: str = os.path.split(wefram.__file__)[0]  # The Wefram root path
