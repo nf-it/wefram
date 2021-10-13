@@ -1,9 +1,0 @@
-{
-  "buildDir": "build",
-  "staticsDir": "static",
-  "staticsUrl": "/static",
-  "assetsDir": "assets",
-  "appsDir": "project",
-  "filesDir": "files",
-  "filesUrl": "/files"
-}

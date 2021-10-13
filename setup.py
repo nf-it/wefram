@@ -1,7 +1,7 @@
 import setuptools
 
 
-VERSION = '0.2.3.7'
+VERSION = '0.2.3.8'
 
 
 with open("README.md", 'r') as f:

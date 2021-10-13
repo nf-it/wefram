@@ -45,7 +45,7 @@ export class LazyText extends React.PureComponent<LazyTextProps, LazyTextState> 
       default:
         variant = 'txt'
     }
-    const content: string = res.data
+    const content: string = String(res.data)
     this.setState({content, variant})
   }
 

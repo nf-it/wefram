@@ -205,7 +205,7 @@ async def _main() -> None:
     print("as `git` repo name or directory name for the project and defines the project")
     print("along other ones.")
     print("")
-    project_name: str = term_input("Project name", os.path.split(cwd)[-1])
+    project_name: str = term_input("Project name", (os.path.split(cwd)[-1]).replace('.', '_').replace(' ', '_'))
 
     print("")
     print("Please define how your project will be titled (the human readable name which")

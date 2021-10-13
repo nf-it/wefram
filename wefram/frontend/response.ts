@@ -35,7 +35,7 @@ export const responses: ResponsesRoutines = {
   responseSuccessMessage(res) {
     return res?.status === 204
       ? gettext("Succeed")
-      : (res?.data || gettext("Succeed"))
+      : String(res?.data || gettext("Succeed"))
   },
 
   responseErrorMessage(err?) {
@@ -45,7 +45,7 @@ export const responses: ResponsesRoutines = {
     const responseText: string =
       err?.response?.status === 500
       ? serverErrorMsg
-      : (err?.response?.data || serverErrorMsg)
+      : String(err?.response?.data || serverErrorMsg)
     const statusCode: number = err?.response?.status || 400
     if (statusCode >= 500) {
       return serverErrorMsg
