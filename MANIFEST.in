@@ -14,3 +14,5 @@ recursive-include wefram *.png
 recursive-include wefram *.jpg
 recursive-include wefram *.jpeg
 recursive-include wefram frontend/*
+recursive-include wefram assets/*
+recursive-include wefram manage/dist/*

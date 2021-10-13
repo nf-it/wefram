@@ -412,17 +412,11 @@ def get_calling_module(parent: types.ModuleType = None) -> str:
                 and not pname == "__main__" \
                 and os.path.isdir(os.path.join(ROOT, pname.split('.')[0])):
             name = pname
-    elif name.startswith(f"{config.APPS_DIR}."):
-        pname: str = get_calling_module(frame)
-        if pname.startswith(f"{config.APPS_DIR}."):
-            name = pname
     return name
 
 
 def get_calling_app(parent: types.ModuleType = None) -> str:
     calling_module: List[str] = get_calling_module(parent).split('.')
-    if calling_module[0] == config.APPS_DIR and len(calling_module) > 1:
-        calling_module = calling_module[1:]
     return calling_module[0] if calling_module[0] != config.COREPKG else 'system'
 
 

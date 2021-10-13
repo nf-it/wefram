@@ -179,9 +179,8 @@ with open(os.path.join(PRJ_ROOT, 'apps.json')) as f:
 COREPKG: str = "wefram"  # the Python Wefram package name
 CORE_ROOT: str = os.path.split(wefram.__file__)[0]  # The Wefram root path
 
-APPS_DIR: str = _BUILD_CONF['appsDir']
 BUILD_DIR: str = _BUILD_CONF['buildDir']
-APPS_ROOT: str = os.path.join(PRJ_ROOT, APPS_DIR)
+APPS_ROOT: str = PRJ_ROOT
 BUILD_ROOT: str = os.path.join(PRJ_ROOT, BUILD_DIR)
 
 ASSETS_DIR: str = _BUILD_CONF['assetsDir'] or None

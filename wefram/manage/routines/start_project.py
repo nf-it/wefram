@@ -219,7 +219,7 @@ async def _main() -> None:
     for f in DIST:
         shutil.copyfile(
             os.path.join(core_path, 'manage', 'dist', f),
-            cwd
+            os.path.join(cwd, f)
         )
 
     CONFIG_JSON['db']['user'] = db_user
@@ -233,6 +233,13 @@ async def _main() -> None:
     json_to_file(BUILD_JSON, os.path.join(cwd, 'build.json'))
     json_to_file(CONFIG_JSON, os.path.join(cwd, 'config.json'))
 
+    os.chmod(os.path.join(cwd, 'manage'), 770)
+    os.chmod(os.path.join(cwd, 'config.json'), 660)
+    os.chmod(os.path.join(cwd, 'build.json'), 660)
+    os.chmod(os.path.join(cwd, 'apps.json'), 660)
+
+    print("")
+    print("=============================================================================")
     print("")
     print("The project environment is ready to use. You may use `./manage` to manage the")
     print("basic project needs. To create the first project app, use:")

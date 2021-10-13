@@ -154,9 +154,7 @@ def register(
         def _make_root_component(_epath: Optional[str]) -> Optional[str]:
             app_module: str = get_calling_module()
             app_module_path: List[str] = app_module.split('.')
-            path_prefix: str = app_module_path[0] \
-                if app_module_path[0] != config.APPS_DIR \
-                else os.path.join(*app_module_path[1:2])
+            path_prefix: str = app_module_path[0]
             if _epath:
                 if _epath.startswith('/'):
                     return _epath[1:]
