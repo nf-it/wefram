@@ -1,1 +1,0 @@
-DEFAULT_APP_DICTS_DIR: str = 'l10n'
