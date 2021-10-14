@@ -10,6 +10,12 @@ from ...runtime import context
 __all__ = [
     'all',
     'connection',
+    'execute',
+    'flush',
+    'commit',
+    'rollback',
+    'all',
+    'one',
     'delete_where',
     'fetch_all',
     'fetch_first',

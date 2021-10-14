@@ -34,24 +34,24 @@ class _ModelMetaclass(DeclarativeMeta):
     def __init__(cls, name, bases, clsdict):
         tablename: Optional[str] = None
 
-        app_name: Optional[str] = cls.__modelapp__()
-        if not app_name:
+        app: Optional[str] = cls.__modelapp__()
+        if not app:
             super().__init__(name, bases, clsdict)
             return
 
-        if app_name:
-            tablename = cls.__inittablename__(app_name)
+        if app:
+            tablename = cls.__inittablename__(app)
 
-        if app_name:
+        if app:
             cls.__decl_cls_name__ = name
             name = tablename
             cls.__name__ = name
 
         super().__init__(name, bases, clsdict)
-        if not app_name:
+        if not app:
             return
 
-        meta: Meta = Meta(cls, app_name, cls.__module__)
+        meta: Meta = Meta(cls, app, cls.__module__)
         for key, attr in cls.__dict__.items():
             if isinstance(attr, Column):
                 meta.columns.append(attr)
@@ -62,14 +62,14 @@ class _ModelMetaclass(DeclarativeMeta):
                 attr.parent_key = key
 
         cls.Meta = meta
-        if app_name not in reg.app_models:
-            reg.app_models[app_name] = dict()
-        reg.app_models[app_name][cls.__decl_cls_name__] = cls
-        reg.models_by_name['.'.join([app_name, cls.__decl_cls_name__])] = cls
+        if app not in reg.app_models:
+            reg.app_models[app] = dict()
+        reg.app_models[app][cls.__decl_cls_name__] = cls
+        reg.models_by_name['.'.join([app, cls.__decl_cls_name__])] = cls
         reg.models_by_modulename['.'.join([cls.__module__, cls.__decl_cls_name__])] = cls
         reg.models_by_tablename[tablename] = cls
 
-        cls.__app__ = app_name
+        cls.__app__ = app
 
         logger.debug(
             f"registered ds.Model [{CSTYLE['red']}{name}=`{tablename}`{CSTYLE['clear']}]",
