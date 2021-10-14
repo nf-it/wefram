@@ -5,7 +5,7 @@ import datetime
 from ..exceptions import AuthenticationFailed
 from ..runtime import context
 from ..tools import all_in, get_calling_module
-from ..private.models import User, Session, RefreshToken, SessionUser, SettingsCatalog
+from ..models import User, Session, RefreshToken, SessionUser, SettingsCatalog
 from ..private.const.aaa import SETTINGS_JWT_EXPIRE
 from .. import config, logger, settings
 from .tools import *

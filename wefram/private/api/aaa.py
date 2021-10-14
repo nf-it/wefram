@@ -1,7 +1,7 @@
 from typing import *
 from ...api import register, ModelAPI
 from ...aaa.tools import hash_password
-from ..models import User, Role
+from ...models import User, Role
 from ..const.aaa import PERMISSION_ADMINUSERSROLES
 
 

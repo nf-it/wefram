@@ -23,7 +23,7 @@ __all__ = [
 
 class AuthenticationCliMiddleware(cli.CliMiddleware):
     async def __call__(self, call_next: Callable) -> None:
-        from ...private.models import Session
+        from ...models import Session
 
         context['is_authenticated'] = False
         context['user']: BaseUser = UnauthenticatedUser()
@@ -48,7 +48,7 @@ class ProjectAuthenticationBackend(AuthenticationBackend):
     async def authenticate(
         self, conn: HTTPConnection
     ) -> Optional[Tuple['AuthCredentials', 'BaseUser']]:
-        from ...private.models import Session, SessionUser
+        from ...models import Session, SessionUser
 
         context['is_authenticated'] = False
         context['user']: BaseUser = UnauthenticatedUser()

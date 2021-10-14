@@ -5,7 +5,7 @@ import os.path
 import shutil
 from ..routines.tools import term_input, term_intinput, yesno
 from ...tools import CSTYLE
-from ...private.types.apps import Manifest
+from ...types.apps import Manifest
 from ... import config, setup
 
 
@@ -30,7 +30,11 @@ def create(args: List[str]) -> None:
     Manifest(
         name=app,
         caption=caption,
-        order=order or None
+        order=order or None,
+        requirements={
+            'pip': {},
+            'node': {}
+        }
     ).write(
         os.path.join(root, 'manifest.json')
     )

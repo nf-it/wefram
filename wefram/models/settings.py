@@ -1,7 +1,7 @@
 from typing import *
 from collections import UserDict
-from ... import ds, logger
-from ...tools import CSTYLE, json_decode, json_encode
+from .. import ds, logger
+from ..tools import CSTYLE, json_decode, json_encode
 from ..types.settings import SettingsEntity, PropBase
 
 
@@ -13,7 +13,7 @@ __all__ = [
 
 class SettingsCatalog(UserDict):
     def __init__(self, entity: SettingsEntity, user_id: Optional[str]):
-        from ...settings import entities
+        from ..settings import entities
 
         super().__init__()
 

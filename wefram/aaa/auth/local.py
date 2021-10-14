@@ -1,7 +1,7 @@
 """ Plain authorization using only password stored in the users database. """
 
 from typing import *
-from ...private.models import User
+from ...models import User
 from ..tools import *
 
 

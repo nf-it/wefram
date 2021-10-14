@@ -1,10 +1,9 @@
-import os.path
 from typing import *
-import types
+from types import ModuleType
 import importlib
-from .private.types.l10n import L10nStr
-from .private.types.apps import IAppsModules, IAppsMains, IAppsManifests, Manifest
-from .tools import CSTYLE, app_path, app_has_module, app_root, has_app
+from .types.l10n import L10nStr
+from .types.apps import IAppsModules, IAppsMains, IAppsManifests, Manifest
+from .tools import CSTYLE, app_path, app_has_module, has_app
 from . import config, logger
 
 
@@ -40,7 +39,7 @@ def is_enabled(app: str) -> bool:
     return app in config.APPS_ENABLED or app in modules
 
 
-def load(apps: List[str]) -> Dict[str, types.ModuleType]:
+def load(apps: List[str]) -> Dict[str, ModuleType]:
     """ The first stage of apps loading. Importing apps' package modules. """
 
     for name in apps:
@@ -48,14 +47,14 @@ def load(apps: List[str]) -> Dict[str, types.ModuleType]:
             f"loading app {CSTYLE['green']}{name}{CSTYLE['clear']}"
         )
         path: str = app_path(name)
-        module: types.ModuleType = importlib.import_module(path)
+        module: ModuleType = importlib.import_module(path)
         modules[name] = module
         manifests[name] = Manifest.manifest_for(name)
 
     return modules
 
 
-def initialize(apps: Dict[str, types.ModuleType]) -> Dict[str, types.ModuleType]:
+def initialize(apps: Dict[str, ModuleType]) -> Dict[str, ModuleType]:
     """ The second stage of apps loading. Trying to import apps' package's
     modules called 'app.py', if present.
     """
@@ -66,7 +65,7 @@ def initialize(apps: Dict[str, types.ModuleType]) -> Dict[str, types.ModuleType]
             f"initializing app {CSTYLE['green']}{name}{CSTYLE['clear']} [app.py]"
         )
         path: str = app_path(name)
-        main: types.ModuleType = importlib.import_module('.'.join([path, 'app']))
+        main: ModuleType = importlib.import_module('.'.join([path, 'app']))
         mains[name] = main
     return mains
 

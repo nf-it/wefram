@@ -2,9 +2,9 @@ from typing import *
 from dataclasses import dataclass
 import datetime
 from starlette.authentication import BaseUser
-from ..const.aaa import SETTINGS_SESSION_LIFETIME
-from ... import ds
-from ...tools import json_decode, json_encode, rerekey_snakecase_to_lowercamelcase
+from ..private.const.aaa import SETTINGS_SESSION_LIFETIME
+from .. import ds
+from ..tools import json_decode, json_encode, rerekey_snakecase_to_lowercamelcase
 
 
 __all__ = [
@@ -172,7 +172,7 @@ class Session:
 
     @classmethod
     async def create(cls, user: User) -> 'Session':
-        from ...aaa import random_token
+        from ..aaa import random_token
 
         session = cls(
             token=random_token(),
@@ -201,7 +201,7 @@ class Session:
         return json_encode(response)
 
     async def save(self) -> None:
-        from ... import settings
+        from .. import settings
 
         rk: str = self.redis_key_for(self.user['id'], self.token)
         cn: ds.redis.RedisConnection = await ds.redis.get_connection()

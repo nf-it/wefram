@@ -1,6 +1,6 @@
 from .. import api
 from ..const.mail import PERMISSION
-from .. import models
+from ... import models
 
 
 @api.register

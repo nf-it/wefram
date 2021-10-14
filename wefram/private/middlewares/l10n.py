@@ -31,7 +31,7 @@ class LocalizationMiddleware(BaseHTTPMiddleware):
     async def dispatch(
             self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
-        from ..models.aaa import SessionUser
+        from ...models import SessionUser
         from ...requests import routing
 
         for prefix in routing.static_routes_prefixes:

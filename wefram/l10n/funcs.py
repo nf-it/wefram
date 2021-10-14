@@ -1,7 +1,7 @@
 from typing import *
 import babel
 import babel.numbers
-from ..private.types.l10n import L10nStr
+from ..types.l10n import L10nStr
 from ..runtime import context
 from ..tools import get_calling_app
 from .locales import Locale

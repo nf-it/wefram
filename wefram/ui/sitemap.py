@@ -1,8 +1,8 @@
 from typing import *
 from dataclasses import dataclass
 from ..aaa import permitted
-from ..private.types.l10n import L10nStr
-from ..private.types.ui import BaseScreen
+from ..types.l10n import L10nStr
+from ..types.ui import BaseScreen
 from ..tools import CSTYLE, get_calling_app, array_from
 from .. import logger
 

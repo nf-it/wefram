@@ -1,7 +1,7 @@
 from typing import *
+from types import ModuleType
 import os
 import os.path
-import types
 import importlib
 import asyncio
 
@@ -54,7 +54,7 @@ async def main(args: list) -> None:
         return
 
     # try:
-    facility: types.ModuleType = importlib.import_module('.'.join(['wefram', 'manage', command]))
+    facility: ModuleType = importlib.import_module('.'.join(['wefram', 'manage', command]))
 
     # except ModuleNotFoundError:
     #     print(f"Unsupported command given: {command}")

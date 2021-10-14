@@ -3,7 +3,7 @@ import os.path
 import re
 from ..requests import routing, media_res_url
 from ..tools import CSTYLE, get_calling_app, array_from, get_calling_module
-from ..private.types.ui import BaseScreen
+from ..types.ui import BaseScreen
 from .. import config, logger, ds, api, ui
 
 

@@ -1,4 +1,4 @@
-from ... import ds
+from .. import ds
 
 
 class MailAccount(ds.Model):

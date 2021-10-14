@@ -2,7 +2,7 @@ from typing import *
 from dataclasses import dataclass
 from .. import logger, apps
 from ..tools import CSTYLE, get_calling_app
-from ..private.types.l10n import L10nStr
+from ..types.l10n import L10nStr
 
 
 __all__ = [

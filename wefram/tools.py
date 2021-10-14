@@ -1,7 +1,7 @@
 from typing import *
+from types import ModuleType
 import uuid
 import abc
-import types
 import sys
 import inspect
 import json
@@ -123,7 +123,7 @@ class JSONexactValue(JSONcustom):
 
 class _JsonEncoder(json.JSONEncoder):
     def default(self, o: Any) -> Any:
-        from .private.types.l10n import L10nStr
+        from wefram.types.l10n import L10nStr
         from .ds import StoredFile, Model
 
         if isinstance(o, JSONcustom):
@@ -186,7 +186,7 @@ def json_to_file(o: Any, filename: str, **kwargs) -> None:
 
 
 def for_jsonify(o: Any, deep: bool = False) -> Any:
-    from .private.types.l10n import L10nStr
+    from wefram.types.l10n import L10nStr
     from .ds import StoredFile, Model
 
     if isinstance(o, JSONcustom):
@@ -387,7 +387,7 @@ def array_from(value: Any) -> List:
         return [value, ]
 
 
-def app_has_module(app: Union[types.ModuleType, str], module_name: str) -> bool:
+def app_has_module(app: Union[ModuleType, str], module_name: str) -> bool:
     apath: str = module_path(app_module_name(app if isinstance(app, str) else app.__name__))
     mpath: str = os.path.join(*module_name.split('.'))
     fpath: str = os.path.join(apath, mpath)
@@ -396,14 +396,14 @@ def app_has_module(app: Union[types.ModuleType, str], module_name: str) -> bool:
     return os.path.isfile(f"{fpath}.py")
 
 
-def load_app_module(app: Union[types.ModuleType, str], module_name: str) -> [None, types.ModuleType]:
+def load_app_module(app: Union[ModuleType, str], module_name: str) -> [None, ModuleType]:
     if not app_has_module(app, module_name):
         return None
     module_name: str = '.'.join([app_module_name(app if isinstance(app, str) else app.__name__), module_name])
     return importlib.import_module(module_name)
 
 
-def get_calling_module(parent: types.ModuleType = None) -> str:
+def get_calling_module(parent: ModuleType = None) -> str:
     frame = (parent or list(getattr(sys, '_current_frames')().values())[-1]).f_back
     name: str = str(frame.f_globals['__name__'])
     if name.startswith(f"{config.COREPKG}."):
@@ -415,7 +415,7 @@ def get_calling_module(parent: types.ModuleType = None) -> str:
     return name
 
 
-def get_calling_app(parent: types.ModuleType = None) -> str:
+def get_calling_app(parent: ModuleType = None) -> str:
     calling_module: List[str] = get_calling_module(parent).split('.')
     return calling_module[0] if calling_module[0] != config.COREPKG else 'system'
 

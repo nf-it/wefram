@@ -4,7 +4,7 @@ from typing import *
 import socket
 import ldap3
 from ... import ds, logger, api
-from ...private.models import User
+from ...models import User
 from ...private.const.aaa import PERMISSION_ADMINUSERSROLES
 
 

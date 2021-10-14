@@ -1,7 +1,7 @@
 from typing import *
 from ..const.aaa import PERMISSION_ADMINUSERSROLES
 from ..const.settings import PERMISSION_ADMINISTERING
-from ..types.settings import SettingsEntity
+from ...types.settings import SettingsEntity
 from ...settings import routines
 from ...requests import Request, JSONResponse, NoContentResponse
 from ... import aaa, api, settings, apps

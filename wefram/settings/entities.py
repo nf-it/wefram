@@ -1,7 +1,7 @@
 from typing import *
 from ..tools import CSTYLE, get_calling_app
-from ..private.types.l10n import L10nStr
-from ..private.types.settings import SettingsEntity, PropBase
+from ..types.l10n import L10nStr
+from ..types.settings import SettingsEntity, PropBase
 from .. import logger
 
 

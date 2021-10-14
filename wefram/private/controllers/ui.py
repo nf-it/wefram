@@ -1,5 +1,5 @@
 from typing import *
-from ..models import Session, SettingsCatalog
+from ...models import Session, SettingsCatalog
 from ..const.aaa import SETTINGS_REMEMBER_USERNAME
 from ... import config, api, l10n, settings, ui
 from ...requests import Request, JSONResponse

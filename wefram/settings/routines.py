@@ -1,7 +1,7 @@
 from typing import *
 from ..tools import get_calling_app
 from ..runtime import context
-from ..private.models import SettingsCatalog
+from ..models import SettingsCatalog
 from . import entities, props
 from .. import exceptions, ds
 

@@ -1,6 +1,6 @@
 from typing import *
+from types import ModuleType
 import asyncio
-import types
 import os
 import os.path
 import importlib
@@ -30,7 +30,7 @@ async def run(targets: list) -> None:
     # Defining the global build context which may be used by apps
     ctx: dict = dict()
     ctx['apps']: List[str] = apps_to_build
-    ctx['apps_build']: Dict[str, types.ModuleType] = dict()
+    ctx['apps_build']: Dict[str, ModuleType] = dict()
 
     # The apps' specific build logic
     makes: List[Tuple[str, callable]] = []
@@ -47,11 +47,11 @@ async def run(targets: list) -> None:
         if name == config.COREPKG or name == 'wefram' or name == 'system':
             continue
 
-        app_module: types.ModuleType = apps.modules[name]
+        app_module: ModuleType = apps.modules[name]
         if not hasattr(app_module, 'build'):
             continue
         app_build: Any = getattr(app_module, 'build')
-        if not isinstance(app_module, types.ModuleType):
+        if not isinstance(app_module, ModuleType):
             raise TypeError(
                 f"'{name}'.build must be module, got the '{type(app_build)}' instead!"
             )
@@ -76,7 +76,7 @@ async def run(targets: list) -> None:
     for target in targets:
         logger.info(f"making the target: {CSTYLE['bold']}{target}{CSTYLE['clear']}", 'make')
         try:
-            target_module: types.ModuleType = importlib.import_module('.'.join([config.COREPKG, 'manage', 'targets', target]))
+            target_module: ModuleType = importlib.import_module('.'.join([config.COREPKG, 'manage', 'targets', target]))
 
         except ModuleNotFoundError as exc:
             raise RuntimeError(

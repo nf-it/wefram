@@ -1,6 +1,6 @@
 from typing import *
-from ..private.types.l10n import L10nStr
-from ..private.types.settings import PropBase
+from ..types.l10n import L10nStr
+from ..types.settings import PropBase
 from ..tools import get_calling_app
 
 

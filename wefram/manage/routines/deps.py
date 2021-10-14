@@ -1,11 +1,7 @@
 from typing import *
-import os
-import json
 import re
-import subprocess
 from ... import config
-from ...tools import app_root
-from ...private.types.apps import Manifest
+from ...types.apps import Manifest
 
 
 __all__ = [

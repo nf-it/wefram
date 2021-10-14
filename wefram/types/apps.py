@@ -1,9 +1,8 @@
 from typing import *
-import types
-import json
+from types import ModuleType
 import os.path
 from dataclasses import dataclass
-from ...tools import app_root, json_from_file, json_to_file
+from ..tools import app_root, json_from_file, json_to_file
 
 
 __all__ = [
@@ -52,11 +51,12 @@ class Manifest:
         json_to_file({
             'name': self.name,
             'caption': self.caption,
-            'order': self.order
+            'order': self.order,
+            'requirements': self.requirements
         }, filename, indent=2)
 
 
-IAppsModules = Dict[str, types.ModuleType]
-IAppsMains = Dict[str, types.ModuleType]
+IAppsModules = Dict[str, ModuleType]
+IAppsMains = Dict[str, ModuleType]
 IAppsManifests = Dict[str, Manifest]
 

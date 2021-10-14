@@ -1,6 +1,6 @@
 from typing import *
-from ...requests import HTTPException, HTMLResponse, PrebuiltHTML
-from ...tools import JSONexactValue
+from ..requests import HTTPException, HTMLResponse, PrebuiltHTML
+from ..tools import JSONexactValue
 from .l10n import L10nStr
 
 

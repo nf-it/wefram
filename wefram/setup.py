@@ -1,13 +1,10 @@
-import inspect
 import asyncio
-import types
+from types import ModuleType
 from typing import *
 import os
 import shutil
-import importlib
-from . import aaa, ds, apps, logger, config
+from . import apps, logger, config
 from .tools import CSTYLE, load_app_module, json_from_file, json_to_file, app_root, app_has_module, has_app
-from .private.models.aaa import User, Role
 
 
 __all__ = [
@@ -21,6 +18,8 @@ __all__ = [
 
 
 async def drop() -> None:
+    from . import ds
+
     logger.warning("Flushing REDIS database!")
     redis_cn: ds.redis.RedisConnection = await ds.redis.create_connection()
     await redis_cn.flushall()
@@ -34,6 +33,9 @@ async def drop() -> None:
 
 
 async def setup() -> None:
+    from . import ds, aaa
+    from .models import User, Role
+
     await drop()
 
     logger.warning("Creating tables in the PostgreSQL database!")
@@ -74,10 +76,10 @@ async def setup() -> None:
 
         enabled_apps: List[str] = apps.get_apps_loaded()
         for appname in enabled_apps:
-            appmodule: types.ModuleType = apps.modules[appname]
+            appmodule: ModuleType = apps.modules[appname]
             if not app_has_module(appmodule, 'setup'):
                 continue
-            app_setup: types.ModuleType = load_app_module(appmodule, 'setup')
+            app_setup: ModuleType = load_app_module(appmodule, 'setup')
             if not hasattr(app_setup, 'upload_initial'):
                 continue
             logger.info(f"uploading initial data for app [{appname}]")
@@ -90,13 +92,13 @@ async def setup() -> None:
 async def demo(app_to_build: Optional[str] = None) -> None:
     apps_to_build: List[str] = ['system'] + config.APPS_ENABLED if not app_to_build else [app_to_build]
     for app in apps_to_build:
-        app_main: types.ModuleType = apps.mains.get(app)
+        app_main: ModuleType = apps.mains.get(app)
         if not app_main:
             continue
         if not hasattr(app_main, 'demo'):
             continue
-        demo_target: Union[Callable, types.ModuleType] = getattr(app_main, 'demo')
-        if isinstance(demo_target, types.ModuleType):
+        demo_target: Union[Callable, ModuleType] = getattr(app_main, 'demo')
+        if isinstance(demo_target, ModuleType):
             demo_target: Callable = getattr(demo_target, 'build', None)
             if not demo_target:
                 continue
@@ -116,7 +118,7 @@ async def remove(apps_to_remove: List[str]) -> None:
     for app in apps_to_remove:
         if not app_has_module(app, 'setup'):
             continue
-        app_setup: types.ModuleType = load_app_module(app, 'setup')
+        app_setup: ModuleType = load_app_module(app, 'setup')
         uninstall_func: Optional[callable] = getattr(app_setup, 'on_uninstall')
         if not uninstall_func or not callable(uninstall_func):
             continue
@@ -148,14 +150,14 @@ async def enable(apps_to_enable: List[str]) -> None:
         apps_json.append(app)
 
     apps_order: Dict[str, int] = apps.get_order_for(apps_json)
-    apps_json = sorted(apps_json, key=lambda n: apps_order.get(n, 99999))
+    apps_json = sorted(apps_json, key=lambda n: apps_order.get(n, 99999) or 99999)
 
     json_to_file(apps_json, apps_json_filename, indent=2)
 
     for app in to_enable:
         if not app_has_module(app, 'setup'):
             continue
-        app_setup: types.ModuleType = load_app_module(app, 'setup')
+        app_setup: ModuleType = load_app_module(app, 'setup')
         enable_func: Optional[callable] = getattr(app_setup, 'on_enable')
         if not enable_func or not callable(enable_func):
             continue
@@ -180,7 +182,7 @@ async def disable(apps_to_disable: List[str]) -> None:
     for app in apps_to_disable:
         if not app_has_module(app, 'setup'):
             continue
-        app_setup: types.ModuleType = load_app_module(app, 'setup')
+        app_setup: ModuleType = load_app_module(app, 'setup')
         disable_func: Optional[callable] = getattr(app_setup, 'on_disable')
         if not disable_func or not callable(disable_func):
             continue
