@@ -19,7 +19,8 @@ __pycache__
 *.pyc
 react-app-env.d.ts
 /.repos
-/.package.json
+/package.json
+/tsconfig.json
 /requirements
 # /config.json
 /build

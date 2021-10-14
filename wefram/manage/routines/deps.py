@@ -5,6 +5,7 @@ import re
 import subprocess
 from ... import config
 from ...tools import app_root
+from ...private.types.apps import Manifest
 
 
 __all__ = [
@@ -40,21 +41,15 @@ def fit_dependency_vers(current: str, requested: str) -> str:
     return '.'.join([str(i) for i in max(current, requested)])
 
 
-def dependencies_for(app_name: str) -> Tuple[dict, dict]:
-    req_fn: str = os.path.join(app_root(app_name), 'requirements.json')
-    if not os.path.isfile(req_fn):
-        return {}, {}
-    with open(req_fn, 'r') as f:
-        req: dict = json.load(f)
-        if not isinstance(req, dict) \
-                or ('pip' in req and not isinstance(req['pip'], dict)) \
-                or ('yarn' in req and not isinstance(req['yarn'], dict)):
-            print(
-                f"ERROR:: invalid requirements file for '{app_name}' in the '{req_fn}'"
-            )
-            return {}, {}
-
-        return req.get('pip', {}), req.get('yarn', {})
+def dependencies_for(app: str) -> Tuple[dict, dict]:
+    manifest: Manifest = Manifest.manifest_for(app)
+    requirements: Optional[dict] = manifest.requirements or {}
+    if not isinstance(requirements, dict):
+        raise TypeError(
+            f"application `{app}` has invalid `requirements` in it's manifest file:"
+            f" must be a (dict) type, containing `pip` and `node` sections!"
+        )
+    return requirements.get('pip', {}), requirements.get('node', {})
 
 
 def collect_dependencies(system_only: bool = False) -> Tuple[dict, dict]:

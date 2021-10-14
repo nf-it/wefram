@@ -19,13 +19,15 @@ class Manifest:
     name: str
     caption: str
     order: Optional[int]
+    requirements: dict
 
     @classmethod
     def default_manifest(cls, name: str) -> 'Manifest':
         return cls(
             name=name,
             caption=name,
-            order=None
+            order=None,
+            requirements={}
         )
 
     @classmethod
@@ -42,7 +44,8 @@ class Manifest:
         return cls(
             name=name,
             caption=data.get('caption', name),
-            order=data.get('order', None)
+            order=data.get('order', None),
+            requirements=data.get('requirements', None) or {}
         )
 
     def write(self, filename: str) -> None:
