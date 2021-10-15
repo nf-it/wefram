@@ -1,5 +1,5 @@
 from ...l10n import lazy_gettext
-from ...requests import media_res_url
+from ...urls import media_res_url
 
 
 __all__ = [

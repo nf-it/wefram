@@ -27,6 +27,7 @@ TSCONFIG: dict = {
         "noUnusedLocals": False,
         "isolatedModules": True,
         "skipLibCheck": True,
+        "resolveJsonModule": True,
         "strict": True,
         "outDir": "static",
         "lib": [
@@ -34,7 +35,7 @@ TSCONFIG: dict = {
               "dom.iterable",
               "esnext"
         ],
-        "baseUrl": config.PRJ_ROOT,
+        "baseUrl": "./",
         "paths": {
             "system/*": [
                 os.path.join(config.CORE_ROOT, "frontend/*")
@@ -43,10 +44,10 @@ TSCONFIG: dict = {
                 os.path.join(config.CORE_ROOT, "frontend/*")
             ],
             "build/*": [
-                os.path.join(config.BUILD_ROOT, "frontend/*")
+                './' + '/'.join([config.BUILD_DIR, "frontend", "*"])
             ],
             "*": [
-                os.path.join(config.PRJ_ROOT, "*")
+                "./*"
             ]
         }
     },

@@ -1,5 +1,6 @@
 from typing import *
 from .. import ds, aaa, logger
+from ..models import User, Role
 from .routines import *
 
 
@@ -8,7 +9,7 @@ __all__ = [
 ]
 
 
-async def make_random_user() -> aaa.User:
+async def make_random_user() -> User:
     first_name: str
     middle_name: str
     last_name: str
@@ -17,7 +18,7 @@ async def make_random_user() -> aaa.User:
 
     login: str = ('.'.join([last_name, ''.join([s[0] for s in (first_name, middle_name) if s])])).lower()
 
-    return aaa.User(
+    return User(
         login=login,
         secret=aaa.hash_password(make_random_password()),
         locked=False,
@@ -30,11 +31,11 @@ async def make_random_user() -> aaa.User:
 
 async def make_random_users(qty: int) -> None:
     logins: List[str] = []
-    users: List[aaa.User] = []
+    users: List[User] = []
 
     n: int = 0
     while n < qty:
-        user: aaa.User = await make_random_user()
+        user: User = await make_random_user()
         if user.login in logins:
             continue
         n += 1

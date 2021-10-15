@@ -1,7 +1,7 @@
 from typing import *
 from wefram.l10n import lazy_gettext
 from wefram.ui import sitemap, screens
-from wefram.requests import media_res_url
+from wefram.urls import media_res_url
 
 
 # Note that you about to use 'lazy_gettext' for localization support in

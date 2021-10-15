@@ -1,4 +1,4 @@
-from ... import config, ui, requests, l10n
+from ... import config, ui, urls, l10n
 
 
 _CONFIG_REQUIRES = config.DESKTOP['requires']
@@ -7,7 +7,7 @@ _CONFIG_REQUIRES = config.DESKTOP['requires']
 @ui.screens.register(sitemap=-1)
 class Desktop(ui.screens.Screen):
     component = 'containers/Desktop'
-    icon = requests.media_res_url('icons/workspace.svg')
+    icon = urls.media_res_url('icons/workspace.svg')
     caption = l10n.lazy_gettext("Desktop")
     route = '//workspace'
     requires = _CONFIG_REQUIRES
