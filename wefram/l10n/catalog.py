@@ -216,7 +216,7 @@ class Dictionary:
             if result is not None:
                 return result
 
-        lcterm = term.lower()
+        lcterm = str(term).lower()
         for domain_name in searching_domains:
             _domain: Optional[_Domain] = self.get_domain(domain_name)
             if _domain is None:
