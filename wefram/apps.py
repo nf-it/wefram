@@ -105,7 +105,7 @@ def get_apps_sorted() -> List[str]:
     default_order: int = max(orders.values()) + 10 if orders else 10
     return sorted(
         [name for name in loaded if name != 'wefram'],
-        key=lambda n: (orders.get(n, default_order), get_app_caption(n))
+        key=lambda n: (orders.get(n, default_order), str(get_app_caption(n)))
     ) + ['system']
 
 
