@@ -52,9 +52,9 @@ class SettingsEntity:
 
     @property
     def is_permitted(self) -> bool:
-        from ... import aaa
+        from .. import aaa
 
-        scopes: aaa.List[str] = \
+        scopes: List[str] = \
             (list(self.requires) if isinstance(self.requires, (list, tuple)) else [self.requires, ]) \
             if self.requires \
             else None

@@ -31,7 +31,7 @@ class L10nStr:
         """ Translates this lazy stored localization in runtime to the corresponding
         localized variant, or return an original text if there is no translation.
         """
-        from ...l10n.catalog import translate, translate_pluralizable
+        from ..l10n.catalog import translate, translate_pluralizable
 
         return translate(self.untranslated, self.domain, self.app_name) \
             if self.plural_num is None \

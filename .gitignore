@@ -23,6 +23,5 @@ react-app-env.d.ts
 /tsconfig.json
 /requirements
 # /config.json
-/build
 /dist
 /wefram.egg-info

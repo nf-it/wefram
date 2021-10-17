@@ -27,7 +27,7 @@ class BaseScreen:
     params: Any = None
 
     def __init__(self):
-        from ...aaa import permitted
+        from ..aaa import permitted
 
         requires: List[str] = self._requires
         if requires and not permitted(requires):
