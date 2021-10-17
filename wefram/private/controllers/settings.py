@@ -43,7 +43,11 @@ async def get_settings_schema(request: Request) -> JSONResponse:
 
     # Sorting tabs using apps order first, and relative entity order with separate
     # tabs second.
-    apps_order: List[Tuple[str, str]] = [(name, apps.get_app_caption(name)) for name in apps.get_apps_sorted() if name in schema]
+    apps_order: List[Tuple[str, str]] = [
+        (name, str(apps.get_app_caption(name)))
+        for name in apps.get_apps_sorted()
+        if name in schema
+    ]
     tabs_order: List[Tuple[str, str]] = []
     for app_name, app_caption in apps_order:
         app_tabs: List[str] = apps_tabs[app_name]
