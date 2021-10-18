@@ -52,7 +52,7 @@ async def start():
 # The place where ASGI about to be prepared to start
 
 logger.debug(
-    "middlewares in use (ordered):\n" + '\n'.join([str(m) for m in middlewares.registered])
+    "middlewares in use (ordered):\n" + '\n'.join(["  %s" % str(m) for m in middlewares.registered])
 )
 
 

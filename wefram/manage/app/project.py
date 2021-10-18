@@ -6,7 +6,7 @@ import shutil
 from ..routines.tools import term_input, term_intinput, yesno
 from ...tools import CSTYLE
 from ...types.apps import Manifest
-from ... import config, setup
+from ... import config, setups
 
 
 def create(args: List[str]) -> None:
@@ -58,7 +58,7 @@ async def remove(args: List[str]) -> None:
         print("Cancelled")
         return
 
-    await setup.remove(args)
+    await setups.remove(args)
     print("done")
 
 
@@ -69,7 +69,7 @@ async def enable(args: List[str]) -> None:
         print("Syntax error, expected: `manage app enable <app_name> [app_name] [...]`")
         return
 
-    await setup.enable(args)
+    await setups.enable(args)
     print("done")
 
 
@@ -80,6 +80,6 @@ async def disable(args: List[str]) -> None:
         print("Syntax error, expected: `manage app disable <app_name> [app_name] [...]`")
         return
 
-    await setup.disable(args)
+    await setups.disable(args)
     print("done")
 

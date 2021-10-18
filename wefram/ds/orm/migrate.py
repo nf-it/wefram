@@ -136,7 +136,7 @@ class DatabaseMigration:
 
     async def execute(self, sql: str, params: Optional[dict] = None, log: bool = False):
         if log:
-            logger.info(f"{CSTYLE['bold']}migrate database{CSTYLE['clear']}: executing:\n{sql}")
+            logger.debug(f"{CSTYLE['bold']}migrate database{CSTYLE['clear']}: executing:\n{sql}")
         params = params if isinstance(params, dict) else {}
         return await self.cn.execute(text(sql), params)
 

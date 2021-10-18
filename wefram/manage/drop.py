@@ -2,7 +2,7 @@
  Redis, and all uploaded files from the files directory. """
 
 from .routines.tools import yesno
-from .. import setup
+from .. import setups
 
 
 async def run(*_) -> None:
@@ -13,5 +13,5 @@ async def run(*_) -> None:
     ):
         print("Canceled")
         exit(1)
-    await setup.drop()
+    await setups.drop()
 

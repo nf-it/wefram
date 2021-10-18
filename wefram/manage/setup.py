@@ -9,7 +9,7 @@ from typing import *
 from .routines.tools import yesno
 from .routines.project import ensure_apps_loaded
 from . import make
-from .. import setup
+from .. import setups
 
 
 async def run(params) -> None:
@@ -22,11 +22,11 @@ async def run(params) -> None:
         exit(1)
 
     ensure_apps_loaded()
-    await setup.setup()
+    await setups.setup()
 
     if params and params[0] == 'demo':
         apps_for_demo: Optional[List[str]] = params[1:] or None
-        await setup.demo(apps_for_demo)
+        await setups.demo(apps_for_demo)
 
     await make.run(['all'])
 

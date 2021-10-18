@@ -1,261 +1,486 @@
 {
   "**": {
-    "Welcome": "Добро пожаловать",
-    "Login": "Вход",
-    "Logout": "Выход",
-    "Help": "Помощь",
-    "User": "Пользователь",
-    "Home": "Домой",
-    "OK": "OK",
-    "Cancel": "Отмена",
-    "Close": "Закрыть",
-    "Clear": "Сброс",
-    "Create": "Создать",
-    "Success": "Успешно",
-    "Error": "Ошибка",
-    "Are you sure?": "Вы уверены?",
-    "Do not show any more": "Больше не показывать",
-    "Card": "Карточка",
-    "Cards": "Карточки",
-    "Order": "Порядок",
-    "Name": "Название",
-    "Type here to find...": "Введите текст для поиска...",
-    "Find": "Найти",
-    "Add": "Добавить",
-    "Back": "Назад",
-    "Save": "Сохранить",
-    "Delete": "Удалить",
-    "Succeed": "Успешно",
-    "Failed": "Неудачно",
-    "Today": "Сегодня",
-    "Created at": "Дата создания",
-    "Are you sure you want to delete?": "Вы уверены, что хотите выполнить удаление?",
-    "There is an error on the server, please try again a little later!": "Произошла ошибка на сервере, пожалуйста попробуйте еще раз позже!",
-    "Something went wrong while downloading data from the server for this location. Please try to visit this page again later.": "Что-то пошло не так при загрузке данных с сервера для этого места. Попробуйте зайти на эту страницу позже снова.",
-    "Something went wrong": "Что-то пошло не так"
+    "Welcome"
+    : "Добро пожаловать",
+    "Login"
+    : "Вход",
+    "Logout"
+    : "Выход",
+    "Help"
+    : "Помощь",
+    "User"
+    : "Пользователь",
+    "Home"
+    : "Домой",
+    "OK"
+    : "OK",
+    "Cancel"
+    : "Отмена",
+    "Close"
+    : "Закрыть",
+    "Clear"
+    : "Сброс",
+    "Create"
+    : "Создать",
+    "Success"
+    : "Успешно",
+    "Error"
+    : "Ошибка",
+    "Are you sure?"
+    : "Вы уверены?",
+    "Do not show any more"
+    : "Больше не показывать",
+    "Card"
+    : "Карточка",
+    "Cards"
+    : "Карточки",
+    "Order"
+    : "Порядок",
+    "Name"
+    : "Название",
+    "Type here to find..."
+    : "Введите текст для поиска...",
+    "Find"
+    : "Найти",
+    "Add"
+    : "Добавить",
+    "Back"
+    : "Назад",
+    "Save"
+    : "Сохранить",
+    "Delete"
+    : "Удалить",
+    "Succeed"
+    : "Успешно",
+    "Failed"
+    : "Неудачно",
+    "Today"
+    : "Сегодня",
+    "Created at"
+    : "Дата создания",
+    "Are you sure you want to delete?"
+    : "Вы уверены, что хотите выполнить удаление?",
+    "There is an error on the server, please try again a little later!"
+    : "Произошла ошибка на сервере, пожалуйста попробуйте еще раз позже!",
+    "Something went wrong while downloading data from the server for this location. Please try to visit this page again later."
+    : "Что-то пошло не так при загрузке данных с сервера для этого места. Попробуйте зайти на эту страницу позже снова.",
+    "Something went wrong"
+    : "Что-то пошло не так"
   },
   "*": {
-    "System": "Система",
-    "Desktop": "Рабочий стол",
-    "Users": "Пользователи"
+    "System"
+    : "Система",
+    "Desktop"
+    : "Рабочий стол",
+    "Users"
+    : "Пользователи"
   },
   "messages": {
-    "The object cannot be deleted because others depend on it.": "Невозможно удалить объект, так как от него зависят другие.",
-    "Changes cannot be made because they conflict with other existing properties or objects.": "Невозможно внести изменения, так как они конфликтуют с другими свойствами существующими или объектами."
+    "The object cannot be deleted because others depend on it."
+    : "Невозможно удалить объект, так как от него зависят другие.",
+    "Changes cannot be made because they conflict with other existing properties or objects."
+    : "Невозможно внести изменения, так как они конфликтуют с другими свойствами существующими или объектами."
   },
   "datetime": {
-    "Previous month": "Предыдущий месяц",
-    "Next month": "Следующий месяц"
+    "Previous month"
+    : "Предыдущий месяц",
+    "Next month"
+    : "Следующий месяц"
   },
   "datetime-months": {
-    "Jan": "Янв",
-    "Feb": "Фев",
-    "Mar": "Мар",
-    "Apr": "Апр",
-    "May": "Май",
-    "Jun": "Июн",
-    "Jul": "Июл",
-    "Aug": "Авг",
-    "Sep": "Сен",
-    "Oct": "Окт",
-    "Nov": "Ноя",
-    "Dec": "Дек",
-    "January": "Январь",
-    "February": "Февраль",
-    "March": "Март",
-    "April": "Апрель",
-    "June": "Июнь",
-    "July": "Июль",
-    "August": "Август",
-    "September": "Сентябрь",
-    "October": "Октябрь",
-    "November": "Ноябрь",
-    "December": "Декабрь"
+    "Jan"
+    : "Янв",
+    "Feb"
+    : "Фев",
+    "Mar"
+    : "Мар",
+    "Apr"
+    : "Апр",
+    "May"
+    : "Май",
+    "Jun"
+    : "Июн",
+    "Jul"
+    : "Июл",
+    "Aug"
+    : "Авг",
+    "Sep"
+    : "Сен",
+    "Oct"
+    : "Окт",
+    "Nov"
+    : "Ноя",
+    "Dec"
+    : "Дек",
+    "January"
+    : "Январь",
+    "February"
+    : "Февраль",
+    "March"
+    : "Март",
+    "April"
+    : "Апрель",
+    "June"
+    : "Июнь",
+    "July"
+    : "Июль",
+    "August"
+    : "Август",
+    "September"
+    : "Сентябрь",
+    "October"
+    : "Октябрь",
+    "November"
+    : "Ноябрь",
+    "December"
+    : "Декабрь"
   },
   "datetime-days": {
-    "Mo": "Пн",
-    "Tu": "Вт",
-    "We": "Ср",
-    "Th": "Чт",
-    "Fr": "Пт",
-    "Sa": "Сб",
-    "Su": "Вс",
-    "Mon": "Пнд",
-    "Tue": "Втр",
-    "Wed": "Срд",
-    "Thu": "Чтв",
-    "Fri": "Птн",
-    "Sat": "Суб",
-    "Sun": "Вск",
-    "Monday": "Понедельник",
-    "Tuesday": "Вторник",
-    "Wednesday": "Среда",
-    "Thursday": "Четверг",
-    "Friday": "Пятница",
-    "Saturday": "Суббота",
-    "Sunday": "Воскресенье"
+    "Mo"
+    : "Пн",
+    "Tu"
+    : "Вт",
+    "We"
+    : "Ср",
+    "Th"
+    : "Чт",
+    "Fr"
+    : "Пт",
+    "Sa"
+    : "Сб",
+    "Su"
+    : "Вс",
+    "Mon"
+    : "Пнд",
+    "Tue"
+    : "Втр",
+    "Wed"
+    : "Срд",
+    "Thu"
+    : "Чтв",
+    "Fri"
+    : "Птн",
+    "Sat"
+    : "Суб",
+    "Sun"
+    : "Вск",
+    "Monday"
+    : "Понедельник",
+    "Tuesday"
+    : "Вторник",
+    "Wednesday"
+    : "Среда",
+    "Thursday"
+    : "Четверг",
+    "Friday"
+    : "Пятница",
+    "Saturday"
+    : "Суббота",
+    "Sunday"
+    : "Воскресенье"
   },
   "ui": {
-    "Invert selection": "Обратить выделение",
-    "Sort by": "Сортировать",
-    "Total rows": "Всего строк",
-    "Unsorted": "Без сортировки",
-    "Clear": "Очистить",
-    "Replace": "Заменить",
-    "Are you sure you want to clean up delete this image?": "Вы уверены, что хотите удалить это изображение?",
-    "Type new element here": "Введите новый элемент здесь",
-    "There are no options to display.": "Нет элементов для отображения.",
-    "Type here to search for options": "Напечатайте для поиска вариантов",
-    "Add elements": "Добавить элементы",
-    "The list is empty": "Список пуст",
-    "Open file": "Открыть файл",
-    "Replace file": "Заменить файл",
-    "Rename file": "Переименовать файл",
-    "Delete file": "Удалить файл",
-    "Delete selected files": "Удалить выбранные файлы",
-    "Upload": "Загрузить",
-    "There are no files uploaded yet.": "Пока не загружено ни одного файла.",
-    "Invalid Date Format": "Неверный формат даты",
-    "Date should not be after maximal date": "Дата не должна быть позже, чем максимальная",
-    "Date should not be before minimal date": "Дата не должна быть раньше, чем минимальная",
-    "Rearrange files": "Переставить файлы",
-    "Rearrange files and click the button again": "Переставьте файлы и кликните эту кнопку снова",
-    "Move up": "Переместить вверх",
-    "Move down": "Переместить вниз",
-    "Move before": "Переместить до",
-    "Move after": "Переместить после",
-    "Try again": "Повторить",
-    "Don't save": "Не сохранять",
-    "You have unsaved changes on your form. Are you sure you want to close it?": "У вас есть несохраненные изменения в форме. Вы уверены, что хотите закрыть её?"
+    "Invert selection"
+    : "Обратить выделение",
+    "Sort by"
+    : "Сортировать",
+    "Total rows"
+    : "Всего строк",
+    "Unsorted"
+    : "Без сортировки",
+    "Clear"
+    : "Очистить",
+    "Replace"
+    : "Заменить",
+    "Are you sure you want to clean up delete this image?"
+    : "Вы уверены, что хотите удалить это изображение?",
+    "Type new element here"
+    : "Введите новый элемент здесь",
+    "There are no options to display."
+    : "Нет элементов для отображения.",
+    "Type here to search for options"
+    : "Напечатайте для поиска вариантов",
+    "Add elements"
+    : "Добавить элементы",
+    "The list is empty"
+    : "Список пуст",
+    "Open file"
+    : "Открыть файл",
+    "Replace file"
+    : "Заменить файл",
+    "Rename file"
+    : "Переименовать файл",
+    "Delete file"
+    : "Удалить файл",
+    "Delete selected files"
+    : "Удалить выбранные файлы",
+    "Upload"
+    : "Загрузить",
+    "There are no files uploaded yet."
+    : "Пока не загружено ни одного файла.",
+    "Invalid Date Format"
+    : "Неверный формат даты",
+    "Date should not be after maximal date"
+    : "Дата не должна быть позже, чем максимальная",
+    "Date should not be before minimal date"
+    : "Дата не должна быть раньше, чем минимальная",
+    "Rearrange files"
+    : "Переставить файлы",
+    "Rearrange files and click the button again"
+    : "Переставьте файлы и кликните эту кнопку снова",
+    "Move up"
+    : "Переместить вверх",
+    "Move down"
+    : "Переместить вниз",
+    "Move before"
+    : "Переместить до",
+    "Move after"
+    : "Переместить после",
+    "Try again"
+    : "Повторить",
+    "Don't save"
+    : "Не сохранять",
+    "You have unsaved changes on your form. Are you sure you want to close it?"
+    : "У вас есть несохраненные изменения в форме. Вы уверены, что хотите закрыть её?"
   },
   "ui-common": {
-    "An error occurred while fetching data from the server": "Возникла ошибка при загрузке данных с сервера"
+    "An error occurred while fetching data from the server"
+    : "Возникла ошибка при загрузке данных с сервера"
   },
   "ui-mui": {
-    "Show path": "Показать путь",
-    "Previous page": "Предыдущая страница",
-    "Rows on page:": "Строк на странице:",
-    " of ": " из ",
-    "more than ": "более, чем ",
-    "Next page": "Следующая страница",
-    " stars": " звёзд",
-    " star": " звезда",
-    "None": "Нет",
-    "Clear": "Очистить",
-    "Close": "Закрыть",
-    "Loading…": "Загрузка…",
-    "No options available": "Нет доступных вариантов",
-    "Open": "Открыть",
-    "Pagination navigation": "Страничная навигация",
-    "Go to page": "Перейти к стр",
-    "Page": "Страница",
-    "Go to first page": "Перейти к первой странице",
-    "Go to last page": "Перейти к последней странице",
-    "Go to next page": "Перейти к следующей странице",
-    "Go to previous page": "Перейти к предыдущей странице"
+    "Show path"
+    : "Показать путь",
+    "Previous page"
+    : "Предыдущая страница",
+    "Rows on page:"
+    : "Строк на странице:",
+    " of "
+    : " из ",
+    "more than "
+    : "более, чем ",
+    "Next page"
+    : "Следующая страница",
+    " stars"
+    : " звёзд",
+    " star"
+    : " звезда",
+    "None"
+    : "Нет",
+    "Clear"
+    : "Очистить",
+    "Close"
+    : "Закрыть",
+    "Loading…"
+    : "Загрузка…",
+    "No options available"
+    : "Нет доступных вариантов",
+    "Open"
+    : "Открыть",
+    "Pagination navigation"
+    : "Страничная навигация",
+    "Go to page"
+    : "Перейти к стр",
+    "Page"
+    : "Страница",
+    "Go to first page"
+    : "Перейти к первой странице",
+    "Go to last page"
+    : "Перейти к последней странице",
+    "Go to next page"
+    : "Перейти к следующей странице",
+    "Go to previous page"
+    : "Перейти к предыдущей странице"
   },
   "responses": {
-    "Invalid request": "Неправильный запрос",
-    "You must be signed in": "Вы должны войти в систему",
-    "The access is denied": "Доступ закрыт"
+    "Invalid request"
+    : "Неправильный запрос",
+    "You must be signed in"
+    : "Вы должны войти в систему",
+    "The access is denied"
+    : "Доступ закрыт"
   },
   "aaa": {
-    "Authentication": "Аутентификация",
-    "Another user": "Другой пользователь",
-    "Security": "Безопасность",
-    "Administrate users & roles": "Администрирование пользователей & групп",
-    "Control security settings": "Управление настройками безопасноси",
-    "Running development tests": "Выполнение тестов разработки",
-    "Delay when login has failed (secs)": "Задержка при неудачной попытке входа (сек)",
-    "Delay when login has succeed (secs)": "Задержка при удачной попытке входа (сек)",
-    "Username (Login)": "Имя пользователя (Логин)",
-    "Password": "Пароль",
-    "Remember me": "Запомнить меня",
-    "Sign In": "Войти",
-    "Logout": "Выйти",
-    "Users": "Пользователи",
-    "Roles": "Роли",
-    "Administrate users": "Управление пользователями",
-    "Administrate roles": "Управление ролями",
-    "Add user": "Добавить",
-    "Users list": "Список пользователей",
-    "Role's users": "Пользователи роли",
-    "Permit to remember an username at log on screen": "Разрешить запоминать логин во время входа",
-    "Max session idle time (minutes)": "Макс. время простоя сессии (минут)",
-    "Security token lifetime (minutes)": "Время жизни токена безопасности (минут)",
-    "click here to sign in": "нажмите здесь, чтобы войти в систему",
-    "Active Directory": "Active Directory",
-    "New domain": "Новый домен",
-    "The domain is in use": "Домен используется",
-    "Domain": "Домен",
-    "Server": "Сервер",
-    "Domains list": "Список доменов",
-    "Active Directory server (optional)": "Сервер Active Directory (опционально)",
-    "Administrate Active Directory domains": "Управление доменами Active Directory",
-    "Your session is over. Please enter your password to continue.": "Ваша сессия закончилась. Пожалуйста введите Ваш пароль для продолжения.",
-    "Set password to empty": "Установить пустой пароль",
-    "Empty password": "Пустой пароль"
+    "Authentication"
+    : "Аутентификация",
+    "Another user"
+    : "Другой пользователь",
+    "Security"
+    : "Безопасность",
+    "Administrate users & roles"
+    : "Администрирование пользователей & групп",
+    "Control security settings"
+    : "Управление настройками безопасноси",
+    "Running development tests"
+    : "Выполнение тестов разработки",
+    "Delay when login has failed (secs)"
+    : "Задержка при неудачной попытке входа (сек)",
+    "Delay when login has succeed (secs)"
+    : "Задержка при удачной попытке входа (сек)",
+    "Username (Login)"
+    : "Имя пользователя (Логин)",
+    "Password"
+    : "Пароль",
+    "Remember me"
+    : "Запомнить меня",
+    "Sign In"
+    : "Войти",
+    "Logout"
+    : "Выйти",
+    "Users"
+    : "Пользователи",
+    "Roles"
+    : "Роли",
+    "Administrate users"
+    : "Управление пользователями",
+    "Administrate roles"
+    : "Управление ролями",
+    "Add user"
+    : "Добавить",
+    "Users list"
+    : "Список пользователей",
+    "Role's users"
+    : "Пользователи роли",
+    "Permit to remember an username at log on screen"
+    : "Разрешить запоминать логин во время входа",
+    "Max session idle time (minutes)"
+    : "Макс. время простоя сессии (минут)",
+    "Security token lifetime (minutes)"
+    : "Время жизни токена безопасности (минут)",
+    "click here to sign in"
+    : "нажмите здесь, чтобы войти в систему",
+    "Active Directory"
+    : "Active Directory",
+    "New domain"
+    : "Новый домен",
+    "The domain is in use"
+    : "Домен используется",
+    "Domain"
+    : "Домен",
+    "Server"
+    : "Сервер",
+    "Domains list"
+    : "Список доменов",
+    "Active Directory server (optional)"
+    : "Сервер Active Directory (опционально)",
+    "Administrate Active Directory domains"
+    : "Управление доменами Active Directory",
+    "Your session is over. Please enter your password to continue."
+    : "Ваша сессия закончилась. Пожалуйста введите Ваш пароль для продолжения.",
+    "Set password to empty"
+    : "Установить пустой пароль",
+    "Empty password"
+    : "Пустой пароль"
   },
   "aaa-form": {
-    "New user": "Новый пользователь",
-    "New role": "Новая роль",
-    "Role name": "Название роли",
-    "Is locked": "Заблокирован",
-    "Last name": "Фамилия",
-    "First name": "Имя",
-    "Middle name": "Отчество",
-    "Login": "Имя пользователя",
-    "Password": "Пароль",
-    "Password confirmation": "Подтверждение пароля",
-    "Type a new password to change it for the user": "Введите новый пароль, чтобы изменить его для пользователя",
-    "Password required to be set for the new user": "Для нового пользователя необходимо установить пароль",
-    "Last logon time": "Время последнего входа",
-    "Permissions for the role": "Разрешения для роли",
-    "Details": "Детали",
-    "Comments": "Комментарии"
+    "New user"
+    : "Новый пользователь",
+    "New role"
+    : "Новая роль",
+    "Role name"
+    : "Название роли",
+    "Is locked"
+    : "Заблокирован",
+    "Last name"
+    : "Фамилия",
+    "First name"
+    : "Имя",
+    "Middle name"
+    : "Отчество",
+    "Login"
+    : "Имя пользователя",
+    "Password"
+    : "Пароль",
+    "Password confirmation"
+    : "Подтверждение пароля",
+    "Type a new password to change it for the user"
+    : "Введите новый пароль, чтобы изменить его для пользователя",
+    "Password required to be set for the new user"
+    : "Для нового пользователя необходимо установить пароль",
+    "Last logon time"
+    : "Время последнего входа",
+    "Permissions for the role"
+    : "Разрешения для роли",
+    "Details"
+    : "Детали",
+    "Comments"
+    : "Комментарии"
   },
   "aaa-messages": {
-    "Username (Login) or password is incorrect, please try again!": "Имя пользователя или пароль неверны, пожалуйста попробуйте еще раз",
-    "You have been logged out. Good bye.": "Вы вышли из системы. До свидания.",
-    "Are you sure you want to delete the selected users?": "Вы уверены, что хотите удалить выбранных пользователей?"
+    "Username (Login) or password is incorrect, please try again!"
+    : "Имя пользователя или пароль неверны, пожалуйста попробуйте еще раз",
+    "You have been logged out. Good bye."
+    : "Вы вышли из системы. До свидания.",
+    "Are you sure you want to delete the selected users?"
+    : "Вы уверены, что хотите удалить выбранных пользователей?"
   },
   "aaa-list": {
-    "Login": "Логин",
-    "Full name": "Полное имя",
-    "Is locked": "Заблокирован",
-    "Last logged on": "Последний вход"
+    "Login"
+    : "Логин",
+    "Full name"
+    : "Полное имя",
+    "Is locked"
+    : "Заблокирован",
+    "Last logged on"
+    : "Последний вход"
   },
   "desktop": {
-    "Introduction": "Знакомство"
+    "Introduction"
+    : "Знакомство"
   },
   "settings": {
-    "Administering": "Управление",
-    "Settings": "Настройки",
-    "Access the settings": "Доступ к настройкам",
-    "Control security settings": "Управление настройками безопасноси",
-    "Running development tests": "Выполнение тестов разработки",
-    "Username (Login)": "Имя пользователя (Логин)",
-    "Password": "Пароль",
-    "Remember me": "Запомнить меня",
-    "Sign In": "Войти",
-    "Logout": "Выйти",
-    "Access the administering": "Доступ к администрированию",
-    "Access properties of the project": "Доступ к настройкам проекта",
-    "Settings & properties": "Настройки и свойства",
-    "Properties and settings": "Настройки и свойства"
+    "Administering"
+    : "Управление",
+    "Settings"
+    : "Настройки",
+    "Access the settings"
+    : "Доступ к настройкам",
+    "Control security settings"
+    : "Управление настройками безопасноси",
+    "Running development tests"
+    : "Выполнение тестов разработки",
+    "Username (Login)"
+    : "Имя пользователя (Логин)",
+    "Password"
+    : "Пароль",
+    "Remember me"
+    : "Запомнить меня",
+    "Sign In"
+    : "Войти",
+    "Logout"
+    : "Выйти",
+    "Access the administering"
+    : "Доступ к администрированию",
+    "Access properties of the project"
+    : "Доступ к настройкам проекта",
+    "Settings & properties"
+    : "Настройки и свойства",
+    "Properties and settings"
+    : "Настройки и свойства"
   },
   "mail": {
-    "Mails": "Почта",
-    "Administer mails": "Администрирование почты",
-    "Mail accounts": "Учетные записи почты",
-    "New account": "Новая учетная запись",
-    "Port": "Порт",
-    "Server for mail sending (SMTP)": "Сервер для отправки почты (SMTP)",
-    "Server for mail receiving (IMAP/POP3)": "Сервер для получения почты (IMAP/POP3)",
-    "Use IMAP protocol": "Использовать протокол IMAP",
-    "Use TLS encryption": "Использовать шифрование TLS",
-    "Username": "Имя пользователя",
-    "Password": "Пароль",
-    "Password confirmation": "Подтверждение пароля"
+    "Mails"
+    : "Почта",
+    "Administer mails"
+    : "Администрирование почты",
+    "Mail accounts"
+    : "Учетные записи почты",
+    "New account"
+    : "Новая учетная запись",
+    "Port"
+    : "Порт",
+    "Server for mail sending (SMTP)"
+    : "Сервер для отправки почты (SMTP)",
+    "Server for mail receiving (IMAP/POP3)"
+    : "Сервер для получения почты (IMAP/POP3)",
+    "Use IMAP protocol"
+    : "Использовать протокол IMAP",
+    "Use TLS encryption"
+    : "Использовать шифрование TLS",
+    "Username"
+    : "Имя пользователя",
+    "Password"
+    : "Пароль",
+    "Password confirmation"
+    : "Подтверждение пароля"
   }
 }

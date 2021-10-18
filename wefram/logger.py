@@ -38,11 +38,11 @@ WARNING: int = 3
 ERROR: int = 2
 FATAL: int = 1
 VERBOSE_STR: Dict[int, str] = {
-    1: f"{CSTYLE['-red']}{'%-10s' % 'FATAL:'}\033[0m{CSTYLE['clear']}",
-    2: f"{CSTYLE['Red']}{'%-10s' % 'ERROR:'}{CSTYLE['clear']}",
-    3: f"{CSTYLE['Yellow']}{'%-10s' % 'WARNING:'}{CSTYLE['clear']}",
-    4: f"{CSTYLE['green']}{'%-10s' % 'INFO:'}{CSTYLE['clear']}",
-    5: f"{CSTYLE['white']}{'%-10s' % 'DEBUG:'}{CSTYLE['clear']}"
+    1: f"{CSTYLE['-red']}{'%-9s' % 'FATAL'}\033[0m{CSTYLE['clear']}",
+    2: f"{CSTYLE['Red']}{'%-9s' % 'ERROR'}{CSTYLE['clear']}",
+    3: f"{CSTYLE['Yellow']}{'%-9s' % 'WARNING'}{CSTYLE['clear']}",
+    4: f"{CSTYLE['green']}{'%-9s' % 'info'}{CSTYLE['clear']}",
+    5: f"{CSTYLE['white']}{'%-9s' % 'debug'}{CSTYLE['clear']}"
 }
 DEFAULT_VERBOSE_LEVEL: int = WARNING
 
@@ -74,14 +74,14 @@ def set_level(level: int) -> None:
 def _log(msg: str, level: int, clarification: Optional[str] = None):
     if level > VERBOSITY:
         return
-    level_str = VERBOSE_STR.get(level, '')
-    clarification = '' if not clarification else f"{CSTYLE['red']}{clarification} => {CSTYLE['clear']}"
-    print(''.join([
+    level_str = VERBOSE_STR.get(level, '').lower()
+    clarification = '' if not clarification else f"{CSTYLE['red']}[{clarification}]{CSTYLE['clear']}"
+    print(' '.join([
         s for s in [
             level_str,
-            f"{CSTYLE['navy']}{'%-14s' % ('[%s]:' % get_calling_app())}{CSTYLE['clear']}",
+            f"{CSTYLE['navy']}({get_calling_app()}){CSTYLE['clear']}",
             clarification,
-            f"\t{CSTYLE['darker'] if level == DEBUG else ''}{msg}{CSTYLE['clear']}"
+            f"{CSTYLE['darker'] if level == DEBUG else ''}{msg}{CSTYLE['clear']}"
         ] if s
     ]))
 

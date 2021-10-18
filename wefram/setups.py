@@ -3,7 +3,7 @@ from types import ModuleType
 from typing import *
 import os
 import shutil
-from . import apps, logger, config
+from . import apps, logger, config, runtime
 from .tools import CSTYLE, load_app_module, json_from_file, json_to_file, app_root, app_has_module, has_app
 
 
@@ -32,6 +32,56 @@ async def drop() -> None:
     os.makedirs(config.FILES_ROOT, exist_ok=True)
 
 
+async def _setup() -> None:
+    from . import aaa
+    from .models import User, Role
+
+    cn = runtime.context['db']
+
+    roles: dict = {
+        'admins': Role(
+            name='Administrators',
+            permissions=[p.key for p in aaa.permissions.registered]
+        ),
+        'users': Role(
+            name='All users'
+        )
+    }
+    [cn.add(r) for r in roles.values()]
+
+    users: dict = {
+        'root': User(
+            login='root',
+            secret=aaa.hash_password('qwerty'),
+            first_name='Administrator'
+        ),
+        'user': User(
+            login='user',
+            secret=aaa.hash_password('1234'),
+            first_name='The user'
+        ),
+    }
+
+    users['root'].roles.append(roles['admins'])
+    users['root'].roles.append(roles['users'])
+
+    [cn.add(u) for u in users.values()]
+
+    logger.warning("Setting up installed and enabled apps")
+
+    enabled_apps: List[str] = apps.get_apps_loaded()
+    for appname in enabled_apps:
+        appmodule: ModuleType = apps.modules[appname]
+        if not app_has_module(appmodule, 'setup'):
+            continue
+        app_setup: ModuleType = load_app_module(appmodule, 'setup')
+        if not hasattr(app_setup, 'setup'):
+            continue
+        logger.info(f"setting up app [{appname}]")
+        f = getattr(app_setup, 'setup')
+        await f()
+
+
 async def setup() -> None:
     from . import ds, aaa
     from .models import User, Role
@@ -41,71 +91,27 @@ async def setup() -> None:
     logger.warning("Creating tables in the PostgreSQL database!")
     await ds.migrate.migrate()
 
-    logger.warning("Uploading initial AAA data to the PostgreSQL database")
-    async with ds.orm.engine.AsyncSession() as cn:
-        roles: dict = {
-            'admins': Role(
-                name='Administrators',
-                permissions=[p.key for p in aaa.permissions.registered]
-            ),
-            'users': Role(
-                name='All users'
-            )
-        }
-        [cn.add(r) for r in roles.values()]
+    logger.warning("Setting up the project")
+    await runtime.within_cli(_setup)
 
-        users: dict = {
-            'root': User(
-                login='root',
-                secret=aaa.hash_password('qwerty'),
-                first_name='Administrator'
-            ),
-            'user': User(
-                login='user',
-                secret=aaa.hash_password('1234'),
-                first_name='The user'
-            ),
-        }
 
-        users['root'].roles.append(roles['admins'])
-        users['root'].roles.append(roles['users'])
-
-        [cn.add(u) for u in users.values()]
-
-        logger.warning("Uploading initial apps data to the PostgreSQL database")
-
-        enabled_apps: List[str] = apps.get_apps_loaded()
-        for appname in enabled_apps:
-            appmodule: ModuleType = apps.modules[appname]
-            if not app_has_module(appmodule, 'setup'):
-                continue
-            app_setup: ModuleType = load_app_module(appmodule, 'setup')
-            if not hasattr(app_setup, 'upload_initial'):
-                continue
-            logger.info(f"uploading initial data for app [{appname}]")
-            f = getattr(app_setup, 'upload_initial')
-            await f(cn)
-
-        await cn.commit()
+async def _demo(app_to_build: Optional[str] = None) -> None:
+    apps_to_build: List[str] = ['system'] + config.APPS_ENABLED if not app_to_build else [app_to_build]
+    for appname in apps_to_build:
+        appmodule: ModuleType = apps.modules[appname]
+        if not app_has_module(appmodule, 'setup'):
+            continue
+        app_setup: ModuleType = load_app_module(appmodule, 'setup')
+        if not hasattr(app_setup, 'setup_demo'):
+            continue
+        logger.info(f"setting up app's demo [{appname}]")
+        f = getattr(app_setup, 'setup_demo')
+        await f()
 
 
 async def demo(app_to_build: Optional[str] = None) -> None:
-    apps_to_build: List[str] = ['system'] + config.APPS_ENABLED if not app_to_build else [app_to_build]
-    for app in apps_to_build:
-        app_main: ModuleType = apps.mains.get(app)
-        if not app_main:
-            continue
-        if not hasattr(app_main, 'demo'):
-            continue
-        demo_target: Union[Callable, ModuleType] = getattr(app_main, 'demo')
-        if isinstance(demo_target, ModuleType):
-            demo_target: Callable = getattr(demo_target, 'build', None)
-            if not demo_target:
-                continue
-        logger.info(
-            f"making {CSTYLE['bold']}demo{CSTYLE['clear']} for {CSTYLE['red']}{app}{CSTYLE['clear']}"
-        )
-        await demo()
+    logger.warning("Settings up the project demo")
+    await runtime.within_cli(_demo, app_to_build)
 
 
 async def remove(apps_to_remove: List[str]) -> None:
