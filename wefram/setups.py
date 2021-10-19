@@ -83,8 +83,9 @@ async def _setup() -> None:
 
 
 async def setup() -> None:
-    from . import ds, aaa
-    from .models import User, Role
+    from . import ds
+
+    print("\n\nSETUP procedure initialized, setting the project up\n\n")
 
     await drop()
 

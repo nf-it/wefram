@@ -28,5 +28,5 @@ async def run(params) -> None:
         apps_for_demo: Optional[List[str]] = params[1:] or None
         await setups.demo(apps_for_demo)
 
-    await make.run(['all'])
+    await make.run(['setup'])
 
