@@ -1,0 +1,8 @@
+{
+  "buildDir": ".var/build",
+  "staticsDir": ".var/build/static",
+  "staticsUrl": "/static",
+  "assetsDir": "assets",
+  "filesDir": ".var/files",
+  "filesUrl": "/files"
+}

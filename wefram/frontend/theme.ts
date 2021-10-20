@@ -1,5 +1,4 @@
 import {ThemeOptions} from '@mui/material'
-import {number} from 'prop-types'
 
 
 interface WorkspaceTheme extends ThemeOptions {

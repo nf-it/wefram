@@ -25,3 +25,5 @@ react-app-env.d.ts
 # /config.json
 /dist
 /wefram.egg-info
+/.var
+/.yarnrc.yml

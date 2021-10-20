@@ -10,9 +10,6 @@
  */
 
 
-import {array} from 'prop-types'
-import {reportTranspileErrors} from 'ts-loader/dist/instances'
-
 type _Internal = {
   lastGeneratedId: number
 }
