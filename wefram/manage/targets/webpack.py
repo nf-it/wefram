@@ -100,6 +100,20 @@ def run(*_) -> None:
         json.dump(package, f, ensure_ascii=False, indent=2)
 
     subprocess.run([
+        'yarn',
+        'set',
+        'version',
+        'berry'
+    ])
+
+    subprocess.run([
         f'yarn',
         f'install',
+    ])
+
+    subprocess.run([
+        'yarn',
+        'plugin',
+        'import',
+        'plugin-typescript'
     ])
