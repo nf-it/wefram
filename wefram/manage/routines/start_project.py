@@ -60,11 +60,11 @@ DIST = [
 ]
 
 BUILD_JSON = {
-  "buildDir": "build",
-  "staticsDir": "static",
+  "buildDir": ".var/build",
+  "staticsDir": ".var/build/static",
   "staticsUrl": "/static",
   "assetsDir": "assets",
-  "filesDir": "files",
+  "filesDir": "./var/files",
   "filesUrl": "/files"
 }
 
