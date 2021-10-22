@@ -56,7 +56,8 @@ def json_to_file(o: Any, filename: str, **kwargs) -> None:
 DIST = [
     'manage',
     'asgi.py',
-    'server.py'
+    'server.py',
+    'main.tsx'
 ]
 
 BUILD_JSON = {

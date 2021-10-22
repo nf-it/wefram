@@ -87,9 +87,4 @@ class Main extends React.Component<AppProps, AppState> {
   }
 }
 
-const App = observer(Main)
-
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-)
+export const ProjectApp = observer(Main)

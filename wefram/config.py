@@ -172,14 +172,14 @@ DESKTOP: dict = {
 
 if os.path.isfile(os.path.join(PRJ_ROOT, 'build.json')):
     with open(os.path.join(PRJ_ROOT, 'build.json')) as f:
-        _BUILD_CONF: dict = json.load(f)
+        BUILD_CONF: dict = json.load(f)
 else:
-    _BUILD_CONF: dict = {
-        "buildDir": "build",
-        "staticsDir": "static",
+    BUILD_CONF: dict = {
+        "buildDir": ".var/build",
+        "staticsDir": ".var/build/static",
         "staticsUrl": "/static",
         "assetsDir": "assets",
-        "filesDir": "files",
+        "filesDir": ".var/files",
         "filesUrl": "/files"
     }
 
@@ -192,14 +192,14 @@ else:
 COREPKG: str = "wefram"  # the Python Wefram package name
 CORE_ROOT: str = os.path.split(wefram.__file__)[0]  # The Wefram root path
 
-BUILD_DIR: str = _BUILD_CONF['buildDir']
+BUILD_DIR: str = BUILD_CONF['buildDir']
 APPS_ROOT: str = PRJ_ROOT
 BUILD_ROOT: str = os.path.join(PRJ_ROOT, BUILD_DIR)
 
-ASSETS_DIR: str = _BUILD_CONF['assetsDir'] or None
+ASSETS_DIR: str = BUILD_CONF['assetsDir'] or None
 ASSETS_ROOT: str = os.path.join(PRJ_ROOT, ASSETS_DIR) if ASSETS_DIR else None
-STATICS_ROOT: str = os.path.join(PRJ_ROOT, _BUILD_CONF['staticsDir'])
-STATICS_URL: str = _BUILD_CONF['staticsUrl']
-FILES_DIR: str = _BUILD_CONF['filesDir']
+STATICS_ROOT: str = os.path.join(PRJ_ROOT, BUILD_CONF['staticsDir'])
+STATICS_URL: str = BUILD_CONF['staticsUrl']
+FILES_DIR: str = BUILD_CONF['filesDir']
 FILES_ROOT: str = os.path.join(PRJ_ROOT, FILES_DIR)
-FILES_URL: str = _BUILD_CONF['filesUrl']
+FILES_URL: str = BUILD_CONF['filesUrl']

@@ -19,3 +19,6 @@ async def on_disable() -> None:
 async def on_upgrade() -> None:
     pass
 
+
+async def setup_demo() -> None:
+    pass

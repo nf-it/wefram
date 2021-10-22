@@ -12,7 +12,7 @@ module.exports = (env) => {
   return {
     mode: process.env.NODE_ENV || 'production',
     context: projectRoot,
-    entry: `${env.systempath}/main.tsx`,
+    entry: `./main.tsx`,
     output: {
       path: path.resolve(projectRoot, buildConfig.staticsDir),
       publicPath: `${buildConfig.staticsUrl}/`,

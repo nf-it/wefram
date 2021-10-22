@@ -29,7 +29,7 @@ TSCONFIG: dict = {
         "skipLibCheck": True,
         "resolveJsonModule": True,
         "strict": True,
-        "outDir": "static",
+        "outDir": config.BUILD_CONF["staticsDir"],
         "lib": [
               "dom",
               "dom.iterable",
