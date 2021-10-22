@@ -75,7 +75,7 @@ class SectionCaption extends React.Component<SectionCaptionProps> {
           fontWeight: 400,
           textTransform: 'uppercase',
           padding: '.5vmax',
-          backgroundColor: '#333',
+          backgroundColor: '#0070f0dd',
           borderRadius: '.5vmax',
           color: '#fff'
         }}
@@ -188,7 +188,7 @@ export default class SettingsScreen extends React.Component<ScreenProps> {
                   <React.Fragment>
                     {appSchema.entities.map((entity: SettingsEntity, entityIndex: number) => (
                       <Paper
-                        elevation={2}
+                        variant={'outlined'}
                         style={{
                           marginBottom: entityIndex < (appSchema.entities.length - 1) ? '24px' : undefined
                         }}

@@ -62,7 +62,6 @@ export class LayoutSitemap extends React.Component<LayoutSitemapProps, LayoutSit
         <Toolbar />
 
         <div className={'SystemUI-LayoutSitemap-container'}>
-          <Ruler vspace={2} />
           <List>
             {runtime.sitemap.map(item => (
               <Box key={`sitemap-item-${item.name}`}>

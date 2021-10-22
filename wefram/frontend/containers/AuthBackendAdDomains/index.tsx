@@ -130,7 +130,9 @@ export default class AuthBackendAdDomains extends React.Component<ScreenProps, A
     return (
       <React.Fragment>
         <Box mt={2}>
-          <Typography variant={'h4'}>{gettext("Administrate Active Directory domains", 'system.aaa')}</Typography>
+          <Typography variant={'h4'} paddingBottom={2}>
+            {gettext("Administrate Active Directory domains", 'system.aaa')}
+          </Typography>
           <EntityTable
             ref={this.listRef}
 

@@ -124,7 +124,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
         || refreshButton
 
     return (
-      <Paper elevation={2}>
+      <Paper variant={'outlined'}>
         {controlsBox && (
           <Box display={'flex'} flexDirection={'row'} justifyContent={'flex-end'} p={2} mt={2} mb={2}>
             {this.props.search !== undefined && (

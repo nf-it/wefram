@@ -1,7 +1,7 @@
 from typing import *
 import os
 
-from . import config, apps, requests, logger, ds, runtime, middlewares, ui
+from . import config, apps, requests, logger, ds, runtime, middlewares, ui, l10n
 from .private import (
     controllers as private_controllers,
     api as private_apis,
@@ -16,6 +16,7 @@ ds.start()
 runtime.start()
 middlewares.start()
 ui.start()
+l10n.start()
 
 private_controllers.start()
 private_apis.start()

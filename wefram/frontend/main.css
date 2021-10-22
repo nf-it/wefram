@@ -27,7 +27,8 @@ div {
 .SystemUI-Box-GrayPanel {
     padding: .6vmax 2px;
     border-radius: .6vmax;
-    background: linear-gradient(to right bottom, #e5e5e5, #fff 120%) !important;
-    border: 1px solid #444;
-    box-shadow: 0 .25vmax 1vmax #0005;
+    /*background: linear-gradient(to right bottom, #e5e5e5, #fff 120%) !important;*/
+    background: #f4f4f4;
+    /*box-shadow: 0 .25vmax 1vmax #0003;*/
+    border: 1px solid #00000019;
 }

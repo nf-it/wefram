@@ -31,7 +31,9 @@ export default class MailAccountsScreen extends React.Component<ScreenProps> {
     return (
       <React.Fragment>
         <Box mt={2}>
-          <Typography variant={'h4'}>{gettext('Mail accounts', 'system.mail')}</Typography>
+          <Typography variant={'h4'} paddingBottom={2}>
+            {gettext('Mail accounts', 'system.mail')}
+          </Typography>
           <EntityList
             ref={this.listRef}
             requestPath={objectsPath}

@@ -20,7 +20,9 @@ export default class Roles extends React.Component<ScreenProps> {
   render() {
     return (
       <Box mt={2}>
-        <Typography variant={'h4'}>{gettext("Administrate roles", 'system.aaa')}</Typography>
+        <Typography variant={'h4'} paddingBottom={2}>
+          {gettext("Administrate roles", 'system.aaa')}
+        </Typography>
         <EntityList
           addScreen={addScreenPath}
           defaultSort={{value: 'name', direction: 'asc'}}

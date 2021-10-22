@@ -31,7 +31,9 @@ export default class UsersScreen extends React.Component<ScreenProps> {
     return (
       <React.Fragment>
       <Box mt={2}>
-        <Typography variant={'h4'} paddingBottom={2}>{gettext("Administrate users", 'system.aaa')}</Typography>
+        <Typography variant={'h4'} paddingBottom={2}>
+          {gettext("Administrate users", 'system.aaa')}
+        </Typography>
         <EntityList
           ref={this.listRef}
 

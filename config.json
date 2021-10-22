@@ -1,0 +1,38 @@
+{
+  "project": {
+  },
+  "projectName": "wefram",
+  "appTitle": "Wefram",
+  "auth": {
+    "salt": "--qwertyuiopasdfghjklzxcvbnm",
+    "secret": "--QWERTYUIOPasdfghjklZXCVBNM",
+    "sessionTimeoutMins": 720,
+    "rememberUsername": true,
+    "backends": [
+      "local",
+      "ad"
+    ]
+  },
+  "url": {
+    "default": "/workspace",
+    "defaultAuthenticated": "/workspace",
+    "defaultGuest": "/workspace",
+    "onLogoff": "/workspace/login",
+    "loginScreen": "/workspace/login"
+  },
+  "desktop": {
+    "requires": ["authenticated"]
+  },
+  "db": {
+    "user": "weframdba",
+    "pass": "wefram",
+    "name": "wefram",
+    "port": 5432,
+    "migrate.dropMissingTables": true,
+    "migrate.dropMissingColumns": true
+  },
+  "uvicorn": {
+    "port": 5000
+  },
+  "devel": true
+}
