@@ -110,6 +110,9 @@ export const workspaceTheme: WorkspaceTheme = {
           borderRadius: '.5vmax',
           padding: '7px 15px 6px'
         },
+        contained: {
+          boxShadow: "0 0 5px #fff9"
+        },
         sizeSmall: {
           padding: '3px 9px'
         },
