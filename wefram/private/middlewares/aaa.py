@@ -76,12 +76,13 @@ class ProjectAuthenticationBackend(AuthenticationBackend):
             schema, token_hash = authorization.split(' ', 1)
         except ValueError:
             return
+
         if token_hash == 'null':
             return
 
         if schema != self.schema:
-            logger.error(f"invalid jwt schema: '{schema}'")
-            raise AuthenticationError("Invalid JWT schema")
+            logger.debug("invalid jwt token, continuing as unauthenticated user")
+            return
 
         try:
             payload = jwt.decode(

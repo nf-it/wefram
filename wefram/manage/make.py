@@ -9,9 +9,41 @@ from .. import config, tools, logger, apps
 from ..tools import CSTYLE
 
 
+TARGETS = {
+    'all': "Make everything",
+    'assets': "Make assets only, without frontend compiling",
+    'cleanall': "Remove all made builds",
+    'db': "Make database (PostgreSQL) migrations",
+    'depends': "Install project dependencies, both backend & frontend",
+    'front': "Make frontend: assets, screens, react",
+    'l10n': "Collect and build localizations",
+    'pip': "Install project backend dependencies",
+    'react': "Compile frontend using webpack (only), not making screens & others",
+    'screens': "Prepare frontend screens to be compiled with react",
+    'setup': "Re-install project with cleaning all data and making everything",
+    'setup demo': "Run `setup` terget and upload demo data after",
+    'texts': "Collect and build static texts",
+    'webpack': "Prepare required webpack configuration and install node dependencies"
+}
+
+
+def print_help() -> None:
+    print("")
+    print(f"Available targets for {CSTYLE['yellow']}make{CSTYLE['clear']}:")
+    print("")
+    for k in sorted(TARGETS.keys()):
+        print(f"{CSTYLE['red']}{k}{CSTYLE['clear']}")
+        print("  ", TARGETS[k])
+    print("")
+
+
 async def run(targets: list) -> None:
     if not targets:
         targets = ['all']
+
+    if targets[0] == 'help':
+        print_help()
+        return
 
     logger.set_level(max(logger.VERBOSITY, logger.INFO))
     logger.info(f"starting to make the project", 'make')
