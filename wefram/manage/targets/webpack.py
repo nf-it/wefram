@@ -55,7 +55,9 @@ TSCONFIG: dict = {
         "system/frontend/templates",
         "system/skel",
         "wefram/frontend/templates",
-        "wefram/skel"
+        "wefram/skel",
+        "build",
+        config.BUILD_DIR,
     ]
 }
 

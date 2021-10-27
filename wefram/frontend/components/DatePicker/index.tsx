@@ -7,7 +7,7 @@ import {gettext} from 'system/l10n'
 import {DatePicker as MuiDatePicker} from '@mui/lab';
 import {CalendarPickerView} from '@mui/lab/CalendarPicker/shared'
 import {DatePickerView} from '@mui/lab/DatePicker/shared'
-import {PopperProps as MuiPopperProps} from '@mui/material/Popper/Popper'
+import {PopperProps as MuiPopperProps} from '@mui/material/Popper/index'
 import {OverrideParseableDateProps} from '@mui/lab/internal/pickers/hooks/date-helpers-hooks'
 import {ExportedCalendarPickerProps} from '@mui/lab/CalendarPicker/CalendarPicker'
 import {ExportedDateInputProps} from '@mui/lab/internal/pickers/PureDateInput'

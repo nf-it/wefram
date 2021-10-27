@@ -26,6 +26,8 @@ def verfrom(verstr: Optional[str]) -> List[int]:
 
 
 def fit_dependency_vers(current: str, requested: str) -> str:
+    if requested.startswith('=='):
+        return requested[2:]
     current = (re.sub('[^.0-9]', '', str(current).lower()) if current is not None else "latest") or "latest"
     requested = (re.sub('[^.0-9]', '', str(requested).lower()) if requested is not None else "latest") or "latest"
     if current == requested or current == "latest":
