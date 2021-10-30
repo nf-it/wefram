@@ -1,7 +1,12 @@
 html {
     font-size: 1.05vw;
     background-color: #e8eaed;
-    /*overflow-y: scroll;*/
+}
+
+@media screen and (max-width: 1600px) {
+    html {
+        font-size: 1.1vw;
+    }
 }
 
 body {
