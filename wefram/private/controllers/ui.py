@@ -6,16 +6,6 @@ from ...requests import Request, JSONResponse
 from ...runtime import context
 
 
-class IUrlConfigurationResponse(TypedDict):
-    loginScreenUrl: str
-    defaultAuthenticatedUrl: str
-    defaultGuestUrl: str
-
-
-class IAaaConfiguration(TypedDict):
-    rememberUsername: bool
-
-
 @api.handle_get('instantiate')
 async def instantiate(request: Request) -> JSONResponse:
     session: Session = context['session']

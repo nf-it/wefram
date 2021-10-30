@@ -118,7 +118,11 @@ def register(
             if not _scopes:
                 return []
             return [
-                (_scope if '.' in _scope else '.'.join([get_calling_app(), _scope]))
+                (
+                    (_scope if '.' in _scope else '.'.join([get_calling_app(), _scope]))
+                    if _scope not in ('authenticated', 'guest')
+                    else _scope
+                )
                 for _scope in array_from(_scopes)
             ]
 

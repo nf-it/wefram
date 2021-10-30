@@ -68,7 +68,12 @@ def _make_requires(scopes: Optional[List[str]] = None) -> List[str]:
     if not scopes:
         return []
     return [
-        (scope if '.' in scope else '.'.join([get_calling_app(), scope])) for scope in array_from(scopes)
+        (
+            (scope if '.' in scope else '.'.join([get_calling_app(), scope]))
+            if scope not in ('authenticated', 'guest')
+            else scope
+        )
+        for scope in array_from(scopes)
     ]
 
 

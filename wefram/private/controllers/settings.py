@@ -9,7 +9,7 @@ from ... import aaa, api, settings, apps
 
 @api.handle_get('/settings/properties', version=1)
 @aaa.requires(PERMISSION_ADMINISTERING)
-async def get_settings_schema(request: Request) -> JSONResponse:
+async def v1_get_settings_schema(request: Request) -> JSONResponse:
     def _ordered_entities(_tab_id: str) -> List[SettingsEntity]:
         _entities: Dict[Union[str, None], SettingsEntity] = schema[_tab_id]
         _result: List[SettingsEntity] = []
@@ -88,7 +88,7 @@ async def get_settings_schema(request: Request) -> JSONResponse:
 
 @api.handle_post('/settings/properties', version=1)
 @aaa.requires(PERMISSION_ADMINISTERING)
-async def update_settings_schema(request: Request) -> NoContentResponse:
+async def v1_update_settings_schema(request: Request) -> NoContentResponse:
     values: Dict[str, Dict[str, Any]] = request.scope['payload']
     await routines.reset(values, verify_permitted=True)
     return NoContentResponse()
@@ -96,7 +96,7 @@ async def update_settings_schema(request: Request) -> NoContentResponse:
 
 @api.handle_get('/screendef/Role', version=1)
 @aaa.requires(PERMISSION_ADMINUSERSROLES)
-async def screendef(request: Request) -> JSONResponse:
+async def v1_screendef(request: Request) -> JSONResponse:
     return JSONResponse({
         'permissions': aaa.permissions.get_schema()
     })

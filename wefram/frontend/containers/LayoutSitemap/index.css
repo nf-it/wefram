@@ -9,8 +9,11 @@
     background: linear-gradient(to right bottom, #222, #444) !important;
     color: #eee !important;
     padding: .35vmax 0 !important;
-    border-right: 2px solid #0009 !important;
     box-shadow: 0 0 1vmax #0004 !important;
+    margin: .5vmax;
+    border-radius: 7px;
+    border: 1px solid #111 !important;
+    height: calc(100% - 2vmax) !important;
 }
 
 .SystemUI-LayoutSitemap-container {

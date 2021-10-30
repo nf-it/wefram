@@ -1,7 +1,7 @@
 import React from 'react'
+import {observer} from 'mobx-react'
 import {
   Box,
-  Ruler,
   Drawer,
   Collapse,
   List,
@@ -10,6 +10,7 @@ import {
   ListItemText,
   Toolbar
 } from 'system/components'
+import {LayoutAppbar} from '../LayoutAppbar'
 import {ExpandLess, ExpandMore} from '@mui/icons-material'
 import {Link} from 'react-router-dom'
 import {runtime} from 'system/runtime'
@@ -24,7 +25,7 @@ type LayoutSitemapState = {
 }
 
 
-export class LayoutSitemap extends React.Component<LayoutSitemapProps, LayoutSitemapState> {
+class Sitemap extends React.Component<LayoutSitemapProps, LayoutSitemapState> {
   state: LayoutSitemapState = {
     expandStatus: {}
   }
@@ -54,12 +55,14 @@ export class LayoutSitemap extends React.Component<LayoutSitemapProps, LayoutSit
         classes={{
           paper: 'SystemUI-LayoutSitemap-paper',
         }}
-        style={{
-          backgroundColor: '#253043',
-          color: '#eee'
-        }}
+        // style={{
+        //   backgroundColor: '#253043',
+        //   color: '#eee'
+        // }}
       >
         <Toolbar />
+
+        <LayoutAppbar />
 
         <div className={'SystemUI-LayoutSitemap-container'}>
           <List>
@@ -149,3 +152,6 @@ export class LayoutSitemap extends React.Component<LayoutSitemapProps, LayoutSit
     )
   }
 }
+
+
+export const LayoutSitemap = observer(Sitemap)

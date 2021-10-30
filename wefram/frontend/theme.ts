@@ -72,17 +72,18 @@ export const workspaceTheme: WorkspaceTheme = {
       styleOverrides: {
         root: {
           display: 'flex',
-          borderRadius: '3pxvmax',
+          borderRadius: '5px',
           zIndex: 1201,
           maxWidth: '19vw',
-          marginLeft: '-.5vmax',
-          marginTop: '1px',
+          // marginLeft: '-.5vmax',
+          // marginTop: '1px',
           right: 'auto',
           justifyContent: 'center',
           background: 'linear-gradient(to left top, #0077FF, #0059B2 120%)',
           color: '#eee',
           boxShadow: '0 0 1vmax #0007',
-          border: '1px solid #0009'
+          border: '1px solid #0009',
+          top: 'calc(.5vmax + 1px)'
         }
       }
     },

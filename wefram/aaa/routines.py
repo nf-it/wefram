@@ -176,6 +176,8 @@ def permitted(scopes: Union[str, Sequence[str]]) -> bool:
     """
 
     permissions: List[str] = context['permissions']
+    print(permissions)
+    print(scopes)
     if not permissions:
         return False
     scopes: List[str] = list(scopes) if isinstance(scopes, (list, tuple)) else [scopes, ]

@@ -5,7 +5,8 @@ import {IProjectInstantiation, IScreenRuntimes, ISitemap, Locale} from './types'
 import {projectProvider} from './provider'
 import {aaa} from './aaa'
 import {localization, gettext} from './l10n'
-import {notifications} from 'system/notification'
+import {notifications} from './notification'
+import {routing} from './routing'
 
 
 type ScrollPositions = Record<string, number>
@@ -68,8 +69,10 @@ class ProjectRuntime {
     aaa.logout()
     runtime.initialize().then(() => {
       notifications.showSuccess(gettext("You have been logged out. Good bye.", 'system.aaa-messages'))
+      routing.gotoOnLogoff()
     }).catch(err => {
       notifications.showRequestError(err)
+      routing.gotoOnLogoff()
     })
   }
 

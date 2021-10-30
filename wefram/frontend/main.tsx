@@ -1,5 +1,4 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
 import {observer} from 'mobx-react'
 import {Switch, Route, Router} from 'react-router-dom'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
@@ -72,7 +71,6 @@ class Main extends React.Component<AppProps, AppState> {
               path={runtime.loginScreenUrl}
             />
             <div className={'SystemUI-Layout-root'}>
-              <LayoutAppbar />
               <LayoutSitemap />
               <LayoutScreens />
             </div>
