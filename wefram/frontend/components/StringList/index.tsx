@@ -7,14 +7,9 @@ import {
   ListItem,
   ListItemText,
   ListItemSecondaryAction,
+  MaterialIcon,
   OutlinedInput,
 } from 'system/components'
-import SubmitIcon from '@mui/icons-material/DoneRounded'
-import RemoveItemIcon from '@mui/icons-material/RemoveCircleTwoTone'
-import DeleteIcon from '@mui/icons-material/DeleteForever'
-import CancelIcon from '@mui/icons-material/Block'
-import UpIcon from '@mui/icons-material/ArrowUpward'
-import DownIcon from '@mui/icons-material/ArrowDownward'
 import {gettext} from 'system/l10n'
 
 
@@ -66,7 +61,7 @@ export class StringList extends React.Component<StringListProps, S> {
                           this.props.onChange(values)
                         }}
                       >
-                        <UpIcon />
+                        <MaterialIcon icon={'arrow_upward'} />
                       </IconButton>,
                       <IconButton
                         size={'small'}
@@ -79,7 +74,7 @@ export class StringList extends React.Component<StringListProps, S> {
                           this.props.onChange(values)
                         }}
                       >
-                        <DownIcon />
+                        <MaterialIcon icon={'arrow_downward'} />
                       </IconButton>
                     ])}
                     {this.state.deleting.includes(ix) ? (
@@ -99,7 +94,7 @@ export class StringList extends React.Component<StringListProps, S> {
                             })
                           }}
                         >
-                          <DeleteIcon />
+                          <MaterialIcon icon={'delete_forever'} />
                         </IconButton>
                         <IconButton
                           size={'small'}
@@ -109,7 +104,7 @@ export class StringList extends React.Component<StringListProps, S> {
                             })
                           }}
                         >
-                          <CancelIcon />
+                          <MaterialIcon icon={'block'} />
                         </IconButton>
                       </React.Fragment>
                     ) : (
@@ -121,7 +116,7 @@ export class StringList extends React.Component<StringListProps, S> {
                           this.setState({deleting})
                         }}
                       >
-                        <RemoveItemIcon />
+                        <MaterialIcon icon={'remove_circle_outline'} />
                       </IconButton>
                     )}
                   </ListItemSecondaryAction>
@@ -168,7 +163,7 @@ export class StringList extends React.Component<StringListProps, S> {
                       this.setState({controlsInput: ''})
                     }}
                   >
-                    <SubmitIcon />
+                    <MaterialIcon icon={'done'} />
                   </IconButton>
                 </InputAdornment>
               }

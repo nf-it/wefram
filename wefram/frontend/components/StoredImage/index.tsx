@@ -5,11 +5,9 @@ import {
   Button,
   IconButton,
   Image,
+  MaterialIcon,
   Modal
 } from 'system/components'
-import CloseIcon from '@mui/icons-material/CloseRounded'
-import ClearIcon from '@mui/icons-material/DeleteForeverRounded'
-import UploadIcon from '@mui/icons-material/CloudUploadRounded'
 import {storage} from 'system/storage'
 import {RequestApiPath, routing} from 'system/routing'
 import {api} from 'system/api'
@@ -210,7 +208,7 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
                 <Box className={'_controls'}>
                   {this.props.permitUpload && (
                     <Button
-                      startIcon={<UploadIcon />}
+                      startIcon={<MaterialIcon icon={'cloud_upload'} />}
                       style={{
                         color: '#ea0',
                         marginRight: '1vmax'
@@ -220,7 +218,7 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
                   )}
                   {this.props.permitClean && (
                     <Button
-                      startIcon={<ClearIcon />}
+                      startIcon={<MaterialIcon icon={'delete_forever'} />}
                       style={{
                         color: '#e66',
                         marginRight: '1vmax'
@@ -245,7 +243,7 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
                     size={'small'}
                     style={{color: '#ddd'}}
                   >
-                    <CloseIcon />
+                    <MaterialIcon icon={'close'} />
                   </IconButton>
                 </Box>
                 <Box className={'_container'} onClick={() => this.setState({openViewer: false})}>

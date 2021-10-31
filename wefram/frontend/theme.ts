@@ -72,7 +72,7 @@ export const workspaceTheme: WorkspaceTheme = {
       styleOverrides: {
         root: {
           display: 'flex',
-          borderRadius: '5px',
+          borderRadius: '6px',
           zIndex: 1201,
           maxWidth: '19vw',
           // marginLeft: '-.5vmax',

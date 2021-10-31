@@ -7,13 +7,13 @@ import {
   Grid,
   FormCommonField,
   LoadingLinear,
+  MaterialIcon,
   Paper,
   Tab,
   Tabs,
   TitlebarControl,
   Typography
 } from 'system/components'
-import SubmitIcon from '@mui/icons-material/DoneRounded'
 import {
   ScreenProps,
   SettingsSchema,
@@ -153,7 +153,11 @@ export default class SettingsScreen extends React.Component<ScreenProps> {
             color={'primary'}
             disabled={!Object.keys(this.state.values).length}
             variant={'contained'}
-            startIcon={this.state.submitting ? <CircularProgress size={20}/> : <SubmitIcon/>}
+            startIcon={
+              this.state.submitting
+                ? <CircularProgress size={20} />
+                : <MaterialIcon icon={'done'} />
+            }
             onClick={this.handleSubmit}
             style={{marginLeft: '8px'}}
           >{gettext("Save")}</Button>

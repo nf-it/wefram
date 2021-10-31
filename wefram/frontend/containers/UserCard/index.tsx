@@ -10,14 +10,13 @@ import {
   FormPasswordSetterField,
   FormTextInputField,
   StaticText,
+  TipTypography,
   Typography
 } from 'system/components'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'
 import {session, UserEditModel} from 'system/aaa'
-
-import {TextField} from '@mui/material'
 
 
 const Help = () => (
@@ -126,6 +125,11 @@ export class UserCard extends React.Component<UserCardProps, UserCardState> {
             formName={'locked'}
             width={4}
           />
+          {/*<FormItem width={12}>*/}
+          {/*  <TipTypography>*/}
+          {/*    This is just a test message*/}
+          {/*  </TipTypography>*/}
+          {/*</FormItem>*/}
           <FormTextInputField
             formName={'lastName'}
             label={gettext("Last name", 'system.aaa-form')}

@@ -3,9 +3,9 @@ import {
   Box,
   Dialog,
   EntityList,
+  MaterialIcon,
   Typography
 } from 'system/components'
-import {LockOpen, Lock} from '@mui/icons-material'
 import {ScreenProps} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
@@ -59,8 +59,8 @@ export default class UsersScreen extends React.Component<ScreenProps> {
                 hidden: (value: any): boolean => !Boolean(value),
                 valueVisualize: (value: any): any => {
                   return value
-                    ? (<Lock fontSize={'small'} style={{color: 'red'}}/>)
-                    : (<LockOpen fontSize={'small'} style={{color: 'gray'}}/>)
+                    ? (<MaterialIcon icon={'lock'} size={20} color={'red'} />)
+                    : (<MaterialIcon icon={'lock_open'} size={20} color={'grey'} />)
                 }
               },
               'login',

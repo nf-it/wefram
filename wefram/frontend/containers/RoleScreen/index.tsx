@@ -13,9 +13,8 @@ import {
   LoadingLinear,
   OptionsList,
   Paper,
-  Typography, TranslatedChapter, Chapters
+  Typography, TranslatedChapter, Chapters, MaterialIcon
 } from 'system/components'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import {RoleEditModel, ScreenProps} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
@@ -140,7 +139,9 @@ export default class RoleCard extends React.Component<ScreenProps, ScreenState> 
               </Box>
               {this.state.screendef?.permissions.map(app => (
                 <Accordion defaultExpanded={false}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon color={'primary'} />}>
+                  <AccordionSummary expandIcon={
+                    <MaterialIcon icon={'expand_more'} />
+                  }>
                     <Typography>{app.caption}</Typography>
                   </AccordionSummary>
                   <AccordionDetails>

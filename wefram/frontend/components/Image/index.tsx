@@ -5,8 +5,7 @@
  */
 
 import React from 'react'
-import {Box, CircularProgress} from 'system/components'
-import BrokenImage from '@mui/icons-material/BrokenImage'
+import {Box, CircularProgress, MaterialIcon} from 'system/components'
 
 
 export type ImageProps = {
@@ -42,7 +41,7 @@ type ImagePropsDefaults = {
   disableError: boolean
   disableSpinner: boolean
   disableTransition: boolean
-  errorIcon: JSX.Element
+  errorIcon: JSX.Element | null
   loading: JSX.Element
 }
 
@@ -53,7 +52,7 @@ const defaults: ImagePropsDefaults = {
   disableError: false,
   disableSpinner: false,
   disableTransition: false,
-  errorIcon: <BrokenImage style={{ width: 48, height: 48, color: '#e0e0e0' }} />,
+  errorIcon: null,
   loading: <CircularProgress size={48} />
 }
 
@@ -159,6 +158,8 @@ export class Image extends React.Component<ImageProps, ImageState> {
       ...imageProps
     } = this.props
 
+    const errorIconElement = errorIcon || <MaterialIcon icon={'broken_image'} size={48} color={'#e0e0e0'} />
+
     return (
       <Box
         style={styles.root}
@@ -175,7 +176,7 @@ export class Image extends React.Component<ImageProps, ImageState> {
         )}
         <Box style={styles.iconContainer}>
           {!disableSpinner && !this.state.imageLoaded && !this.state.imageError && loading}
-          {!disableError && this.state.imageError && errorIcon}
+          {!disableError && this.state.imageError && errorIconElement}
         </Box>
       </Box>
     )

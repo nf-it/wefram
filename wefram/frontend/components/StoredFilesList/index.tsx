@@ -5,18 +5,11 @@ import {
   Checkbox,
   Grid,
   IconButton,
+  MaterialIcon,
   LoadingCircular,
   Tooltip,
   Typography
 } from 'system/components'
-import FileIcon from '@mui/icons-material/AttachFile'
-import RemoveIcon from '@mui/icons-material/DeleteOutline'
-import UploadIcon from '@mui/icons-material/Publish'
-import OpenIcon from '@mui/icons-material/OpenInNew'
-import EditIcon from '@mui/icons-material/Edit'
-import RearrangeIcon from '@mui/icons-material/SwapVert'
-import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
-import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import {StoredFilesModel, StoredFileModel} from 'system/types'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
@@ -235,7 +228,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                     this.removeFiles()
                   }}
                 >
-                  <RemoveIcon />
+                  <MaterialIcon icon={'delete_outline'} />
                 </IconButton>
               </Tooltip>
             )}
@@ -244,7 +237,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                 <Button
                   color={'primary'}
                   variant={'outlined'}
-                  startIcon={<UploadIcon />}
+                  startIcon={<MaterialIcon icon={'publish'} />}
                   style={{
                     marginLeft: '8px'
                   }}
@@ -272,7 +265,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                       marginLeft: '24px'
                     }}
                   >
-                    <RearrangeIcon />
+                    <MaterialIcon icon={'swap_vert'} />
                   </IconButton>
                 </Tooltip>
               </React.Fragment>
@@ -299,7 +292,9 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                 </Grid>
               )}
               {!(this.props.permitDelete ?? true) && (
-                <Grid item xs={1}><FileIcon /></Grid>
+                <Grid item xs={1}>
+                  <MaterialIcon icon={'attach_file'} />
+                </Grid>
               )}
               <Grid item xs={9}>
                 <Typography>{item.caption || item.file}</Typography>
@@ -312,7 +307,9 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                         onClick={() => {
                           window.open(storage.urlFor(this.props.storageEntity, item.file), '_blank')
                         }}
-                      ><OpenIcon /></IconButton>
+                      >
+                        <MaterialIcon icon={'open_in_new'} />
+                      </IconButton>
                     </Tooltip>
                   )}
                   {(this.props.permitEdit ?? true) && (!this.state.rearrangeMode) && (
@@ -330,14 +327,18 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                             }
                           })
                         }}
-                      ><EditIcon /></IconButton>
+                      >
+                        <MaterialIcon icon={'edit'} />
+                      </IconButton>
                     </Tooltip>
                     <Tooltip title={gettext("Replace file", 'system.ui')}>
                       <IconButton
                         onClick={() => {
                           this.selectFileForUpload(item.id)
                         }}
-                      ><UploadIcon /></IconButton>
+                      >
+                        <MaterialIcon icon={'publish'} />
+                      </IconButton>
                     </Tooltip>
                     </React.Fragment>
                   )}
@@ -347,7 +348,9 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                         onClick={() => {
                           this.removeFile(item.id)
                         }}
-                      ><RemoveIcon /></IconButton>
+                      >
+                        <MaterialIcon icon={'delete_outline'} />
+                      </IconButton>
                     </Tooltip>
                   )}
                   {(this.state.rearrangeMode) && ([
@@ -361,7 +364,9 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                           this.setState({items})
                         }}
                         disabled={index === 0}
-                      ><ArrowUpIcon /></IconButton>
+                      >
+                        <MaterialIcon icon={'keyboard_arrow_up'} />
+                      </IconButton>
                     </Tooltip>,
                     <Tooltip key={`file-rearr-dn-${item.id}`} title={gettext("Move down", 'system.ui')}>
                       <IconButton
@@ -373,7 +378,9 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
                           this.setState({items})
                         }}
                         disabled={index === arr.length - 1}
-                      ><ArrowDownIcon /></IconButton>
+                      >
+                        <MaterialIcon icon={'keyboard_arrow_down'} />
+                      </IconButton>
                     </Tooltip>
                   ])}
                 </Box>

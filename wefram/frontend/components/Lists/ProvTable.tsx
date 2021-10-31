@@ -1,13 +1,12 @@
 import React, {createRef} from 'react'
 import {
-  Box,
   Checkbox,
   Collapse,
   IconButton,
+  MaterialIcon,
   Table,
   TableBody,
   TableCell,
-  TableContainer,
   TableHead,
   TableRow, Tooltip
 } from 'system/components'
@@ -15,8 +14,6 @@ import {
   ListsSelection,
   ProvTableProps,
 } from './types'
-import ExpandIcon from '@mui/icons-material/KeyboardArrowDown'
-import CollapseIcon from '@mui/icons-material/KeyboardArrowUp'
 import {ProvListsHoc} from './ProvListsHoc'
 import {FieldItemData} from './FieldItemData'
 import {CommonKey} from 'system/types'
@@ -173,9 +170,9 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
                             this.setState({expanded})
                           }}>
                             {this.state.expanded[index] ? (
-                              <CollapseIcon />
+                              <MaterialIcon icon={'keyboard_arrow_up'} />
                             ) : (
-                              <ExpandIcon />
+                              <MaterialIcon icon={'keyboard_arrow_down'} />
                             )}
                           </IconButton>
                         )}

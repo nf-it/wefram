@@ -8,10 +8,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  MaterialIcon,
   Toolbar
 } from 'system/components'
 import {LayoutAppbar} from '../LayoutAppbar'
-import {ExpandLess, ExpandMore} from '@mui/icons-material'
 import {Link} from 'react-router-dom'
 import {runtime} from 'system/runtime'
 import {screensSchema} from 'build/screens'
@@ -86,7 +86,11 @@ class Sitemap extends React.Component<LayoutSitemapProps, LayoutSitemapState> {
                         )}
                       </ListItemIcon>
                       <ListItemText primary={item.caption}/>
-                      {this.state.expandStatus[item.name] ? <ExpandLess/> : <ExpandMore/>}
+                      {
+                        this.state.expandStatus[item.name]
+                          ? <MaterialIcon icon={'expand_less'} />
+                          : <MaterialIcon icon={'expand_more'} />
+                      }
                     </ListItem>
                     <Collapse
                       in={this.state.expandStatus[item.name]}

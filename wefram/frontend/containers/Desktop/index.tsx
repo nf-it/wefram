@@ -5,12 +5,10 @@ import {
   Button,
   ButtonLink,
   DividerRuler,
+  MaterialIcon,
   TranslatedText,
   Typography
 } from 'system/components'
-import LoginIcon from '@mui/icons-material/LockOpen'
-import LogoffIcon from '@mui/icons-material/ExitToApp'
-import HelpIcon from '@mui/icons-material/LiveHelpOutlined'
 import {runtime} from 'system/runtime'
 import {session} from 'system/aaa'
 import {gettext} from 'system/l10n'
@@ -64,7 +62,7 @@ export default class Desktop extends React.Component<ScreenProps> {
                 <Button
                   color={'primary'}
                   variant={'outlined'}
-                  endIcon={<LogoffIcon />}
+                  endIcon={<MaterialIcon icon={'exit_to_app'} />}
                   style={{
                     marginLeft: '24px'
                   }}
@@ -77,7 +75,7 @@ export default class Desktop extends React.Component<ScreenProps> {
               <React.Fragment>
                 <ButtonLink
                   to={runtime.loginScreenUrl}
-                  startIcon={<LoginIcon />}
+                  startIcon={<MaterialIcon icon={'lock_open'} />}
                   variant={'contained'}
                   color={'primary'}
                 >{gettext("Sign In", 'system.aaa')}</ButtonLink>
@@ -89,8 +87,7 @@ export default class Desktop extends React.Component<ScreenProps> {
             {this.props.params.introTextId !== null && (
               <Button
                 color={'primary'}
-                // variant={'outlined'}
-                endIcon={<HelpIcon />}
+                endIcon={<MaterialIcon icon={'live_help'} variant={'outlined'} />}
                 style={{
                   marginLeft: '24px'
                 }}

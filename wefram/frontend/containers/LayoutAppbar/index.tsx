@@ -2,6 +2,7 @@ import React from 'react'
 import {
   AppBar,
   ClockTime,
+  MaterialIcon,
   Menu,
   MenuItem,
   IconButton,
@@ -9,7 +10,6 @@ import {
   Typography,
   Tooltip,
 } from 'system/components'
-import {AccountCircle} from '@mui/icons-material'
 import {runtime} from 'system/runtime'
 import {session} from 'system/aaa'
 import {gettext} from 'system/l10n'
@@ -64,7 +64,7 @@ export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppba
               onClick={this.handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle/>
+              <MaterialIcon icon={'account_circle'} />
             </IconButton>
           </Tooltip>
         </Toolbar>

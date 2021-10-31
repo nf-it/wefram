@@ -5,6 +5,7 @@ import {
   Checkbox,
   DividerRuler,
   MenuItem,
+  TextField,
   Tooltip,
   Typography,
   Pagination
@@ -27,7 +28,6 @@ import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
 import {IApiEntityResponse, IApiEntityComplexResponse} from 'system/types'
 import {responses} from 'system/response'
-import {TextField} from '@mui/material'
 
 
 export type ProvHocFetchResult = {

@@ -1,6 +1,5 @@
 import React from 'react'
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined'
-import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import {MaterialIcon} from 'system/components'
 import {
   ListsField,
   FieldType,
@@ -61,8 +60,8 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
               itemValue ? gettext("Yes") : gettext("No")
             ) : (
               itemValue
-                ? <CheckCircleOutlineOutlinedIcon fontSize={'small'} style={{color: 'green'}} />
-                : <RemoveCircleOutlineOutlinedIcon fontSize={'small'} style={{color: 'red'}} />
+                ? <MaterialIcon icon={'check_circle_outline'} size={20} color={'green'} />
+                : <MaterialIcon icon={'remove_circle_outline'} size={20} color={'red'} />
             )
             break
           case 'date':

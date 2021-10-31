@@ -64,7 +64,8 @@ export class FormCommonField extends React.Component<FormCommonFieldProps, FormC
                 value={String(value ?? '')}
                 fullWidth
                 variant={'outlined'}
-                margin={'dense'}
+                // margin={'dense'}
+                size={'small'}
                 type={field.fieldType === 'number' ? 'number' : 'text'}
                 style={{
                   marginTop: '4px',
@@ -85,7 +86,7 @@ export class FormCommonField extends React.Component<FormCommonFieldProps, FormC
 
       case 'number-min-max':
         return (
-          <Grid container>
+          <Grid container pt={1} pb={1}>
             <Grid item xs={5} style={{alignSelf: 'center'}}>
               <FormCommonFieldCaption caption={caption}/>
             </Grid>
@@ -128,6 +129,7 @@ export class FormCommonField extends React.Component<FormCommonFieldProps, FormC
                 value={String(value ?? '')}
                 fullWidth
                 multiline
+                size={'small'}
                 variant={'outlined'}
                 onChange={(ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                   this.props.onChange(name, String(ev.target.value))
@@ -198,7 +200,8 @@ export class FormCommonField extends React.Component<FormCommonFieldProps, FormC
                 value={String(value ?? '')}
                 fullWidth
                 variant={'outlined'}
-                margin={'dense'}
+                // margin={'dense'}
+                size={'small'}
                 style={{
                   marginTop: '4px',
                   marginBottom: '4px'

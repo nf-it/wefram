@@ -11,9 +11,8 @@ import {
   Checkbox,
   Link,
   Paper,
-  Typography
+  Typography, MaterialIcon
 } from 'system/components'
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
 import {runtime} from 'system/runtime'
@@ -122,7 +121,7 @@ class _LoginForm extends React.Component<Props, State> {
         }}>
           <Box className={'UI-LoginForm-paper'}>
             <Avatar className={'UI-LoginForm-avatar'} color="secondary">
-              <LockOutlinedIcon />
+              <MaterialIcon icon={'lock'} />
             </Avatar>
             <Typography component="h1" variant="h5">
               {gettext("Welcome")}

@@ -11,9 +11,8 @@ import {
   Grid,
   LazyTextField,
   LoadingCircular,
-  Typography
+  Typography, MaterialIcon
 } from 'system/components'
-import AddIcon from '@mui/icons-material/AddCircleOutline'
 import {gettext} from 'system/l10n'
 import {CommonKey} from 'system/types'
 import {RequestApiPath} from 'system/routing'
@@ -242,7 +241,7 @@ export class OptionsList extends React.Component<OptionsListProps, OptionsListSt
         <Box mt={2} display={'flex'} justifyContent={'flex-end'}>
           <Button
             color={'primary'}
-            startIcon={<AddIcon />}
+            startIcon={<MaterialIcon icon={'add_circle_outline'} />}
             onClick={() => {
               this.setState({
                 dialogOpen: true,
@@ -259,7 +258,7 @@ export class OptionsList extends React.Component<OptionsListProps, OptionsListSt
             <Box mb={2}>
               {this.state.dialogOptions.length > 0 ? this.state.dialogOptions.map((opt: OptionsListItem) => (
                 <Chip
-                  icon={<AddIcon />}
+                  icon={<MaterialIcon icon={'add_circle_outline'} />}
                   label={opt.caption}
                   variant={'outlined'}
                   style={{

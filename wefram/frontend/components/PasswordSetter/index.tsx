@@ -1,9 +1,6 @@
 import React from 'react'
-import {Box, IconButton, TextField, Tooltip} from 'system/components'
+import {Box, IconButton, MaterialIcon, TextField, Tooltip} from 'system/components'
 import {gettext} from 'system/l10n'
-import UnmaskPasswordIcon from '@mui/icons-material/Visibility'
-import MaskPasswordIcon from '@mui/icons-material/VisibilityOff'
-import ClearIcon from '@mui/icons-material/HighlightOff'
 
 
 export type PasswordSetterProps = {
@@ -115,7 +112,7 @@ export class PasswordSetter extends React.Component<PasswordSetterProps, Passwor
                 color={this.state.clear ? 'secondary' : 'default'}
                 onClick={() => this.setState({clear: !this.state.clear})}
               >
-                <ClearIcon fontSize={'small'}/>
+                <MaterialIcon icon={'highlight_off'} size={20} />
               </IconButton>
             </Tooltip>
           )}
@@ -130,7 +127,11 @@ export class PasswordSetter extends React.Component<PasswordSetterProps, Passwor
               }}
               color={this.state.unhide ? 'secondary' : 'default'}
               onClick={() => this.setState({unhide: !this.state.unhide})}
-            >{this.state.unhide ? (<UnmaskPasswordIcon fontSize={'small'}/>) : (<MaskPasswordIcon fontSize={'small'}/>)}</IconButton>
+            >{
+              this.state.unhide
+                ? (<MaterialIcon icon={'visibility'} size={20} />)
+                : (<MaterialIcon icon={'visibility_off'} size={20} />)
+            }</IconButton>
           )}
         </Box>
       </React.Fragment>

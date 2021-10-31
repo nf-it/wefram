@@ -8,18 +8,12 @@ import {
   DialogActions,
   DialogContent,
   DialogWindowTitle,
-  DialogTitle,
-  DividerRuler,
   LoadingLinear,
+  MaterialIcon,
+  Ruler,
   Toolbar,
-  Tooltip,
-  Typography
+  Tooltip
 } from 'system/components'
-import BackIcon from '@mui/icons-material/ArrowBackRounded'
-import CloseIcon from '@mui/icons-material/CancelTwoTone'
-import SubmitIcon from '@mui/icons-material/DoneRounded'
-import DeleteIcon from '@mui/icons-material/DeleteRounded'
-import HelpIcon from '@mui/icons-material/LiveHelpOutlined'
 import {api} from 'system/api'
 import {CommonKey, IApiEntityComplexResponse, IApiEntityResponse, TApiSubmitMethod} from 'system/types'
 import {RequestApiPath, RequestMethod, routing} from 'system/routing'
@@ -484,7 +478,11 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
               }
               onClick={this.submit}
               variant={'outlined'}
-              startIcon={this.state.submitting ? <CircularProgress size={20}/> : <SubmitIcon/>}
+              startIcon={
+                this.state.submitting
+                  ? <CircularProgress size={20}/>
+                  : <MaterialIcon icon={'done'} />
+              }
             >{(typeof this.props.submit == 'string') ? String(this.props.submit) : gettext("Save")}</Button>
           </Box>
         )}
@@ -493,7 +491,11 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
             <Button
               color={'primary'}
               onClick={this.reqClose}
-              startIcon={this.props.windowed ? <CloseIcon /> : <BackIcon />}
+              startIcon={
+                this.props.windowed
+                  ? <MaterialIcon icon={'cancel'} />
+                  : <MaterialIcon icon={'arrow_back'} />
+              }
             >{
               (typeof this.props.close == 'string')
                 ? String(this.props.close)
@@ -519,7 +521,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
                     borderColor: '#181'
                   }}
                 >
-                  <HelpIcon style={{color: '#181'}} />
+                  <MaterialIcon icon={'help'} color={'#181'} />
                 </Button>
               </Tooltip>
             </Box>
@@ -531,7 +533,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
                   color={'secondary'}
                   onClick={this.remove}
                 >
-                  <DeleteIcon />
+                  <MaterialIcon icon={'delete'} />
                 </Button>
               </Tooltip>
             </Box>
@@ -547,7 +549,11 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
               }
               onClick={this.submit}
               variant={'outlined'}
-              startIcon={this.state.submitting ? <CircularProgress size={20}/> : <SubmitIcon/>}
+              startIcon={
+                this.state.submitting
+                  ? <CircularProgress size={20} />
+                  : <MaterialIcon icon={'done'} />
+              }
             >{(typeof this.props.submit == 'string') ? String(this.props.submit) : gettext("Save")}</Button>
           </Box>
         )}
@@ -556,7 +562,11 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
             <Button
               color={'primary'}
               onClick={this.reqClose}
-              startIcon={this.props.windowed ? <CloseIcon /> : <BackIcon />}
+              startIcon={
+                this.props.windowed
+                  ? <MaterialIcon icon={'cancel'} />
+                  : <MaterialIcon icon={'arrow_back'} />
+              }
             >{
               (typeof this.props.close == 'string')
                 ? String(this.props.close)
@@ -617,9 +627,10 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
           </React.Fragment>
         )}
         {this.props.help !== undefined && (
-          <Dialog open={this.state.helpOpen}>
+          <Dialog open={this.state.helpOpen} maxWidth={'sm'}>
             <DialogWindowTitle title={gettext("Help")} onClose={() => this.setState({helpOpen: false})} />
             <DialogContent>
+              <Ruler width={'sm'} />
               {this.state.helpOpen && (
                 <Box>
                   {this.props.help}

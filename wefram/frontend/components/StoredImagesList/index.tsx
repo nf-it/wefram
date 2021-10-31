@@ -8,16 +8,10 @@ import {
   ImageListItem,
   ImageListItemBar,
   LoadingCircular,
+  MaterialIcon,
   Tooltip,
   Typography
 } from 'system/components'
-import RemoveIcon from '@mui/icons-material/DeleteOutline'
-import UploadIcon from '@mui/icons-material/Publish'
-import OpenIcon from '@mui/icons-material/OpenInNew'
-import EditIcon from '@mui/icons-material/Edit'
-import RearrangeIcon from '@mui/icons-material/SwapHoriz'
-import ArrowBeforeIcon from '@mui/icons-material/ArrowBack'
-import ArrowAfterIcon from '@mui/icons-material/ArrowForward'
 import {StoredImagesModel, StoredImageModel} from 'system/types'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
@@ -241,7 +235,7 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                     this.removeFiles()
                   }}
                 >
-                  <RemoveIcon />
+                  <MaterialIcon icon={'delete_outline'} />
                 </IconButton>
               </Tooltip>
             )}
@@ -250,7 +244,7 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                 <Button
                   color={'primary'}
                   variant={'outlined'}
-                  startIcon={<UploadIcon />}
+                  startIcon={<MaterialIcon icon={'publish'} />}
                   style={{
                     marginLeft: '8px'
                   }}
@@ -278,7 +272,7 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                       marginLeft: '24px'
                     }}
                   >
-                    <RearrangeIcon />
+                    <MaterialIcon icon={'swap_horiz'} />
                   </IconButton>
                 </Tooltip>
               </React.Fragment>
@@ -316,7 +310,9 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                               onClick={() => {
                                 window.open(storage.urlFor(this.props.storageEntity, item.file), '_blank')
                               }}
-                            ><OpenIcon /></IconButton>
+                            >
+                              <MaterialIcon icon={'open_in_new'} />
+                            </IconButton>
                           </Tooltip>
                         )}
 
@@ -338,7 +334,9 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                                   }
                                 })
                               }}
-                            ><EditIcon /></IconButton>
+                            >
+                              <MaterialIcon icon={'edit'} />
+                            </IconButton>
                           </Tooltip>
                           <Tooltip title={gettext("Replace file", 'system.ui')}>
                             <IconButton
@@ -348,7 +346,9 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                               onClick={() => {
                                 this.selectFileForUpload(item.id)
                               }}
-                            ><UploadIcon /></IconButton>
+                            >
+                              <MaterialIcon icon={'publish'} />
+                            </IconButton>
                           </Tooltip>
                           </React.Fragment>
                         )}
@@ -362,7 +362,9 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                               onClick={() => {
                                 this.removeFile(item.id)
                               }}
-                            ><RemoveIcon /></IconButton>
+                            >
+                              <MaterialIcon icon={'delete_outline'} />
+                            </IconButton>
                           </Tooltip>
                         )}
 
@@ -380,7 +382,9 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                                 this.setState({items})
                               }}
                               disabled={index === 0}
-                            ><ArrowBeforeIcon /></IconButton>
+                            >
+                              <MaterialIcon icon={'arrow_back'} />
+                            </IconButton>
                           </Tooltip>,
                           <Tooltip key={`file-rearr-dn-${item.id}`} title={gettext("Move after", 'system.ui')}>
                             <IconButton
@@ -395,7 +399,9 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                                 this.setState({items})
                               }}
                               disabled={index === arr.length - 1}
-                            ><ArrowAfterIcon /></IconButton>
+                            >
+                              <MaterialIcon icon={'arrow_forward'} />
+                            </IconButton>
                           </Tooltip>
                         ])}
 

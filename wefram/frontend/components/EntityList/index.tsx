@@ -1,5 +1,4 @@
 import React, {createRef} from 'react'
-import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Box,
   Button,
@@ -9,13 +8,12 @@ import {
   LazyTextField,
   ListsProvidedFilters,
   ListsSelection,
+  MaterialIcon,
   Paper,
   ProvList,
   ProvListProps,
   Tooltip
 } from 'system/components'
-import RefreshIcon from '@mui/icons-material/Refresh'
-import ClearIcon from '@mui/icons-material/BackspaceRounded'
 import {gettext} from 'system/l10n'
 import {dialog} from 'system/dialog'
 import {api} from 'system/api'
@@ -147,7 +145,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
                             {searchValue: '', searchLazyValue: ''}
                           )}
                       >
-                        <ClearIcon />
+                        <MaterialIcon icon={'backspace'} />
                       </IconButton>
                     </InputAdornment>
                   )
@@ -212,7 +210,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
                     variant={'outlined'}
                     disabled={this.state.itemsSelected.length === 0}
                   >
-                    <DeleteIcon />
+                    <MaterialIcon icon={'delete'} />
                   </Button>
                 </Tooltip>
               </Box>
@@ -225,7 +223,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
                   variant={'outlined'}
                   onClick={() => this.listRef.current?.fetch()}
                 >
-                  <RefreshIcon />
+                  <MaterialIcon icon={'refresh'} />
                 </Button>
               </Box>
             )}
