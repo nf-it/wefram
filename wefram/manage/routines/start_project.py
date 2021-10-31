@@ -57,7 +57,8 @@ DIST = [
     'manage',
     'asgi.py',
     'server.py',
-    'main.tsx'
+    'main.tsx',
+    'makefile'
 ]
 
 BUILD_JSON = {
