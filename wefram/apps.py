@@ -83,9 +83,9 @@ def get_app_caption(app_name: str) -> Union[str, L10nStr]:
 
     if app_name not in modules:
         raise KeyError(f"app '{app_name}' has not been found")
-    if app_name not in mains:
+    if app_name not in manifests:
         return app_name
-    return gettext(getattr(mains[app_name], 'CAPTION', app_name), app_name)
+    return gettext(manifests[app_name].caption, app_name)
 
 
 def get_apps_sorted() -> List[str]:

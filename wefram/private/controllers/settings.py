@@ -94,9 +94,9 @@ async def v1_update_settings_schema(request: Request) -> NoContentResponse:
     return NoContentResponse()
 
 
-@api.handle_get('/screendef/Role', version=1)
+@api.handle_get('/container/Role', version=1)
 @aaa.requires(PERMISSION_ADMINUSERSROLES)
-async def v1_screendef(request: Request) -> JSONResponse:
+async def v1_container(request: Request) -> JSONResponse:
     return JSONResponse({
         'permissions': aaa.permissions.get_schema()
     })

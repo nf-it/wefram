@@ -29,35 +29,35 @@ const Help = () => (
 )
 
 const apiVersion: number = 1
-const screendefPath: RequestApiPath = {
+const containerPath: RequestApiPath = {
   app: 'system',
-  path: 'screendef/Role',
+  path: 'container/Role',
   version: apiVersion
 }
 const objectPath: RequestApiPath = api.entityObjectPath('system', 'Role')
 
 
-type ScreenDefPermission = {
+type ScontainerPermission = {
   key: string
   caption: string
 }
 
-type ScreenDefAppPermission = {
+type ContainerAppPermission = {
   app: string
   caption: string
-  permissions: ScreenDefPermission[]
+  permissions: ScontainerPermission[]
 }
 
-type ScreenDefAppPermissions = ScreenDefAppPermission[]
+type ContainerAppPermissions = ContainerAppPermission[]
 
-type ScreenDef = {
-  permissions: ScreenDefAppPermissions
+type Container = {
+  permissions: ContainerAppPermissions
 }
 
 type ScreenState = {
   loading: boolean
   data: RoleEditModel
-  screendef?: ScreenDef
+  container?: Container
 }
 
 export default class RoleCard extends React.Component<ScreenProps, ScreenState> {
@@ -76,11 +76,11 @@ export default class RoleCard extends React.Component<ScreenProps, ScreenState> 
   }
 
   private instantiate = (): void => {
-    api.get(screendefPath).then(res => {
+    api.get(containerPath).then(res => {
       this.setState({
-        screendef: res.data,
+        container: res.data,
         loading: false
-      }, () => console.log(this.state.screendef))
+      }, () => console.log(this.state.container))
     }).catch(err => {
       notifications.showRequestError(err)
       routing.back()
@@ -137,7 +137,7 @@ export default class RoleCard extends React.Component<ScreenProps, ScreenState> 
               <Box pb={1}>
                 <Typography variant={'h5'}>{gettext("Permissions for the role", 'system.aaa-form')}</Typography>
               </Box>
-              {this.state.screendef?.permissions.map(app => (
+              {this.state.container?.permissions.map(app => (
                 <Accordion defaultExpanded={false}>
                   <AccordionSummary expandIcon={
                     <MaterialIcon icon={'expand_more'} />
