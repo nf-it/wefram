@@ -1,6 +1,11 @@
 import {ThemeOptions} from '@mui/material'
 
 
+export const primaryColor = '#0070f0'
+export const secondaryColor = '#dd2f00'
+export const disabledColor = '#00000044'
+
+
 interface WorkspaceTheme extends ThemeOptions {
   notifications: {
     success: string
@@ -32,10 +37,10 @@ export const breakpoints: ThemeBreakpoints = {
 export const workspaceTheme: WorkspaceTheme = {
   palette: {
     primary: {
-      main: '#0070f0'
+      main: primaryColor
     },
     secondary: {
-      main: '#dd2f00'
+      main: secondaryColor
     }
   },
 
