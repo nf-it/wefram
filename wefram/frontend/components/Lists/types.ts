@@ -41,6 +41,7 @@ export type ListsFieldStruct = {
   caption?: string | JSX.Element
   captionStyle?: object
   captionClassName?: string
+  captionHint?: string
   textual?: boolean
   nullText?: string | boolean
   valueVisualize?: ListsFieldValueVisualize

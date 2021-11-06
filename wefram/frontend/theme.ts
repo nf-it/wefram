@@ -4,6 +4,7 @@ import {ThemeOptions} from '@mui/material'
 export const primaryColor = '#0070f0'
 export const secondaryColor = '#dd2f00'
 export const disabledColor = '#00000044'
+export const hintColor = '#4488ff'
 
 
 interface WorkspaceTheme extends ThemeOptions {

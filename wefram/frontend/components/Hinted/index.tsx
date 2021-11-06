@@ -1,5 +1,6 @@
 import React from 'react'
-import {Box, MaterialIcon, Tooltip} from '..'
+import {hintColor} from 'system/theme'
+import {Box, IconButton, MaterialIcon, Tooltip} from '..'
 
 
 export type HintedProps = {
@@ -11,10 +12,15 @@ export type HintedProps = {
 
 
 export const Hinted = (props: HintedProps) => (
-  <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+  <Box display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
     {props.children}
     <Tooltip title={props.hint}>
-      <MaterialIcon icon={props.icon ?? 'info'} size={'small'} color={props.color ?? '#644'} />
+      <IconButton style={{
+        padding: 0,
+        marginLeft: '4px'
+      }}>
+        <MaterialIcon icon={props.icon ?? 'info'} size={16} color={props.color ?? hintColor} />
+      </IconButton>
     </Tooltip>
   </Box>
 )

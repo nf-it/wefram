@@ -3,6 +3,7 @@ import {
   Checkbox,
   Collapse,
   IconButton,
+  Hinted,
   MaterialIcon,
   Table,
   TableBody,
@@ -119,7 +120,13 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
               <TableCell padding={'checkbox'} />
             )}
             {this.props.columns.filter(column => !column.hidden).map(column => (
-              <TableCell align={column.fieldAlign}>{column.caption}</TableCell>
+              <TableCell align={column.fieldAlign}>
+                {column.captionHint !== undefined ? (
+                  <Hinted hint={column.captionHint}>{column.caption}</Hinted>
+                ) : (
+                  column.caption
+                )}
+              </TableCell>
             ))}
             {this.props.renderRowSuffix && (
               <TableCell padding={'checkbox'} />
