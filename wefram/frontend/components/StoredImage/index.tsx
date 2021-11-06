@@ -139,7 +139,7 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
         ? null
         : this.props.emptyUrl
           ?? (routing.mediaAssetPath('system', this.props.permitUpload ? 'image-upload.svg' : 'image.svg'))
-    const style: any = this.props.style ?? {}
+    const style: any = Object.assign({}, this.props.style ?? {})
     style.height = height
     if (width) {
       style.width = width

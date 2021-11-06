@@ -158,6 +158,7 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
 
     return (
       <div className={this.props.className || 'mr-3'}>
+
         {rendered}
       </div>
     )

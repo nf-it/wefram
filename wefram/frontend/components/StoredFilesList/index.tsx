@@ -218,7 +218,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
             || (this.props.permitDelete ?? true)
             || (this.props.permitRearrange ?? true)
         ) && (
-          <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+          <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'} mb={1}>
             {(this.props.permitDelete ?? true) && (!this.state.rearrangeMode) && (
               <Tooltip title={gettext("Delete selected files")}>
                 <IconButton
