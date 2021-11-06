@@ -23,7 +23,7 @@ export const TipTypography = (props: TipTypographyProps) => {
 
   return (
     <Box
-      alignItems={'center'}
+      alignItems={'flex-start'}
       border={(bordered ?? true) ? '1px solid #0002' : undefined}
       borderRadius={'8px'}
       display={'flex'}
@@ -34,7 +34,7 @@ export const TipTypography = (props: TipTypographyProps) => {
       }}
     >
       <Box paddingRight={'8px'} lineHeight={0}>
-        <MaterialIcon icon={icon ?? 'info'} color={iconColor ?? '#320b'} />
+        <MaterialIcon icon={icon ?? 'info'} color={iconColor ?? '#000b'} />
       </Box>
       <Box>
         <Typography flexGrow={1} fontSize={'.85rem'} {...typographyProps} />
