@@ -27,7 +27,7 @@ export class FormTitle extends React.Component<FormTitleProps> {
       >
         <Typography
           color={this.props.color}
-          variant={this.props.variant}
+          variant={this.props.variant ?? 'h4'}
           gutterBottom
         >
           {this.props.title}

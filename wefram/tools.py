@@ -273,7 +273,7 @@ def isostr_2_date(s: Union[str, datetime.date]) -> Optional[datetime.date]:
 
 
 def snakecase_to_lowercamelcase(text: str) -> str:
-    return re.sub('_([a-zA-Z0-9])', lambda m: m.group(1).upper(), text)
+    return re.sub('_([a-zA-Z])', lambda m: m.group(1).upper(), text)
 
 
 def camelcase_to_snakecase(text: str) -> str:
