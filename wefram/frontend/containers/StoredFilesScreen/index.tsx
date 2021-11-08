@@ -22,7 +22,7 @@ export default class StoredFilesScreen extends React.Component<ScreenProps, Stor
     const screenCaption: string = runtime.screens[this.props.name].caption
     return (
       <React.Fragment>
-        <Box mt={2} mb={2}>
+        <Box mt={1}>
           <Typography variant={'h4'}>{screenCaption || 'Files'}</Typography>
         </Box>
         <Box>

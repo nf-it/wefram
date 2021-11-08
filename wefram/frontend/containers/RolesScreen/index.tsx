@@ -19,7 +19,7 @@ export default class Roles extends React.Component<ScreenProps> {
 
   render() {
     return (
-      <Box mt={2}>
+      <Box mt={1}>
         <Typography variant={'h4'} paddingBottom={2}>
           {gettext("Administrate roles", 'system.aaa')}
         </Typography>

@@ -3,11 +3,11 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularBusy,
   IconButton,
   ImageList,
   ImageListItem,
   ImageListItemBar,
-  LoadingCircular,
   MaterialIcon,
   Tooltip,
   Typography
@@ -199,7 +199,7 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
     if (this.state.loading)
       return (
         <Box display={'flex'} justifyContent={'center'}>
-          <LoadingCircular />
+          <CircularBusy />
         </Box>
       )
 

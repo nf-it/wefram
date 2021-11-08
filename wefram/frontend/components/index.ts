@@ -1,6 +1,7 @@
 export * from '@mui/material'
 export * from './ButtonLink'
 export * from './Chapters'
+export * from './CircularBusy'
 export * from './ClockTime'
 export * from './DatePicker'
 export * from './DateTimes'

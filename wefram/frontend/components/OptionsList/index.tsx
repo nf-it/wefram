@@ -2,6 +2,7 @@ import React from 'react'
 import {
   Box,
   Button,
+  CircularBusy,
   CircularProgress,
   Chip,
   Dialog,
@@ -10,8 +11,8 @@ import {
   DialogActions,
   Grid,
   LazyTextField,
-  LoadingCircular,
-  Typography, MaterialIcon
+  MaterialIcon,
+  Typography,
 } from 'system/components'
 import {gettext} from 'system/l10n'
 import {CommonKey} from 'system/types'
@@ -190,7 +191,7 @@ export class OptionsList extends React.Component<OptionsListProps, OptionsListSt
   render() {
     if (this.state.loading)
       return (
-        <LoadingCircular />
+        <CircularBusy />
       )
 
     let values: CommonKey[] = this.props.values ?? this.state.values

@@ -30,7 +30,7 @@ export default class MailAccountsScreen extends React.Component<ScreenProps> {
   render() {
     return (
       <React.Fragment>
-        <Box mt={2}>
+        <Box mt={1}>
           <Typography variant={'h4'} paddingBottom={2}>
             {gettext('Mail accounts', 'system.mail')}
           </Typography>

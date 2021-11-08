@@ -147,7 +147,7 @@ export default class SettingsScreen extends React.Component<ScreenProps> {
       return null
 
     return (
-      <Box mt={2} mb={3}>
+      <Box mt={1}>
         <TitlebarControl title={gettext("Properties and settings", 'system.settings')} mb={3}>
           <Button
             color={'primary'}

@@ -56,7 +56,6 @@ export class FormTitleField extends React.Component<FormTitleFieldProps> {
       ...elementProps
     } = this.props
     const formItemProps = {
-      width,
       pt,
       pb,
       pl,
@@ -64,6 +63,7 @@ export class FormTitleField extends React.Component<FormTitleFieldProps> {
       p,
       align,
       justify,
+      width: width ?? 12,
       style: fieldStyle
     }
     return (

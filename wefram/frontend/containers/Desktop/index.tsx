@@ -36,7 +36,7 @@ export default class Desktop extends React.Component<ScreenProps> {
   render() {
     return (
       <React.Fragment>
-        <Box mt={3} mb={3}>
+        <Box mt={1}>
           <Typography
             variant={'h2'}
             style={{

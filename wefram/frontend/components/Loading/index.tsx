@@ -26,17 +26,6 @@ export class Loading extends React.Component<LoadingProps> {
 }
 
 
-export class LoadingCircular extends React.Component<any> {
-  render() {
-    return (
-      <div>
-        <CircularProgress/>
-      </div>
-    )
-  }
-}
-
-
 export class LoadingLinear extends React.Component<any> {
   render() {
     return (

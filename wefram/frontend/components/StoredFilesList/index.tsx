@@ -3,10 +3,10 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularBusy,
   Grid,
   IconButton,
   MaterialIcon,
-  LoadingCircular,
   Tooltip,
   Typography
 } from 'system/components'
@@ -192,7 +192,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
     if (this.state.loading)
       return (
         <Box display={'flex'} justifyContent={'center'}>
-          <LoadingCircular />
+          <CircularBusy />
         </Box>
       )
 
