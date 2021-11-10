@@ -16,7 +16,7 @@ from wefram import aaa, ds, settings
 
 # A way to declare storage entities for uploading files:
 
-# ds.storages.register('default', requires='some_permission')
+# ds.storages.register('default', requires=['some_permission'])
 # ds.storages.register('another')
 
 
