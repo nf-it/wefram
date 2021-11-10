@@ -108,7 +108,7 @@ class TheModel:
 
 def model_column(model: str, column: str, app: Optional[str] = None) -> str:
     app = app or (
-        model.split('.')[0] if ('.' in 'model') else get_calling_app()
+        model.split('.')[0] if ('.' in model) else get_calling_app()
     )
     model = model.split('.')[1] if ('.' in model) else model
     return f"{app}{model}.{column}"
