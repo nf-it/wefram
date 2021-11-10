@@ -1,5 +1,7 @@
 from typing import *
-from .. import ds, aaa, logger
+import os
+import random
+from .. import ds, aaa, logger, config
 from ..models import User, Role
 from .routines import *
 
@@ -9,6 +11,9 @@ __all__ = [
 ]
 
 
+DEMO_AVATARS: List[str] = os.listdir(os.path.join(config.CORE_ROOT, 'assets', 'media', 'demo', 'avatars'))
+
+
 async def make_random_user() -> User:
     first_name: str
     middle_name: str
@@ -16,6 +21,9 @@ async def make_random_user() -> User:
     gender: str
     first_name, middle_name, last_name, gender = make_random_fullname()
 
+    avatar: Optional[str] = f"/system/demo/avatars/{random.choice(DEMO_AVATARS)}" \
+        if random.random() > .3 \
+        else None
     login: str = ('.'.join([last_name, ''.join([s[0] for s in (first_name, middle_name) if s])])).lower()
 
     return User(
@@ -25,7 +33,8 @@ async def make_random_user() -> User:
         available=True,
         first_name=first_name,
         middle_name=middle_name,
-        last_name=last_name
+        last_name=last_name,
+        avatar=avatar
     )
 
 
