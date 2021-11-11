@@ -38,6 +38,7 @@
 
 .SystemUI-LayoutSitemap-item {
     text-shadow: 0 1px 1px #0009;
+    padding: .25vmax 0;
 }
 
 .SystemUI-LayoutSitemap-item:hover {
@@ -45,6 +46,6 @@
 }
 
 .SystemUI-LayoutSitemap-icon {
-    width: 1.5vw;
-    height: 1.5vw;
+    width: 1.75vw;
+    height: 1.75vw;
 }

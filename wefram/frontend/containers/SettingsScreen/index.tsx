@@ -179,7 +179,8 @@ export default class SettingsScreen extends React.Component<ScreenProps> {
                   wrapped
                   style={{
                     maxWidth: 'none',
-                    alignItems: 'flex-start'
+                    alignItems: 'flex-start',
+                    textAlign: 'left'
                   }}
                 />
               ))}

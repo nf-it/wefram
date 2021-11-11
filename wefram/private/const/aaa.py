@@ -31,9 +31,10 @@ __all__ = [
 ]
 
 
-ICON_USERS = media_res_url('icons/users.svg')
-ICON_ROLES = media_res_url('icons/roles.svg')
-ICON_DOMAINS = media_res_url('icons/domains.svg')
+ICON_USERS = media_res_url('icons/users.png')
+ICON_ROLES = media_res_url('icons/roles.png')
+ICON_DOMAINS = media_res_url('icons/domains.png'
+                             '')
 
 MSG_APP_CAPTION = lazy_gettext("Security", 'system.aaa')
 MSG_PERMISSIONS_USERSROLES = lazy_gettext("Administrate users & roles", 'system.aaa')

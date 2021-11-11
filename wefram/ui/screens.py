@@ -19,7 +19,7 @@ class FilesScreen(BaseScreen):
     component: str = '/wefram/containers/StoredFilesScreen'
     api_entity: Any = None
     updatable: Union[bool, str, List[str]] = None
-    icon: str = media_res_url('icons/files.svg')
+    icon: str = media_res_url('icons/files.png')
 
     @classmethod
     def schema_json(cls) -> dict:
@@ -57,7 +57,7 @@ class FilesScreen(BaseScreen):
 
 class ImagesScreen(FilesScreen):
     component: str = '/wefram/containers/StoredImagesScreen'
-    icon: str = media_res_url('icons/images.svg')
+    icon: str = media_res_url('icons/images.png')
     columns: Optional[int] = None
     row_height: Optional[int] = None
     gap: Optional[int] = None
