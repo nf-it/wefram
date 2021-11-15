@@ -70,42 +70,42 @@ async def execute(
     )
 
 
-async def all(statement: Select, **kwargs) -> List[Row]:
+async def all(statement: Select) -> List[Row]:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalars().all()
 
 
-async def one(statement: Select, **kwargs) -> Row:
+async def one(statement: Select) -> Row:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalars().one()
 
 
-async def first(statement: Select, **kwargs) -> Row:
+async def first(statement: Select) -> Row:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalars().first()
 
 
-async def one_or_none(statement: Select, **kwargs) -> Optional[Row]:
+async def one_or_none(statement: Select) -> Optional[Row]:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalars().one_or_none()
 
 
-async def scalar_one(statement: Select, **kwargs) -> Any:
+async def scalar_one(statement: Select) -> Any:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalar_one()
 
 
-async def scalar_one_or_none(statement: Select, **kwargs) -> Optional[Any]:
+async def scalar_one_or_none(statement: Select) -> Optional[Any]:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalar_one_or_none()
 
 
-async def scalar(statement: Select, **kwargs) -> Optional[Any]:
+async def scalar(statement: Select) -> Optional[Any]:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalar()
 
 
-async def scalars(statement: Select, index: int, **kwargs) -> ScalarResult:
+async def scalars(statement: Select) -> ScalarResult:
     session: AsyncSession = _get_context_connection()
     return (await session.execute(statement)).scalars()
 
