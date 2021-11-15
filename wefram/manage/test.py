@@ -1,4 +1,7 @@
+import types
+import asyncio
 from typing import *
+from wefram import tools
 
 
 def print_help() -> None:
@@ -29,4 +32,27 @@ async def run(args: List[str]) -> None:
         print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
         return
 
-    print("(test)")
+    else:
+        from wefram import apps
+
+        app: str = command
+        if app != 'system' and app != 'wefram' and not apps.is_enabled(app):
+            print(f"app '{app}' is not enabled and cannot be tested")
+            return
+
+        tests: types.ModuleType = tools.load_app_module(app, 'tests')
+        if tests is None:
+            print(f"app '{app}' has no module named 'tests' (tests.py) to be ran within test")
+            return
+
+        test_name: str = args.pop(0) if len(args) else 'main'
+        if not hasattr(tests, test_name):
+            print(f"app '{app}' has no test named '{test_name}' in the 'tests' module")
+            return
+
+        test = getattr(tests, test_name)
+        if asyncio.iscoroutinefunction(test):
+            await test(*args)
+        else:
+            test(args)
+        return
