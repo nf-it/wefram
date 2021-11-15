@@ -30,8 +30,8 @@ export default class ___Screen extends React.Component<ScreenProps> {
   render() {
     return (
       <React.Fragment>
-        <Box mt={2}>
-          <Typography variant={'h4'}>{gettext('___')}</Typography>
+        <Box mt={1}>
+          <Typography variant={'h4'} paddingBottom={2}>{gettext('___')}</Typography>
           <EntityTable
             ref={this.listRef}
             requestPath={objectsPath}
