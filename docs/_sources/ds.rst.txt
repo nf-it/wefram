@@ -18,7 +18,7 @@ into three basics:
 #.  Storing object of models (rows in the relational database). Lets
     name it **ORM**.
 
-#.  Storing uploadable files, images and etc. Lets name
+#.  Storing uploadable files, images, etc. Let's name
     it **File storage**.
 
 #.  Storing temporary or caching data in the interprocess memory.

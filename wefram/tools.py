@@ -33,6 +33,8 @@ __all__ = [
     'camelcase_to_snakecase',
     'rerekey_snakecase_to_lowercamelcase',
     'rerekey_camelcase_to_snakecase',
+    'py_to_json',
+    'json_to_py',
     'remove_from_array',
     'int_or_none',
     'is_int',
@@ -302,6 +304,14 @@ def rerekey_camelcase_to_snakecase(d: Union[dict, list, tuple]) -> Union[dict, l
             (v if not isinstance(v, (dict, list, tuple)) else rerekey_camelcase_to_snakecase(v))
         for k, v in d.items()
     }
+
+
+def py_to_json(d: Union[dict, list, tuple]) -> Union[dict, list]:
+    return rerekey_snakecase_to_lowercamelcase(d)
+
+
+def json_to_py(d: Union[dict, list, tuple]) -> Union[dict, list]:
+    return rerekey_camelcase_to_snakecase(d)
 
 
 def remove_from_array(elements: Sequence[Any], array: [list, set, dict]) -> [list, set, dict]:
