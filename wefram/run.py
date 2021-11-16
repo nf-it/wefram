@@ -42,3 +42,6 @@ apps_main: apps.IAppsMains = apps.initialize(project_apps)
 def start() -> None:
     pass
 
+
+def ensure_started() -> None:
+    pass

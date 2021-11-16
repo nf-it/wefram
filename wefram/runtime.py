@@ -34,8 +34,9 @@ async def within_cli(exe: Callable, *args, **kwargs) -> None:
     :param kwargs: named arguments (optional) whose about to be applied to the
             calling exe
     """
-    from . import middlewares
+    from . import run, middlewares
 
+    run.ensure_started()
     context.context = {}  # Overriding the request-level context with usual dict
 
     cli_middlewares: list = middlewares.registered_cli
