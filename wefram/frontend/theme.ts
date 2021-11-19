@@ -241,10 +241,10 @@ export const workspaceTheme: WorkspaceTheme = {
           fontSize: '1.6rem'
         },
         h5: {
-          fontSize: '1.1rem'
+          fontSize: '1.15rem'
         },
         h6: {
-          fontSize: '.9rem'
+          fontSize: '1.05rem'
         }
       }
     },

@@ -18,6 +18,8 @@ const _internal: _Internal = {
   lastGeneratedId: 0
 }
 
+const _compactScreenMaxWidth: number = 650
+
 
 export function strToDate(src: string): Date | null {
   if (!src.trim())
@@ -126,4 +128,9 @@ export function isArraysEqual(arr1: any[], arr2: any[]): boolean {
 
 export function arrayFrom<T>(s: T | T[]): T[] {
   return Array.isArray(s) ? s : [s, ]
+}
+
+
+export function isCompactScreen(): boolean {
+  return window.innerWidth <= _compactScreenMaxWidth
 }

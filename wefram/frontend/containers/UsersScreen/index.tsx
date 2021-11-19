@@ -38,11 +38,12 @@ export default class UsersScreen extends React.Component<ScreenProps> {
           ref={this.listRef}
 
           addButtonAction={() => this.setState({entityKey: null})}
+          avatarField={'avatar'}
           defaultSort={{value: 'fullName', direction: 'asc'}}
           deleteButton={true}
           deleteConfirmMessage={gettext("Are you sure you want to delete the selected users?", 'system.aaa-messages')}
           entityCaption={gettext("Users list", 'system.aaa')}
-          limit={25}
+          limit={30}
           pagination
           primaryField={'fullName'}
           requestPath={objectsPath}
@@ -73,6 +74,7 @@ export default class UsersScreen extends React.Component<ScreenProps> {
           ]}
           selectable
           textTotalCount
+          variant={'cards'}
           urlStateOffset
           urlStateSearch
           onItemClick={(item: any) => {

@@ -230,20 +230,22 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
           </Box>
         )}
 
-        <ProvList
-          ref={this.listRef}
-          providedFilters={providedFilters}
-          selected={itemsSelected}
-          urlStateStorage={urlStateStorage}
-          onSelection={this.onItemsSelection}
-          onProvidedFiltersUpdateReq={(filters => {
-            this.setState({
-              searchValue: filters['ilike'],
-              searchLazyValue: filters['ilike']
-            })
-          })}
-          {...this.props}
-        />
+        <Box pl={this.props.variant === 'cards' ? 2 : 0} pr={this.props.variant === 'cards' ? 2 : 0}>
+          <ProvList
+            ref={this.listRef}
+            providedFilters={providedFilters}
+            selected={itemsSelected}
+            urlStateStorage={urlStateStorage}
+            onSelection={this.onItemsSelection}
+            onProvidedFiltersUpdateReq={(filters => {
+              this.setState({
+                searchValue: filters['ilike'],
+                searchLazyValue: filters['ilike']
+              })
+            })}
+            {...this.props}
+          />
+        </Box>
       </Paper>
     )
   }

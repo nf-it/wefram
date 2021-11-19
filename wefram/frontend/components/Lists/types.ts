@@ -80,6 +80,9 @@ export type ProvListProps = {
   onSortChange?: (sort: ListsSorting | null, fetchCallback: any) => void
 
   avatarField?: string
+  cardsOnRow?: number
+  cardsOnRowCompactScreen?: number
+  cardsOnRowWideScreen?: number
   defaultSort?: ListsSorting
   emptyListText?: boolean | string
   providedFilters?: ListsProvidedFilters
@@ -92,6 +95,8 @@ export type ProvListProps = {
   pagination?: boolean
   primaryField?: string
   primaryComponent?: React.ElementType
+  renderItemActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
+  renderItemCardHeaderActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
   secondaryField?: ListsField
   secondaryComponent?: React.ElementType
   requestPath: RequestApiPath | string
@@ -102,6 +107,7 @@ export type ProvListProps = {
   textTotalCountAll?: string | boolean
   unsortedOption?: boolean | string
   urlStateStorage?: UrlStateStorage
+  variant?: 'list' | 'cards'
 
   items?: any[]
   itemsCount?: number
