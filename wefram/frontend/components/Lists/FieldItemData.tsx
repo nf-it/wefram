@@ -1,5 +1,5 @@
 import React from 'react'
-import {MaterialIcon} from 'system/components'
+import {Box, MaterialIcon} from 'system/components'
 import {
   ListsField,
   FieldType,
@@ -19,8 +19,8 @@ export type FieldItemDataProps = {
 type FieldItemDataInnerProps = {
   item: any
   field: ListsFieldType
-  className?: string
   disableCaption?: boolean
+  style?: React.CSSProperties
 }
 
 
@@ -156,11 +156,18 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
     if (rendered === null)
       return null
 
-    return (
-      <div className={this.props.className || 'mr-3'}>
+    const {
+      marginRight,
+      ...styles
+    } = this.props.style ?? {}
 
+    return (
+      <Box sx={{
+        marginRight: marginRight ?? '4px',
+        ...styles
+      }}>
         {rendered}
-      </div>
+      </Box>
     )
   }
 }
@@ -174,11 +181,11 @@ export class FieldItemData extends React.Component<FieldItemDataProps> {
           {this.props.field.map((f: any) => {
             if (Array.isArray(f))
               return (
-                <div className={'d-flex align-items-center'}>
+                <Box display={'flex'} alignItems={'center'}>
                   {f.map(subf => (
                     <FieldItemDataInner field={subf} item={this.props.item} disableCaption={this.props.disableCaption} />
                   ))}
-                </div>
+                </Box>
               )
             else
               return (
