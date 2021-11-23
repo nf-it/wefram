@@ -143,8 +143,11 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
   private getItemAvatarColor = (item: any, itemAlt: string | undefined): string | undefined => {
     if (typeof this.props.avatarColor == 'function')
       return this.props.avatarColor(item)
-    if (typeof this.props.avatarColor == 'string')
+    if (typeof this.props.avatarColor == 'string') {
+      if (this.props.avatarColor in item)
+        return item[this.props.avatarColor]
       return this.props.avatarColor
+    }
     if (this.props.avatarColor === true && itemAlt)
       return colorByString(itemAlt)
     return undefined
