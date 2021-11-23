@@ -178,7 +178,7 @@ export class FieldItemData extends React.Component<FieldItemDataProps> {
     if (Array.isArray(this.props.field))
       return (
         <React.Fragment>
-          {this.props.field.map((f: any) => {
+          {this.props.field.filter((f: any) => f !== null).map((f: any) => {
             if (Array.isArray(f))
               return (
                 <Box display={'flex'} alignItems={'center'}>

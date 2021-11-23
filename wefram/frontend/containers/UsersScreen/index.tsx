@@ -65,12 +65,12 @@ export default class UsersScreen extends React.Component<ScreenProps> {
                 }
               },
               'login',
-              {
-                fieldType: 'dateTimeNice',
-                fieldName: 'lastLogin',
-                caption: gettext("Last logged on", 'system.aaa-list')
-              }
             ],
+            {
+              fieldType: 'dateTimeNice',
+              fieldName: 'lastLogin',
+              caption: gettext("Last logged on", 'system.aaa-list')
+            }
           ]}
           selectable
           textTotalCount
