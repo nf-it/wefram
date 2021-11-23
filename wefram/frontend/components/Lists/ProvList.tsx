@@ -45,6 +45,7 @@ type ProvListItemPrepared = {
   primaryField: string
   itemAltText: string | undefined
   avatarUrl: string | null
+  avatarChildren: JSX.Element | JSX.Element[] | string | null
   selected: boolean
   actions: JSX.Element | JSX.Element[] | null
   cardHeaderActions: JSX.Element | JSX.Element[] | null
@@ -118,6 +119,26 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       : null
   }
 
+  private getItemAvatarChildren = (item: any): JSX.Element | JSX.Element[] | string | null => {
+    if (this.props.avatarField && item[this.props.avatarField])
+      return null
+    if (this.props.avatarFallback === undefined) {
+      const itemAlt = this.getItemAlt(item)
+      if (!itemAlt)
+        return null
+      const itemAltSplitted: string[] = itemAlt.split(' ')
+      const avatarLetters: string[] = [itemAltSplitted[0][0]]
+      if (itemAltSplitted.length > 1) {
+        avatarLetters.push(itemAltSplitted[1][0])
+      }
+      return avatarLetters.join('')
+    } else if (typeof this.props.avatarFallback == 'string') {
+      return this.props.avatarFallback
+    } else {
+      return this.props.avatarFallback(item)
+    }
+  }
+
   public fetch = (): void => {
     this.hocRef.current?.fetch()
   }
@@ -139,6 +160,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       primaryField: string = this.props.primaryField ?? 'caption',
       itemAltText: string | undefined = this.getItemAlt(item),
       avatarUrl: string | null = this.getItemAvatarUrl(item),
+      avatarChildren: JSX.Element | JSX.Element[] | string | null = this.getItemAvatarChildren(item),
       selection = (this.props.selected ?? this.state.selected ?? []) as any[],
       selected: boolean = (key !== undefined && this.props.selectable && selection.length)
         ? selection.includes(key)
@@ -157,6 +179,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       primaryField,
       itemAltText,
       avatarUrl,
+      avatarChildren,
       selected,
       actions,
       cardHeaderActions
@@ -204,7 +227,9 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                     <ListItem button>
                       {this.props.avatarField !== undefined && (
                         <ListItemAvatar>
-                          <Avatar alt={preparedItem.itemAltText} src={preparedItem.avatarUrl ?? undefined}/>
+                          <Avatar alt={preparedItem.itemAltText} src={preparedItem.avatarUrl ?? undefined}>
+                            {preparedItem.avatarChildren}
+                          </Avatar>
                         </ListItemAvatar>
                       )}
                       {preparedItem.key !== undefined && this.props.avatarField === undefined && this.props.selectable === true && (
@@ -288,9 +313,10 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                       height: '100%'
                     }}>
                       <CardHeader
-                        // this.props.avatarField
                         avatar={this.props.avatarField !== undefined ? (
-                          <Avatar alt={preparedItem.itemAltText} src={preparedItem.avatarUrl ?? undefined}/>
+                          <Avatar alt={preparedItem.itemAltText} src={preparedItem.avatarUrl ?? undefined}>
+                            {preparedItem.avatarChildren}
+                          </Avatar>
                         ) : (preparedItem.key !== undefined && this.props.selectable === true) ? (
                           <Checkbox
                             edge="start"
