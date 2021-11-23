@@ -26,7 +26,7 @@ import {
 import {ProvListsHoc} from './ProvListsHoc'
 import {FieldItemData} from './FieldItemData'
 import {CommonKey} from 'system/types'
-import {isCompactScreen} from 'system/tools'
+import {isCompactScreen, colorByString} from 'system/tools'
 import {routing} from 'system/routing'
 
 
@@ -46,6 +46,7 @@ type ProvListItemPrepared = {
   itemAltText: string | undefined
   avatarUrl: string | null
   avatarChildren: JSX.Element | JSX.Element[] | string | null
+  avatarColor?: string
   selected: boolean
   actions: JSX.Element | JSX.Element[] | null
   cardHeaderActions: JSX.Element | JSX.Element[] | null
@@ -133,10 +134,20 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       }
       return avatarLetters.join('')
     } else if (typeof this.props.avatarFallback == 'string') {
-      return this.props.avatarFallback
+      return <img src={routing.mediaAssetAbspath(this.props.avatarFallback)} />
     } else {
       return this.props.avatarFallback(item)
     }
+  }
+
+  private getItemAvatarColor = (item: any, itemAlt: string | undefined): string | undefined => {
+    if (typeof this.props.avatarColor == 'function')
+      return this.props.avatarColor(item)
+    if (typeof this.props.avatarColor == 'string')
+      return this.props.avatarColor
+    if (this.props.avatarColor === true && itemAlt)
+      return colorByString(itemAlt)
+    return undefined
   }
 
   public fetch = (): void => {
@@ -161,6 +172,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       itemAltText: string | undefined = this.getItemAlt(item),
       avatarUrl: string | null = this.getItemAvatarUrl(item),
       avatarChildren: JSX.Element | JSX.Element[] | string | null = this.getItemAvatarChildren(item),
+      avatarColor: string | undefined = this.getItemAvatarColor(item, itemAltText),
       selection = (this.props.selected ?? this.state.selected ?? []) as any[],
       selected: boolean = (key !== undefined && this.props.selectable && selection.length)
         ? selection.includes(key)
@@ -180,6 +192,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       itemAltText,
       avatarUrl,
       avatarChildren,
+      avatarColor,
       selected,
       actions,
       cardHeaderActions
@@ -227,7 +240,14 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                     <ListItem button>
                       {this.props.avatarField !== undefined && (
                         <ListItemAvatar>
-                          <Avatar alt={preparedItem.itemAltText} src={preparedItem.avatarUrl ?? undefined}>
+                          <Avatar
+                            alt={preparedItem.itemAltText}
+                            src={preparedItem.avatarUrl ?? undefined}
+                            sx={{
+                              color: '#FFFFFFDD',
+                              bgcolor: preparedItem.avatarColor
+                            }}
+                          >
                             {preparedItem.avatarChildren}
                           </Avatar>
                         </ListItemAvatar>
@@ -314,7 +334,14 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                     }}>
                       <CardHeader
                         avatar={this.props.avatarField !== undefined ? (
-                          <Avatar alt={preparedItem.itemAltText} src={preparedItem.avatarUrl ?? undefined}>
+                          <Avatar
+                            alt={preparedItem.itemAltText}
+                            src={preparedItem.avatarUrl ?? undefined}
+                            sx={{
+                              color: '#FFFFFFDD',
+                              bgcolor: preparedItem.avatarColor
+                            }}
+                          >
                             {preparedItem.avatarChildren}
                           </Avatar>
                         ) : (preparedItem.key !== undefined && this.props.selectable === true) ? (

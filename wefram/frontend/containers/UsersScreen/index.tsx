@@ -38,6 +38,7 @@ export default class UsersScreen extends React.Component<ScreenProps> {
           ref={this.listRef}
 
           addButtonAction={() => this.setState({entityKey: null})}
+          avatarColor
           avatarField={'avatar'}
           defaultSort={{value: 'fullName', direction: 'asc'}}
           deleteButton={true}

@@ -134,3 +134,27 @@ export function arrayFrom<T>(s: T | T[]): T[] {
 export function isCompactScreen(): boolean {
   return window.innerWidth <= _compactScreenMaxWidth
 }
+
+
+export function colorByString(s: string | null | undefined): string {
+  const DEFAULT_COLOR: string = '#BDBDBD'
+  const COLORS: string[] = [
+    '#115599',
+    '#119955',
+    '#995511',
+    '#991155',
+    '#337766',
+    '#336699',
+    '#008888',
+    '#DD8800',
+    '#5544BB',
+    '#557788'
+  ]
+  if (!s)
+    return DEFAULT_COLOR
+  const letterCode: string = String(String(s[0]).charCodeAt(0))
+  const colorCodeN: number = Number(letterCode[letterCode.length-1])
+  if (isNaN(colorCodeN))
+    return DEFAULT_COLOR
+  return COLORS[colorCodeN]
+}

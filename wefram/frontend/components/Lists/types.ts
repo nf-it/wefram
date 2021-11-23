@@ -79,6 +79,7 @@ export type ProvListProps = {
   onPageChange?: (page: number, fetchCallback: any) => void
   onSortChange?: (sort: ListsSorting | null, fetchCallback: any) => void
 
+  avatarColor?: string | boolean | ((item: any) => string | undefined)
   avatarFallback?: string | ((item: any) => JSX.Element | JSX.Element[] | null)
   avatarField?: string
   cardsOnRow?: number
@@ -146,6 +147,7 @@ export type ProvTableProps = {
 
   columns: ProvTableColumns
 
+  avatarColor?: string | boolean | ((item: any) => string | undefined)
   avatarFallback?: string | ((item: any) => JSX.Element | JSX.Element[] | null)
   avatarField?: string
   entityCaption?: string
