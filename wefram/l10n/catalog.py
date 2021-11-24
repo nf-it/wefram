@@ -79,8 +79,7 @@ def locate_dictionary_json(locale: Locale) -> Optional[str]:
 class Dictionary:
     def __init__(self, locale_: Locale, autoload: bool = True):
         self.locale: Locale = locale_
-        self._domains: Dict[str, _Domain] = \
-            (self.load() if autoload else dict()) or dict()
+        self._domains: Dict[str, _Domain] = (self.load() if autoload else dict()) or dict()
 
     @classmethod
     def parse_dictionary(
@@ -232,9 +231,10 @@ _catalogs: Dict[str, Optional[Dictionary]] = {}
 
 
 def _get_dictionary(locale: Locale) -> Dictionary:
-    if locale not in _catalogs:
-        _catalogs[str(locale)]: Optional[Dictionary] = Dictionary(locale)
-    return _catalogs[str(locale)]
+    locale_code: str = str(locale)
+    if locale_code not in _catalogs:
+        _catalogs[locale_code]: Optional[Dictionary] = Dictionary(locale)
+    return _catalogs[locale_code]
 
 
 def _get_current_dictionary() -> Dictionary:
