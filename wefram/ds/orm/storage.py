@@ -2,7 +2,7 @@ from typing import *
 import datetime
 from sqlalchemy import types
 from .types import BigAutoIncrement, Column, DateTime, Integer, String
-from .model import OrmModel
+from .model import DatabaseModel
 from ... import config
 from ...tools import get_calling_app
 
@@ -110,7 +110,7 @@ def files_model(
     app: str = get_calling_app()
     if '.' not in entity:
         entity = '.'.join([app, entity])
-    cls: ClassVar = type(name, (_FilesModelMixin, OrmModel,), {
+    cls: ClassVar = type(name, (_FilesModelMixin, DatabaseModel,), {
         '__app__': app,
         'file': Column(File(entity)),
     })
@@ -144,7 +144,7 @@ def images_model(
     app: str = get_calling_app()
     if '.' not in entity:
         entity = '.'.join([app, entity])
-    cls: ClassVar = type(name, (_ImagesModelMixin, OrmModel,), {
+    cls: ClassVar = type(name, (_ImagesModelMixin, DatabaseModel,), {
         '__app__': app,
         'file': Column(Image(entity)),
     })

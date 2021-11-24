@@ -3,7 +3,7 @@ from datetime import datetime
 from sqlalchemy import event, inspect
 from sqlalchemy.orm import class_mapper, attributes as orm_attributes, state as orm_state
 from sqlalchemy.util.concurrency import await_only
-from .model import OrmModel as Model, History
+from .model import DatabaseModel as Model, History
 from .reg import models_by_name
 from .types import Column, BigAutoIncrement, String, StringChoice, UUID, JSONB, DateTime, ForeignKey
 from .helpers import ModelColumn

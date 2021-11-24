@@ -34,5 +34,6 @@
   "uvicorn": {
     "port": 8888
   },
-  "devel": true
+  "devel": true,
+  "echo_ds": true
 }

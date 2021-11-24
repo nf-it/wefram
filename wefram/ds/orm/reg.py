@@ -43,13 +43,13 @@ def get_model(name: str, app_name: str = None) -> [None, ClassVar]:
 
 
 def tablename_of(model: [str, ClassVar]) -> (str, None):
-    from .model import OrmModel
+    from .model import DatabaseModel
 
     if isinstance(model, str):
         model: ClassVar = get_model(model)
         if model is None:
             return None
         return model.__tablename__
-    elif inspect.isclass(model) and issubclass(model, OrmModel):
+    elif inspect.isclass(model) and issubclass(model, DatabaseModel):
         return model.__tablename__
     raise ValueError("ds.tablename_of expects model to be given as (str) name or model class")

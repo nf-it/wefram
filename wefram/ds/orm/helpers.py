@@ -151,9 +151,9 @@ class TableOf:
         self.model: [str, ClassVar] = model
 
     def __call__(self) -> [Table, None]:
-        from .model import OrmModel
+        from .model import DatabaseModel
 
-        if inspect.isclass(self.model) and issubclass(self.model, OrmModel):
+        if inspect.isclass(self.model) and issubclass(self.model, DatabaseModel):
             return self.model.__table__
         model: ClassVar = reg.get_model(self.model)
         if model is None:

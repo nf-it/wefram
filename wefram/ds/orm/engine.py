@@ -14,6 +14,7 @@ engine: AsyncEngine = create_async_engine(
     'postgresql+asyncpg://{user}:{pass}@{host}:{port}/{name}'.format(**config.DATABASE),
     # pool_size=1,
     echo=bool(getattr(config, 'ECHO_DS', False)),
+    # query_cache_size=0,
     pool_pre_ping=True
 )
 _AsyncSession: sessionmaker = sessionmaker(bind=engine, class_=AsyncSession, autoflush=True, expire_on_commit=False)

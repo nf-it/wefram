@@ -76,7 +76,15 @@ class User(ds.Model):
         findable = ['full_name', 'login']
         attributes_sets = {
             'session': [
-                'id', 'login', 'first_name', 'middle_name', 'last_name', 'display_name', 'full_name', 'locale', 'timezone'
+                'id',
+                'login',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'display_name',
+                'full_name',
+                'locale',
+                'timezone'
             ]
         }
         history = ds.History(enable=True, ignore=['last_login'], exclude=['last_login', 'secret'])

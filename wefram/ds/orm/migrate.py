@@ -105,7 +105,7 @@ class DatabaseMigration:
         async with engine.engine.connect() as cn:
             self.cn = cn
             self.current_tables = await self.get_tables_current()
-            self.declared_tables = model.OrmModel.metadata.sorted_tables
+            self.declared_tables = model.DatabaseModel.metadata.sorted_tables
             self.mapped_tables: Dict[str, schema.Table] = {
                 t.name: t for t in self.declared_tables
             }

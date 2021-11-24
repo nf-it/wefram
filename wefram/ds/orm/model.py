@@ -24,7 +24,7 @@ from ...tools import CSTYLE, snakecase_to_lowercamelcase, app_name
 
 __all__ = [
     'Model',
-    'OrmModel',
+    'DatabaseModel',
     'Meta',
     'History',
 ]
@@ -557,6 +557,7 @@ class Model:
 
         if not isinstance(excluding, (list, tuple)):
             raise TypeError("ds.Model.Meta.hidden must be [list] of [str] type")
+        excluding = list(excluding)
 
         if exclude and isinstance(exclude, (list, tuple, set)):
             excluding.extend(list(exclude))
@@ -843,7 +844,7 @@ class Model:
         return (await session.execute(statement)).scalars()
 
 
-OrmModel = declarative_base(cls=Model, metaclass=_ModelMetaclass)
+DatabaseModel = declarative_base(cls=Model, metaclass=_ModelMetaclass)
 
 
 @dataclass
