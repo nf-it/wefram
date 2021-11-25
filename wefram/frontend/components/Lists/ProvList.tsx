@@ -20,6 +20,7 @@ import {
   ListItemSecondaryAction
 } from 'system/components'
 import {
+  ListField,
   ListsSelection,
   ProvListProps,
 } from './types'
@@ -42,7 +43,8 @@ type ProvListItemPrepared = {
   key: CommonKey | undefined
   routePath: string | null
   divider: boolean
-  primaryField: string
+  primaryField: ListField | null
+  secondaryField: ListField | null
   itemAltText: string | undefined
   avatarUrl: string | null
   avatarChildren: JSX.Element | JSX.Element[] | string | null
@@ -171,7 +173,8 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
             : itemsRoute(item)
           ) : null,
       divider: boolean = index < items.length - 1,
-      primaryField: string = this.props.primaryField ?? 'caption',
+      primaryField: ListField | null = this.props.primaryField ?? 'caption',
+      secondaryField: ListField | null = this.props.secondaryField ?? null,
       itemAltText: string | undefined = this.getItemAlt(item),
       avatarUrl: string | null = this.getItemAvatarUrl(item),
       avatarChildren: JSX.Element | JSX.Element[] | string | null = this.getItemAvatarChildren(item),
@@ -192,6 +195,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       routePath,
       divider,
       primaryField,
+      secondaryField,
       itemAltText,
       avatarUrl,
       avatarChildren,
@@ -228,8 +232,16 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
             {items.map((item, index) => {
               const preparedItem: ProvListItemPrepared = this.prepareItem(item, index, items)
 
-              const PrimaryFieldComponent = this.props.primaryComponent || FieldItemData
-              const SecondaryFieldComponent = this.props.secondaryComponent || FieldItemData
+              const PrimaryFieldComponent = this.props.renderPrimaryField !== undefined
+                ? this.props.renderPrimaryField(item, preparedItem.primaryField)
+                : preparedItem.primaryField
+                  ? <FieldItemData item={item} field={preparedItem.primaryField} />
+                  : undefined
+              const SecondaryFieldComponent = this.props.renderSecondaryField !== undefined
+                ? this.props.renderSecondaryField(item, preparedItem.secondaryField)
+                : preparedItem.secondaryField
+                  ? <FieldItemData item={item} field={preparedItem.secondaryField} />
+                  : undefined
 
               const ListItemComponent: React.ElementType | undefined = this.props.itemComponent
               const ListItemElement = ListItemComponent !== undefined
@@ -274,10 +286,8 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                       )}
 
                       <ListItemText
-                        primary={<PrimaryFieldComponent item={item} field={preparedItem.primaryField} />}
-                        secondary={this.props.secondaryField && (
-                          <SecondaryFieldComponent item={item} field={this.props.secondaryField} />
-                        )}
+                        primary={PrimaryFieldComponent}
+                        secondary={SecondaryFieldComponent}
                       />
 
                       {(
@@ -319,8 +329,16 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
             {items.map((item, index) => {
               const preparedItem: ProvListItemPrepared = this.prepareItem(item, index, items)
 
-              const PrimaryFieldComponent = this.props.primaryComponent || FieldItemData
-              const SecondaryFieldComponent = this.props.secondaryComponent || FieldItemData
+              const PrimaryFieldComponent = this.props.renderPrimaryField !== undefined
+                ? this.props.renderPrimaryField(item, preparedItem.primaryField)
+                : preparedItem.primaryField
+                  ? <FieldItemData item={item} field={preparedItem.primaryField} />
+                  : undefined
+              const SecondaryFieldComponent = this.props.renderSecondaryField !== undefined
+                ? this.props.renderSecondaryField(item, preparedItem.secondaryField)
+                : preparedItem.secondaryField
+                  ? <FieldItemData item={item} field={preparedItem.secondaryField} />
+                  : undefined
 
               const ListItemComponent: React.ElementType | undefined = this.props.itemComponent
               const ListItemElement = ListItemComponent !== undefined
@@ -393,17 +411,17 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                             }
                           </React.Fragment>
                         ) : undefined}
-                        title={<PrimaryFieldComponent item={item} field={preparedItem.primaryField} />}
+                        title={PrimaryFieldComponent}
                         titleTypographyProps={{
                           variant: 'h6',
                         }}
                       />
-                      {this.props.secondaryField && (
+                      {SecondaryFieldComponent !== undefined && SecondaryFieldComponent !== null && (
                         <CardContent sx={{
                           paddingTop: '4px',
                           paddingBottom: '16px'
                         }}>
-                          <SecondaryFieldComponent item={item} field={this.props.secondaryField} />
+                          {SecondaryFieldComponent}
                         </CardContent>
                       )}
                       {preparedItem.actions !== null && (

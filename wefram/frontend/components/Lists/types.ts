@@ -50,13 +50,13 @@ export type ListsFieldStruct = {
   getter?: ((item: any) => any) | null  // used to return a value from the every item instead of item[fieldName]
 }
 
-export type ListsFieldType = string | ListsFieldStruct
+export type ListsFieldType = string | ListsFieldStruct | null
 
 export type ListsRowFields = ListsFieldType[]
 
 export type ListsRowField = ListsFieldType | ListsFieldType[]
 
-export type ListsField = ListsFieldType | ListsRowFields | ListsRowField[]
+export type ListField = ListsFieldType | ListsRowFields | ListsRowField[] | null
 
 export type UrlStateStorage = {
   sort?: string
@@ -95,12 +95,12 @@ export type ProvListProps = {
   itemKeyField?: string
   itemsRoute?: string | ItemRouteCallback
   pagination?: boolean
-  primaryField?: string
-  primaryComponent?: React.ElementType
+  primaryField?: ListField
   renderItemActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
   renderItemCardHeaderActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
-  secondaryField?: ListsField
-  secondaryComponent?: React.ElementType
+  renderPrimaryField?: (item: any, field?: ListField) => JSX.Element | JSX.Element[] | null
+  renderSecondaryField?: (item: any, field?: ListField) => JSX.Element | JSX.Element[] | null
+  secondaryField?: ListField
   requestPath: RequestApiPath | string
   selectable?: boolean
   separated?: boolean

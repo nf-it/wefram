@@ -1,7 +1,7 @@
 import React from 'react'
 import {Box, MaterialIcon} from 'system/components'
 import {
-  ListsField,
+  ListField,
   FieldType,
   ListsFieldType,
   ListsFieldStruct
@@ -11,7 +11,7 @@ import {gettext} from 'system/l10n'
 
 export type FieldItemDataProps = {
   item: any
-  field: ListsField
+  field: ListField
   disableCaption?: boolean
 }
 
@@ -145,6 +145,9 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
   }
 
   render() {
+    if (this.props.field === null)
+      return null
+
     const field: ListsFieldType = typeof this.props.field == 'string'
       ? { fieldName: this.props.field, fieldType: this.guessFieldType(this.props.item[this.props.field]) }
       : this.props.field
