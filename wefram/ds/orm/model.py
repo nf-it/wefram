@@ -360,7 +360,7 @@ class Model:
             await instance.delete()
 
         """
-        context['db'].delete(self)
+        await context['db'].delete(self)
 
     @classmethod
     async def delete_where(cls, *clause, **filters) -> None:
