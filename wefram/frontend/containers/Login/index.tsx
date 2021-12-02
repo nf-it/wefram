@@ -1,9 +1,10 @@
 import React from 'react'
+import {Box} from 'system/components'
 import {LoginForm} from '../LoginForm'
 
 
-export const LoginScreen = () => (
-  <div style={{
+const Login = () => (
+  <Box style={{
     position: 'fixed',
     left: 0,
     top: 0,
@@ -12,5 +13,7 @@ export const LoginScreen = () => (
     zIndex: 20000
   }}>
     <LoginForm />
-  </div>
+  </Box>
 )
+
+export default Login

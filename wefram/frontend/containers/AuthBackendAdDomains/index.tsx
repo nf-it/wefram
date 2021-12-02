@@ -19,23 +19,23 @@ import {
 const entityPath: RequestApiPath = api.entityPath('system', 'ActiveDirectoryDomain')
 const objectPath: RequestApiPath = api.entityObjectPath('system', 'ActiveDirectoryDomain')
 
-type AuthBackendAdDomainsState = {
+type ScreenState = {
   entityKey?: string | null
 }
 
-export type DomainCardProps = {
+export type CardProps = {
   entityKey: string | null
   onAfterDelete: () => void
   onAfterSubmit: () => void
   onClose: () => void
 }
 
-type DomainCardState = {
+type CardState = {
   data: ActiveDirectoryDomainModel
 }
 
-class DomainCard extends React.Component<DomainCardProps, DomainCardState> {
-  state: DomainCardState = {
+class Card extends React.Component<CardProps, CardState> {
+  state: CardState = {
     data: {
       id: null,
       enabled: true,
@@ -119,8 +119,8 @@ class DomainCard extends React.Component<DomainCardProps, DomainCardState> {
 }
 
 
-export default class AuthBackendAdDomains extends React.Component<ScreenProps, AuthBackendAdDomainsState> {
-  state: AuthBackendAdDomainsState = {
+export default class Screen extends React.Component<ScreenProps, ScreenState> {
+  state: ScreenState = {
     entityKey: undefined
   }
 
@@ -154,7 +154,7 @@ export default class AuthBackendAdDomains extends React.Component<ScreenProps, A
         </Box>
         <Dialog open={this.state.entityKey !== undefined} maxWidth={'sm'}>
           {this.state.entityKey !== undefined && (
-            <DomainCard
+            <Card
               entityKey={this.state.entityKey}
               onClose={() => {
                 this.setState({entityKey: undefined})

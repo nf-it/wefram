@@ -31,7 +31,7 @@ import './index.css'
 
 type CtrlState = Record<string, any>
 
-type S = {
+type ScreenState = {
   loading: boolean
   submitting: boolean
   schema: SettingsSchema
@@ -85,8 +85,8 @@ class SectionCaption extends React.Component<SectionCaptionProps> {
 }
 
 
-export default class SettingsScreen extends React.Component<ScreenProps> {
-  state: S = {
+export default class Screen extends React.Component<ScreenProps> {
+  state: ScreenState = {
     loading: true,
     submitting: false,
     schema: [],

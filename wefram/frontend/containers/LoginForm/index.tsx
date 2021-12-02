@@ -120,7 +120,24 @@ class _LoginForm extends React.Component<Props, State> {
           alignItems: 'center'
         }}>
           <Box className={'UI-LoginForm-paper'}>
-            <Avatar className={'UI-LoginForm-avatar'} color="secondary">
+            <Box pb={3} pt={1}>
+              <Typography
+                variant={'h1'}
+                style={{
+                  color: '#0077ff',
+                  background: 'linear-gradient(to right, #007FFF, #0059B2)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  fontWeight: 800
+                }}
+              >
+                {runtime.title}
+              </Typography>
+            </Box>
+            <Avatar className={'UI-LoginForm-avatar'} style={{
+              background: 'linear-gradient(to right, #007FFF, #0059B2)',
+              color: '#ffffff'
+            }}>
               <MaterialIcon icon={'lock'} />
             </Avatar>
             <Typography component="h1" variant="h5">

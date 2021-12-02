@@ -16,7 +16,7 @@ import {Loading} from './components'
 import {runtime} from './runtime'
 import {notifications} from './notification'
 import {routingHistory} from 'system/routing'
-import {LoginScreen} from 'system/containers/LoginScreen'
+import Login from 'system/containers/Login'
 import {aaa} from 'system/aaa'
 import './main.css'
 
@@ -67,7 +67,7 @@ class Main extends React.Component<AppProps, AppState> {
             <Route
               exact
               key={'routing-loginscreen'}
-              component={LoginScreen}
+              component={Login}
               path={runtime.loginScreenUrl}
             />
             <div className={'SystemUI-Layout-root'}>

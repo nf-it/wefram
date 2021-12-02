@@ -15,13 +15,13 @@ import {gettext} from 'system/l10n'
 import './index.css'
 
 
-type DesktopState = {
+type ScreenState = {
   introduction: boolean
 }
 
 
-export default class Desktop extends React.Component<ScreenProps> {
-  state: DesktopState = {
+export default class Screen extends React.Component<ScreenProps> {
+  state: ScreenState = {
     introduction: false
   }
 

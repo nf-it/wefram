@@ -9,19 +9,19 @@ import {ScreenProps} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'
-import {MailAccount} from 'system/containers/MailAccount'
+import MailAccount from 'system/containers/MailAccount'
 
 
 const objectsPath: RequestApiPath = api.entityPath('system', 'MailAccount')
 
 
-type MailAccountsScreenState = {
+type ScreenState = {
   entityKey?: string | null
 }
 
 
-export default class MailAccountsScreen extends React.Component<ScreenProps> {
-  state: MailAccountsScreenState = {
+export default class Screen extends React.Component<ScreenProps, ScreenState> {
+  state: ScreenState = {
     entityKey: undefined
   }
 

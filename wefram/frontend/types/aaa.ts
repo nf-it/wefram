@@ -52,6 +52,7 @@ export type UserEditModel = {
   locale: string | null
   comments: string
   fullName: string
+  avatar: string | null
 }
 
 export type RoleEditModel = {

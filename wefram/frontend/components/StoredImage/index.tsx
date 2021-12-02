@@ -31,7 +31,9 @@ export type StoredImageProps = {
   permitUpload?: boolean
   imageHeight?: string
   imageWidth?: string
+  imageSize?: string
   style?: any
+  variant?: 'rounded' | 'square' | 'circular'
 
   onChange?: (fileId: string | null) => void
 }
@@ -132,8 +134,8 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
 
   render() {
     const fileId: string | null = this.currentFileId
-    const height: string = this.props.imageHeight ?? '10vmax'
-    const width: string | undefined = this.props.imageWidth
+    const height: string = this.props.imageSize ?? this.props.imageHeight ?? '10vmax'
+    const width: string | undefined = this.props.imageSize ?? this.props.imageWidth
     const emptyUrl: string | null =
       this.props.emptyUrl === null
         ? null
@@ -144,6 +146,11 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
     if (width) {
       style.width = width
     }
+    style.borderRadius = style.borderRadius ?? this.props.variant == 'rounded'
+      ? '50%'
+      : this.props.variant == 'square'
+        ? '0'
+        : '.5vmax'
 
     return (
       <React.Fragment>
@@ -181,13 +188,18 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
                 position: 'absolute'
               }}
               imageStyle={{
-                width: undefined,
-                height: undefined,
+                // width: undefined,
+                // height: undefined,
                 position: 'relative',
                 overflow: 'hidden',
                 maxWidth: '100%',
                 maxHeight: '100%',
-                borderRadius: '.5vmax'
+                borderRadius: '2px'
+                // borderRadius: this.props.variant == 'rounded'
+                //   ? '50%'
+                //   : this.props.variant == 'square'
+                //     ? '0'
+                //     : '.5vmax'
               }}
               cover={this.props.cover}
             />

@@ -8,13 +8,13 @@ import {
 import {runtime} from 'system/runtime'
 
 
-type StoredImagesState = {
+type ScreenState = {
   loading: boolean
 }
 
 
-export default class StoredImagesScreen extends React.Component<ScreenProps, StoredImagesState> {
-  state: StoredImagesState = {
+export default class Screen extends React.Component<ScreenProps, ScreenState> {
+  state: ScreenState = {
     loading: true
   }
 

@@ -15,19 +15,19 @@ import {MailAccountModel} from 'system/types'
 const objectPath: RequestApiPath = api.entityObjectPath('system', 'MailAccount')
 
 
-export type MailAccountProps = {
+type CardProps = {
   entityKey: string | null
   onAfterDelete: () => void
   onAfterSubmit: () => void
   onClose: () => void
 }
 
-type MailAccountState = {
+type CardState = {
   data: MailAccountModel
 }
 
-export class MailAccount extends React.Component<MailAccountProps, MailAccountState> {
-  state: MailAccountState = {
+export default class Card extends React.Component<CardProps, CardState> {
+  state: CardState = {
     data: {
       id: null,
       name: '',

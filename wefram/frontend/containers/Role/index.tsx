@@ -60,7 +60,7 @@ type ScreenState = {
   container?: Container
 }
 
-export default class RoleCard extends React.Component<ScreenProps, ScreenState> {
+export default class Screen extends React.Component<ScreenProps, ScreenState> {
   state: ScreenState = {
     loading: true,
     data: {

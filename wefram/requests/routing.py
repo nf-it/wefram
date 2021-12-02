@@ -1,10 +1,12 @@
 from typing import *
-from starlette.routing import Route
+from starlette.routing import Route as _Route, Request, PlainTextResponse
+from starlette.responses import Response
 from ..tools import CSTYLE, get_calling_app
-from .. import logger
+from .. import logger, exceptions
 
 
 __all__ = [
+    'Route',
     'registered',
     'route',
     'append',
@@ -13,6 +15,38 @@ __all__ = [
     'static_routes_prefixes',
     'is_static_path'
 ]
+
+
+class Route(_Route):
+    def __init__(
+            self,
+            path: str,
+            endpoint: Callable,
+            *,
+            methods: List[str] = None,
+            name: str = None,
+            **kwargs
+    ):
+        super().__init__(
+            path,
+            self._decorate_endpoint(endpoint),
+            methods=methods,
+            name=name,
+            **kwargs
+        )
+
+    def _decorate_endpoint(self, endpoint: Callable) -> Callable:
+        async def _decorated(request: Request) -> Response:
+            try:
+                return await endpoint(request)
+
+            except exceptions.AccessDenied:
+                return PlainTextResponse("Access denied", status_code=403)
+
+            except exceptions.NotAuthenticated:
+                return PlainTextResponse("Not authorized", status_code=401)
+
+        return _decorated
 
 
 registered: List[Route] = []

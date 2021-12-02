@@ -1,11 +1,13 @@
 import React from 'react'
 import {
   Chapters,
+  Grid,
   TranslatedChapter,
   DateTimeText,
   EntityForm,
   FormPaper,
   FormItem,
+  FormStoredImage,
   FormSwitchField,
   FormPasswordSetterField,
   FormTextInputField,
@@ -28,20 +30,20 @@ const Help = () => (
 
 const objectPath: RequestApiPath = api.entityObjectPath('system', 'User')
 
-export type UserCardProps = {
+type CardProps = {
   entityKey: string | null
   onAfterDelete: () => void
   onAfterSubmit: () => void
   onClose: () => void
 }
 
-type UserCardState = {
+type CardState = {
   data: UserEditModel
 }
 
 
-export class UserCard extends React.Component<UserCardProps, UserCardState> {
-  state: UserCardState = {
+export default class Card extends React.Component<CardProps, CardState> {
+  state: CardState = {
     data: {
       id: null,
       login: '',
@@ -55,7 +57,8 @@ export class UserCard extends React.Component<UserCardProps, UserCardState> {
       timezone: null,
       locale: null,
       comments: '',
-      fullName: ""
+      fullName: "",
+      avatar: null
     }
   }
 
@@ -84,7 +87,8 @@ export class UserCard extends React.Component<UserCardProps, UserCardState> {
           'lastName',
           'timezone',
           'locale',
-          'comments'
+          'comments',
+          'avatar'
         ]}
 
         submit
@@ -111,43 +115,58 @@ export class UserCard extends React.Component<UserCardProps, UserCardState> {
           </FormPaper>
         )}
 
-        <FormPaper>
-          <FormTextInputField
-            error={this.state.data.login === ''}
-            formName={'login'}
-            label={gettext("Login", 'system.aaa-form')}
-            required
-            width={8}
-          />
-          <FormSwitchField
-            disabled={String(session.user?.id) === String(key)}
-            label={gettext("Is locked", 'system.aaa-form')}
-            formName={'locked'}
-            width={4}
-          />
-          {/*<FormItem width={12}>*/}
-          {/*  <TipTypography>*/}
-          {/*    This is just a test message*/}
-          {/*  </TipTypography>*/}
-          {/*</FormItem>*/}
-          <FormTextInputField
-            formName={'lastName'}
-            label={gettext("Last name", 'system.aaa-form')}
-            width={12}
-          />
-          <FormTextInputField
-            error={this.state.data.firstName === ''}
-            formName={'firstName'}
-            label={gettext("First name", 'system.aaa-form')}
-            required
-            width={6}
-          />
-          <FormTextInputField
-            formName={'middleName'}
-            label={gettext("Middle name", 'system.aaa-form')}
-            width={6}
-          />
-        </FormPaper>
+        <Grid container spacing={'8px'}>
+          <Grid item xs={4} display={'flex'} alignItems={'center'} justifyContent={'flex-start'}>
+            <FormStoredImage
+              cover
+              entity={'system.users'}
+              formName={'avatar'}
+              imageSize={'200px'}
+              variant={'rounded'}
+              permitUpload
+              permitClean
+            />
+          </Grid>
+          <Grid item xs={8}>
+            <FormPaper spacingBefore={0} spacingAfter={0}>
+              <FormTextInputField
+                error={this.state.data.login === ''}
+                formName={'login'}
+                label={gettext("Login", 'system.aaa-form')}
+                required
+                width={8}
+              />
+              <FormSwitchField
+                disabled={String(session.user?.id) === String(key)}
+                label={gettext("Is locked", 'system.aaa-form')}
+                formName={'locked'}
+                width={4}
+              />
+              {/*<FormItem width={12}>*/}
+              {/*  <TipTypography>*/}
+              {/*    This is just a test message*/}
+              {/*  </TipTypography>*/}
+              {/*</FormItem>*/}
+              <FormTextInputField
+                formName={'lastName'}
+                label={gettext("Last name", 'system.aaa-form')}
+                width={12}
+              />
+              <FormTextInputField
+                error={this.state.data.firstName === ''}
+                formName={'firstName'}
+                label={gettext("First name", 'system.aaa-form')}
+                required
+                width={6}
+              />
+              <FormTextInputField
+                formName={'middleName'}
+                label={gettext("Middle name", 'system.aaa-form')}
+                width={6}
+              />
+            </FormPaper>
+          </Grid>
+        </Grid>
 
         <FormPaper title={gettext("Password", 'system.aaa')}>
           {key !== null && (

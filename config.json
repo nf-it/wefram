@@ -35,5 +35,5 @@
     "port": 8888
   },
   "devel": true,
-  "echo_ds": true
+  "echo_ds": false
 }

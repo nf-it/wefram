@@ -46,7 +46,7 @@ type ImagePropsDefaults = {
 }
 
 const defaults: ImagePropsDefaults = {
-  animationDuration: 3000,
+  animationDuration: 1000,
   aspectRatio: 1,
   color: '#ffffff',
   disableError: false,
@@ -94,7 +94,7 @@ export class Image extends React.Component<ImageProps, ImageState> {
       },
       image: {
         width: '100%',
-        height: '100%',
+        height: this.props.cover ? '100%' : undefined,
         position: 'absolute',
         objectFit: cover ? 'cover' : 'inherit',
         top: 0,
@@ -168,7 +168,6 @@ export class Image extends React.Component<ImageProps, ImageState> {
         {imageProps.src && (
           <img
             {...imageProps}
-            // ref={this.image}
             style={styles.image}
             onLoad={this.handleLoadImage}
             onError={this.handleImageError}

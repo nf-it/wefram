@@ -1,6 +1,5 @@
 from typing import *
-from starlette.routing import Route
-from ..requests import routing
+from ..requests import routing, Route
 
 
 __all__ = [

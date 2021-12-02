@@ -1,10 +1,11 @@
 from typing import *
 import asyncio
 from starlette.applications import Starlette
-from starlette.routing import Route, Mount
+from starlette.routing import Mount
 from starlette.staticfiles import StaticFiles
 
 from . import run, config, requests, logger, ds, runtime, middlewares, ui
+from .requests import Route
 
 
 def get_default_path() -> str:
@@ -56,11 +57,11 @@ logger.debug(
 )
 
 
-_routes: List[Union[Route, Mount]] = requests.routing.registered
-_routes.insert(0, requests.Route('/', root_route, methods=['GET']))
+_routes: List[Union[requests.Route, Mount]] = requests.routing.registered
+_routes.insert(0, Route('/', root_route, methods=['GET']))
 _routes.append(Route(config.URL['login_screen'], ui.screens.Screen.endpoint, methods=['GET']))
 _routes.append(Mount(config.STATICS_URL, app=StaticFiles(directory=config.STATICS_ROOT), name='static'))
-_routes.append(requests.Route('/{rest_of_path:path}', default_route, methods=['GET']))
+_routes.append(Route('/{rest_of_path:path}', default_route, methods=['GET']))
 
 
 # Creating the ASGI actual instance

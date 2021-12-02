@@ -90,7 +90,6 @@ export type ProvListProps = {
   providedFilters?: ListsProvidedFilters
   filtersEmptyAllowed?: string[]
   forbidUrlStateUpdate?: boolean
-  itemAction?: (item: any) => void
   itemComponent?: React.ElementType
   itemKeyField?: string
   itemsRoute?: string | ItemRouteCallback
@@ -105,6 +104,7 @@ export type ProvListProps = {
   selectable?: boolean
   separated?: boolean
   sortOptions?: ListsSortingOptions
+  storageEntity?: string
   textTotalCount?: string | boolean
   textTotalCountAll?: string | boolean
   unsortedOption?: boolean | string
@@ -156,7 +156,6 @@ export type ProvTableProps = {
   providedFilters?: ListsProvidedFilters
   filtersEmptyAllowed?: string[]
   forbidUrlStateUpdate?: boolean
-  itemAction?: (item: any) => void
   itemComponent?: React.ElementType
   itemKeyField?: string
   itemsRoute?: string | ItemRouteCallback

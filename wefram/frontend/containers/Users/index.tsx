@@ -10,18 +10,19 @@ import {ScreenProps} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'
-import {UserCard} from '../UserCard'
+import User from '../User'
+
 
 const objectsPath: RequestApiPath = api.entityPath('system', 'User')
 
 
-type UsersScreenState = {
+type ScreenState = {
   entityKey?: string | null
 }
 
 
-export default class UsersScreen extends React.Component<ScreenProps> {
-  state: UsersScreenState = {
+export default class Screen extends React.Component<ScreenProps> {
+  state: ScreenState = {
     entityKey: undefined
   }
 
@@ -74,6 +75,7 @@ export default class UsersScreen extends React.Component<ScreenProps> {
             }
           ]}
           selectable
+          storageEntity={'system.users'}
           textTotalCount
           variant={'cards'}
           urlStateOffset
@@ -85,7 +87,7 @@ export default class UsersScreen extends React.Component<ScreenProps> {
       </Box>
       <Dialog open={this.state.entityKey !== undefined} maxWidth={'sm'}>
         {this.state.entityKey !== undefined && (
-          <UserCard
+          <User
             entityKey={this.state.entityKey}
             onClose={() => {
               this.setState({entityKey: undefined})

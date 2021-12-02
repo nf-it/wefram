@@ -12,7 +12,7 @@ const addScreenPath: string = '/settings/system/roles/new'
 const objectsPath: RequestApiPath = api.entityPath('system', 'Role')
 
 
-export default class Roles extends React.Component<ScreenProps> {
+export default class Screen extends React.Component<ScreenProps> {
   restoreScrollPosition = (): void => {
     runtime.restoreScrollPosition()
   }

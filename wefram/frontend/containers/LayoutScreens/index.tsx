@@ -3,7 +3,7 @@ import {Route, Switch, Redirect} from 'react-router-dom'
 import {Box} from 'system/components'
 import {screensSchema} from 'build/screens'
 import {Screen} from 'system/containers/Screen'
-import {LoginScreen} from 'system/containers/LoginScreen'
+import Login from 'system/containers/Login'
 import {routing} from 'system/routing'
 import {session} from 'system/aaa'
 
@@ -83,7 +83,7 @@ export class LayoutScreens extends React.Component<LayoutScreensProps, LayoutScr
                     exact
                     key={`routing-screen-switch-${name}`}
                     path={screenSchema.routeUrl}
-                    component={LoginScreen}
+                    component={Login}
                   />
                 )
               }

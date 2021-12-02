@@ -44,7 +44,7 @@ class SettingsScreen(ui.screens.Screen):
 
 @ui.screens.register(sitemap=SITEMAP_FOLDER_ID)
 class UsersScreen(ui.screens.Screen):
-    component = 'containers/UsersScreen'
+    component = 'containers/Users'
     route = '/users'
     parent = APP_ID
     icon = aaa.ICON_USERS
@@ -55,7 +55,7 @@ class UsersScreen(ui.screens.Screen):
 
 @ui.screens.register(sitemap=SITEMAP_FOLDER_ID)
 class RolesScreen(ui.screens.Screen):
-    component = 'containers/RolesScreen'
+    component = 'containers/Roles'
     route = '/roles'
     parent = APP_ID
     icon = aaa.ICON_ROLES
@@ -66,7 +66,7 @@ class RolesScreen(ui.screens.Screen):
 
 @ui.screens.register
 class RoleScreen(ui.screens.Screen):
-    component = 'containers/RoleScreen'
+    component = 'containers/Role'
     parent = APP_ID
     route = '/roles/{key}'
     requires = aaa.PERMISSION_ADMINUSERSROLES

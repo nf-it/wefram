@@ -1,5 +1,5 @@
 import React from 'react'
-import {FormItem, FormItemProps, GridSize, StoredImage, StoredImageProps} from 'system/components'
+import {FormItem, FormItemProps, StoredImage, StoredImageProps} from 'system/components'
 import {FormFieldCommon} from './types'
 
 
@@ -33,15 +33,15 @@ export class FormStoredImage extends React.Component<FormStoredImageProps> {
     } = this.props
     elementProps.onChange = elementProps.onChange ?? this.handleOnChange
 
-    return (
-      <StoredImage
-        fileId={
-          defaultValue ?? fileId ?? (
+    const imageFileId: string = defaultValue ?? fileId ?? (
             (this.props._formData !== undefined && this.props.formName !== undefined)
               ? this.props._formData[this.props.formName]
               : ''
           )
-        }
+
+    return (
+      <StoredImage
+        fileId={imageFileId}
         {...elementProps}
       />
     )

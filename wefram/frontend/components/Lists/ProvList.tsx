@@ -29,6 +29,7 @@ import {FieldItemData} from './FieldItemData'
 import {CommonKey} from 'system/types'
 import {isCompactScreen, colorByString} from 'system/tools'
 import {routing} from 'system/routing'
+import {storage} from 'system/storage'
 
 
 type ProvListState = {
@@ -118,8 +119,11 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
 
   private getItemAvatarUrl = (item: any): string | null => {
     return this.props.avatarField && item[this.props.avatarField]
-      ? routing.mediaAssetAbspath(item[this.props.avatarField])
-      : null
+      ? (
+        this.props.storageEntity
+          ? storage.urlFor(this.props.storageEntity, item[this.props.avatarField])
+          : routing.mediaAssetAbspath(item[this.props.avatarField])
+      ) : null
   }
 
   private getItemAvatarChildren = (item: any): JSX.Element | JSX.Element[] | string | null => {
