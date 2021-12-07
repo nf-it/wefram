@@ -5,6 +5,7 @@ import {
   Button,
   IconButton,
   Image,
+  ImageVariant,
   MaterialIcon,
   Modal
 } from 'system/components'
@@ -33,7 +34,7 @@ export type StoredImageProps = {
   imageWidth?: string
   imageSize?: string
   style?: any
-  variant?: 'rounded' | 'square' | 'circular'
+  variant?: ImageVariant
 
   onChange?: (fileId: string | null) => void
 }
@@ -142,15 +143,12 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
         : this.props.emptyUrl
           ?? (routing.mediaAssetPath('system', this.props.permitUpload ? 'image-upload.svg' : 'image.svg'))
     const style: any = Object.assign({}, this.props.style ?? {})
+    const borderRadius: string = style.borderRadius ?? Image.borderRadiusForVariant(this.props.variant)
     style.height = height
     if (width) {
       style.width = width
     }
-    style.borderRadius = style.borderRadius ?? this.props.variant == 'rounded'
-      ? '50%'
-      : this.props.variant == 'square'
-        ? '0'
-        : '.5vmax'
+    style.borderRadius = borderRadius
 
     return (
       <React.Fragment>
@@ -185,21 +183,15 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
                 backgroundColor: 'transparent',
                 padding: undefined,
                 paddingTop: undefined,
-                position: 'absolute'
+                position: 'absolute',
+                borderRadius
               }}
               imageStyle={{
-                // width: undefined,
-                // height: undefined,
                 position: 'relative',
                 overflow: 'hidden',
                 maxWidth: '100%',
                 maxHeight: '100%',
-                borderRadius: '2px'
-                // borderRadius: this.props.variant == 'rounded'
-                //   ? '50%'
-                //   : this.props.variant == 'square'
-                //     ? '0'
-                //     : '.5vmax'
+                borderRadius
               }}
               cover={this.props.cover}
             />

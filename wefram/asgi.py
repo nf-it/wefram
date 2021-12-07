@@ -3,6 +3,8 @@ import asyncio
 from starlette.applications import Starlette
 from starlette.routing import Mount
 from starlette.staticfiles import StaticFiles
+from starlette.middleware import Middleware
+from starlette.exceptions import ExceptionMiddleware
 
 from . import run, config, requests, logger, ds, runtime, middlewares, ui
 from .requests import Route
@@ -52,8 +54,12 @@ async def start():
 
 # The place where ASGI about to be prepared to start
 
+_middlewares: List[Middleware] = middlewares.registered + [
+    Middleware(ExceptionMiddleware)
+]
+
 logger.debug(
-    "middlewares in use (ordered):\n" + '\n'.join(["  %s" % str(m) for m in middlewares.registered])
+    "middlewares in use (ordered):\n" + '\n'.join(["  %s" % str(m) for m in _middlewares])
 )
 
 
@@ -67,7 +73,7 @@ _routes.append(Route('/{rest_of_path:path}', default_route, methods=['GET']))
 # Creating the ASGI actual instance
 asgi = Starlette(
     on_startup=[start],
-    middleware=middlewares.registered,
+    middleware=_middlewares,
     routes=_routes,
     debug=False
 )

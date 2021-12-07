@@ -8,6 +8,8 @@ import React from 'react'
 import {Box, CircularProgress, MaterialIcon} from 'system/components'
 
 
+export type ImageVariant = 'rounded' | 'square' | 'circular'
+
 export type ImageProps = {
   animationDuration?: number          /** Duration of the fading animation, in milliseconds. */
   aspectRatio?: number                /** Override aspect ratio. */
@@ -25,6 +27,7 @@ export type ImageProps = {
   onLoad?: React.EventHandler<any>    /** Fired when the image finished loading. */
   src: string                         /** Specifies the URL of an image. */
   style?: React.CSSProperties         /** Override the inline-styles of the root element. */
+  variant?: ImageVariant  /** The variant of the displaying image. */
 }
 
 
@@ -42,6 +45,7 @@ type ImagePropsDefaults = {
   disableSpinner: boolean
   disableTransition: boolean
   errorIcon: JSX.Element | null
+  variant: ImageVariant
   loading: JSX.Element
 }
 
@@ -53,6 +57,7 @@ const defaults: ImagePropsDefaults = {
   disableSpinner: false,
   disableTransition: false,
   errorIcon: null,
+  variant: 'square',
   loading: <CircularProgress size={48} />
 }
 
@@ -61,6 +66,22 @@ export class Image extends React.Component<ImageProps, ImageState> {
   state: ImageState = {
     imageError: false,
     imageLoaded: false
+  }
+
+  public static borderRadiusForVariant = (
+    variant?: ImageVariant,
+    defaultVariant: ImageVariant = 'square'
+  ): string => {
+    switch (variant) {
+      case 'square':
+        return '1px'
+      case 'rounded':
+        return '.5vmax'
+      case 'circular':
+        return '10000px'
+      default:
+        return defaultVariant
+    }
   }
 
   private getStyles = (): any => {
@@ -85,11 +106,14 @@ export class Image extends React.Component<ImageProps, ImageState> {
         opacity ${(animationDuration ?? defaults.animationDuration) / 2}ms cubic-bezier(0.4, 0.0, 0.2, 1)`
     }
 
+    const borderRadius: string = Image.borderRadiusForVariant(this.props.variant)
+
     return {
       root: {
         backgroundColor: color,
         paddingTop: `calc(1 / ${aspectRatio} * 100%)`,
         position: 'relative',
+        borderRadius,
         ...style
       },
       image: {
@@ -99,6 +123,7 @@ export class Image extends React.Component<ImageProps, ImageState> {
         objectFit: cover ? 'cover' : 'inherit',
         top: 0,
         left: 0,
+        borderRadius,
         ...imageTransition,
         ...imageStyle
       },
@@ -112,6 +137,7 @@ export class Image extends React.Component<ImageProps, ImageState> {
         alignItems: 'center',
         justifyContent: 'center',
         pointerEvents: 'none',
+        borderRadius,
         ...iconContainerStyle
       }
     }

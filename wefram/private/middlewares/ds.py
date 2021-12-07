@@ -1,4 +1,5 @@
 from typing import *
+from sqlalchemy.exc import PendingRollbackError
 from starlette.middleware.base import (
     BaseHTTPMiddleware,
     RequestResponseEndpoint,
@@ -37,7 +38,10 @@ class DatastorageConnectionMiddleware(BaseHTTPMiddleware):
                 request.scope['db'] = db
                 context['db'] = db
                 response: Response = await call_next(request)
-                await db.commit()
+                try:
+                    await db.commit()
+                except PendingRollbackError:
+                    pass
 
         return response
 
@@ -68,7 +72,10 @@ class DatastorageConnectionCliMiddleware(CliMiddleware):
         async with AsyncSession() as db:
             context['db'] = db
             await call_next()
-            await db.commit()
+            try:
+                await db.commit()
+            except PendingRollbackError:
+                pass
 
 
 class RedisConnectionCliMiddleware(CliMiddleware):

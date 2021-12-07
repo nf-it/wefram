@@ -79,7 +79,11 @@
     "The object cannot be deleted because others depend on it."
     : "Невозможно удалить объект, так как от него зависят другие.",
     "Changes cannot be made because they conflict with other existing properties or objects."
-    : "Невозможно внести изменения, так как они конфликтуют с другими свойствами существующими или объектами."
+    : "Невозможно внести изменения, так как они конфликтуют с другими существующими свойствами или объектами.",
+    "Updating both values and file attachment(s) of the object is not supported"
+    : "Одновременное обновление и значений, и загруженного(ых) файла(ов) не поддерживается",
+    "The specified object was not found"
+    : "Указанный объект не был найден"
   },
   "datetime": {
     "Previous month"

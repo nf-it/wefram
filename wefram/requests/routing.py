@@ -41,10 +41,19 @@ class Route(_Route):
                 return await endpoint(request)
 
             except exceptions.AccessDenied:
-                return PlainTextResponse("Access denied", status_code=403)
+                return PlainTextResponse("Forbidden", status_code=403)
 
             except exceptions.NotAuthenticated:
-                return PlainTextResponse("Not authorized", status_code=401)
+                return PlainTextResponse("Unauthorized", status_code=401)
+
+            except exceptions.ObjectNotFoundError as e:
+                return PlainTextResponse(e.details, status_code=404)
+
+            except exceptions.ApiError as e:
+                return PlainTextResponse(e.details, status_code=e.status_code)
+
+            except exceptions.DatabaseError as e:
+                return PlainTextResponse(e.details, status_code=e.status_code)
 
         return _decorated
 

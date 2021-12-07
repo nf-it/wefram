@@ -3,8 +3,8 @@ import os.path
 from starlette.datastructures import UploadFile
 from .models import ModelAPI
 from .mixins import SortedModelMixin
-from ..requests import HTTPException
-from .. import ds, logger
+from ..l10n import gettext
+from .. import ds, logger, exceptions
 
 
 __all__ = [
@@ -35,7 +35,9 @@ class FilesModelAPI(SortedModelMixin, ModelAPI):
     async def update(self, *keys: [str, int], **values) -> None:
         if 'file' in values and len(keys) > 1:
             # Diallow to update several records with file uploading or set.
-            raise HTTPException(400)
+            raise exceptions.ApiError(
+                details=gettext("Updating both values and file attachment(s) of the object is not supported", 'system.messages')
+            )
         file: UploadFile = values.get('file', None)
         if file is not None:
             file_id: str = ds.storages.upload_file_content(

@@ -33,10 +33,10 @@ export class FormStoredImage extends React.Component<FormStoredImageProps> {
     } = this.props
     elementProps.onChange = elementProps.onChange ?? this.handleOnChange
 
-    const imageFileId: string = defaultValue ?? fileId ?? (
+    const imageFileId: string | null = defaultValue ?? fileId ?? (
             (this.props._formData !== undefined && this.props.formName !== undefined)
               ? this.props._formData[this.props.formName]
-              : ''
+              : null
           )
 
     return (

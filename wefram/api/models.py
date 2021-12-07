@@ -8,9 +8,8 @@ from sqlalchemy.sql.elements import (
 from sqlalchemy import sql, and_, or_, Column, INT, BIGINT, Integer, BigInteger
 from sqlalchemy.orm.attributes import QueryableAttribute
 from sqlalchemy.exc import IntegrityError
-from .. import ds
+from .. import ds, logger, exceptions
 from ..ds import db, clause_eq_for_c, Model
-from ..requests import HTTPException
 from ..l10n import gettext
 from ..tools import camelcase_to_snakecase
 from .entities import EntityAPI
@@ -78,7 +77,8 @@ class ModelAPI(EntityAPI):
         try:
             await db.flush()
         except IntegrityError as e:
-            raise HTTPException(400, str(e.orig))
+            logger.debug(str(e.orig))
+            raise exceptions.DatabaseIntegrityError()
         return instance.key if cls.return_created_id else True
 
     def handle_read_filter(self, c: QueryableAttribute, value: Any) -> Optional[ClauseElement]:
@@ -146,7 +146,7 @@ class ModelAPI(EntityAPI):
         instance: Optional[Model] = await self.model.get(key)
         # If the entity object has not been found - raise 404
         if instance is None:
-            raise HTTPException(404)
+            raise exceptions.ObjectNotFoundError()
         # Returning the single entity object
         return await self.item_as_json(instance, deep=deep)
 
@@ -218,7 +218,7 @@ class ModelAPI(EntityAPI):
         if order_clause:
             stmt = stmt.order_by(*order_clause)
 
-        instances: List[Model] = await db.all(stmt)
+        instances: List[Any] = await db.all(stmt)
         items: List[dict] = await self.items_as_json(instances, deep=deep)
 
         return items if not count else {
@@ -241,9 +241,6 @@ class ModelAPI(EntityAPI):
         # If requested the single entity object to be fetched
         if self.key:
             return await self.read_single(self.key, deep=deep)
-
-        if keys is None:
-            raise HTTPException(400)
 
         # If has been requested a list of entity objects
         return await self.read_many(
@@ -304,11 +301,8 @@ class ModelAPI(EntityAPI):
             await db.flush()
 
         except IntegrityError as e:
-            print(e.orig)
-            raise HTTPException(
-                409,
-                gettext("Changes cannot be made because they conflict with other existing properties or objects.", 'wefram.messages')
-            )
+            logger.debug(str(e.orig))
+            raise exceptions.DatabaseIntegrityError()
 
     async def delete(self, *keys: [str, int]) -> None:
         keys: List[str, int]
@@ -320,9 +314,7 @@ class ModelAPI(EntityAPI):
             await db.flush()
 
         except IntegrityError as e:
-            print(e.orig)
-            raise HTTPException(
-                409,
+            logger.debug(str(e.orig))
+            raise exceptions.DatabaseIntegrityError(
                 gettext("The object cannot be deleted because others depend on it.", 'wefram.messages')
             )
-

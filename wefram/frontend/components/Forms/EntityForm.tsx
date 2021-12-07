@@ -337,7 +337,9 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
 
     let value: any = undefined
 
-    if (typeof valarg == 'object' && '$$typeof' in valarg) {
+    if (valarg === null) {
+      value = null
+    } else if (typeof valarg == 'object' && '$$typeof' in valarg) {
       if ('props' in valarg && 'value' in valarg.props) {
         value = valarg.props.value
       } else {
