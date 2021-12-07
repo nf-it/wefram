@@ -1046,6 +1046,8 @@ class Meta:
         }
 
     def casted_value(self, c: Optional[Column], v: Any) -> Any:
+        if v is None:
+            return None
         if c is None:
             return v
         c_type = self.column_type(c)

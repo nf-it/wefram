@@ -1,4 +1,3 @@
-from .l10n import gettext
 
 
 class HTTPResponseError(BaseException):
@@ -33,6 +32,7 @@ class ApiError(BaseException):
 
 class ObjectNotFoundError(BaseException):
     def __init__(self, details: str = None):
+        from .l10n import gettext
         self.details: str = details or gettext("The specified object was not found", 'system.messages')
 
 
@@ -44,6 +44,7 @@ class DatabaseError(BaseException):
 
 class DatabaseIntegrityError(DatabaseError):
     def __init__(self, details: str = None) -> None:
+        from .l10n import gettext
         super().__init__(
             409,
             details or gettext(
