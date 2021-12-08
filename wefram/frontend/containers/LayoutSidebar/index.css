@@ -1,10 +1,10 @@
-.SystemUI-LayoutSitemap {
+.SystemUI-LayoutSidebar {
     width: 18vw;
     flex-shrink: 0;
     margin-right: 1vw;
 }
 
-.SystemUI-LayoutSitemap-paper {
+.SystemUI-LayoutSidebar-paper {
     width: 19vw;
     background: linear-gradient(to right bottom, #222, #444) !important;
     color: #eee !important;
@@ -16,36 +16,42 @@
     height: calc(100% - 2vmax) !important;
 }
 
-.SystemUI-LayoutSitemap-container {
+.SystemUI-LayoutSidebar-container {
     overflow: auto;
 }
 
-.SystemUI-LayoutSitemap-folder {
-    font-size: 0.9em;
-    border-top: 1px solid #0004;
-    border-bottom: 1px solid #0004;
+.SystemUI-LayoutSidebar-folder {
+    font-size: 0.8em;
     background-color: #0002;
+    border: 1px solid #0009;
+    border-radius: .5vmax;
+    margin: 4px;
 }
 
-.SystemUI-LayoutSitemap a {
+.SystemUI-LayoutSidebar a {
     text-decoration: none;
     color: inherit;
 }
 
-.SystemUI-LayoutSitemap a:hover {
+.SystemUI-LayoutSidebar a:hover {
     background-color: #0005 !important;
 }
 
-.SystemUI-LayoutSitemap-item {
+.SystemUI-LayoutSidebar-item {
     text-shadow: 0 1px 1px #0009;
     padding: .25vmax 0;
 }
 
-.SystemUI-LayoutSitemap-item:hover {
+.SystemUI-LayoutSidebar-item:hover {
     background-color: #0005 !important;
 }
 
-.SystemUI-LayoutSitemap-icon {
+.SystemUI-LayoutSidebar-icon {
     width: 1.75vw;
     height: 1.75vw;
+}
+
+.SystemUI-LayoutSidebar-folder .SystemUI-LayoutSidebar-icon {
+    width: 1.25vw;
+    height: 1.25vw;
 }

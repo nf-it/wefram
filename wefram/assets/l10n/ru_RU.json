@@ -58,6 +58,12 @@
     : "Сегодня",
     "Created at"
     : "Дата создания",
+    "Messages"
+    : "Сообщения",
+    "Close all"
+    : "Закрыть все",
+    "Hide"
+    : "Скрыть",
     "Are you sure you want to delete?"
     : "Вы уверены, что хотите выполнить удаление?",
     "There is an error on the server, please try again a little later!"
@@ -65,7 +71,9 @@
     "Something went wrong while downloading data from the server for this location. Please try to visit this page again later."
     : "Что-то пошло не так при загрузке данных с сервера для этого места. Попробуйте зайти на эту страницу позже снова.",
     "Something went wrong"
-    : "Что-то пошло не так"
+    : "Что-то пошло не так",
+    "You have no messages requiring attention."
+    : "У вас нет сообщений, требующих внимания."
   },
   "*": {
     "System"

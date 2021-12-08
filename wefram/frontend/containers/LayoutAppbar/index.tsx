@@ -1,6 +1,8 @@
 import React from 'react'
 import {
   AppBar,
+  Badge,
+  Box,
   ClockTime,
   MaterialIcon,
   Menu,
@@ -10,10 +12,13 @@ import {
   Typography,
   Tooltip,
 } from 'system/components'
+import {observer} from 'mobx-react'
 import {runtime} from 'system/runtime'
 import {session} from 'system/aaa'
 import {gettext} from 'system/l10n'
 import {routingHistory} from 'system/routing'
+import {messagesStore, messages} from 'system/messages'
+import {Button} from '@mui/material'
 
 
 type LayoutAppbarProps = { }
@@ -22,7 +27,7 @@ type LayoutAppbarState = {
 }
 
 
-export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppbarState> {
+class _LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppbarState> {
   state: LayoutAppbarState = {
     anchorProfileMenu: null
   }
@@ -48,13 +53,45 @@ export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppba
     return [
       <AppBar position="fixed" key={'__systemAppBar'}>
         <Toolbar>
-          <Typography variant="h6" noWrap style={{
-            flexGrow: 1,
-            textShadow: '0 1px 1px #000D'
-          }}>
-            {runtime.title}
-          </Typography>
+          {runtime.title.indexOf(' ') >= 0 ? (
+            <Box style={{flexGrow: 1}}>
+              <Typography variant="h6" noWrap style={{
+                flexGrow: 1,
+                textShadow: '0 1px 1px #000D'
+              }}>
+                {runtime.title.split(' ')[0]}
+              </Typography>
+              <Typography variant="subtitle2" noWrap style={{
+                flexGrow: 1,
+                textShadow: '0 1px 1px #000D',
+                fontWeight: 400
+              }}>
+                {runtime.title.split(' ').slice(1).join(' ')}
+              </Typography>
+            </Box>
+          ) : (
+            <Typography variant="h6" noWrap style={{
+              flexGrow: 1,
+              textShadow: '0 1px 1px #000D'
+            }}>
+              {runtime.title}
+            </Typography>
+          )}
           <ClockTime />
+          <Tooltip title={gettext('Messages', 'system')}>
+            <IconButton
+              edge="end"
+              aria-label={gettext('Messages', 'system')}
+              aria-controls="messages"
+              aria-haspopup="false"
+              onClick={() => messages.openBackdrop()}
+              color="inherit"
+            >
+              <Badge color={'secondary'} badgeContent={messagesStore.messages.length}>
+                <MaterialIcon icon={messagesStore.messages.length ? 'notification_important' : 'notifications'} />
+              </Badge>
+            </IconButton>
+          </Tooltip>
           <Tooltip title={session.user?.fullName || gettext('Sign In', 'system.aaa')}>
             <IconButton
               edge="end"
@@ -100,3 +137,6 @@ export class LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppba
     ]
   }
 }
+
+
+export const LayoutAppbar = observer(_LayoutAppbar)

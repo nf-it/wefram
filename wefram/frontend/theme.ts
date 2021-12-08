@@ -132,6 +132,15 @@ export const workspaceTheme: WorkspaceTheme = {
       }
     },
 
+    MuiDialog: {
+      styleOverrides: {
+        container: {
+          WebkitBackdropFilter: 'blur(1px)',
+          backdropFilter: 'blur(2px)'
+        }
+      }
+    },
+
     MuiDialogActions: {
       styleOverrides: {
         root: {

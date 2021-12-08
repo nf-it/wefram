@@ -2,7 +2,7 @@
   "project": {
   },
   "projectName": "wefram",
-  "appTitle": "Wefram",
+  "appTitle": "Wefram Framework",
   "auth": {
     "salt": "--qwertyuiopasdfghjklzxcvbnm",
     "secret": "--QWERTYUIOPasdfghjklZXCVBNM",

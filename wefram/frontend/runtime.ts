@@ -12,6 +12,7 @@ import {routing} from './routing'
 type ScrollPositions = Record<string, number>
 
 class ProjectRuntime {
+  production: boolean = true
   busy: boolean = false
   title: string = '(devel)'
   loginScreenUrl: string = '/login'
@@ -34,6 +35,7 @@ class ProjectRuntime {
 
   constructor() {
     makeObservable(this, {
+      production: observable,
       busy: observable,
       title: observable,
       loginScreenUrl: observable,
@@ -49,6 +51,7 @@ class ProjectRuntime {
   public initialize = async (): Promise<IProjectInstantiation | null> => {
     return projectProvider.instantiate().then(res => {
       runInAction(() => {
+        runtime.production = res.data.production
         runtime.title = res.data.title
         runtime.sitemap = res.data.sitemap
         runtime.screens = res.data.screens

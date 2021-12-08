@@ -16,6 +16,7 @@ export interface IUrlConfiguration {
 }
 
 export interface IProjectInstantiation {
+  production: boolean
   session: ISession
   sitemap: ISitemap
   screens: IScreenRuntimes

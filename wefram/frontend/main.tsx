@@ -3,18 +3,18 @@ import {observer} from 'mobx-react'
 import {Switch, Route, Router} from 'react-router-dom'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
 import {workspaceTheme} from './theme'
-import {notificationsStore} from './notification'
+import {notificationsStore, notifications} from './notification'
+import {messagesStore} from './messages'
 import {dialogsStore} from './dialog'
-import {LayoutAppbar} from './containers/LayoutAppbar'
-import {LayoutSitemap} from './containers/LayoutSitemap'
+import {LayoutSidebar} from './containers/LayoutSidebar'
 import {LayoutScreens} from './containers/LayoutScreens'
 import {NotificationBar} from './containers/GlobalNotify'
 import {GlobalDialog} from './containers/GlobalDialog'
+import {MessagesBar} from 'system/containers/Messages'
 import {Relogin} from 'system/containers/Relogin'
 import {LoadingGlobal} from './components'
 import {Loading} from './components'
 import {runtime} from './runtime'
-import {notifications} from './notification'
 import {routingHistory} from 'system/routing'
 import Login from 'system/containers/Login'
 import {aaa} from 'system/aaa'
@@ -71,7 +71,7 @@ class Main extends React.Component<AppProps, AppState> {
               path={runtime.loginScreenUrl}
             />
             <div className={'SystemUI-Layout-root'}>
-              <LayoutSitemap />
+              <LayoutSidebar />
               <LayoutScreens />
             </div>
           </Switch>
@@ -80,6 +80,7 @@ class Main extends React.Component<AppProps, AppState> {
         <LoadingGlobal busy={runtime.busy} />
         <GlobalDialog store={dialogsStore} />
         <NotificationBar store={notificationsStore} />
+        <MessagesBar store={messagesStore} />
       </ThemeProvider>
     )
   }

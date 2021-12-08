@@ -12,6 +12,7 @@ async def instantiate(request: Request) -> JSONResponse:
     aaa_settings: SettingsCatalog = await settings.get('system.aaa')
 
     response: dict = {
+        'production': config.PRODUCTION,
         'session': session.as_json() if session is not None else None,
         'sitemap': ui.sitemap.as_json(),
         'screens': ui.screens.runtime_json(),
