@@ -1,0 +1,26 @@
+All files from this directory, including the existing directory
+structure, will be copied in the static build directory within
+parent directory 'dist' and app's name directory.
+
+For example, we have the app named 'demotest' with the next
+dist structure:
+
+/demotest
+  /assets
+    /dist
+      /mydir1
+        somefile1.js
+        somefile2.js
+      /mydir2
+        someimg.png
+        someimg2.jpg
+      somestyle.css
+
+Then, the resulting URL structure will be:
+
+/static/dist/demotest/mydir1/somefile1.js
+/static/dist/demotest/mydir1/somefile2.js
+/static/dist/demotest/mydir2/someimg.png
+/static/dist/demotest/mydir2/someimg2.jpg
+/static/dist/demotest/somestyle.css
+

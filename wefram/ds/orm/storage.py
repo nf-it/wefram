@@ -25,7 +25,7 @@ class StoredFile:
     @property
     def url(self) -> str:
         if self.file_id.startswith('/'):
-            return f"{config.STATICS_URL}/media/{self.file_id.lstrip('/')}"
+            return f"{config.STATICS_URL}/assets/{self.file_id.lstrip('/')}"
         return f'{config.FILES_URL}/{self.entity}/{self.file_id}'
 
 

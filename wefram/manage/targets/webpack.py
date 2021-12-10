@@ -53,9 +53,9 @@ TSCONFIG: dict = {
     },
     "exclude": [
         "system/frontend/templates",
-        "system/skel",
+        "system/manage/dist/skel",
         "wefram/frontend/templates",
-        "wefram/skel",
+        "wefram/manage/dist/skel",
         "build",
         config.BUILD_DIR,
     ]

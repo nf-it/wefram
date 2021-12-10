@@ -2,7 +2,7 @@ from typing import *
 import os.path
 import re
 from ..requests import routing
-from ..urls import media_res_url
+from ..urls import asset_url
 from ..tools import CSTYLE, get_calling_app, array_from, get_calling_module
 from ..types.ui import BaseScreen
 from .. import config, logger, ds, api, ui
@@ -19,7 +19,7 @@ class FilesScreen(BaseScreen):
     component: str = '/wefram/containers/StoredFilesScreen'
     api_entity: Any = None
     updatable: Union[bool, str, List[str]] = None
-    icon: str = media_res_url('icons/files.png')
+    icon: str = asset_url('icons/files.png')
 
     @classmethod
     def schema_json(cls) -> dict:
@@ -57,7 +57,7 @@ class FilesScreen(BaseScreen):
 
 class ImagesScreen(FilesScreen):
     component: str = '/wefram/containers/StoredImagesScreen'
-    icon: str = media_res_url('icons/images.png')
+    icon: str = asset_url('icons/images.png')
     columns: Optional[int] = None
     row_height: Optional[int] = None
     gap: Optional[int] = None

@@ -26,7 +26,7 @@ def create(args: List[str]) -> None:
     caption: str = term_input("The new app's caption")
     order: int = term_intinput("The new app's order (number from 0 upto 99999)", 0)
 
-    shutil.copytree(os.path.join(config.CORE_ROOT, 'skel', 'app'), root)
+    shutil.copytree(os.path.join(config.CORE_ROOT, 'manage', 'dist', 'skel', 'app'), root)
     Manifest(
         name=app,
         caption=caption,

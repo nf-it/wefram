@@ -29,11 +29,9 @@ class View:
     _route_url: str
     _requires: List[str]
 
-    assets_uuid: str = None
+    _assets_uuid: str = None
     public_statics: str = config.STATICS_URL
-    public_css: str = None
-    public_js: str = None
-    public_media: str = f'{config.STATICS_URL}/media'
+    public_assets: str = f'{config.STATICS_URL}/assets'
     public_fonts: str = f'{config.STATICS_URL}/fonts'
 
     name: str
@@ -49,13 +47,45 @@ class View:
             'request': self.request,
             'config': config,
             'features': features.all_features(),
-            'assets_uuid': self.assets_uuid,
+            'assets_uuid': self.get_assets_uuid(),
             'public_statics': self.public_statics,
-            'public_css': self.public_css,
-            'public_js': self.public_js,
-            'public_media': self.public_media,
+            'public_css': self.get_public_css_path(),
+            'public_js': self.get_public_js_path(),
+            'public_assets': self.public_assets,
             'public_fonts': self.public_fonts
         }
+
+    @classmethod
+    def get_assets_uuid(cls) -> Optional[str]:
+        """ Returns built assets UUID. If the project is in PRODUCTION
+        state - returns the cached one which aknowns at the moment of
+        the ASGI process start; otherwise (within DEVELOPMENT project
+        state) each time reads the corresponding 'assets.uuid' file in
+        the build directory.
+        """
+        if config.PRODUCTION:
+            return View._assets_uuid
+        return get_assets_uuid()
+
+    @classmethod
+    def get_public_css_path(cls) -> str:
+        """ Returns the fully-qualified URL path to the public site's
+        merged and minified stylesheets (CSS) resource.
+        """
+        assets_uuid: Optional[str] = View.get_assets_uuid()
+        if not assets_uuid:
+            return ""
+        return f"{config.STATICS_URL}/assets/{assets_uuid}.css"
+
+    @classmethod
+    def get_public_js_path(cls) -> str:
+        """ Returns the fully-qualified URL path to the public site's
+        merged and minified JavaScripts (JS) resource.
+        """
+        assets_uuid: Optional[str] = View.get_assets_uuid()
+        if not assets_uuid:
+            return ""
+        return f"{config.STATICS_URL}/assets/{assets_uuid}.js"
 
     @classmethod
     def append_context_loader(cls, loader: Callable) -> None:
@@ -119,20 +149,20 @@ def get_view(name: str) -> ClassVar[View]:
     return registered[name]
 
 
-def init_view_public_assets() -> None:
+def get_assets_uuid() -> Optional[str]:
     assets_uuid_fn: str = os.path.join(config.STATICS_ROOT, 'assets.uuid')
     if not os.path.isfile(assets_uuid_fn):
-        return
-        # raise FileNotFoundError("Cannot find statics assets UUID - probably 'manage.py build' was not ran!")
+        return None
     assets_uuid: str
     with open(assets_uuid_fn, 'r') as f:
         assets_uuid = f.read().strip()
     if not assets_uuid:
-        return
-        # raise ValueError("Statics assets UUID is empty - probably 'manage.py build' was not ran!")
-    View.assets_uuid = assets_uuid
-    View.public_js = f"{config.STATICS_URL}/js/assets.{assets_uuid}.js"
-    View.public_css = f"{config.STATICS_URL}/css/assets.{assets_uuid}.css"
+        return None
+    return assets_uuid
+
+
+def init_view_public_assets() -> None:
+    View._assets_uuid = get_assets_uuid()
 
 
 def register(cls: ClassVar[View]) -> ClassVar[View]:

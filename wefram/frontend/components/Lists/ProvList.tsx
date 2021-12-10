@@ -122,7 +122,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       ? (
         this.props.storageEntity
           ? storage.urlFor(this.props.storageEntity, item[this.props.avatarField])
-          : routing.mediaAssetAbspath(item[this.props.avatarField])
+          : routing.assetAbspath(item[this.props.avatarField])
       ) : null
   }
 
@@ -140,7 +140,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       }
       return avatarLetters.join('')
     } else if (typeof this.props.avatarFallback == 'string') {
-      return <img src={routing.mediaAssetAbspath(this.props.avatarFallback)} />
+      return <img src={routing.assetAbspath(this.props.avatarFallback)} />
     } else {
       return this.props.avatarFallback(item)
     }

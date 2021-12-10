@@ -13,24 +13,28 @@ __all__ = [
 ]
 
 
-STATICS_CSS_ROOT: str = os.path.join(config.STATICS_ROOT, 'css')
-STATICS_JS_ROOT: str = os.path.join(config.STATICS_ROOT, 'js')
-STATICS_MEDIA_ROOT: str = os.path.join(config.STATICS_ROOT, 'media')
+STATICS_ASSETS_ROOT: str = os.path.join(config.STATICS_ROOT, 'assets')
 STATICS_FONTS_ROOT: str = os.path.join(config.STATICS_ROOT, 'fonts')
-STATICS_DIST_ROOT: str = config.STATICS_ROOT
 
 
 def run(roots: List[str]) -> None:
     assets_uuid: str = uuid.uuid4().hex
 
-    make_media(roots)
+    build_assets_root()
+    make_dist(roots)
     make_fonts(roots)
     make_styles(roots, assets_uuid)
     make_scripts(roots, assets_uuid)
-    make_dists(roots)
+    # make_dists(roots)
 
     with open(os.path.join(config.STATICS_ROOT, 'assets.uuid'), 'w') as f:
         f.write(assets_uuid)
+
+
+def build_assets_root() -> None:
+    """ Removes old files from the assets directory and create the new one. """
+    shutil.rmtree(STATICS_ASSETS_ROOT, ignore_errors=True)
+    os.makedirs(STATICS_ASSETS_ROOT, exist_ok=True)
 
 
 def path_from_root(root: str) -> Optional[str]:
@@ -41,8 +45,6 @@ def path_from_root(root: str) -> Optional[str]:
 
 
 def make_scripts(roots: List[str], assets_uuid: str) -> None:
-    shutil.rmtree(STATICS_JS_ROOT, ignore_errors=True)
-    os.makedirs(STATICS_JS_ROOT)
     contents: List[str] = []
     embed: List[str] = []
     logger.info(f"building assets statics [{CSTYLE['bold']}JS{CSTYLE['clear']}]")
@@ -90,9 +92,9 @@ def make_scripts(roots: List[str], assets_uuid: str) -> None:
 
     contents: str = jsmin.jsmin('\n\n'.join(contents))
     embed: str = '\n\n'.join(embed)
-    fn: str = f"assets.{assets_uuid}.js"
+    fn: str = f"{assets_uuid}.js"
     logger.info(f"building assets statics [{CSTYLE['bold']}JS{CSTYLE['clear']}] -> writting {CSTYLE['red']}{fn}{CSTYLE['clear']}")
-    with open(os.path.join(STATICS_JS_ROOT, fn), 'w') as f:
+    with open(os.path.join(STATICS_ASSETS_ROOT, fn), 'w') as f:
         f.write('"use strict";\n\n')
         if embed:
             f.write(embed)
@@ -102,8 +104,6 @@ def make_scripts(roots: List[str], assets_uuid: str) -> None:
 
 
 def make_styles(roots: List[str], assets_uuid: str) -> None:
-    shutil.rmtree(STATICS_CSS_ROOT, ignore_errors=True)
-    os.makedirs(STATICS_CSS_ROOT)
     contents: List[str] = []
     embed: List[str] = []
     logger.info(f"building assets statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}]")
@@ -123,9 +123,9 @@ def make_styles(roots: List[str], assets_uuid: str) -> None:
             with open(os.path.join(srcpath, source), 'r') as f:
                 content: str = f.read() \
                     .strip() \
-                    .replace('{{ PUBLIC_MEDIA }}', f'{config.STATICS_URL}/media') \
+                    .replace('{{ PUBLIC_ASSETS }}', f'{config.STATICS_URL}/assets') \
                     .replace('{{ PUBLIC_FONTS }}', f'{config.STATICS_URL}/fonts') \
-                    .replace('{{ APP_MEDIA }}', f'{config.STATICS_URL}/media/{root}')
+                    .replace('{{ APP_ASSETS }}', f'{config.STATICS_URL}/assets/{root}')
                 contents.append(content)
         embedpath: str = os.path.join(srcpath, 'embed')
         if os.path.isdir(embedpath):
@@ -150,9 +150,9 @@ def make_styles(roots: List[str], assets_uuid: str) -> None:
             with open(os.path.join(srcpath, source), 'r') as f:
                 content: str = f.read() \
                     .strip() \
-                    .replace('{{ PUBLIC_MEDIA }}', f'{config.STATICS_URL}/media') \
+                    .replace('{{ PUBLIC_ASSETS }}', f'{config.STATICS_URL}/assets') \
                     .replace('{{ PUBLIC_FONTS }}', f'{config.STATICS_URL}/fonts') \
-                    .replace('{{ APP_MEDIA }}', f'{config.STATICS_URL}/media/{root}')
+                    .replace('{{ APP_ASSETS }}', f'{config.STATICS_URL}/assets/{root}')
                 contents.append(content)
 
     # Now making the final asset
@@ -161,9 +161,9 @@ def make_styles(roots: List[str], assets_uuid: str) -> None:
 
     contents: str = csscompressor.compress('\n\n'.join(contents))
     embed: str = '\n\n'.join(embed)
-    fn: str = f"assets.{assets_uuid}.css"
+    fn: str = f"{assets_uuid}.css"
     logger.info(f"building assets statics [{CSTYLE['bold']}CSS{CSTYLE['clear']}] -> writting {CSTYLE['red']}{fn}{CSTYLE['clear']}")
-    with open(os.path.join(STATICS_CSS_ROOT, fn), 'w') as f:
+    with open(os.path.join(STATICS_ASSETS_ROOT, fn), 'w') as f:
         if embed:
             f.write(embed)
             f.write('\n\n')
@@ -171,19 +171,17 @@ def make_styles(roots: List[str], assets_uuid: str) -> None:
             f.write(contents)
 
 
-def make_media(roots: List[str]) -> None:
-    shutil.rmtree(STATICS_MEDIA_ROOT, ignore_errors=True)
-    os.makedirs(STATICS_MEDIA_ROOT)
-    logger.info(f"building assets statics [{CSTYLE['bold']}MEDIA{CSTYLE['clear']}]")
+def make_dist(roots: List[str]) -> None:
+    logger.info(f"building assets statics [{CSTYLE['bold']}DIST{CSTYLE['clear']}]")
     for root in roots:
         rootpath = path_from_root(root)
         if not rootpath:
             continue
-        fqpath: str = os.path.join(rootpath, 'assets', 'media')
+        fqpath: str = os.path.join(rootpath, 'assets', 'dist')
         if not os.path.isdir(fqpath):
             continue
-        logger.info(f"building assets statics [{CSTYLE['bold']}MEDIA{CSTYLE['clear']}] => {root}")
-        apath: str = os.path.join(STATICS_MEDIA_ROOT, root)
+        logger.info(f"building assets statics [{CSTYLE['bold']}DIST{CSTYLE['clear']}] => {root}")
+        apath: str = os.path.join(STATICS_ASSETS_ROOT, root)
         shutil.copytree(fqpath, apath)
 
 
@@ -201,16 +199,4 @@ def make_fonts(roots: List[str]) -> None:
         logger.info(f"building assets statics [{CSTYLE['bold']}FONTS{CSTYLE['clear']}] => {root}")
         shutil.copytree(fqpath, STATICS_FONTS_ROOT, dirs_exist_ok=True)
 
-
-def make_dists(roots: List[str]) -> None:
-    logger.info(f"building assets statics [{CSTYLE['bold']}DIST{CSTYLE['clear']}]")
-    for root in roots:
-        rootpath = path_from_root(root)
-        if not rootpath:
-            continue
-        fqpath: str = os.path.join(rootpath, 'assets', 'dist')
-        if not os.path.isdir(fqpath):
-            continue
-        logger.info(f"building assets statics [{CSTYLE['bold']}DIST{CSTYLE['clear']}] => {root}")
-        shutil.copytree(fqpath, STATICS_DIST_ROOT, dirs_exist_ok=True)
 

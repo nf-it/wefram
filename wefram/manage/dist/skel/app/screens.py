@@ -1,7 +1,7 @@
 from typing import *
 from wefram.l10n import lazy_gettext
 from wefram.ui import sitemap, screens
-from wefram.urls import media_res_url
+from wefram.urls import asset_url
 
 
 # Note that you about to use 'lazy_gettext' for localization support in
@@ -16,7 +16,7 @@ from wefram.urls import media_res_url
 # sitemap.append(
 #     name='my_sitemap_folder',
 #     caption=lazy_gettext("My folder"),
-#     icon=media_res_url('icons/my_folder_icon.svg'),
+#     icon=asset_url('icons/my_folder_icon.svg'),
 #     requires='some_permission',
 #     order=100
 # )

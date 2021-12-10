@@ -174,7 +174,7 @@ async def get_embedded_file_response(
         file_id: str,
         request: Optional[Request] = None
 ) -> Union[FileResponse, NotModifiedResponse]:
-    filepath: str = os.path.join(config.STATICS_ROOT, 'media', file_id.replace('..', ''))
+    filepath: str = os.path.join(config.STATICS_ROOT, 'assets', file_id.replace('..', ''))
     if not os.path.isfile(filepath):
         raise FileNotFoundError()
 
@@ -250,7 +250,7 @@ async def get_file_response(
 
 def get_abs_filename(entity: str, file_id: str) -> Optional[str]:
     if file_id.startswith('/'):
-        filepath: str = os.path.join(config.STATICS_ROOT, 'media', file_id.replace('..', ''))
+        filepath: str = os.path.join(config.STATICS_ROOT, 'assets', file_id.replace('..', ''))
         if not os.path.isfile(filepath):
             return None
         return filepath

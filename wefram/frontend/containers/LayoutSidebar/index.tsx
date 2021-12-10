@@ -162,7 +162,7 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
                   <ListItemIcon>
                     <img
                       className={'SystemUI-LayoutSidebar-icon'}
-                      src={routing.mediaAssetPath('system', 'icons/development.png')}
+                      src={routing.assetPath('system', 'icons/development.png')}
                     />
                   </ListItemIcon>
                   <ListItemText primary={'Development'}/>
@@ -195,7 +195,7 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
                               messages.append({
                                 title: "Test message",
                                 text: value,
-                                icon: routing.mediaAssetPath('system', 'icons/development.png'),
+                                icon: routing.assetPath('system', 'icons/development.png'),
                                 action: (message: StoredMessage) => alert(message.id)
                               })
                             }

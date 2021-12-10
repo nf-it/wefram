@@ -141,7 +141,7 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
       this.props.emptyUrl === null
         ? null
         : this.props.emptyUrl
-          ?? (routing.mediaAssetPath('system', this.props.permitUpload ? 'image-upload.svg' : 'image.svg'))
+          ?? (routing.assetPath('system', this.props.permitUpload ? 'image-upload.svg' : 'image.svg'))
     const style: any = Object.assign({}, this.props.style ?? {})
     const borderRadius: string = style.borderRadius ?? Image.borderRadiusForVariant(this.props.variant)
     style.height = height

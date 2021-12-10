@@ -1,0 +1,7 @@
+If the app (generally the specified project app) requires some
+specific fonts, in general - for the design and styles of the
+public site pages - this is the right place where those fonts
+files must be placed at.
+
+The resulting URLs will be like:
+/<static_url>/fonts/*

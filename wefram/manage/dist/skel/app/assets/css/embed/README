@@ -1,0 +1,21 @@
+Files in this directory will be embedded in the final
+project build. Instead of other files, localed in the
+parent (higher-level) directory, these ones will not
+be minified or simplified or any other kind of
+automation.
+
+In addition, embedded resources are located higher in
+the resulting assets resource, than non-embedded ones,
+so the client browser will read and execute them prior
+than higher-level.
+
+So, the final merged resource file (assets.<uuid>.type)
+will look like:
+
+<embedded_styles>
+<embedded_styles>
+...
+<project_styles>
+<project_styles>
+...
+

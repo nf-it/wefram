@@ -44,7 +44,7 @@ def create_container(params: List[str]) -> None:
         os.makedirs(container_dir, exist_ok=True)
 
     container_type: str = term_choice("Container type", CONTAINERS_TYPES)
-    skel_path: str = os.path.join(config.CORE_ROOT, 'skel', 'frontend', container_type)
+    skel_path: str = os.path.join(config.CORE_ROOT, 'manage', 'dist', 'skel', 'frontend', container_type)
     foldered: bool = os.path.isdir(skel_path)
     src_path: str = skel_path if foldered else f"{skel_path}.tsx"
 

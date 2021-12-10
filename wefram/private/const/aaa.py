@@ -1,5 +1,5 @@
 from ...l10n import lazy_gettext
-from ...urls import media_res_url
+from ...urls import asset_url
 
 
 __all__ = [
@@ -31,9 +31,9 @@ __all__ = [
 ]
 
 
-ICON_USERS = media_res_url('icons/users.png')
-ICON_ROLES = media_res_url('icons/roles.png')
-ICON_DOMAINS = media_res_url('icons/domains.png'
+ICON_USERS = asset_url('icons/users.png')
+ICON_ROLES = asset_url('icons/roles.png')
+ICON_DOMAINS = asset_url('icons/domains.png'
                              '')
 
 MSG_APP_CAPTION = lazy_gettext("Security", 'system.aaa')

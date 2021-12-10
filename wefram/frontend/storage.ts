@@ -9,7 +9,7 @@ export type Storage = {
 export const storage: Storage = {
   urlFor(entity, fileId) {
     if (fileId.startsWith('/'))
-      return routing.mediaAssetAbspath(fileId)
+      return routing.assetAbspath(fileId)
     return `/files/${entity}/${fileId}`
   },
 

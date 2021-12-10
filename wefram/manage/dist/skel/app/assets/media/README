@@ -1,0 +1,8 @@
+You may place any kind of accessible from the public site
+resources here. This folder will be copied including all
+files to the corresponding build directory.
+
+All files will be accessible by the next URL:
+
+/<static_url>/media/<app_name>/*
+

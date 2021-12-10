@@ -1,0 +1,26 @@
+Place localization directories in this folder.
+Localizations are made as JSON files, containing
+international phrases (english) and corresponding
+localized ones.
+
+The corresponding filenames are same as locale
+names with .json extensions. For example, for
+Russian localization filename will be:
+
+ru_RU.json
+
+You may create localized texts by creating directory
+with the corresponding locale named name (the same
+as corresponding JSON file) and place texts into
+this directory.
+
+For example, the resulting files structure for the
+Russian locale will look like:
+
+/<app_name>
+  /assets
+    /l10n
+      /ru_RU
+        my_text.md
+        my_other_text.md
+      ru_RU.json

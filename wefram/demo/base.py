@@ -11,7 +11,7 @@ __all__ = [
 ]
 
 
-DEMO_AVATARS: List[str] = os.listdir(os.path.join(config.CORE_ROOT, 'assets', 'media', 'demo', 'avatars'))
+DEMO_AVATARS: List[str] = os.listdir(os.path.join(config.CORE_ROOT, 'assets', 'dist', 'demo', 'avatars'))
 
 
 async def make_random_user() -> User:

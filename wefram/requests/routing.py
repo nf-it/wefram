@@ -1,3 +1,4 @@
+import inspect
 from typing import *
 from starlette.routing import Route as _Route, Request, PlainTextResponse
 from starlette.responses import Response
@@ -18,6 +19,8 @@ __all__ = [
 
 
 class Route(_Route):
+    """ The wrapper class extending the Starlette's Route class """
+
     def __init__(
             self,
             path: str,
@@ -36,6 +39,15 @@ class Route(_Route):
         )
 
     def _decorate_endpoint(self, endpoint: Callable) -> Callable:
+        """ Decorating the endpoint (if the endpoint is a function or method) with
+        extra functionality. """
+
+        if inspect.isclass(endpoint):
+            # If the endpoint is the HTTPEndpoint class - return is
+            # straight without any decoration
+            return endpoint
+
+        # Decorate the endpoint function with some extra functionality
         async def _decorated(request: Request) -> Response:
             try:
                 return await endpoint(request)
@@ -65,12 +77,17 @@ static_routes_prefixes: List[str] = [
 
 
 def append(r: Route) -> None:
+    """ Appends the given route to the routing table of the project."""
+
     _methods: str = ','.join(str(s) for s in r.methods)
     logger.debug(f"routed {CSTYLE['white']}{_methods}{CSTYLE['clear']} {CSTYLE['pink']}{r.path}{CSTYLE['clear']}")
     registered.append(r)
 
 
 def abs_url(path: str, app: Optional[str] = None) -> str:
+    """ Returns the absolete URL for the given path and app. If the app
+    has been ommited - use the calling app by default. """
+
     app = app or get_calling_app()
     if path.startswith('//'):
         return path[1:]
@@ -96,6 +113,9 @@ def format_path(
 
 
 def route(path: str, methods: Optional[List[str]] = None) -> Callable:
+    """ Decorator used to route the function endpoint. It appends the resulting
+    route to the routing table of the project. """
+
     def decorator(endpoint: Callable) -> Callable:
         request_methods = methods or ['GET']
         append(Route(format_path(path), endpoint, methods=request_methods))
@@ -104,6 +124,10 @@ def route(path: str, methods: Optional[List[str]] = None) -> Callable:
 
 
 def is_static_path(p: str) -> bool:
+    """ Returns `True` if the given FQ path is the static one (endpoints to
+    the static file storage, not the response function or class), and `False`
+    otherwise. """
+
     p: str = p.lstrip('/')
     if '/' in p:
         return False

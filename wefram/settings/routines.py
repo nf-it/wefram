@@ -81,8 +81,14 @@ async def update(
             continue
         current_value: Any = catalog.get(key, ...)
         if isinstance(prop, (props.ImageProp, props.FileProp)):
-            if current_value is not ... and current_value != value:
-                ds.storages.remove_file(prop.entity, current_value)
+            current_file_id: Union[str, None] = current_value.file_id \
+                if isinstance(current_value, ds.StoredFile) \
+                else (... if current_value is ... else current_value)
+            new_file_id: Union[str, None] = value.file_id \
+                if isinstance(value, ds.StoredFile) \
+                else (... if value is ... else value)
+            if current_value is not ... and current_file_id is not None and current_file_id != new_file_id:
+                ds.storages.remove_file(prop.entity, current_file_id)
         catalog[key] = value
     await catalog.save()
 

@@ -216,7 +216,7 @@ async def _main() -> None:
 
     for f in DIST:
         shutil.copyfile(
-            os.path.join(core_path, 'manage', 'dist', f),
+            os.path.join(core_path, 'manage', 'dist', 'project', f),
             os.path.join(cwd, f)
         )
 

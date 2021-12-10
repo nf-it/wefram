@@ -32,8 +32,8 @@ export const routingHistory = createBrowserHistory()
 
 type Routing = {
   requestPathToString(path: RequestPath): string
-  mediaAssetPath(app: string, filename: string): string
-  mediaAssetAbspath(filename: string): string
+  assetPath(app: string, filename: string): string
+  assetAbspath(filename: string): string
   screenPath(screenName: string): string | null
   gotoLogin(): void
   gotoDefault(): void
@@ -51,15 +51,15 @@ export const routing: Routing = {
     return `/${[path.app.replace(/^\/+|\/+$/g, ''), path.path.replace(/^\/+|\/+$/g, '')].join('/')}`
   },
 
-  mediaAssetPath(app, filename) {
-    return `${buildConfig.staticsUrl}/media/${app}/${filename}`
+  assetPath(app, filename) {
+    return `${buildConfig.staticsUrl}/assets/${app}/${filename}`
   },
 
-  mediaAssetAbspath(filename) {
-    const prefix: string = `${buildConfig.staticsUrl}/media/`
+  assetAbspath(filename) {
+    const prefix: string = `${buildConfig.staticsUrl}/assets/`
     if (filename.startsWith(prefix))
       return filename
-    return `${buildConfig.staticsUrl}/media/${filename.replace(/^\/+/g, '')}`
+    return `${buildConfig.staticsUrl}/assets/${filename.replace(/^\/+/g, '')}`
   },
 
   screenPath(screenName) {

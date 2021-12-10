@@ -113,7 +113,7 @@ class _LoginForm extends React.Component<Props, State> {
     return (
       <Grid container className={'UI-LoginForm-root'}>
         <Grid item xs={false} sm={4} md={7} className={'UI-LoginForm-image'} style={{
-          backgroundImage: `url(${routing.mediaAssetPath('system', 'authorization.jpg')})`
+          backgroundImage: `url(${routing.assetPath('system', 'authorization.jpg')})`
         }} />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square style={{
           display: 'flex',
