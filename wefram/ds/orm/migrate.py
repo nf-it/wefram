@@ -1,6 +1,8 @@
 from typing import *
 from datetime import date, datetime
 from dataclasses import dataclass
+
+import sqlalchemy.exc
 from sqlalchemy import text
 from sqlalchemy.sql import schema
 from . import engine, model
@@ -359,7 +361,7 @@ class DatabaseMigration:
                 + list(table.unique_keys.keys())
             for cn in constraints:
                 await self.execute(
-                    f'ALTER TABLE "{tn}" DROP CONSTRAINT "{cn}"',
+                    f'ALTER TABLE "{tn}" DROP CONSTRAINT IF EXISTS "{cn}" CASCADE',
                 )
 
     async def reconstraint(self) -> None:
