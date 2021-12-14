@@ -253,7 +253,9 @@
     "Don't save"
     : "Не сохранять",
     "You have unsaved changes on your form. Are you sure you want to close it?"
-    : "У вас есть несохраненные изменения в форме. Вы уверены, что хотите закрыть её?"
+    : "У вас есть несохраненные изменения в форме. Вы уверены, что хотите закрыть её?",
+    "Upload new images"
+    : "Загрузить новые изображения"
   },
   "ui-common": {
     "An error occurred while fetching data from the server"

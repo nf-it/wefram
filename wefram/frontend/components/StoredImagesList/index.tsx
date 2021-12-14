@@ -62,7 +62,8 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
     this.replacingId = null
   }
 
-  private fileinput: React.RefObject<HTMLInputElement> = React.createRef()
+  private uploadFileInput: React.RefObject<HTMLInputElement> = React.createRef()
+  private replaceFileInput: React.RefObject<HTMLInputElement> = React.createRef()
 
   componentDidMount() {
     this.load()
@@ -145,14 +146,14 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
     })
   }
 
-  private upload = (data: any): void => {
+  private upload = (fileInputData: any): void => {
     const form: FormData = new FormData()
-    if (data.target.files.length > 1) {
-      data.target.files.forEach((file: any, index: number) => {
+    if (fileInputData.target.files.length > 1) {
+      Array.from(fileInputData.target.files).forEach((file: any, index: number) => {
         form.append(`file${index}`, file)
       })
     } else {
-      form.append('file', data.target.files[0])
+      form.append('file', fileInputData.target.files[0])
     }
     runtime.setBusy()
 
@@ -192,7 +193,11 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
 
   private selectFileForUpload = (id?: number): void => {
     this.replacingId = id || null
-    this.fileinput.current?.click()
+    if (this.replacingId === null) {
+      this.uploadFileInput.current?.click()
+    } else {
+      this.replaceFileInput.current?.click()
+    }
   }
 
   render() {
@@ -205,20 +210,55 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
 
     if (!this.state.items.length)
       return (
-        <Box pt={3} pb={3} borderTop={'1px solid #aaa'} borderBottom={'1px solid #aaa'}>
-          <Typography>{gettext("There are no files uploaded yet.", 'system.ui')}</Typography>
-        </Box>
+        <React.Fragment>
+          <Box pt={3} pb={3} mb={2} borderTop={'1px solid #aaa'} borderBottom={'1px solid #aaa'}>
+            <Typography>{gettext("There are no files uploaded yet.", 'system.ui')}</Typography>
+          </Box>
+          {(this.props.permitUpload ?? true) && (
+            <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+              <input
+                type={'file'}
+                ref={this.uploadFileInput}
+                style={{display: 'none'}}
+                onChange={this.upload}
+                multiple
+              />
+              <Tooltip title={gettext("Upload new image", 'system.ui')}>
+                <Button
+                  color={'primary'}
+                  variant={'outlined'}
+                  startIcon={<MaterialIcon icon={'publish'} />}
+                  style={{
+                    marginLeft: '8px'
+                  }}
+                  onClick={() => this.selectFileForUpload()}
+                >
+                  {gettext("Upload", 'system.ui')}
+                </Button>
+              </Tooltip>
+            </Box>
+          )}
+        </React.Fragment>
       )
 
     return (
       <Box>
         {((this.props.permitUpload ?? true) || (this.props.permitEdit ?? true)) && (
-          <input
-            type={'file'}
-            ref={this.fileinput}
-            style={{display: 'none'}}
-            onChange={this.upload}
-          />
+          <React.Fragment>
+            <input
+              type={'file'}
+              ref={this.uploadFileInput}
+              style={{display: 'none'}}
+              onChange={this.upload}
+              multiple
+            />
+            <input
+              type={'file'}
+              ref={this.replaceFileInput}
+              style={{display: 'none'}}
+              onChange={this.upload}
+            />
+          </React.Fragment>
         )}
 
         {((this.props.permitUpload ?? true)
@@ -240,7 +280,7 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
               </Tooltip>
             )}
             {(this.props.permitUpload ?? true) && (!this.state.rearrangeMode) && (
-              <Tooltip title={gettext("Delete selected files")}>
+              <Tooltip title={gettext("Upload new images", 'system.ui')}>
                 <Button
                   color={'primary'}
                   variant={'outlined'}
@@ -281,7 +321,9 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
         )}
 
         <ImageList cols={this.props.columns} gap={this.props.gap ?? 4} rowHeight={this.props.rowHeight} variant={'quilted'}>
-          {this.state.items.map((item: StoredImageModel, index: number, arr: any[]) => {
+          {this.state.items
+              .filter((item: StoredImageModel) => item.file !== null)
+              .map((item: StoredImageModel, index: number, arr: any[]) => {
             const showControls: boolean = this.state.rearrangeMode || (this.props.showControls !== undefined
                 ? Boolean(this.props.showControls)
                 : (this.props.permitDelete ?? true)

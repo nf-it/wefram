@@ -23,7 +23,7 @@ export default class Screen extends React.Component<ScreenProps, ScreenState> {
     return (
       <React.Fragment>
         <Box mt={1}>
-          <Typography variant={'h4'}>{screenCaption || 'Images'}</Typography>
+          <Typography variant={'h4'} paddingBottom={2}>{screenCaption || 'Images'}</Typography>
         </Box>
         <Box>
           <StoredImagesList
