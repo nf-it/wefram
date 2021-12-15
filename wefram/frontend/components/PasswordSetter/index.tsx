@@ -110,7 +110,7 @@ export class PasswordSetter extends React.Component<PasswordSetterProps, Passwor
                   border: this.state.clear ? '1px solid #bd3302' : '1px solid #dddddd'
                 }}
                 color={this.state.clear ? 'secondary' : 'default'}
-                onClick={() => this.setState({clear: !this.state.clear})}
+                onClick={this.handleClear}
               >
                 <MaterialIcon icon={'highlight_off'} size={20} />
               </IconButton>

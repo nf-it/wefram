@@ -10,7 +10,7 @@ import {
   Tooltip,
   Typography
 } from 'system/components'
-import {StoredFilesModel, StoredFileModel} from 'system/types'
+import {StoredFilesModel, StoredFileModel, StoredImageModel} from 'system/types'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
 import {gettext} from 'system/l10n'
@@ -22,6 +22,7 @@ import {dialog} from 'system/dialog'
 
 export type StoredFilesListProps = {
   apiEntity: string
+  multipleUpload?: boolean
   storageEntity: string
   permitDelete?: boolean
   permitEdit?: boolean
@@ -55,7 +56,8 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
     this.replacingId = null
   }
 
-  private fileinput: React.RefObject<HTMLInputElement> = React.createRef()
+  private uploadFileInput: React.RefObject<HTMLInputElement> = React.createRef()
+  private replaceFileInput: React.RefObject<HTMLInputElement> = React.createRef()
 
   componentDidMount() {
     this.load()
@@ -64,7 +66,7 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
   public load = (): void => {
     const path: RequestApiPath = this.requestPath()
     api.get(path).then(res => {
-      const items: StoredFilesModel = res.data
+      const items: StoredFilesModel = res.data.filter((item: StoredImageModel) => item.file !== null)
       const ids: number[] = items.map((el: StoredFileModel) => el.id)
       const selected: number[] = this.state.selected.filter((el: number) => ids.includes(el))
       this.setState({
@@ -138,14 +140,15 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
     })
   }
 
-  private upload = (data: any): void => {
+  private upload = (fileInputData: any): void => {
     const form: FormData = new FormData()
-    if (data.target.files.length > 1) {
-      data.target.files.forEach((file: any, index: number) => {
-        form.append(`file${index}`, file)
+    if (fileInputData.target.files.length > 1) {
+      form.append('isMultipleFileUpload', 'true')
+      Array.from(fileInputData.target.files).forEach((file: any, index: number) => {
+        form.append(`fileUploadData_${index}`, file)
       })
     } else {
-      form.append('file', data.target.files[0])
+      form.append('fileUploadData', fileInputData.target.files[0])
     }
     runtime.setBusy()
 
@@ -185,7 +188,23 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
 
   private selectFileForUpload = (id?: number): void => {
     this.replacingId = id || null
-    this.fileinput.current?.click()
+    if (this.replacingId === null) {
+      this.uploadFileInput.current?.click()
+    } else {
+      this.replaceFileInput.current?.click()
+    }
+  }
+
+  private handleSelectAll = (): void => {
+    const selected: number[] = []
+    this.state.items
+      .filter((item: StoredImageModel) => item.file !== null)
+      .forEach((item: StoredImageModel) => {
+        if (!this.state.selected.includes(item.id)) {
+          selected.push(item.id)
+        }
+      })
+    this.setState({selected})
   }
 
   render() {
@@ -198,20 +217,55 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
 
     if (!this.state.items.length)
       return (
-        <Box pt={3} pb={3} borderTop={'1px solid #aaa'} borderBottom={'1px solid #aaa'}>
-          <Typography>{gettext("There are no files uploaded yet.", 'system.ui')}</Typography>
-        </Box>
+        <React.Fragment>
+          <Box pt={3} pb={3} mb={2} borderTop={'1px solid #aaa'} borderBottom={'1px solid #aaa'}>
+            <Typography>{gettext("There are no files uploaded yet.", 'system.ui')}</Typography>
+          </Box>
+          {(this.props.permitUpload ?? true) && (
+            <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
+              <input
+                type={'file'}
+                ref={this.uploadFileInput}
+                style={{display: 'none'}}
+                onChange={this.upload}
+                multiple={this.props.multipleUpload ?? true}
+              />
+              <Tooltip title={gettext("Upload new image", 'system.ui')}>
+                <Button
+                  color={'primary'}
+                  variant={'outlined'}
+                  startIcon={<MaterialIcon icon={'publish'} />}
+                  style={{
+                    marginLeft: '8px'
+                  }}
+                  onClick={() => this.selectFileForUpload()}
+                >
+                  {gettext("Upload", 'system.ui')}
+                </Button>
+              </Tooltip>
+            </Box>
+          )}
+        </React.Fragment>
       )
 
     return (
       <Box>
         {((this.props.permitUpload ?? true) || (this.props.permitEdit ?? true)) && (
-          <input
-            type={'file'}
-            ref={this.fileinput}
-            style={{display: 'none'}}
-            onChange={this.upload}
-          />
+          <React.Fragment>
+            <input
+              type={'file'}
+              ref={this.uploadFileInput}
+              style={{display: 'none'}}
+              onChange={this.upload}
+              multiple={this.props.multipleUpload ?? true}
+            />
+            <input
+              type={'file'}
+              ref={this.replaceFileInput}
+              style={{display: 'none'}}
+              onChange={this.upload}
+            />
+          </React.Fragment>
         )}
 
         {((this.props.permitUpload ?? true)
@@ -220,17 +274,26 @@ export class StoredFilesList extends React.Component<StoredFilesListProps, Store
         ) && (
           <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'} mb={1}>
             {(this.props.permitDelete ?? true) && (!this.state.rearrangeMode) && (
-              <Tooltip title={gettext("Delete selected files")}>
-                <IconButton
-                  color={'secondary'}
-                  disabled={!this.state.selected.length}
-                  onClick={() => {
-                    this.removeFiles()
-                  }}
-                >
-                  <MaterialIcon icon={'delete_outline'} />
-                </IconButton>
-              </Tooltip>
+              <React.Fragment>
+                <Tooltip title={gettext("Select all")}>
+                  <IconButton
+                    onClick={this.handleSelectAll}
+                  >
+                    <MaterialIcon icon={'select_all'} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={gettext("Delete selected files")}>
+                  <IconButton
+                    color={'secondary'}
+                    disabled={!this.state.selected.length}
+                    onClick={() => {
+                      this.removeFiles()
+                    }}
+                  >
+                    <MaterialIcon icon={'delete_outline'} />
+                  </IconButton>
+                </Tooltip>
+              </React.Fragment>
             )}
             {(this.props.permitUpload ?? true) && (!this.state.rearrangeMode) && (
               <Tooltip title={gettext("Delete selected files")}>

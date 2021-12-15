@@ -149,6 +149,14 @@ export const workspaceTheme: WorkspaceTheme = {
       }
     },
 
+    MuiImageList: {
+      styleOverrides: {
+        root: {
+          overflowY: 'hidden'
+        }
+      }
+    },
+
     MuiFormControl: {
       styleOverrides: {
         marginDense: {

@@ -73,7 +73,9 @@
     "Something went wrong"
     : "Что-то пошло не так",
     "You have no messages requiring attention."
-    : "У вас нет сообщений, требующих внимания."
+    : "У вас нет сообщений, требующих внимания.",
+    "Select all"
+    : "Выбрать все"
   },
   "*": {
     "System"

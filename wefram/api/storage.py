@@ -4,6 +4,7 @@ from starlette.datastructures import UploadFile
 from .models import ModelAPI
 from .mixins import SortedModelMixin
 from ..l10n import gettext
+from ..requests import NoContentResponse
 from .. import ds, logger, exceptions
 
 
@@ -18,8 +19,28 @@ class FilesModelAPI(SortedModelMixin, ModelAPI):
 
     @classmethod
     async def create(cls, **with_values) -> Union[bool, object]:
-        if 'file' in with_values and isinstance(with_values['file'], UploadFile):
-            file: UploadFile = with_values['file']
+        if 'is_multiple_file_upload' in with_values \
+                and isinstance(with_values['is_multiple_file_upload'], str) \
+                and with_values['is_multiple_file_upload'] == 'true':
+            for form_name, form_value in with_values.items():
+                if not form_name.startswith('file_upload_data_'):
+                    continue
+                file: UploadFile = form_value
+                file_id: str = ds.storages.upload_file_content(
+                    cls.storage_entity,
+                    file.file,
+                    file.filename,
+                    {
+                        'content_type': file.content_type
+                    }
+                )
+                await super().create(
+                    caption=os.path.splitext(file.filename)[0],
+                    file=file_id
+                )
+            return True
+        elif 'file_upload_data' in with_values and isinstance(with_values['file_upload_data'], UploadFile):
+            file: UploadFile = with_values['file_upload_data']
             file_id: str = ds.storages.upload_file_content(
                 cls.storage_entity,
                 file.file,

@@ -47,7 +47,7 @@ export default class Card extends React.Component<CardProps, CardState> {
     data: {
       id: null,
       login: '',
-      secret: null,
+      secret: '',
       locked: false,
       createdAt: null,
       lastLogin: null,

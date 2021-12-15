@@ -30,6 +30,7 @@ export default class Screen extends React.Component<ScreenProps, ScreenState> {
             apiEntity={this.props.params['apiEntity']}
             storageEntity={this.props.params['storageEntity']}
             columns={this.props.params.columns}
+            minHeight={'calc(100vh - 72px)'}
             rowHeight={this.props.params.rowHeight}
             gap={this.props.params.gap}
           />
