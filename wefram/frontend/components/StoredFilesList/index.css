@@ -1,0 +1,18 @@
+.SystemUI-StoredFilesList-Item-Filename {
+    text-decoration: none;
+    color: inherit;
+}
+
+.SystemUI-StoredFilesList-Item-Filename:hover {
+    text-decoration: underline;
+    color: #2a5adf;
+}
+
+.SystemUI-StoredFilesList-Item-Filename > p {
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.SystemUI-StoredFilesList-Item-Filename:hover > p {
+    background: #f5f5f5;
+}

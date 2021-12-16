@@ -152,7 +152,20 @@ export const workspaceTheme: WorkspaceTheme = {
     MuiImageList: {
       styleOverrides: {
         root: {
-          overflowY: 'hidden'
+          overflowY: 'visible',
+          overflowX: 'visible',
+          overflow: 'visible'
+        }
+      }
+    },
+
+    MuiImageListItem: {
+      styleOverrides: {
+        root: {
+          border: '2px solid #fff',
+          borderRadius: '6px',
+          overflow: 'hidden',
+          boxShadow: '0 2px 4px #0002'
         }
       }
     },
@@ -263,12 +276,6 @@ export const workspaceTheme: WorkspaceTheme = {
         h6: {
           fontSize: '1.05rem'
         }
-      }
-    },
-
-    MuiImageListItem: {
-      styleOverrides: {
-
       }
     }
   }

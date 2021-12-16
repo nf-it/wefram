@@ -149,15 +149,15 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
     })
   }
 
-  private upload = (fileInputData: any): void => {
+  public upload = (files: any[]): void => {
     const form: FormData = new FormData()
-    if (fileInputData.target.files.length > 1) {
+    if (files.length > 1) {
       form.append('isMultipleFileUpload', 'true')
-      Array.from(fileInputData.target.files).forEach((file: any, index: number) => {
+      Array.from(files).forEach((file: any, index: number) => {
         form.append(`fileUploadData_${index}`, file)
       })
     } else {
-      form.append('fileUploadData', fileInputData.target.files[0])
+      form.append('fileUploadData', files[0])
     }
     runtime.setBusy()
 
@@ -181,6 +181,10 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
         notifications.showRequestError(err)
       })
     }
+  }
+
+  private uploadFromInput = (fileInputData: any): void => {
+    this.upload(Array.from(fileInputData.target.files))
   }
 
   public renameFile = (id: number, caption: string): void => {
@@ -216,6 +220,37 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
     this.setState({selected})
   }
 
+  private handleDragEnter = (ev: React.MouseEvent): void => {
+    ev.preventDefault()
+    ev.stopPropagation()
+  }
+
+  private handleDragOver = (ev: React.MouseEvent): void => {
+    ev.preventDefault()
+    ev.stopPropagation()
+  }
+
+  private handleDragDrop = (ev: React.DragEvent): void => {
+    ev.preventDefault()
+    ev.stopPropagation()
+    if (!(this.props.dropAndDropUpload ?? true))
+      return
+
+    let files: any[] = []
+
+    if (ev.dataTransfer.items) {
+      for (let i = 0; i < ev.dataTransfer.items.length; i++) {
+        if (ev.dataTransfer.items[i].kind !== 'file')
+          continue
+        files.push(ev.dataTransfer.items[i].getAsFile())
+      }
+    } else {
+      files = Array.from(ev.dataTransfer.files)
+    }
+
+    this.upload(files)
+  }
+
   render() {
     if (this.state.loading)
       return (
@@ -228,6 +263,9 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
       return (
         <Box
           minHeight={this.props.minHeight}
+          onDragEnter={this.handleDragEnter}
+          onDragOver={this.handleDragOver}
+          onDrop={this.handleDragDrop}
         >
           <Box pt={3} pb={3} mb={2} borderTop={'1px solid #aaa'} borderBottom={'1px solid #aaa'}>
             <Typography>{gettext("There are no files uploaded yet.", 'system.ui')}</Typography>
@@ -238,7 +276,7 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
                 type={'file'}
                 ref={this.uploadFileInput}
                 style={{display: 'none'}}
-                onChange={this.upload}
+                onChange={this.uploadFromInput}
                 multiple={this.props.multipleUpload ?? true}
               />
               <Tooltip title={gettext("Upload new image", 'system.ui')}>
@@ -260,21 +298,26 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
       )
 
     return (
-      <Box minHeight={this.props.minHeight}>
+      <Box
+        minHeight={this.props.minHeight}
+        onDragEnter={this.handleDragEnter}
+        onDragOver={this.handleDragOver}
+        onDrop={this.handleDragDrop}
+      >
         {((this.props.permitUpload ?? true) || (this.props.permitEdit ?? true)) && (
           <React.Fragment>
             <input
               type={'file'}
               ref={this.uploadFileInput}
               style={{display: 'none'}}
-              onChange={this.upload}
+              onChange={this.uploadFromInput}
               multiple={this.props.multipleUpload ?? true}
             />
             <input
               type={'file'}
               ref={this.replaceFileInput}
               style={{display: 'none'}}
-              onChange={this.upload}
+              onChange={this.uploadFromInput}
             />
           </React.Fragment>
         )}
@@ -286,13 +329,15 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
           <Box display={'flex'} justifyContent={'flex-end'} alignItems={'center'}>
             {(this.props.permitDelete ?? true) && (!this.state.rearrangeMode) && (
               <React.Fragment>
-                <Tooltip title={gettext("Select all")}>
-                  <IconButton
-                    onClick={this.handleSelectAll}
-                  >
-                    <MaterialIcon icon={'select_all'} />
-                  </IconButton>
-                </Tooltip>
+                <Box flexGrow={1}>
+                  <Tooltip title={gettext("Select all")}>
+                    <IconButton
+                      onClick={this.handleSelectAll}
+                    >
+                      <MaterialIcon icon={'select_all'} />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
                 <Tooltip title={gettext("Delete selected files")}>
                   <IconButton
                     color={'secondary'}

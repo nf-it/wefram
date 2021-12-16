@@ -2,6 +2,7 @@ import React from 'react'
 import {ScreenProps} from 'system/types'
 import {
   Box,
+  Paper,
   StoredFilesList,
   Typography
 } from 'system/components'
@@ -25,12 +26,16 @@ export default class Screen extends React.Component<ScreenProps, ScreenState> {
         <Box mt={1}>
           <Typography variant={'h4'} paddingBottom={2}>{screenCaption || 'Files'}</Typography>
         </Box>
-        <Box>
+        <Paper variant={'outlined'} style={{
+          paddingTop: '8px',
+          paddingBottom: '8px'
+        }}>
           <StoredFilesList
             apiEntity={this.props.params['apiEntity']}
             storageEntity={this.props.params['storageEntity']}
+            minHeight={'calc(100vh - 72px - 16px)'}
           />
-        </Box>
+        </Paper>
       </React.Fragment>
     )
   }
