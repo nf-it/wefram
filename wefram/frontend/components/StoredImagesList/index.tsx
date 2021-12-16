@@ -8,6 +8,7 @@ import {
   ImageList,
   ImageListItem,
   ImageListItemBar,
+  ImageView,
   MaterialIcon,
   Tooltip,
   Typography
@@ -44,6 +45,7 @@ type StoredImagesListState = {
   items: StoredImagesModel,
   selected: number[]
   rearrangeMode: boolean
+  opened: string
 }
 
 
@@ -55,7 +57,8 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
     loading: true,
     items: [],
     selected: [],
-    rearrangeMode: false
+    rearrangeMode: false,
+    opened: ''
   }
 
   replacingId: number | null
@@ -403,13 +406,23 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
 
             return (
               <ImageListItem>
-                <img src={storage.urlFor(this.props.storageEntity, item.file)} alt={item.caption} />
+                <img
+                  src={storage.urlFor(this.props.storageEntity, item.file)}
+                  alt={item.caption}
+                  onClick={(ev: React.MouseEvent) => {
+                    if ((ev.target as HTMLElement).tagName.toUpperCase() !== 'IMG')
+                      return
+                    this.setState({opened: storage.urlFor(this.props.storageEntity, item.file)})
+                  }}
+                />
+
                 {(this.props.showCaption ?? true) && item.caption !== undefined && item.caption !== '' && (
                   <ImageListItemBar
                     position={'bottom'}
                     title={item.caption}
                   />
                 )}
+
                 {showControls && (
                   <ImageListItemBar
                     position={'top'}
@@ -545,6 +558,11 @@ export class StoredImagesList extends React.Component<StoredImagesListProps, Sto
           })}
         </ImageList>
 
+        <ImageView
+          src={this.state.opened}
+          open={this.state.opened !== ''}
+          onClose={() => this.setState({opened: ''})}
+        />
       </Box>
     )
   }

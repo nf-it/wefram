@@ -111,6 +111,15 @@ export const workspaceTheme: WorkspaceTheme = {
       }
     },
 
+    MuiBackdrop: {
+      styleOverrides: {
+        root: {
+          WebkitBackdropFilter: 'blur(1px)',
+          backdropFilter: 'blur(2px)'
+        }
+      }
+    },
+
     MuiButton: {
       styleOverrides: {
         root: {
