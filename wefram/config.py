@@ -180,7 +180,15 @@ else:
         "staticsUrl": "/static",
         "assetsDir": "assets",
         "filesDir": ".var/files",
-        "filesUrl": "/files"
+        "filesUrl": "/files",
+        "frontend": {
+            "components": {
+                "ProjectLayout": "system/containers/Layout",
+                "ProjectSidebar": "system/containers/LayoutSidebar",
+                "ProjectScreens": "system/containers/LayoutScreens"
+            },
+            "theme": "system/theme"
+        }
     }
 
 if os.path.isfile(os.path.join(PRJ_ROOT, 'apps.json')):

@@ -36,7 +36,7 @@ module.exports = (env) => {
       alias: {
         system: path.resolve(env.systempath),
         wefram: path.resolve(env.systempath),
-        build: path.resolve(projectRoot, 'build', 'frontend')
+        build: path.resolve(projectRoot, '.var', 'build', 'frontend')
       }
     },
     module: {

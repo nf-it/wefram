@@ -11,14 +11,14 @@ import {
   MaterialIcon,
   Toolbar
 } from 'system/components'
-import {LayoutAppbar} from '../LayoutAppbar'
+import LayoutAppbar from '../LayoutAppbar'
 import {Link} from 'react-router-dom'
 import {runtime} from 'system/runtime'
 import {screensSchema} from 'build/screens'
 import {routing} from 'system/routing'
-import './index.css'
 import {dialog} from 'system/dialog'
 import {messages, StoredMessage} from 'system/messages'
+import './index.css'
 
 
 type TSidebarFolderOpen = Record<string, boolean>
@@ -218,4 +218,5 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
 }
 
 
-export const LayoutSidebar = observer(Sidebar)
+const LayoutSidebar = observer(Sidebar)
+export default LayoutAppbar

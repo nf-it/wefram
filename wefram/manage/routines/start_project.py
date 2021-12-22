@@ -62,12 +62,20 @@ DIST = [
 ]
 
 BUILD_JSON = {
-  "buildDir": ".var/build",
-  "staticsDir": ".var/build/static",
-  "staticsUrl": "/static",
-  "assetsDir": "assets",
-  "filesDir": "./var/files",
-  "filesUrl": "/files"
+    "buildDir": ".var/build",
+    "staticsDir": ".var/build/static",
+    "staticsUrl": "/static",
+    "assetsDir": "assets",
+    "filesDir": "./var/files",
+    "filesUrl": "/files",
+    "frontend": {
+        "components": {
+            "ProjectLayout": "system/containers/Layout",
+            "ProjectSidebar": "system/containers/LayoutSidebar",
+            "ProjectScreens": "system/containers/LayoutScreens"
+        },
+        "theme": "system/theme"
+    }
 }
 
 APPS_JSON = []

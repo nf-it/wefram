@@ -163,7 +163,12 @@ export default class Screen extends React.Component<ScreenProps> {
           >{gettext("Save")}</Button>
         </TitlebarControl>
         <Grid container style={{alignItems: 'flex-start'}}>
-          <Grid item xs={2} className={'SystemUI-Box-GrayPanel'}>
+          <Grid item xs={2} sx={{
+            padding: '.6vmax 2px',
+            borderRadius: '.6vmax',
+            background: '#f4f4f4',
+            border: '1px solid #00000019'
+          }}>
             <Tabs
               orientation={'vertical'}
               variant={'scrollable'}

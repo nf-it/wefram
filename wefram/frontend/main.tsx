@@ -2,16 +2,15 @@ import React from 'react'
 import {observer} from 'mobx-react'
 import {Switch, Route, Router} from 'react-router-dom'
 import {createTheme, ThemeProvider} from '@mui/material/styles'
-import {workspaceTheme} from './theme'
+import {workspaceTheme} from 'build/theme'
 import {notificationsStore, notifications} from './notification'
 import {messagesStore} from './messages'
 import {dialogsStore} from './dialog'
-import {LayoutSidebar} from './containers/LayoutSidebar'
-import {LayoutScreens} from './containers/LayoutScreens'
 import {NotificationBar} from './containers/GlobalNotify'
 import {GlobalDialog} from './containers/GlobalDialog'
 import {MessagesBar} from 'system/containers/Messages'
 import {Relogin} from 'system/containers/Relogin'
+import {ProjectLayout} from 'build/components'
 import {LoadingGlobal} from './components'
 import {Loading} from './components'
 import {runtime} from './runtime'
@@ -70,10 +69,7 @@ class Main extends React.Component<AppProps, AppState> {
               component={Login}
               path={runtime.loginScreenUrl}
             />
-            <div className={'SystemUI-Layout-root'}>
-              <LayoutSidebar />
-              <LayoutScreens />
-            </div>
+            <ProjectLayout />
           </Switch>
         </Router>
         <Relogin open={runtime.reloginFormOpen} />

@@ -1,5 +1,5 @@
 import React from 'react'
-import {hintColor} from 'system/theme'
+import {workspaceTheme} from 'build/theme'
 import {Box, IconButton, MaterialIcon, Tooltip} from '..'
 
 
@@ -19,7 +19,7 @@ export const Hinted = (props: HintedProps) => (
         padding: 0,
         marginLeft: '4px'
       }}>
-        <MaterialIcon icon={props.icon ?? 'info'} size={16} color={props.color ?? hintColor} />
+        <MaterialIcon icon={props.icon ?? 'info'} size={16} color={props.color ?? workspaceTheme.colors.hintColor} />
       </IconButton>
     </Tooltip>
   </Box>

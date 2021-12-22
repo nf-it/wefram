@@ -12,14 +12,14 @@ type LayoutScreensProps = { }
 type LayoutScreensState = { }
 
 
-export class LayoutScreens extends React.Component<LayoutScreensProps, LayoutScreensState> {
+export default class LayoutScreens extends React.Component<LayoutScreensProps, LayoutScreensState> {
   state: LayoutScreensState = {
 
   }
 
   render() {
     return (
-      <Box className={'SystemUI-Layout-content'}>
+      <Box flexGrow={1} padding={'0 24px 2px'}>
           <Switch>
             {/*Routes whose not requires any permissions to be */}
             {Object.keys(screensSchema).filter(

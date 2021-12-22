@@ -158,3 +158,13 @@ export function colorByString(s: string | null | undefined): string {
     return DEFAULT_COLOR
   return COLORS[colorCodeN]
 }
+
+
+export function isValidDate(d: any) {
+  if (Object.prototype.toString.call(d) === "[object Date]") {
+    return !isNaN(d.getTime());
+  } else {
+    return false
+  }
+}
+

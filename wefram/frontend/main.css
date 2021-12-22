@@ -18,22 +18,3 @@ body {
 div {
     position: relative;
 }
-
-.SystemUI-Layout-root {
-    display: flex;
-}
-
-.SystemUI-Layout-content {
-    flex-grow: 1;
-    padding: 0 24px 2px;
-}
-
-
-.SystemUI-Box-GrayPanel {
-    padding: .6vmax 2px;
-    border-radius: .6vmax;
-    /*background: linear-gradient(to right bottom, #e5e5e5, #fff 120%) !important;*/
-    background: #f4f4f4;
-    /*box-shadow: 0 .25vmax 1vmax #0003;*/
-    border: 1px solid #00000019;
-}

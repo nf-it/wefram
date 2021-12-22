@@ -1,5 +1,5 @@
 import React from 'react'
-import {primaryColor, secondaryColor, disabledColor} from 'system/theme'
+import {workspaceTheme} from 'build/theme'
 
 
 export type MaterialIconProps = {
@@ -40,11 +40,11 @@ export const MaterialIcon = (props: MaterialIconProps) => (
               ? `${props.size ?? 24}px`
               : undefined,
       color: props.color === 'primary'
-        ? primaryColor
+        ? workspaceTheme.colors.primaryColor
         : props.color === 'secondary'
-          ? secondaryColor
+          ? workspaceTheme.colors.secondaryColor
           : props.color === 'disabled'
-            ? disabledColor
+            ? workspaceTheme.colors.disabledColor
             : props.color,
       marginLeft: props.ml !== undefined
         ? `${props.ml * 8}px`

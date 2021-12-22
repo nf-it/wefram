@@ -1,13 +1,20 @@
 import {ThemeOptions} from '@mui/material'
 
 
-export const primaryColor = '#0070f0'
-export const secondaryColor = '#dd2f00'
-export const disabledColor = '#00000044'
-export const hintColor = '#4488ff'
+const primaryColor = '#0070f0'
+const secondaryColor = '#dd2f00'
+const disabledColor = '#00000044'
+const hintColor = '#4488ff'
 
 
-interface WorkspaceTheme extends ThemeOptions {
+export interface WorkspaceTheme extends ThemeOptions {
+  colors: {
+    primaryColor: string,
+    secondaryColor: string,
+    disabledColor: string,
+    hintColor: string
+  },
+
   notifications: {
     success: string
     error: string
@@ -35,7 +42,14 @@ export const breakpoints: ThemeBreakpoints = {
 }
 
 
-export const workspaceTheme: WorkspaceTheme = {
+const workspaceTheme: WorkspaceTheme = {
+  colors: {
+    primaryColor,
+    secondaryColor,
+    disabledColor,
+    hintColor
+  },
+
   palette: {
     primary: {
       main: primaryColor
@@ -81,8 +95,6 @@ export const workspaceTheme: WorkspaceTheme = {
           borderRadius: '6px',
           zIndex: 1201,
           maxWidth: '19vw',
-          // marginLeft: '-.5vmax',
-          // marginTop: '1px',
           right: 'auto',
           justifyContent: 'center',
           background: 'linear-gradient(to left top, #0077FF, #0059B2 120%)',
@@ -144,8 +156,8 @@ export const workspaceTheme: WorkspaceTheme = {
     MuiDialog: {
       styleOverrides: {
         container: {
-          WebkitBackdropFilter: 'blur(1px)',
-          backdropFilter: 'blur(2px)'
+          // WebkitBackdropFilter: 'blur(1px)',
+          // backdropFilter: 'blur(2px)'
         }
       }
     },
@@ -290,3 +302,4 @@ export const workspaceTheme: WorkspaceTheme = {
   }
 }
 
+export default workspaceTheme

@@ -17,7 +17,7 @@ ALL_TARGETS: List[str] = [
     'assets',
     'l10n',
     'texts',
-    'screens',
+    'prefront',
     'webpack',
     'react',
 ]

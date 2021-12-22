@@ -139,4 +139,5 @@ class _LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppbarState
 }
 
 
-export const LayoutAppbar = observer(_LayoutAppbar)
+const LayoutAppbar = observer(_LayoutAppbar)
+export default LayoutAppbar
