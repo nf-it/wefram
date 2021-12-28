@@ -221,9 +221,9 @@ def register(
             )
             if not sitemap_parent:
                 ui.sitemap.append(
+                    screen=cls,
                     name=cls.name,
                     caption=cls.caption or cls.name,
-                    screen=cls.name,
                     order=order,
                     icon=cls.icon,
                     requires=cls.requires
@@ -231,9 +231,9 @@ def register(
             else:
                 ui.sitemap.append_to(
                     parent=sitemap_parent,
+                    screen=cls,
                     name=cls.name,
                     caption=cls.caption or cls.name,
-                    screen=cls.name,
                     order=order,
                     icon=cls.icon,
                     requires=cls.requires
