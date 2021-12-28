@@ -23,8 +23,8 @@ __all__ = [
 SITEMAP_FOLDER_ID: str = APP_ID
 
 ui.sitemap.append(
-    SITEMAP_FOLDER_ID,
-    SITEMAP_CAPTION,
+    name=SITEMAP_FOLDER_ID,
+    caption=SITEMAP_CAPTION,
     icon=APP_ICON,
     requires=PERMISSION_ADMINISTERING,
     order=99999

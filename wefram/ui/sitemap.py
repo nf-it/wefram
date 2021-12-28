@@ -19,6 +19,17 @@ def _get_screen_url(screen: BaseScreen) -> Optional[str]:
     return screen.get_route_url()
 
 
+def append_folder(
+        name: str,
+        caption: [str, L10nStr],
+        order: Optional[int] = None,
+        icon: Optional[str] = None,
+        requires: Optional[Union[str, Sequence[str]]] = None
+) -> None:
+    """ Appends the folder to the sidebar """
+    pass
+
+
 def append(
         screen: BaseScreen,
         name: str,

@@ -185,7 +185,7 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
                       </List>
                     </Collapse>
                   </React.Fragment>
-                ) : (
+                ) : item.children === null ? (
                   <Link to={screensSchema[item.screen]?.routeUrl} className={'SystemUI-LayoutSidebar-item'}>
                     <ListItem
                       button
@@ -206,7 +206,7 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
                       <ListItemText primary={item.caption}/>
                     </ListItem>
                   </Link>
-                )}
+                ) : null}
               </Box>
             ))}
 
