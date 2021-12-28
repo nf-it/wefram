@@ -1,4 +1,4 @@
-from . import sitemap, screens, views
+from . import sitemap, sidebar, screens, views
 
 
 def start() -> None:

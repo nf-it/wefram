@@ -32,8 +32,13 @@ def _make_components() -> None:
     contents: List[str] = []
     for component_name, component_path in components.items():
         contents.append(
-            f"export const {component_name} = require('{component_path}')"
+            f"import {component_name} from '{component_path}'"
         )
+
+    contents.append("export {")
+    contents.append(','.join(components.keys()))
+    contents.append("}")
+
     with open(fn, 'w') as f:
         f.write('\n'.join(contents))
 
@@ -44,7 +49,8 @@ def _make_theme() -> None:
         os.unlink(fn)
     theme: str = build_frontend.get('theme') or build_defaults['frontend']['theme'] or 'system/theme'
     with open(fn, 'w') as f:
-        f.write(f"export const workspaceTheme = require('{theme}')")
+        f.write(f"import workspaceTheme from '{theme}'\n")
+        f.write("export {workspaceTheme}\n")
 
 
 def run(*_) -> None:

@@ -1,6 +1,6 @@
-import {IAuthorization} from '../types/aaa'
+import {AaaAuthorizationSession} from '../types/aaa'
 import {aaa} from './api'
-import {ISession, session} from './session'
+import {ClientSession, session} from './session'
 import {api} from '../api'
 import {RequestApiPath} from '../routing'
 import {Response} from '../response'
@@ -20,9 +20,9 @@ const CHECKPATH: RequestApiPath = {
 
 
 export type AaaProvider = {
-  login(username: string, password: string): Response<IAuthorization>
-  refreshToken(): Response<IAuthorization>
-  touch(): Response<ISession>
+  login(username: string, password: string): Response<AaaAuthorizationSession>
+  refreshToken(): Response<AaaAuthorizationSession>
+  touch(): Response<ClientSession>
   check(): Response<any>
 }
 

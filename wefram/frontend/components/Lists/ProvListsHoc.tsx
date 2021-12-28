@@ -26,7 +26,7 @@ import {LoadingLinear} from '../Loading'
 import {api} from 'system/api'
 import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
-import {IApiEntityResponse, IApiEntityComplexResponse} from 'system/types'
+import {ApiEntityResponse, ApiEntityComplexResponse} from 'system/types'
 import {responses} from 'system/response'
 
 
@@ -300,7 +300,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
     })
   }
 
-  private handleFetch = (response: IApiEntityResponse | IApiEntityComplexResponse): void => {
+  private handleFetch = (response: ApiEntityResponse | ApiEntityComplexResponse): void => {
     if (Array.isArray(response)) {
       this.setState({
         itemsCount: undefined,

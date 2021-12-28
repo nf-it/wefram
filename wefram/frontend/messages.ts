@@ -114,7 +114,7 @@ export const messages: MessagesInterface = {
 }
 
 
-export type IMessages = {
+export type MessagesMobxStoreType = {
   messages: StoredMessage[]
   open: boolean
 }

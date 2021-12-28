@@ -79,9 +79,8 @@ export const notifications: NotificationInterface = {
 }
 
 
-export interface INotification {
+export type NotificationMobxStoreType = {
   open: boolean
   message: string
   variant: NotificationVariant
 }
-

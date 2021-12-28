@@ -20,79 +20,79 @@ export default class LayoutScreens extends React.Component<LayoutScreensProps, L
   render() {
     return (
       <Box flexGrow={1} padding={'0 24px 2px'}>
-          <Switch>
-            {/*Routes whose not requires any permissions to be */}
-            {Object.keys(screensSchema).filter(
-              name => !screensSchema[name].requires.length
-            ).map(name => {
-                const screenSchema = screensSchema[name]
-                return (
-                  <Route
-                    exact
-                    key={`routing-screen-switch-${name}`}
-                    path={screenSchema.routeUrl}
-                    render={
-                      (props) => <Screen
-                        name={screenSchema.name}
-                        rootComponent={screenSchema.rootComponent || undefined}
-                        requires={screenSchema.requires}
-                        routeUrl={screenSchema.routeUrl}
-                        routeParams={screenSchema.routeParams}
-                        params={screenSchema.params}
-                        {...props}
-                      />
-                    }
+        <Switch>
+          {/*Routes whose not requires any permissions to be */}
+          {Object.keys(screensSchema).filter(
+            name => !screensSchema[name].requires.length
+          ).map(name => {
+            const screenSchema = screensSchema[name]
+            return (
+              <Route
+                exact
+                key={`routing-screen-switch-${name}`}
+                path={screenSchema.routeUrl}
+                render={
+                  (props) => <Screen
+                    name={screenSchema.name}
+                    rootComponent={screenSchema.rootComponent || undefined}
+                    requires={screenSchema.requires}
+                    routeUrl={screenSchema.routeUrl}
+                    routeParams={screenSchema.routeParams}
+                    params={screenSchema.params}
+                    {...props}
                   />
-                )
-              }
-            )}
+                }
+              />
+            )
+            }
+          )}
 
-            {/* Routes whose requires user to be logged in and have according permissions */}
-            {session.authenticated && Object.keys(screensSchema).filter(
-              name => screensSchema[name].requires.length && session.permitted(screensSchema[name].requires)
-            ).map(name => {
-                const screenSchema = screensSchema[name]
-                return (
-                  <Route
-                    exact
-                    key={`routing-screen-switch-${name}`}
-                    path={screenSchema.routeUrl}
-                    render={
-                      (props) => <Screen
-                        name={screenSchema.name}
-                        rootComponent={screenSchema.rootComponent || undefined}
-                        requires={screenSchema.requires}
-                        routeUrl={screenSchema.routeUrl}
-                        routeParams={screenSchema.routeParams}
-                        params={screenSchema.params}
-                        {...props}
-                      />
-                    }
+          {/* Routes whose requires user to be logged in and have according permissions */}
+          {session.authenticated && Object.keys(screensSchema).filter(
+            name => screensSchema[name].requires.length && session.permitted(screensSchema[name].requires)
+          ).map(name => {
+            const screenSchema = screensSchema[name]
+            return (
+              <Route
+                exact
+                key={`routing-screen-switch-${name}`}
+                path={screenSchema.routeUrl}
+                render={
+                  (props) => <Screen
+                    name={screenSchema.name}
+                    rootComponent={screenSchema.rootComponent || undefined}
+                    requires={screenSchema.requires}
+                    routeUrl={screenSchema.routeUrl}
+                    routeParams={screenSchema.routeParams}
+                    params={screenSchema.params}
+                    {...props}
                   />
-                )
-              }
-            )}
+                }
+              />
+            )
+            }
+          )}
 
-            {/* Service routes whose displays login screen if the screen requires user to be logged in  */}
-            {!session.authenticated && Object.keys(screensSchema).filter(
-              name => !session.permitted(screensSchema[name].requires)
-            ).map(name => {
-                const screenSchema = screensSchema[name]
-                return (
-                  <Route
-                    exact
-                    key={`routing-screen-switch-${name}`}
-                    path={screenSchema.routeUrl}
-                    component={Login}
-                  />
-                )
-              }
-            )}
+          {/* Service routes whose displays login screen if the screen requires user to be logged in  */}
+          {!session.authenticated && Object.keys(screensSchema).filter(
+            name => !session.permitted(screensSchema[name].requires)
+          ).map(name => {
+            const screenSchema = screensSchema[name]
+            return (
+              <Route
+                exact
+                key={`routing-screen-switch-${name}`}
+                path={screenSchema.routeUrl}
+                component={Login}
+              />
+            )
+            }
+          )}
 
-            {/* Redirect to the default page if the given URL is not valid for the set routing schema*/}
-            <Redirect key={'routing-screen-switch--default'} to={routing.defaultPath()}/>
+          {/* Redirect to the default page if the given URL is not valid for the set routing schema*/}
+          <Redirect key={'routing-screen-switch--default'} to={routing.defaultPath()}/>
 
-          </Switch>
+        </Switch>
       </Box>
     )
   }

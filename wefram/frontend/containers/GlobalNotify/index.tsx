@@ -1,11 +1,11 @@
 import React from 'react'
 import {observer} from 'mobx-react'
 import {Notification} from 'system/components'
-import {INotification, notifications} from 'system/notification'
+import {NotificationMobxStoreType, notifications} from 'system/notification'
 
 
 export type GlobalNotifyProps = {
-  store: INotification
+  store: NotificationMobxStoreType
 }
 
 class _NotificationBar extends React.Component<GlobalNotifyProps> {

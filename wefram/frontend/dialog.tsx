@@ -17,7 +17,7 @@ export type DialogButton = {
 }
 
 
-class _Store {
+class Store {
   open: boolean = false
   title?: string = undefined
   content?: JSX.Element | JSX.Element[] | string = undefined
@@ -39,7 +39,7 @@ class _Store {
   }
 }
 
-export const dialogsStore = new _Store()
+export const dialogsStore = new Store()
 
 type DialogInterface = {
   show(
@@ -201,7 +201,7 @@ export const dialog: DialogInterface = {
   }
 }
 
-export interface IDialog {
+export type DialogMobxStoreType = {
   open: boolean
   title?: string
   content?: JSX.Element | JSX.Element[] | string

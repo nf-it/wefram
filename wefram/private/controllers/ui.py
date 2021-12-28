@@ -14,7 +14,7 @@ async def instantiate(request: Request) -> JSONResponse:
     response: dict = {
         'production': config.PRODUCTION,
         'session': session.as_json() if session is not None else None,
-        'sitemap': ui.sitemap.as_json(),
+        'sidebar': ui.sidebar.as_json(),
         'screens': ui.screens.runtime_json(),
         'locale': l10n.ui_locale_json(),
         'title': config.APP_TITLE,

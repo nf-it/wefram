@@ -3,7 +3,7 @@ import {RouteComponentProps} from 'react-router-dom'
 import {Permissions} from '../aaa'
 
 
-export interface IScreen {
+export type ScreenModelProps = {
   name: string
   rootComponent?: React.LazyExoticComponent<any> | null
   rootComponentPath?: string | null
@@ -14,13 +14,12 @@ export interface IScreen {
   urlStoredState?: Record<string, string>
 }
 
-export interface IScreenRuntime {
+export type ScreenConfiguration = {
   caption: string
 }
 
-export type IScreenRuntimes = Record<string, IScreenRuntime>
+export type ScreensConfiguration = Record<string, ScreenConfiguration>
 
-export interface ScreenProps extends RouteComponentProps, IScreen {
-}
+export type ScreenProps = RouteComponentProps & ScreenModelProps
 
-export type ScreensSchema = Record<string, IScreen>
+export type ScreensSchema = Record<string, ScreenModelProps>

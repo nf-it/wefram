@@ -1,12 +1,12 @@
 import React from 'react'
 import {observer} from 'mobx-react'
-import {IMessages, messages, StoredMessage, MessageAction} from 'system/messages'
+import {MessagesMobxStoreType, messages, StoredMessage, MessageAction} from 'system/messages'
 import {gettext} from 'system/l10n'
 import {Avatar, Backdrop, Box, Button, DateTimeText, MaterialIcon, IconButton, Typography} from 'system/components'
 
 
 export type MessagesProps = {
-  store: IMessages
+  store: MessagesMobxStoreType
 }
 
 type MessagesState = {

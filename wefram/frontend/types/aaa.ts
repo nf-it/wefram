@@ -1,6 +1,6 @@
 import {CommonKey} from 'system/types/common'
 
-export interface IAuthorization {
+export type AaaAuthorizationSession = {
   token: string
   refreshToken: string
   user: {
@@ -18,7 +18,7 @@ export interface IAuthorization {
   permissions: string[]
 }
 
-export interface ISessionUser {
+export type AaaSessionUser = {
   id: string
   login: string
   firstName: string
@@ -30,10 +30,10 @@ export interface ISessionUser {
   timezone: string | null
 }
 
-export type SessionUser = ISessionUser | null
+export type SessionUser = AaaSessionUser | null
 export type Permissions = string[]
 
-export type IAuthorizationSession = IAuthorization | null
+export type AaaSession = AaaAuthorizationSession | null
 
 export const localStorageAuthorizationKeyname: string = 'system.aaa.authorization'
 export const localStorageUsernameRememberKeyname: string = "system.aaa.rememberedUsername"

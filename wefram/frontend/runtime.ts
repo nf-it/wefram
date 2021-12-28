@@ -1,7 +1,7 @@
 import {makeObservable, observable, runInAction} from 'mobx'
 import {Location} from 'history'
 import {Localization} from '@mui/material/locale'
-import {IProjectInstantiation, IScreenRuntimes, ISitemap, Locale} from './types'
+import {ProjectConfiguration, ProjectDevelopmentConfiguration, ScreensConfiguration, SidebarConfiguration, Locale} from './types'
 import {projectProvider} from './provider'
 import {aaa} from './aaa'
 import {localization, gettext} from './l10n'
@@ -13,6 +13,7 @@ type ScrollPositions = Record<string, number>
 
 class ProjectRuntime {
   production: boolean = true
+  development: ProjectDevelopmentConfiguration = {}
   busy: boolean = false
   title: string = '(devel)'
   loginScreenUrl: string = '/login'
@@ -20,8 +21,8 @@ class ProjectRuntime {
   defaultAuthenticatedUrl: string = '/'
   onLogoffUrl: string = '/'
   rememberUsername: boolean = false
-  sitemap: ISitemap = []
-  screens: IScreenRuntimes = {}
+  sidebar: SidebarConfiguration = []
+  screens: ScreensConfiguration = {}
   locale: Locale = {
     name: 'en_US',
     weekStartsOn: 0,
@@ -36,24 +37,25 @@ class ProjectRuntime {
   constructor() {
     makeObservable(this, {
       production: observable,
+      development: observable,
       busy: observable,
       title: observable,
       loginScreenUrl: observable,
       defaultGuestUrl: observable,
       defaultAuthenticatedUrl: observable,
       rememberUsername: observable,
-      sitemap: observable,
+      sidebar: observable,
       muiLocalization: observable,
       reloginFormOpen: observable
     })
   }
 
-  public initialize = async (): Promise<IProjectInstantiation | null> => {
+  public initialize = async (): Promise<ProjectConfiguration | null> => {
     return projectProvider.instantiate().then(res => {
       runInAction(() => {
         runtime.production = res.data.production
         runtime.title = res.data.title
-        runtime.sitemap = res.data.sitemap
+        runtime.sidebar = res.data.sidebar
         runtime.screens = res.data.screens
         runtime.locale = res.data.locale
         runtime.loginScreenUrl = res.data.urlConfiguration.loginScreenUrl

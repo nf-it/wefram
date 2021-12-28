@@ -18,6 +18,7 @@ import {screensSchema} from 'build/screens'
 import {routing} from 'system/routing'
 import {dialog} from 'system/dialog'
 import {messages, StoredMessage} from 'system/messages'
+import {SidebarItemModel} from 'system/types'
 import './index.css'
 
 
@@ -25,6 +26,66 @@ type TSidebarFolderOpen = Record<string, boolean>
 type LayoutSidebarProps = { }
 type LayoutSidebarState = {
   expandStatus: TSidebarFolderOpen
+}
+
+
+type SidebarItemProps = {
+  item: SidebarItemModel
+}
+
+
+const SidebarItemInner = (props: SidebarItemProps) => (
+  <ListItem
+    button
+    key={props.item.name}
+    data-key={props.item.name}
+    style={{
+      backgroundColor: 'inherit'
+    }}
+    onClick={() => {
+      if (props.item.endpoint === null)
+        return
+      // reserved for the future use with custom endpoint
+    }}
+  >
+    <ListItemIcon>
+      {props.item.icon !== null && (
+        <img
+          className={'SystemUI-LayoutSidebar-icon'}
+          src={props.item.icon}
+        />
+      )}
+    </ListItemIcon>
+    <ListItemText primary={props.item.caption}/>
+  </ListItem>
+)
+
+
+const SidebarItem = (props: SidebarItemProps) => {
+  const item: SidebarItemModel = props.item
+  if (!item.url)
+    return null  // at this moment - endpoint are not supported
+
+  switch (item.urlTarget) {
+    case 'screen':
+      return (
+        <Link to={item.url} className={'SystemUI-LayoutSidebar-item'}>
+          <SidebarItemInner item={item} />
+        </Link>
+      )
+    case 'redirect':
+      return (
+        <a href={item.url} target={'_self'} className={'SystemUI-LayoutSidebar-item'}>
+          <SidebarItemInner item={item} />
+        </a>
+      )
+    default:  // blank
+      return (
+        <a href={item.url} target={'_blank'} className={'SystemUI-LayoutSidebar-item'}>
+          <SidebarItemInner item={item} />
+        </a>
+      )
+  }
 }
 
 
@@ -65,9 +126,9 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
 
         <Box className={'SystemUI-LayoutSidebar-container'}>
           <List>
-            {runtime.sitemap.map(item => (
+            {runtime.sidebar.map(item => (
               <Box key={`sidebar-item-${item.name}`}>
-                {item.children !== null && item.children?.length > 0 && (
+                {(item.children !== null && item.children?.length > 0) ? (
                   <React.Fragment>
                     <ListItem
                       button
@@ -124,8 +185,7 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
                       </List>
                     </Collapse>
                   </React.Fragment>
-                )}
-                {item.children === null && (
+                ) : (
                   <Link to={screensSchema[item.screen]?.routeUrl} className={'SystemUI-LayoutSidebar-item'}>
                     <ListItem
                       button
@@ -219,4 +279,4 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
 
 
 const LayoutSidebar = observer(Sidebar)
-export default LayoutAppbar
+export default LayoutSidebar

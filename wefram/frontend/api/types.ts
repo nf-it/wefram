@@ -1,6 +1,6 @@
 import {AxiosRequestConfig} from 'axios'
 import {RequestApiPath, RequestPathParams} from 'system/routing'
-import {CommonKey, EntityKey, TApiSubmitMethod} from 'system/types'
+import {CommonKey, EntityKey, ApiSubmitMethod} from 'system/types'
 
 
 export interface IApiRequestConfig extends AxiosRequestConfig { }
@@ -15,7 +15,7 @@ export type API = {
   get(path: RequestApiPath, config?: IApiRequestConfig): Promise<any>
   post(path: RequestApiPath, data?: any, config?: IApiRequestConfig): Promise<any>
   put(path: RequestApiPath, data?: any, config?: IApiRequestConfig): Promise<any>
-  submit(method: TApiSubmitMethod, path: RequestApiPath, data?: any, config?: IApiRequestConfig): Promise<any>
+  submit(method: ApiSubmitMethod, path: RequestApiPath, data?: any, config?: IApiRequestConfig): Promise<any>
   patch(path: RequestApiPath, data?: any, config?: IApiRequestConfig): Promise<any>
   delete(path: RequestApiPath, config?: IApiRequestConfig): Promise<any>
   deleteObject(path: RequestApiPath, key: EntityKey): Promise<any>

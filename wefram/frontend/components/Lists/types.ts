@@ -1,5 +1,5 @@
 import React from 'react'
-import {IApiEntityComplexResponse, IApiEntityResponse} from 'system/types'
+import {ApiEntityComplexResponse, ApiEntityResponse} from 'system/types'
 import {RequestApiPath} from 'system/routing'
 
 
@@ -71,7 +71,7 @@ export type ProvListProps = {
   entityCaption?: string
   onError?: (err: any) => void
   onErrorShowMsg?: boolean | string
-  onFetch?: (response: IApiEntityResponse | IApiEntityComplexResponse) => void
+  onFetch?: (response: ApiEntityResponse | ApiEntityComplexResponse) => void
   onFetchDone?: (success?: boolean) => void
   onItemClick?: (item: any) => void
   onProvidedFiltersUpdateReq?: (filters: Record<string, any>) => void
@@ -137,7 +137,7 @@ export type ProvTableColumns = ProvTableColumn[]
 export type ProvTableProps = {
   onError?: (err: any) => void
   onErrorShowMsg?: boolean | string
-  onFetch?: (response: IApiEntityResponse | IApiEntityComplexResponse) => void
+  onFetch?: (response: ApiEntityResponse | ApiEntityComplexResponse) => void
   onFetchDone?: (success?: boolean) => void
   onItemClick?: (item: any) => void
   onProvidedFiltersUpdateReq?: (filters: Record<string, any>) => void

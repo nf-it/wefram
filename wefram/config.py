@@ -211,3 +211,11 @@ STATICS_URL: str = BUILD_CONF['staticsUrl']
 FILES_DIR: str = BUILD_CONF['filesDir']
 FILES_ROOT: str = os.path.join(PRJ_ROOT, FILES_DIR)
 FILES_URL: str = BUILD_CONF['filesUrl']
+
+
+# The setting below is only specific for the Wefram development mode when
+# the core is in the development environment itself. Not usable for the
+# any Wefram-based project because is used for the internal procedures
+# and testing environment of the framework itself only.
+
+WEFRAM_MASTER_DEVELOPMENT: bool = read('development.weframMasterDevelopment', False, 'bool')

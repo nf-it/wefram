@@ -1,20 +1,20 @@
 import {runInAction} from 'mobx'
-import {IAuthorizationSession, localStorageAuthorizationKeyname, IAuthorization} from "../types/aaa";
+import {AaaSession, localStorageAuthorizationKeyname, AaaAuthorizationSession} from "../types/aaa";
 import {aaaProvider} from "./provider";
-import {ISessionResponse, session} from './session'
+import {ClientSessionResponse, session} from './session'
 import {request, updateAuthorizationHeader} from 'system/requests'
 
 
 export type AaaInterface = {
   initializeFromServer(): Promise<any>
-  initializeFromStruct(authsession: ISessionResponse): void
+  initializeFromStruct(authsession: ClientSessionResponse): void
   dropSession(): void
-  getAuthorizationSession(): IAuthorizationSession
-  storeAuthorizationSession(session: IAuthorizationSession): void
+  getAuthorizationSession(): AaaSession
+  storeAuthorizationSession(session: AaaSession): void
   dropAuthorizationSession(): void
   getAuthorizationToken(): string | null
   getRefreshToken(): string | null
-  authenticate(username: string, password: string): Promise<IAuthorizationSession>
+  authenticate(username: string, password: string): Promise<AaaSession>
   logout(): void
   isLoggedIn(): boolean
   check(): Promise<any>
@@ -24,14 +24,14 @@ export type AaaInterface = {
 export const aaa: AaaInterface = {
   async initializeFromServer() {
     await aaaProvider.touch().then(res => {
-      const authsession: ISessionResponse = res.data
+      const authsession: ClientSessionResponse = res.data
       aaa.initializeFromStruct(authsession)
     }).catch(() => {
       aaa.dropSession()
     })
   },
 
-  initializeFromStruct(authsession: ISessionResponse) {
+  initializeFromStruct(authsession: ClientSessionResponse) {
     runInAction(() => {
       session.user = authsession?.user || null
       session.permissions = authsession?.permissions || []
@@ -49,14 +49,14 @@ export const aaa: AaaInterface = {
     })
   },
 
-  getAuthorizationSession(): IAuthorizationSession {
+  getAuthorizationSession(): AaaSession {
     const storedSession: string | null = localStorage.getItem(localStorageAuthorizationKeyname)
     if (storedSession === null)
       return null
     return JSON.parse(storedSession)
   },
 
-  storeAuthorizationSession(session: IAuthorizationSession): void {
+  storeAuthorizationSession(session: AaaSession): void {
     localStorage.setItem(localStorageAuthorizationKeyname, JSON.stringify(session))
   },
 
@@ -65,7 +65,7 @@ export const aaa: AaaInterface = {
   },
 
   getAuthorizationToken(): string | null {
-    const session: IAuthorizationSession = aaa.getAuthorizationSession()
+    const session: AaaSession = aaa.getAuthorizationSession()
     if (session === null)
       return null
     const token: string = String(session.token)
@@ -73,15 +73,15 @@ export const aaa: AaaInterface = {
   },
 
   getRefreshToken(): string | null {
-    const session: IAuthorizationSession = aaa.getAuthorizationSession()
+    const session: AaaSession = aaa.getAuthorizationSession()
     if (session === null)
       return null
     return String(session.refreshToken)
   },
 
-  async authenticate(username: string, password: string): Promise<IAuthorizationSession> {
+  async authenticate(username: string, password: string): Promise<AaaSession> {
     return await aaaProvider.login(username, password).then(response => {
-      const authorizationSession: IAuthorization = response.data
+      const authorizationSession: AaaAuthorizationSession = response.data
       aaa.storeAuthorizationSession(authorizationSession)
       updateAuthorizationHeader(aaa.getAuthorizationToken())
       return authorizationSession

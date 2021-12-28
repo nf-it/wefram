@@ -48,11 +48,11 @@ class Session {
   }
 }
 
-export interface ISession {
+export type ClientSession = {
   user: SessionUser | null
   permissions: Permissions
 }
 
-export type ISessionResponse = ISession | null
+export type ClientSessionResponse = ClientSession | null
 
 export const session = new Session()

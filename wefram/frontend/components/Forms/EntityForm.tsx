@@ -15,7 +15,7 @@ import {
   Tooltip
 } from 'system/components'
 import {api} from 'system/api'
-import {CommonKey, IApiEntityComplexResponse, IApiEntityResponse, TApiSubmitMethod} from 'system/types'
+import {CommonKey, ApiEntityComplexResponse, ApiEntityResponse, ApiSubmitMethod} from 'system/types'
 import {RequestApiPath, RequestMethod, routing} from 'system/routing'
 import {notifications} from 'system/notification'
 import {dialog} from 'system/dialog'
@@ -75,7 +75,7 @@ export type EntityFormProps = {
   /** The error message (string) or default message (if true); error will not be shown on false **/
   onErrorShowMsg?: boolean | string
   /** Calls on fetch done, overriding the default EntityForm fetched data handling at all **/
-  onFetch?: (response: IApiEntityResponse | IApiEntityComplexResponse) => void
+  onFetch?: (response: ApiEntityResponse | ApiEntityComplexResponse) => void
   /** Calls on fetch done, but before initial data to be set up; useful to handle fetched data **/
   onFetchMakeData?: (data: any) => any
 }
@@ -184,8 +184,8 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
     if (submitPath === null)
       return
 
-    const submitMethod: TApiSubmitMethod =
-      ((this.props.submitMethod ?? (key ? 'PUT' : 'POST')).toUpperCase()) as TApiSubmitMethod
+    const submitMethod: ApiSubmitMethod =
+      ((this.props.submitMethod ?? (key ? 'PUT' : 'POST')).toUpperCase()) as ApiSubmitMethod
 
     if (!['PUT', 'POST'].includes(submitMethod))
       throw (`FormEntity.submit() - submit method ${submitMethod} is not supported!`)
@@ -594,9 +594,9 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
       : (
         <Toolbar style={{
           backgroundColor: '#f7f7f7',
+          borderRadius: '.5vmax',
           justifyContent: 'space-between',
           padding: '0 16px',
-          margin: '0 -16px',
           top: 0,
           position: 'sticky',
           borderBottom: '1px solid #f3f3f3',

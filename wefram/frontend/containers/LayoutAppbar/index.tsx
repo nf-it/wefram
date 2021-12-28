@@ -18,7 +18,6 @@ import {session} from 'system/aaa'
 import {gettext} from 'system/l10n'
 import {routingHistory} from 'system/routing'
 import {messagesStore, messages} from 'system/messages'
-import {Button} from '@mui/material'
 
 
 type LayoutAppbarProps = { }

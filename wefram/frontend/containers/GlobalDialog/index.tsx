@@ -9,11 +9,11 @@ import {
   DialogActions,
   CircularProgress
 } from 'system/components'
-import {IDialog, DialogButton} from 'system/dialog'
+import {DialogMobxStoreType, DialogButton} from 'system/dialog'
 
 
 export type GlobalDialogProps = {
-  store: IDialog
+  store: DialogMobxStoreType
 }
 
 

@@ -1,6 +1,6 @@
-export type IApiEntityResponse = any[]
-export type IApiEntityComplexResponse = {
-  items: IApiEntityResponse
+export type ApiEntityResponse = any[]
+export type ApiEntityComplexResponse = {
+  items: ApiEntityResponse
   itemsCount: number
   itemsCountAll?: number
 }
