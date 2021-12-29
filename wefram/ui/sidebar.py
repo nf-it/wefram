@@ -7,6 +7,7 @@ from .. import logger
 
 
 __all__ = [
+    'folder',
     'append',
     'append_to',
     'as_json',
@@ -23,7 +24,7 @@ class Item:
     name: str
     caption: [str, L10nStr]
     url: Optional[str]
-    url_target: Optional[Literal['screen', 'blank', 'redirect']]
+    url_target: Optional[Literal['screen', 'blank', 'redirect', 'container']]
     endpoint: Optional[str]
     order: int
     icon: Optional[str]
@@ -44,7 +45,7 @@ class Item:
             'name': self.name,
             'caption': self.caption,
             'url': self.url if children is None else None,
-            'url_target': self.url_target if children is None else None,
+            'urlTarget': self.url_target if children is None else None,
             'endpoint': self.endpoint if children is None else None,
             'order': self.order,
             'icon': self.icon,
@@ -55,6 +56,7 @@ class Item:
 
 
 _items: List[Item] = list()
+_containers: Dict[str, Item] = dict()
 _childrens: Dict[str, List[Item]] = dict()
 
 
@@ -77,6 +79,47 @@ def _make_requires(scopes: Optional[List[str]] = None) -> List[str]:
         )
         for scope in array_from(scopes)
     ]
+
+
+def folder(
+        name: str,
+        caption: [str, L10nStr],
+        order: Optional[int] = None,
+        icon: Optional[str] = None,
+        requires: Optional[Union[str, Sequence[str]]] = None
+) -> None:
+    """ Appends the folder to the sidebar with given name (the name is
+    very important because all childs about to be appended to the
+    folder by it's name).
+
+    :param name: the name of the sitemap item
+    :param caption: the caption which will be displayed to the end user
+    :param order: numerical order towards to the other items in the same corresponding folder
+    :param icon: the icon name
+    :param requires: array of permission scopes required to display this item
+    """
+
+    if not name:
+        raise ValueError("`name` is required for the sitebar folder!")
+
+    if name in _containers:
+        raise KeyError(f"sidebar folder with name {name} is already exists!")
+
+    if order is None:
+        order = (len(_items) + 1) * _ORDER_INC
+    item: Item = Item(
+        name=name,
+        caption=caption,
+        order=order,
+        icon=icon,
+        requires=_make_requires(requires),
+        url=None,
+        url_target='container',
+        endpoint=None
+    )
+    _items.append(item)
+    _containers[name] = item
+    logger.debug(f"appended sidebar folder: {CSTYLE['red']}{name}{CSTYLE['clear']}")
 
 
 def append(
@@ -115,8 +158,6 @@ def append(
         icon=icon,
         requires=_make_requires(requires)
     ))
-    # if icon:
-    #     icons.require(icon)
     logger.debug(f"appended sidebar item: {CSTYLE['red']}{name}{CSTYLE['clear']}")
 
 

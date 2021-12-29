@@ -31,12 +31,12 @@ export default class Card extends React.Component<CardProps, CardState> {
     data: {
       id: null,
       name: '',
-      snd_host: '',
-      snd_port: 0,
-      rcv_host: '',
-      rcv_port: 0,
-      use_imap: true,
-      use_tls: true,
+      sndHost: '',
+      sndPort: 0,
+      rcvHost: '',
+      rcvPort: 0,
+      useImap: true,
+      useTls: true,
       username: '',
       password: ''
     }

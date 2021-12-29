@@ -9,6 +9,7 @@ from . import sidebar
 
 
 __all__ = [
+    'folder',
     'append',
     'append_to',
     'register',
@@ -19,15 +20,31 @@ def _get_screen_url(screen: BaseScreen) -> Optional[str]:
     return screen.get_route_url()
 
 
-def append_folder(
+def folder(
         name: str,
         caption: [str, L10nStr],
         order: Optional[int] = None,
         icon: Optional[str] = None,
         requires: Optional[Union[str, Sequence[str]]] = None
 ) -> None:
-    """ Appends the folder to the sidebar """
-    pass
+    """ Appends the folder to the sidebar with given name (the name is
+    very important because all childs about to be appended to the
+    folder by it's name).
+
+    :param name: the name of the sitemap item
+    :param caption: the caption which will be displayed to the end user
+    :param order: numerical order towards to the other items in the same corresponding folder
+    :param icon: the icon name
+    :param requires: array of permission scopes required to display this item
+    """
+
+    sidebar.folder(
+        name=name,
+        caption=caption,
+        order=order,
+        icon=icon,
+        requires=requires
+    )
 
 
 def append(
@@ -39,6 +56,7 @@ def append(
         requires: Optional[Union[str, Sequence[str]]] = None
 ) -> None:
     """ Appends the given screen to the sitemap.
+
     :param screen: the screen which is about to be appended to the sitemap
     :param name: the name of the sitemap item
     :param caption: the caption which will be displayed to the end user
@@ -69,6 +87,7 @@ def append_to(
 ) -> None:
     """ Append the given screen to the sitemap within given folder. The folder have not
     to exist on the moment of the declaration.
+
     :param parent: the name of the sitemap folder item
     :param screen: the screen which is about to be appended to the sitemap
     :param name: the name of the sitemap item

@@ -22,7 +22,7 @@ __all__ = [
 
 SITEMAP_FOLDER_ID: str = APP_ID
 
-ui.sitemap.append(
+ui.sitemap.folder(
     name=SITEMAP_FOLDER_ID,
     caption=SITEMAP_CAPTION,
     icon=APP_ICON,

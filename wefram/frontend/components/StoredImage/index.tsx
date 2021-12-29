@@ -210,45 +210,56 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
             {this.state.openViewer && fileId !== null && (
               <Box className={'SystemUI-StoredImage-Viewer'}>
                 <Box className={'_controls'}>
-                  {this.props.permitUpload && (
-                    <Button
-                      startIcon={<MaterialIcon icon={'cloud_upload'} />}
-                      style={{
-                        color: '#ea0',
-                        marginRight: '1vmax'
-                      }}
-                      onClick={this.selectFile}
-                    >{gettext("Replace", 'system.ui')}</Button>
-                  )}
-                  {this.props.permitClean && (
-                    <Button
-                      startIcon={<MaterialIcon icon={'delete_forever'} />}
-                      style={{
-                        color: '#e66',
-                        marginRight: '1vmax'
-                      }}
-                      onClick={() => {
-                        dialog.showConfirm({
-                          message: gettext("Are you sure you want to clean up delete this image?", 'system.ui'),
-                          captionOK: gettext("Delete"),
-                          defaultOK: false,
-                          colorOK: 'secondary',
-                          highlightOK: true,
-                          okCallback: () => {
-                            dialog.hide()
-                            this.clearImage()
-                          }
-                        })
-                      }}
-                    >{gettext("Clear", 'system.ui')}</Button>
-                  )}
                   <IconButton
                     onClick={() => this.setState({openViewer: false})}
                     size={'small'}
-                    style={{color: '#ddd'}}
+                    style={{color: '#fff'}}
                   >
                     <MaterialIcon icon={'close'} />
                   </IconButton>
+                  <IconButton
+                    onClick={() => window.open(storage.urlFor(this.props.entity, fileId))}
+                    size={'small'}
+                    style={{color: '#ddd'}}
+                  >
+                    <MaterialIcon icon={'download_for_offline'} />
+                  </IconButton>
+                  {(this.props.permitUpload || this.props.permitClean) && (
+                    <Box borderLeft={'1px solid #fff2'} marginLeft={'4px'}>
+                      {this.props.permitUpload && (
+                        <Button
+                          startIcon={<MaterialIcon icon={'cloud_upload'} />}
+                          style={{
+                            color: '#ddd',
+                            marginRight: '1vmax'
+                          }}
+                          onClick={this.selectFile}
+                        >{gettext("Replace", 'system.ui')}</Button>
+                      )}
+                      {this.props.permitClean && (
+                        <Button
+                          startIcon={<MaterialIcon icon={'delete_forever'} />}
+                          style={{
+                            color: '#ddd',
+                            marginRight: '1vmax'
+                          }}
+                          onClick={() => {
+                            dialog.showConfirm({
+                              message: gettext("Are you sure you want to clean up delete this image?", 'system.ui'),
+                              captionOK: gettext("Delete"),
+                              defaultOK: false,
+                              colorOK: 'secondary',
+                              highlightOK: true,
+                              okCallback: () => {
+                                dialog.hide()
+                                this.clearImage()
+                              }
+                            })
+                          }}
+                        >{gettext("Clear", 'system.ui')}</Button>
+                      )}
+                    </Box>
+                  )}
                 </Box>
                 <Box className={'_container'} onClick={() => this.setState({openViewer: false})}>
                   <Image

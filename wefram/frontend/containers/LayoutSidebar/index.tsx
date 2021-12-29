@@ -14,7 +14,6 @@ import {
 import LayoutAppbar from '../LayoutAppbar'
 import {Link} from 'react-router-dom'
 import {runtime} from 'system/runtime'
-import {screensSchema} from 'build/screens'
 import {routing} from 'system/routing'
 import {dialog} from 'system/dialog'
 import {messages, StoredMessage} from 'system/messages'
@@ -22,10 +21,10 @@ import {SidebarItemModel} from 'system/types'
 import './index.css'
 
 
-type TSidebarFolderOpen = Record<string, boolean>
+type SidebarFolderOpenState = Record<string, boolean>
 type LayoutSidebarProps = { }
 type LayoutSidebarState = {
-  expandStatus: TSidebarFolderOpen
+  expandStatus: SidebarFolderOpenState
 }
 
 
@@ -67,6 +66,8 @@ const SidebarItem = (props: SidebarItemProps) => {
     return null  // at this moment - endpoint are not supported
 
   switch (item.urlTarget) {
+    case 'container':
+      return null
     case 'screen':
       return (
         <Link to={item.url} className={'SystemUI-LayoutSidebar-item'}>
@@ -95,13 +96,13 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
   }
 
   componentDidMount() {
-    const expandStatus: TSidebarFolderOpen = JSON.parse(localStorage.getItem('sidebarExpandStatus') || '{}')
+    const expandStatus: SidebarFolderOpenState = JSON.parse(localStorage.getItem('sidebarExpandStatus') || '{}')
     this.setState({expandStatus})
   }
 
   handleSidebarFolderClick = (event: React.MouseEvent<HTMLElement>) => {
     const key: string = String(event.currentTarget.dataset.key)
-    const expandStatus: TSidebarFolderOpen = this.state.expandStatus
+    const expandStatus: SidebarFolderOpenState = this.state.expandStatus
     if (typeof expandStatus[key] === 'undefined') {
       expandStatus[key] = true
     } else {
@@ -128,7 +129,7 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
           <List>
             {runtime.sidebar.map(item => (
               <Box key={`sidebar-item-${item.name}`}>
-                {(item.children !== null && item.children?.length > 0) ? (
+                {(item.children != null && item.children?.length > 0) ? (
                   <React.Fragment>
                     <ListItem
                       button
@@ -160,52 +161,13 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
                     >
                       <List component="div" disablePadding>
                         {item.children.map(child => (
-                          <Link to={screensSchema[child.screen]?.routeUrl} className={'SystemUI-LayoutSidebar-item'}>
-                            <ListItem
-                                button
-                                key={child.name}
-                                data-key={child.name}
-                                dense
-                                style={{
-                                  backgroundColor: 'inherit'
-                                }}
-                            >
-                              <ListItemIcon>
-                                {child.icon !== null && (
-                                  <img
-                                    className={'SystemUI-LayoutSidebar-icon'}
-                                    src={child.icon}
-                                  />
-                                )}
-                              </ListItemIcon>
-                              <ListItemText primary={child.caption}/>
-                            </ListItem>
-                          </Link>
+                          <SidebarItem item={child} />
                         ))}
                       </List>
                     </Collapse>
                   </React.Fragment>
                 ) : item.children === null ? (
-                  <Link to={screensSchema[item.screen]?.routeUrl} className={'SystemUI-LayoutSidebar-item'}>
-                    <ListItem
-                      button
-                      key={item.name}
-                      data-key={item.name}
-                      style={{
-                        backgroundColor: 'inherit'
-                      }}
-                    >
-                      <ListItemIcon>
-                        {item.icon !== null && (
-                          <img
-                            className={'SystemUI-LayoutSidebar-icon'}
-                            src={item.icon}
-                          />
-                        )}
-                      </ListItemIcon>
-                      <ListItemText primary={item.caption}/>
-                    </ListItem>
-                  </Link>
+                  <SidebarItem item={item} />
                 ) : null}
               </Box>
             ))}
