@@ -35,13 +35,15 @@ class DatastorageConnectionMiddleware(BaseHTTPMiddleware):
 
         async with AsyncSession() as db:
             async with db.begin():
-                request.scope['db'] = db
-                context['db'] = db
-                response: Response = await call_next(request)
                 try:
-                    await db.commit()
-                except PendingRollbackError:
-                    pass
+                    request.scope['db'] = db
+                    context['db'] = db
+                    response: Response = await call_next(request)
+                finally:
+                    try:
+                        await db.commit()
+                    except PendingRollbackError:
+                        pass
 
         return response
 
@@ -59,10 +61,12 @@ class RedisConnectionMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         connection = await redis.create_connection()
-        request.scope['redis'] = connection
-        context['redis'] = connection
-        response: Response = await call_next(request)
-        await connection.close()
+        try:
+            request.scope['redis'] = connection
+            context['redis'] = connection
+            response: Response = await call_next(request)
+        finally:
+            await connection.close()
 
         return response
 
