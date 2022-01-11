@@ -111,8 +111,8 @@ const Message = (props: MessageProps): React.ReactElement => {
         size={'small'}
         style={{
           position: 'absolute',
-          left: '-.25vw',
-          top: '-.25vw',
+          left: '-2px',
+          top: '-2px',
           zIndex: 2,
           backgroundColor: closeAllConfirm ? '#fffc' : undefined
         }}

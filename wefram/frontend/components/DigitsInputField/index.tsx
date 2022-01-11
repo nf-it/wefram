@@ -20,7 +20,7 @@ export type DigitsInputFieldProps = TextFieldProps & {
 
 
 interface NumberFormatCustomProps {
-  inputRef: (instance: NumberFormat | null) => void;
+  inputRef: (instance: any | null) => void;
   onChange: (event: { target: { name: string; tagName: string; value: number } }) => void;
   name: string;
   thousandSeparator?: string | boolean
