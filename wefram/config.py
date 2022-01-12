@@ -38,22 +38,33 @@ def read(
     """
 
     def _get_plain_value() -> Any:
+        # If the name consists of dot ('.') in the name (for example: 'scope.name'), then
+        # the first part will be used as a scope name, and the last of the name will be used
+        # as a value name.
         names: List[str] = name.split('.', 1)
         scope: Optional[str] = names[0] if len(names) == 2 else None
         param: str = names[-1]
 
+        # Making the corresponding environment option name to try to search for the
+        # value in the environment.
         envname: str = '_'.join([str(s).upper() for s in (scope or 'PROJECT', param) if s])
         envval: Optional[str] = os.environ.get(envname, None)
         if envval is not None:
             return envval
 
-        if _json_config:
+        # We will try to find the requested value over actual (current) and over
+        # default (if exists) configurations.
+        _configs: list = [_json_config, _json_default_config]
+
+        for _config in _configs:
+            if not _config:  # If the config did not loaded - skipping it (of cource)
+                continue
             if scope:
-                if scope not in _json_config:
-                    return default
-                return _json_config[scope].get(param, default)
-            else:
-                return _json_config.get(param, default)
+                if scope not in _config:
+                    continue
+                return _config[scope].get(param, default)
+            elif param in _config:
+                return _config.get(param, default)
 
         return default
 
@@ -93,9 +104,17 @@ PRJ_ROOT: str = os.getcwd()
 
 
 _json_config: Any = None
+_json_default_config: Any = None
+
+# Loading the actual (deployed) config
 if os.path.isfile(os.path.join(PRJ_ROOT, 'config.json')):
     with open(os.path.join(PRJ_ROOT, 'config.json')) as f:
         _json_config = json.load(f)
+
+# Loading the default (usually saved in the repo) config
+if os.path.isfile(os.path.join(PRJ_ROOT, 'config.default.json')):
+    with open(os.path.join(PRJ_ROOT, 'config.default.json')) as f:
+        _json_default_config = json.load(f)
 
 # --
 # -- Custom configuration
