@@ -154,7 +154,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
             )}
 
             {this.props.addScreen !== undefined && (
-              <Box ml={1}>
+              <Box ml={1} display={'flex'}>
                 <ButtonLink
                   to={api.pathToUrl(this.props.addScreen)}
                   variant={'outlined'}
@@ -165,7 +165,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
               </Box>
             )}
             {!Boolean(this.props.addScreen) && this.props.addButtonAction !== undefined && (
-              <Box ml={1}>
+              <Box ml={1} display={'flex'}>
                 <Button
                   variant={'outlined'}
                   color={'primary'}
@@ -177,7 +177,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
             )}
 
             {this.props.deleteButton !== undefined && this.props.deleteButton !== false && (
-              <Box ml={1}>
+              <Box ml={1} display={'flex'}>
                 <Tooltip title={this.props.deleteButtonCaption ?? gettext("Delete")}>
                   <Button
                     onClick={() => {
@@ -217,7 +217,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
             )}
 
             {refreshButton && (
-              <Box ml={1}>
+              <Box ml={1} display={'flex'}>
                 <Button
                   color={'primary'}
                   variant={'outlined'}

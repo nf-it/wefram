@@ -166,7 +166,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
             ))}
 
             {this.props.addScreen !== undefined && (
-              <Box ml={1}>
+              <Box ml={1} display={'flex'}>
                 <ButtonLink
                   to={api.pathToUrl(this.props.addScreen)}
                   variant={'outlined'}
@@ -177,7 +177,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
               </Box>
             )}
             {!Boolean(this.props.addScreen) && this.props.addButtonAction !== undefined && (
-              <Box ml={1}>
+              <Box ml={1} display={'flex'}>
                 <Button
                   variant={'outlined'}
                   color={'primary'}
@@ -189,7 +189,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
             )}
 
             {this.props.deleteButton !== undefined && this.props.deleteButton !== false && (
-              <Box ml={1}>
+              <Box ml={1} display={'flex'}>
                 <Tooltip title={this.props.deleteButtonCaption ?? gettext("Delete")}>
                   <Button
                     onClick={() => {
@@ -229,7 +229,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
             )}
 
             {refreshButton && (
-              <Box ml={1}>
+              <Box ml={1} display={'flex'}>
                 <Button
                   color={'primary'}
                   variant={'outlined'}

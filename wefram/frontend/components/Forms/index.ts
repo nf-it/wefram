@@ -1,6 +1,7 @@
 export * from './EntityForm'
 export * from './FormPaper'
 export * from './FormItem'
+export * from './FormDatePicker'
 export * from './FormTextInput'
 export * from './FormSwitch'
 export * from './FormCheckbox'

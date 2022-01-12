@@ -134,13 +134,13 @@ export default class Card extends React.Component<CardProps, CardState> {
                 formName={'login'}
                 label={gettext("Login", 'system.aaa-form')}
                 required
-                width={8}
+                width={7}
               />
               <FormSwitchField
                 disabled={String(session.user?.id) === String(key)}
                 label={gettext("Is locked", 'system.aaa-form')}
                 formName={'locked'}
-                width={4}
+                width={5}
               />
               {/*<FormItem width={12}>*/}
               {/*  <TipTypography>*/}
