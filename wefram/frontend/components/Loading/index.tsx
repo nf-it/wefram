@@ -17,7 +17,7 @@ export class Loading extends React.Component<LoadingProps> {
     return (
       <Backdrop open={this.props.open} style={{
         zIndex: 65535,
-        backgroundColor: '#ffffffa0'
+        backgroundColor: '#ffffff10'
       }}>
         <CircularProgress/>
       </Backdrop>

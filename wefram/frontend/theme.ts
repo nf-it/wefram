@@ -15,6 +15,11 @@ export interface WorkspaceTheme extends ThemeOptions {
     hintColor: string
   },
 
+  sidebar: {
+    background: string,
+    itemsColor: string
+  },
+
   notifications: {
     success: string
     error: string
@@ -48,6 +53,11 @@ const workspaceTheme: WorkspaceTheme = {
     secondaryColor,
     disabledColor,
     hintColor
+  },
+
+  sidebar: {
+    background: '#f4f4f4',
+    itemsColor: primaryColor
   },
 
   palette: {
@@ -92,7 +102,7 @@ const workspaceTheme: WorkspaceTheme = {
       styleOverrides: {
         root: {
           display: 'flex',
-          borderRadius: '6px',
+          borderRadius: '6px 6px 0 0',
           zIndex: 1201,
           maxWidth: '19vw',
           right: 'auto',
@@ -100,8 +110,9 @@ const workspaceTheme: WorkspaceTheme = {
           background: 'linear-gradient(to left top, #0077FF, #0059B2 120%)',
           color: '#eee',
           boxShadow: '0 0 1vmax #0007',
-          border: '1px solid #0009',
-          top: 'calc(.5vmax + 1px)'
+          // border: '1px solid #0009',
+          // top: 'calc(.5vmax + 1px)',
+          top: '.5vmax'
         }
       }
     },

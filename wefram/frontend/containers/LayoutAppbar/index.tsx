@@ -56,14 +56,16 @@ class _LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppbarState
             <Box style={{flexGrow: 1}}>
               <Typography variant="h6" noWrap style={{
                 flexGrow: 1,
-                textShadow: '0 1px 1px #000D'
+                textShadow: '0 1px 1px #000D',
+                lineHeight: 1
               }}>
                 {runtime.title.split(' ')[0]}
               </Typography>
               <Typography variant="subtitle2" noWrap style={{
                 flexGrow: 1,
                 textShadow: '0 1px 1px #000D',
-                fontWeight: 400
+                fontWeight: 400,
+                lineHeight: 1
               }}>
                 {runtime.title.split(' ').slice(1).join(' ')}
               </Typography>
@@ -71,7 +73,8 @@ class _LayoutAppbar extends React.Component<LayoutAppbarProps, LayoutAppbarState
           ) : (
             <Typography variant="h6" noWrap style={{
               flexGrow: 1,
-              textShadow: '0 1px 1px #000D'
+              textShadow: '0 1px 1px #000D',
+              lineHeight: 1
             }}>
               {runtime.title}
             </Typography>

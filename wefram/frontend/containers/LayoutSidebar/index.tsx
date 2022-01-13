@@ -18,6 +18,7 @@ import {routing} from 'system/routing'
 import {dialog} from 'system/dialog'
 import {messages, StoredMessage} from 'system/messages'
 import {SidebarItemModel} from 'system/types'
+import {workspaceTheme} from 'build/theme'
 import './index.css'
 
 
@@ -39,7 +40,8 @@ const SidebarItemInner = (props: SidebarItemProps) => (
     key={props.item.name}
     data-key={props.item.name}
     style={{
-      backgroundColor: 'inherit'
+      backgroundColor: 'inherit',
+      color: workspaceTheme.sidebar.itemsColor
     }}
     onClick={() => {
       if (props.item.endpoint === null)
@@ -120,6 +122,9 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
         classes={{
           paper: 'SystemUI-LayoutSidebar-paper',
         }}
+        style={{
+          background: workspaceTheme.sidebar.background
+        }}
       >
         <Toolbar />
 
@@ -137,6 +142,9 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
                       data-key={item.name}
                       onClick={this.handleSidebarFolderClick}
                       className={'SystemUI-LayoutSidebar-item'}
+                      style={{
+                        color: workspaceTheme.sidebar.itemsColor
+                      }}
                     >
                       <ListItemIcon>
                         {item.icon !== null && (
@@ -180,6 +188,9 @@ class Sidebar extends React.Component<LayoutSidebarProps, LayoutSidebarState> {
                   data-key={'development__menu'}
                   onClick={this.handleSidebarFolderClick}
                   className={'SystemUI-LayoutSidebar-item'}
+                  style={{
+                    color: workspaceTheme.sidebar.itemsColor
+                  }}
                 >
                   <ListItemIcon>
                     <img

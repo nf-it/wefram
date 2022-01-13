@@ -18,21 +18,6 @@ export type FormDatePickerFieldProps = FormDatePickerProps & FormItemProps & {
 
 export class FormDatePicker extends React.Component<FormDatePickerProps> {
 
-  // onChange={(value: Date | null) => {
-  //                 try {
-  //                   const editDateValue: string = isValidDate(value) && value !== null
-  //                     ? value.toISOString().split('T')[0]
-  //                     : ''
-  //                   this.setState({
-  //                     editDateValue
-  //                   })
-  //                 } catch (e) {
-  //                   this.setState({
-  //                     editDateValue: ''
-  //                   })
-  //                 }
-  //               }}
-
   private handleOnChange = (value: Date | null): void => {
     if (!this.props._formOnChange || !this.props.formName)
       return

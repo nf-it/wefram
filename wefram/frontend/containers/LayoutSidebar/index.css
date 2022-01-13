@@ -6,13 +6,11 @@
 
 .SystemUI-LayoutSidebar-paper {
     width: 19vw;
-    background: linear-gradient(to right bottom, #222, #444) !important;
-    color: #eee !important;
     padding: .35vmax 0 !important;
     box-shadow: 0 0 1vmax #0004 !important;
     margin: .5vmax;
     border-radius: 7px;
-    border: 1px solid #111 !important;
+    border: 1px solid #0002 !important;
     height: calc(100% - 2vmax) !important;
 }
 
@@ -22,29 +20,28 @@
 
 .SystemUI-LayoutSidebar-folder {
     font-size: 0.8em;
-    background-color: #0002;
-    border: 1px solid #0009;
+    background-color: #0001;
+    border: 1px solid #0002;
     border-radius: .5vmax;
     margin: 4px;
+    color: #0070f0;
 }
 
 .SystemUI-LayoutSidebar a {
     text-decoration: none;
-    color: inherit;
     opacity: 1;
 }
 
 .SystemUI-LayoutSidebar a:hover {
-    background-color: #0005 !important;
+    background-color: #0001 !important;
 }
 
 .SystemUI-LayoutSidebar-item {
-    text-shadow: 0 1px 1px #0009;
     padding: .25vmax 0;
 }
 
 .SystemUI-LayoutSidebar-item:hover {
-    background-color: #0005 !important;
+    background-color: #0001 !important;
 }
 
 .SystemUI-LayoutSidebar-icon {
@@ -61,3 +58,4 @@
 .SystemUI-LayoutSidebar-folder a {
     opacity: .65;
 }
+

@@ -1,11 +1,11 @@
 html {
-    font-size: 1.05vw;
+    font-size: 1.05rem;
     background-color: #e8eaed;
 }
 
 @media screen and (max-width: 1600px) {
     html {
-        font-size: 1.1vw;
+        font-size: 1.1rem;
     }
 }
 
