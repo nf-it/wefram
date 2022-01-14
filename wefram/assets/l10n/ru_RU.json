@@ -16,6 +16,8 @@
     : "OK",
     "Cancel"
     : "Отмена",
+    "Open"
+    : "Открыть",
     "Close"
     : "Закрыть",
     "Clear"
@@ -356,6 +358,8 @@
     : "Список пользователей",
     "Role's users"
     : "Пользователи роли",
+    "User's roles"
+    : "Роли пользователя",
     "Permit to remember an username at log on screen"
     : "Разрешить запоминать логин во время входа",
     "Max session idle time (minutes)"
@@ -385,7 +389,15 @@
     "Set password to empty"
     : "Установить пустой пароль",
     "Empty password"
-    : "Пустой пароль"
+    : "Пустой пароль",
+    "User's sessions"
+    : "Сессии пользователя",
+    "User login log"
+    : "Журнал входов пользователя",
+    "Open login log"
+    : "Открыть журнал входов",
+    "Client address"
+    : "Адрес клиента"
   },
   "aaa-form": {
     "New user"

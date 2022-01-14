@@ -160,6 +160,7 @@ class Role(ds.Model):
     )
 
     class Meta:
+        caption_key = 'name'
         findable = ['name']
 
 
@@ -168,6 +169,9 @@ class SessionLog(ds.Model):
     user_id = ds.Column(ds.UUID(), ds.ForeignKey(User.id, ondelete='CASCADE'), nullable=False)
     ts = ds.Column(ds.DateTime(), nullable=False, default=datetime.datetime.now)
     extra = ds.Column(ds.JSONB())
+
+    class Meta:
+        order = '-ts'
 
 
 @dataclass

@@ -230,8 +230,7 @@ export class StoredImage extends React.Component<StoredImageProps, StoredImageSt
                         <Button
                           startIcon={<MaterialIcon icon={'cloud_upload'} />}
                           style={{
-                            color: '#ddd',
-                            marginRight: '1vmax'
+                            color: '#ddd'
                           }}
                           onClick={this.selectFile}
                         >{gettext("Replace", 'system.ui')}</Button>

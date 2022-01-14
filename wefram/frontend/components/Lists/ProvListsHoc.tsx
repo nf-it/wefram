@@ -8,7 +8,7 @@ import {
   TextField,
   Tooltip,
   Typography,
-  Pagination
+  Pagination, IconButton, MaterialIcon
 } from 'system/components'
 import {
   ListsProvidedFilters,
@@ -433,20 +433,17 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
         </Box>
 
         <Box
-          mt={1} mb={1}
-          pl={2}
+          mt={1} mb={1} ml={1}
           display={'flex'} flexDirection={'row'} alignItems={'center'}
         >
           {this.props.selectable === true && (!this.props.disableSelectInvertButton) && (
-            <Box mr={3}>
+            <Box flexGrow={1} mr={3} marginLeft={'-2px'}>
               <Tooltip title={gettext("Invert selection", 'system.ui')}>
-                <Checkbox
-                  edge="start"
-                  checked={true}
-                  tabIndex={-1}
-                  disableRipple
+                <IconButton
                   onClick={() => (this.props.onHocInvertSelection && this.props.onHocInvertSelection())}
-                />
+                >
+                  <MaterialIcon icon={'select_all'} />
+                </IconButton>
               </Tooltip>
             </Box>
           )}

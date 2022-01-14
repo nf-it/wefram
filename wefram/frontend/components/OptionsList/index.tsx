@@ -38,6 +38,7 @@ export type OptionsListProps = {
   name?: string
   resolveItemsPath?: RequestApiPath
   values?: CommonKey[]
+  variant?: 'default' | 'bordered'
   searchItemsPath?: RequestApiPath
   sort?: boolean | ((items: OptionsResolve) => CommonKey[])
 
@@ -207,6 +208,13 @@ export class OptionsList extends React.Component<OptionsListProps, OptionsListSt
       values.sort((a, b) => (items[a] > items[b]) ? 1 : -1)
     }
 
+    const style = (this.props.variant ?? 'default') === 'default' ? {} : {
+      border: '1px solid #0003',
+      backgroundColor: '#aaa1',
+      padding: '8px',
+      borderRadius: '8px'
+    }
+
     return (
       <React.Fragment>
         {values.length > 0 && (
@@ -214,10 +222,14 @@ export class OptionsList extends React.Component<OptionsListProps, OptionsListSt
             container
             spacing={1}
             direction={(this.props.gridItemSize ?? 0) > 0 ? 'row' : 'column'}
+            style={style}
           >
             {values.map((key: CommonKey) => {
               return (
-                <Grid item xs={this.props.gridItemSize || 12}>
+                <Grid item xs={this.props.gridItemSize || 12} style={{
+                  margin: '4px',
+                  padding: 0
+                }}>
                   <Chip
                     classes={{
                       root: 'SystemUI-OptionsList-chip-root',
@@ -233,7 +245,7 @@ export class OptionsList extends React.Component<OptionsListProps, OptionsListSt
           </Grid>
         )}
         {values.length == 0 && (this.props.emptyMsg ?? true) !== false && (
-          <Box pt={1} pb={1}>
+          <Box pt={1} pb={1} style={style}>
             {typeof this.props.emptyMsg == 'string'
               ? this.props.emptyMsg
               : gettext("The list is empty", 'system.ui')}

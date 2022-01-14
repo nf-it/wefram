@@ -1,4 +1,5 @@
-import {CommonKey} from 'system/types/common'
+import {EntityDateTime} from 'system/types/api'
+import {CommonKey, UuidKey} from 'system/types/common'
 
 export type AaaAuthorizationSession = {
   token: string
@@ -53,6 +54,7 @@ export type UserEditModel = {
   comments: string
   fullName: string
   avatar: string | null
+  roles: UuidKey[]
 }
 
 export type RoleEditModel = {
@@ -69,4 +71,11 @@ export type ActiveDirectoryDomainModel = {
   name: string
   domain: string
   server: string
+}
+
+export type SessionLogModel = {
+  id: number
+  userId: UuidKey
+  ts: EntityDateTime
+  extra: any
 }

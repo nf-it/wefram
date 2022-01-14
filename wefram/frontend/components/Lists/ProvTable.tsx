@@ -1,5 +1,6 @@
 import React, {createRef} from 'react'
 import {
+  Box,
   Checkbox,
   Collapse,
   IconButton,
@@ -9,7 +10,8 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableRow, Tooltip
+  TableRow,
+  Tooltip
 } from 'system/components'
 import {
   ListsSelection,
@@ -107,12 +109,11 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
             {this.props.selectable && (
               <TableCell align={'center'} padding={'checkbox'}>
                 <Tooltip title={gettext("Invert selection", 'system.ui')}>
-                  <Checkbox
-                    checked={true}
-                    tabIndex={-1}
-                    disableRipple
+                  <IconButton
                     onClick={this.invertSelection}
-                  />
+                  >
+                    <MaterialIcon icon={'select_all'} />
+                  </IconButton>
                 </Tooltip>
               </TableCell>
             )}

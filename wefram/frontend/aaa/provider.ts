@@ -1,6 +1,7 @@
-import {AaaAuthorizationSession} from '../types/aaa'
+import {UuidKey} from 'system/types'
+import {AaaAuthorizationSession, SessionLogModel} from '../types/aaa'
 import {aaa} from './api'
-import {ClientSession, session} from './session'
+import {ClientSession} from './session'
 import {api} from '../api'
 import {RequestApiPath} from '../routing'
 import {Response} from '../response'
@@ -17,6 +18,7 @@ const CHECKPATH: RequestApiPath = {
   path: 'check',
   version: APIVER
 }
+// const SESSIONLOGPATH: RequestApiPath = api.entityPath('system', 'SessionLog')
 
 
 export type AaaProvider = {
@@ -24,6 +26,7 @@ export type AaaProvider = {
   refreshToken(): Response<AaaAuthorizationSession>
   touch(): Response<ClientSession>
   check(): Response<any>
+  // getSessionLog(userId: UuidKey): Response<SessionLogModel[]>
 }
 
 export const aaaProvider: AaaProvider = {
@@ -52,5 +55,13 @@ export const aaaProvider: AaaProvider = {
         'Authorization': aaa.getAuthorizationToken() ?? ''
       }
     })
-  }
+  },
+
+  // getSessionLog(userId) {
+  //   return api.get(SESSIONLOGPATH, {
+  //     params: {
+  //       userId
+  //     }
+  //   })
+  // }
 }

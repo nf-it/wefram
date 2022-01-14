@@ -1,7 +1,7 @@
 from typing import *
 from ...api import register, ModelAPI
 from ...aaa.tools import hash_password
-from ...models import User, Role
+from ...models import User, Role, SessionLog
 from ..const.aaa import PERMISSION_ADMINUSERSROLES
 
 
@@ -29,4 +29,13 @@ class User(ModelAPI):
 class Role(ModelAPI):
     model = Role
     requires = PERMISSION_ADMINUSERSROLES
+
+
+@register
+class SessionLog(ModelAPI):
+    model = SessionLog
+    requires = PERMISSION_ADMINUSERSROLES
+    allow_create = False
+    allow_delete = False
+    allow_update = False
 

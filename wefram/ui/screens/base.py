@@ -1,18 +1,41 @@
 from typing import *
 import os.path
 import re
-from ..requests import routing
-from ..urls import asset_url
-from ..tools import CSTYLE, get_calling_app, array_from, get_calling_module
-from ..types.ui import BaseScreen
-from .. import config, logger, ds, api, ui
+from ...requests import routing, Request
+from ...urls import asset_url
+from ...tools import CSTYLE, get_calling_app, array_from, get_calling_module
+from ...types.ui import BaseScreen
+from ... import config, logger, ds, api, ui
 
 
 RouteParams = List[str]
+CompositeLayout = List[Any]
 
 
 class Screen(BaseScreen):
     pass
+
+
+class CompositeScreen(BaseScreen):
+    component: str = '/wefram/containers/CompositeScreen'
+    layout: Any = None
+    static: bool = None
+
+    @classmethod
+    def layout_schema(cls) -> CompositeLayout:
+        return []
+
+    @classmethod
+    def schema_json(cls) -> dict:
+        is_static: bool = cls.static is True or (cls.static is None and not callable(cls.layout))
+        layout: Optional[list] = None if not is_static else cls.layout_schema()
+
+        schema: dict = super().schema_json()
+        schema['params']['layout'] = layout
+        return schema
+
+    async def render(self, request: Request) -> Optional[CompositeLayout]:
+        raise NotImplementedError
 
 
 class FilesScreen(BaseScreen):
