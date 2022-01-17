@@ -2,11 +2,15 @@ import React from 'react'
 import {workspaceTheme} from 'build/theme'
 
 
+export type MaterialIconSize = number | 'small' | 'medium' | 'large'
+export type MaterialIconColor = string | 'primary' | 'secondary' | 'disabled'
+export type MaterialIconVariant = 'filled' | 'outlined' | 'rounded' | 'sharp' | 'two-tone'
+
 export type MaterialIconProps = {
-  color?: string | 'primary' | 'secondary' | 'disabled'
-  size?: number | 'small' | 'medium' | 'large'
+  color?: MaterialIconColor
+  size?: MaterialIconSize
   icon: string
-  variant?: 'filled' | 'outlined' | 'rounded' | 'sharp' | 'two-tone'
+  variant?: MaterialIconVariant
   ml?: number
   mr?: number
   mt?: number

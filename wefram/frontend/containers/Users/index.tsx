@@ -3,7 +3,7 @@ import {
   Box,
   Dialog,
   EntityList,
-  MaterialIcon,
+  MaterialIcon, MenuButton,
   Typography
 } from 'system/components'
 import {ScreenProps} from 'system/types'
@@ -41,6 +41,24 @@ export default class Screen extends React.Component<ScreenProps> {
           addButtonAction={() => this.setState({entityKey: null})}
           avatarColor
           avatarField={'avatar'}
+          controls={[
+            <MenuButton
+              variant={'outlined'}
+              items={[
+                {
+                  icon: 'lock',
+                  iconColor: 'red',
+                  caption: gettext('Lock selected', 'system.aaa'),
+                  onClick: () => {}
+                },
+                {
+                  icon: 'lock_open',
+                  caption: gettext('Unlock selected', 'system.aaa'),
+                  onClick: () => {}
+                }
+              ]}
+            />
+          ]}
           defaultSort={{value: 'fullName', direction: 'asc'}}
           deleteButton={true}
           deleteConfirmMessage={gettext("Are you sure you want to delete the selected users?", 'system.aaa-messages')}

@@ -1,4 +1,4 @@
-import {ThemeOptions} from '@mui/material'
+import {ThemeOptions, Components} from '@mui/material'
 
 
 const primaryColor = '#0070f0'
@@ -6,6 +6,10 @@ const secondaryColor = '#dd2f00'
 const disabledColor = '#00000044'
 const hintColor = '#4488ff'
 
+
+export type WeframComponents = {
+
+}
 
 export interface WorkspaceTheme extends ThemeOptions {
   colors: {
@@ -25,7 +29,9 @@ export interface WorkspaceTheme extends ThemeOptions {
     error: string
     info: string
     warning: string
-  }
+  },
+
+  weframComponents: WeframComponents
 }
 
 
@@ -85,6 +91,10 @@ const workspaceTheme: WorkspaceTheme = {
       lg: 1440,
       xl: 1920
     }
+  },
+
+  weframComponents: {
+
   },
 
   components: {

@@ -153,6 +153,12 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
               />
             )}
 
+            {Array.isArray(this.props.controls) ? this.props.controls.map((el: JSX.Element) => (
+              <Box ml={1} display={'flex'}>{el}</Box>
+            )) : this.props.controls !== null && this.props.controls !== undefined ? (
+              <Box ml={1} display={'flex'}>{this.props.controls}</Box>
+            ) : null}
+
             {this.props.addScreen !== undefined && (
               <Box ml={1} display={'flex'}>
                 <ButtonLink

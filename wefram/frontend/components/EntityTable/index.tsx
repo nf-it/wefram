@@ -28,7 +28,7 @@ export interface EntityTableProps extends ProvTableProps {
   addScreen?: RequestApiPath
   addButtonCaption?: string
   addButtonAction?: () => void
-  controls?: JSX.Element[]
+  controls?: JSX.Element[] | JSX.Element
   deleteButton?: RequestApiPath | boolean
   deleteButtonCaption?: string
   deleteConfirmMessage?: string
@@ -161,9 +161,11 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
               />
             )}
 
-            {this.props.controls && this.props.controls.map((el: JSX.Element) => (
-              <Box ml={1}>{el}</Box>
-            ))}
+            {Array.isArray(this.props.controls) ? this.props.controls.map((el: JSX.Element) => (
+              <Box ml={1} display={'flex'}>{el}</Box>
+            )) : this.props.controls !== null && this.props.controls !== undefined ? (
+              <Box ml={1} display={'flex'}>{this.props.controls}</Box>
+            ) : null}
 
             {this.props.addScreen !== undefined && (
               <Box ml={1} display={'flex'}>

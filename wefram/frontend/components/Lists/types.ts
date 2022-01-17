@@ -67,8 +67,7 @@ export type UrlStateStorage = {
 
 type ItemRouteCallback = (item: any) => string
 
-export type ProvListProps = {
-  entityCaption?: string
+type ProvListCommonProps = {
   onError?: (err: any) => void
   onErrorShowMsg?: boolean | string
   onFetch?: (response: ApiEntityResponse | ApiEntityComplexResponse) => void
@@ -82,9 +81,7 @@ export type ProvListProps = {
   avatarColor?: string | boolean | ((item: any) => string | undefined)
   avatarFallback?: string | ((item: any) => JSX.Element | JSX.Element[] | null)
   avatarField?: string
-  cardsOnRow?: number
-  cardsOnRowCompactScreen?: number
-  cardsOnRowWideScreen?: number
+  entityCaption?: string
   defaultSort?: ListsSorting
   emptyListText?: boolean | string
   providedFilters?: ListsProvidedFilters
@@ -94,12 +91,6 @@ export type ProvListProps = {
   itemKeyField?: string
   itemsRoute?: string | ItemRouteCallback
   pagination?: boolean
-  primaryField?: ListField
-  renderItemActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
-  renderItemCardHeaderActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
-  renderPrimaryField?: (item: any, field?: ListField) => JSX.Element | JSX.Element[] | null
-  renderSecondaryField?: (item: any, field?: ListField) => JSX.Element | JSX.Element[] | null
-  secondaryField?: ListField
   requestPath: RequestApiPath | string
   selectable?: boolean
   separated?: boolean
@@ -109,7 +100,6 @@ export type ProvListProps = {
   textTotalCountAll?: string | boolean
   unsortedOption?: boolean | string
   urlStateStorage?: UrlStateStorage
-  variant?: 'list' | 'cards'
 
   items?: any[]
   itemsCount?: number
@@ -120,6 +110,19 @@ export type ProvListProps = {
 
   offset?: number
   limit?: number
+}
+
+export type ProvListProps = ProvListCommonProps & {
+  cardsOnRow?: number
+  cardsOnRowCompactScreen?: number
+  cardsOnRowWideScreen?: number
+  primaryField?: ListField
+  renderItemActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
+  renderItemCardHeaderActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
+  renderPrimaryField?: (item: any, field?: ListField) => JSX.Element | JSX.Element[] | null
+  renderSecondaryField?: (item: any, field?: ListField) => JSX.Element | JSX.Element[] | null
+  secondaryField?: ListField
+  variant?: 'list' | 'cards'
 }
 
 export type ProvListOverridedParams = {
@@ -134,53 +137,11 @@ export type ProvTableColumn = ListsFieldStruct & {
 
 export type ProvTableColumns = ProvTableColumn[]
 
-export type ProvTableProps = {
-  onError?: (err: any) => void
-  onErrorShowMsg?: boolean | string
-  onFetch?: (response: ApiEntityResponse | ApiEntityComplexResponse) => void
-  onFetchDone?: (success?: boolean) => void
-  onItemClick?: (item: any) => void
-  onProvidedFiltersUpdateReq?: (filters: Record<string, any>) => void
-  onSelection?: (items: ListsSelection) => void
-  onPageChange?: (page: number, fetchCallback: any) => void
-  onSortChange?: (sort: ListsSorting | null, fetchCallback: any) => void
-
+export type ProvTableProps = ProvListCommonProps & {
   columns: ProvTableColumns
-
-  avatarColor?: string | boolean | ((item: any) => string | undefined)
-  avatarFallback?: string | ((item: any) => JSX.Element | JSX.Element[] | null)
-  avatarField?: string
-  entityCaption?: string
-  defaultSort?: ListsSorting
-  emptyListText?: boolean | string
-  providedFilters?: ListsProvidedFilters
-  filtersEmptyAllowed?: string[]
-  forbidUrlStateUpdate?: boolean
-  itemComponent?: React.ElementType
-  itemKeyField?: string
-  itemsRoute?: string | ItemRouteCallback
-  pagination?: boolean
   renderRowPrefix?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
   renderRowSuffix?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
   renderRowExpandedChild?: (item: any) => JSX.Element | JSX.Element[] | null
-  requestPath: RequestApiPath | string
-  selectable?: boolean
-  separated?: boolean
-  sortOptions?: ListsSortingOptions
-  textTotalCount?: string | boolean
-  textTotalCountAll?: string | boolean
-  unsortedOption?: boolean | string
-  urlStateStorage?: UrlStateStorage
-
-  items?: any[]
-  itemsCount?: number
-  itemsCountAll?: number
-
-  selected?: ListsSelection
-  sort?: ListsSorting | null
-
-  offset?: number
-  limit?: number
 }
 
 export type ProvTableOverridedParams = {

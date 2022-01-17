@@ -28,6 +28,7 @@ type ReactElements = any | any[] | null | undefined
 
 export type EntityFormProps = {
   close?: string | boolean
+  closeOnSubmit?: boolean
   confirmOnUnsaved?: boolean
   controls?: JSX.Element[]
   data: any
@@ -161,6 +162,8 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
   }
 
   private afterSubmit = (): void => {
+    if (this.props.onAfterSubmit === undefined && this.props.closeOnSubmit === false)
+      return
     this.props.onAfterSubmit !== undefined
       ? this.props.onAfterSubmit()
       : this.close()
