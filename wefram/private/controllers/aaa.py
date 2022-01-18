@@ -159,7 +159,7 @@ async def v1_refresh(request: Request) -> JSONResponse:
     ))
 
 
-@api.handle_post('/lock', API_V1)
+@api.handle_post('/users/lock', API_V1)
 @requires(PERMISSION_ADMINUSERSROLES)
 async def v1_lock_users(request: Request) -> SuccessResponse:
     """ Locks given system users by their 'id' field preventing from loggin in.
@@ -189,7 +189,7 @@ async def v1_lock_users(request: Request) -> SuccessResponse:
     return SuccessResponse()
 
 
-@api.handle_post('/unlock', API_V1)
+@api.handle_post('/users/unlock', API_V1)
 @requires(PERMISSION_ADMINUSERSROLES)
 async def v1_unlock_users(request: Request) -> SuccessResponse:
     """ Unlocks given system users by their 'id' field preventing from loggin in.
@@ -218,7 +218,7 @@ async def v1_unlock_users(request: Request) -> SuccessResponse:
     return SuccessResponse()
 
 
-@api.handle_post('/logoff', API_V1)
+@api.handle_post('/users/logoff', API_V1)
 @requires(PERMISSION_ADMINUSERSROLES)
 async def v1_logoff_users(request: Request) -> SuccessResponse:
     """ Logs off all given users, terminating all their corresponding sessions.

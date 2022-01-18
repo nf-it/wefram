@@ -1,5 +1,5 @@
 from typing import *
-from sqlalchemy.exc import PendingRollbackError
+from sqlalchemy.exc import PendingRollbackError, ResourceClosedError
 from starlette.middleware.base import (
     BaseHTTPMiddleware,
     RequestResponseEndpoint,
@@ -78,7 +78,7 @@ class DatastorageConnectionCliMiddleware(CliMiddleware):
             await call_next()
             try:
                 await db.commit()
-            except PendingRollbackError:
+            except (PendingRollbackError, ResourceClosedError):
                 pass
 
 

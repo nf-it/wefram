@@ -88,6 +88,7 @@ def requires(
 
     .. highlight:: python
     .. code-block:: python
+
         # Require 'extra_access' named permission to be present in the
         # any of role which the current user is belongs to.
         @requires('extra_access')

@@ -6,10 +6,12 @@ import {
   MaterialIcon, MenuButton,
   Typography
 } from 'system/components'
+import {notifications} from 'system/notification'
+import {runtime} from 'system/runtime'
 import {ScreenProps, UuidKey, UserModel} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
-import {session} from 'system/aaa'
+import {aaaProvider, session} from 'system/aaa'
 import {RequestApiPath} from 'system/routing'
 import User from '../User'
 
@@ -54,17 +56,58 @@ export default class Screen extends React.Component<ScreenProps> {
                     icon: 'lock',
                     iconColor: 'red',
                     caption: gettext("Lock selected", 'system.aaa'),
-                    onClick: () => {}
+                    disabled: this.state.selected.length === 0,
+                    onClick: () => {
+                      const selected = this.state.selected
+                      if (!selected.length)
+                        return
+                      runtime.busy = true
+                      aaaProvider.lockUsers(selected).then(() => {
+                        runtime.busy = false
+                        notifications.showRequestSuccess()
+                        this.listRef.current?.update()
+                      }).catch(err => {
+                        runtime.busy = false
+                        notifications.showRequestError(err)
+                      })
+                    }
                   },
                   {
                     icon: 'lock_open',
                     caption: gettext("Unlock selected", 'system.aaa'),
-                    onClick: () => {}
+                    disabled: this.state.selected.length === 0,
+                    onClick: () => {
+                      const selected = this.state.selected
+                      if (!selected.length)
+                        return
+                      runtime.busy = true
+                      aaaProvider.unlockUsers(selected).then(() => {
+                        runtime.busy = false
+                        notifications.showRequestSuccess()
+                        this.listRef.current?.update()
+                      }).catch(err => {
+                        runtime.busy = false
+                        notifications.showRequestError(err)
+                      })
+                    }
                   },
                   {
                     icon: 'logout',
                     caption: gettext("Log off selected", 'system.aaa'),
-                    onClick: () => {}
+                    disabled: this.state.selected.length === 0,
+                    onClick: () => {
+                      const selected = this.state.selected
+                      if (!selected.length)
+                        return
+                      runtime.busy = true
+                      aaaProvider.logoffUsers(selected).then(() => {
+                        runtime.busy = false
+                        notifications.showRequestSuccess()
+                      }).catch(err => {
+                        runtime.busy = false
+                        notifications.showRequestError(err)
+                      })
+                    }
                   }
                 ]}
               />

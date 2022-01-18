@@ -35,7 +35,7 @@
     "port": 8888
   },
   "devel": true,
-  "echo_ds": false,
+  "echo_ds": true,
   "development": {
     "weframMasterDevelopment": true
   }

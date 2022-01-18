@@ -177,12 +177,12 @@ class User(ds.Model):
         :param ids: The list of corresponding users' IDs (UUIDs)
         """
 
-        users: List[User] = await cls.all(cls.id.in_(ids))
+        users: List[User] = await cls.all(cls.id.in_(ids), update=True)
         if not users:
             return
 
-        for user in users:
-            user.locked = state
+        for u in users:
+            u.locked = state
 
 
 class Role(ds.Model):

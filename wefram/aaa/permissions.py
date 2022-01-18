@@ -63,6 +63,7 @@ def register(
 
     .. highlight:: python
     .. code-block:: python
+
         permissions.register('admin_access', "Administer everything")
 
     will register the permission 'mytest.admin_access' with caption

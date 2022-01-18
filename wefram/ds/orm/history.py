@@ -9,6 +9,7 @@ from .types import Column, BigAutoIncrement, String, StringChoice, UUID, JSONB, 
 from .helpers import ModelColumn
 from .engine import AsyncSession
 from ...tools import CSTYLE, for_jsonify
+from ...runtime import context
 from ... import logger
 
 
@@ -102,10 +103,13 @@ async def push_history_record(
         after=for_jsonify(after)
     )
 
-    async with AsyncSession() as db:
-        async with db.begin():
-            db.add(record)
-            await db.commit()
+    db = context['db']
+    db.add(record)
+
+    # async with AsyncSession() as db:
+    #     async with db.begin():
+    #         db.add(record)
+    #         await db.commit()
 
     logger.debug(
         f"logged {CSTYLE['blue']}{action}{CSTYLE['clear']} action for"
