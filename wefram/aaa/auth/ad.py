@@ -1,4 +1,6 @@
-""" Active Directory authentication backend """
+"""
+Active Directory authentication backend
+"""
 
 from typing import *
 import socket

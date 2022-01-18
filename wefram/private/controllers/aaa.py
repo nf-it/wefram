@@ -8,7 +8,7 @@ from ...requests import Request, NoContentResponse, JSONResponse, HTTPException,
 from ...runtime import context
 from ...exceptions import AuthenticationFailed
 from ...aaa.wrappers import requires_authenticated, requires
-from ...aaa.routines import authenticate, create_session, refresh_with_token
+from ...aaa.routines import authenticate, create_session, refresh_with_token, drop_user_sessions_by_id
 from ...models import User, Session, SessionLog, SessionUser
 from ..const.aaa import SETTINGS_FAILEDAUTH_DELAY, SETTINGS_SUCCEEDAUTH_DELAY, PERMISSION_ADMINUSERSROLES
 
@@ -181,7 +181,6 @@ async def v1_lock_users(request: Request) -> SuccessResponse:
     ids: Optional[List[str]] = payload.get('ids')
     if not ids:
         raise HTTPException(500, "Invalid request - 'ids' payload was not specified!")
-
     if not isinstance(ids, (list, tuple)):
         raise HTTPException(500, "Invalid request - 'ids' must be a list of users' id!")
 
@@ -211,7 +210,6 @@ async def v1_unlock_users(request: Request) -> SuccessResponse:
     ids: Optional[List[str]] = payload.get('ids')
     if not ids:
         raise HTTPException(500, "Invalid request - 'ids' payload was not specified!")
-
     if not isinstance(ids, (list, tuple)):
         raise HTTPException(500, "Invalid request - 'ids' must be a list of users' id!")
 
@@ -240,12 +238,16 @@ async def v1_logoff_users(request: Request) -> SuccessResponse:
     """
 
     payload = request.scope['payload']
-    ids: Optional[List[str]] = payload.get('ids')
-    if not ids:
+    user_ids: Optional[List[str]] = payload.get('ids')
+    if not user_ids:
         raise HTTPException(500, "Invalid request - 'ids' payload was not specified!")
-
-    if not isinstance(ids, (list, tuple)):
+    if not isinstance(user_ids, (list, tuple)):
         raise HTTPException(500, "Invalid request - 'ids' must be a list of users' id!")
+
+    for user_id in user_ids:
+        if not isinstance(user_id, str):
+            raise HTTPException(500, "Invalid request - 'ids' must be a list of users' id!")
+        await drop_user_sessions_by_id(user_id)
 
     return SuccessResponse()
 

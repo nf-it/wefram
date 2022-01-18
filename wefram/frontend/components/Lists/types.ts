@@ -68,6 +68,19 @@ export type UrlStateStorage = {
 type ItemRouteCallback = (item: any) => string
 
 type ProvListCommonProps = {
+  /**
+   * @typedef {Object} ProvListCommonProps - the common set of props for lists
+   *
+   * @property onAfterFetch - Called after fetch done and right before rendering items to make ability to make some changes,
+   * or make some work on the higher level component using fetched items. The function must return the array of items whose
+   * about to be rendered.
+   *
+   * @property selectable - If set to `true` - all items will be selectable; if set to `false` - none of items will be selectable
+   * at all; if set to the array - only items with keys from the given array will be selectable, which gives
+   * the higher component an ability to control whose items must be selectable and whose must not.
+   */
+
+  onAfterFetch?: (items: any[]) => any[]
   onError?: (err: any) => void
   onErrorShowMsg?: boolean | string
   onFetch?: (response: ApiEntityResponse | ApiEntityComplexResponse) => void
@@ -92,7 +105,7 @@ type ProvListCommonProps = {
   itemsRoute?: string | ItemRouteCallback
   pagination?: boolean
   requestPath: RequestApiPath | string
-  selectable?: boolean
+  selectable?: boolean | any[]
   separated?: boolean
   sortOptions?: ListsSortingOptions
   storageEntity?: string

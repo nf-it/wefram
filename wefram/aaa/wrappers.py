@@ -1,3 +1,8 @@
+"""
+ASGI/routing-level wrappers for the authentication mechanics used by the project and
+by the middleware.
+"""
+
 from typing import *
 import inspect
 import asyncio
@@ -29,6 +34,28 @@ def test_request_scope(
         status_code: int = 403,
         redirect: str = None
 ) -> Optional[str]:
+    """ Raises the specific for situation exception if the current, logged-in user has
+    no access to the requesting facility. On other side, if the user HAS the access,
+    nothing will happen.
+    The testing is connection-level, so, the `HTTPConnection` about to be passed to
+    this function.
+
+    If the user is not logged-in, but requested to be - the 401 status code (Not
+    authenticated) will be used as exception; otherwise, 403 (Access denied)
+    will be returned if even one scope is not accessible by the user.
+
+    :param conn:
+        The ASGI connection for which context to test the access;
+    :param scopes:
+        The requested scoped to be accessible by the current (based on the connection
+        session) user;
+    :param status_code:
+        Which status code to raise if the user has no access (but IS logged-in);
+    :param redirect:
+        Instead of raising "Access denied" or "Not authenticated" exception - redirect
+        the calling client to the given URL; optional argument;
+    """
+
     if scopes and scopes[0].lower() == 'guest' and not isinstance(conn.user, UnauthenticatedUser) and conn.user is not None:
         if redirect is not None:
             return redirect
@@ -50,6 +77,34 @@ def requires(
     status_code: int = 403,
     redirect: str = None
 ) -> Callable:
+    """ The decorator used to protect the decorating function, controller,
+    method or etc., with specified by the application set of permissions
+    (scopes). If the current user has no access to any of the specified
+    permissions when the decorated function apear to be run - the
+    corresponding exception will be raised, preventing client from doing
+    unaccessible work.
+
+    Example:
+
+    .. highlight:: python
+    .. code-block:: python
+        # Require 'extra_access' named permission to be present in the
+        # any of role which the current user is belongs to.
+        @requires('extra_access')
+        async def my_controller(request: Request) -> Response:
+            pass
+
+    :param scopes:
+        The list of scopes (permissions) required to be accessible for
+        the current user;
+    :param status_code:
+        Which status code to use (403 by default) if the user is logged-in,
+        but has no access to the any of the specified scopes;
+    :param redirect:
+        Instead of raising "Access denied" or "Not authenticated" exception - redirect
+        the calling client to the given URL; optional argument;
+    """
+
     def _ensure_app_prefix(scope: str) -> str:
         if scope in ['authenticated', 'guest']:
             return scope
@@ -140,6 +195,8 @@ def requires_authenticated(
     status_code: int = 403,
     redirect: str = None,
 ) -> Callable:
+    """ The shortcut decoractor for the `requires('authenticated')` """
+
     return requires('authenticated', status_code=status_code, redirect=redirect)
 
 
@@ -147,4 +204,6 @@ def requires_guest(
     status_code: int = 403,
     redirect: str = None,
 ) -> Callable:
+    """ The shortcut decoractor for the `requires('guest')` """
+
     return requires('guest', status_code=status_code, redirect=redirect)

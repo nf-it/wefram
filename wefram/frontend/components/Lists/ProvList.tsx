@@ -32,6 +32,13 @@ import {storage} from 'system/storage'
 
 
 type ProvListState = {
+  /**
+   * @property compactScreen - `true` if the current screen width comforms to the compact,
+   *    mobile device dimensions; `false` otherwise.
+   * @property loading - `true` (initially = true) when loading items
+   * @property items - the fetched from backend items array
+   * @property selected - the array of selected items' keys
+   */
   compactScreen: boolean
   loading: boolean
   items?: any[]
@@ -40,6 +47,21 @@ type ProvListState = {
 
 
 type ProvListItemPrepared = {
+  /**
+   * @property key - the item's key (UuidKey or string | number)
+   * @property routePath - the item's URL for link element, if the item click routes to the another screen
+   * @property divider - do render the divider after this item?
+   * @property primaryField - the item's primary field struct or null
+   * @property secondaryField - the item's secondary field struct or null
+   * @property itemAltText - the item's alternative string
+   * @property avatarUrl - the item's avatar image URL, if applicable
+   * @property avatarChildren - the item's avatar ready to render JSX element(s)
+   * @property avatarColor - the item's avatar color, if applicable & there is no avatar image
+   * @property selected - is this item selected and corresponding checkbox must be "checked"?
+   * @property actions - the ready to render JSX element(s) containing additional item's actions (optional)
+   * @property cardHeaderActions - extension for 'cards' variant of the list, with ability to render
+   *    additional actions for the item at the item's header
+   */
   key: CommonKey | undefined
   routePath: string | null
   divider: boolean
@@ -76,12 +98,18 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
     this.setState({compactScreen: isCompactScreen()});
   }
 
+  /**
+   * Called when checkbox has been clicked to modify the list of the selected items.
+   *
+   * @param key - the corresponding item's key (on which's checkbox has been clicked)
+   */
   private handleCheckboxChange = (key: CommonKey | undefined): void => {
+    const restricted: boolean = Array.isArray(this.props.selectable) && !this.props.selectable.includes(key)
     const selected = (this.props.selected ?? this.state.selected ?? []) as any
     const checked = selected.includes(key)
     if (checked) {
       selected.splice(selected.indexOf(key), 1)
-    } else {
+    } else if (!restricted) {
       selected.push(key)
     }
     this.props.onSelection !== undefined
@@ -89,6 +117,10 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       : this.setState({selected})
   }
 
+  /**
+   * Inverts the selection, taking all items and inverting their corresponding state. If
+   * the another item is selected - makes it unselected, and vise versa.
+   */
   public invertSelection = (): void => {
     const items = this.props.items ?? this.state.items ?? []
     const currentSelected = (this.props.selected ?? this.state.selected ?? []) as any
@@ -101,7 +133,8 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       if (key === undefined)
         return
       const selected: boolean = currentSelected.includes(key)
-      if (!selected) {
+      const restricted: boolean = Array.isArray(this.props.selectable) && !this.props.selectable.includes(key)
+      if (!selected && !restricted) {
         updatedSelected.push(key)
       }
     })
@@ -110,12 +143,25 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       : this.setState({selected: updatedSelected})
   }
 
+  /**
+   * Returns item's alternative string.
+   *
+   * @param item - the item object
+   * @return - the item alternative string or undefined if not applicable.
+   */
   private getItemAlt = (item: any): string | undefined => {
     if (typeof this.props.primaryField == 'string')
       return item[this.props.primaryField]
     return undefined
   }
 
+  /**
+   * Returns the item corresponding avatar URL (the absolute one). If there is no
+   * avatar image - returns null instead.
+   *
+   * @param item - the item object
+   * @return - the URL if applicable, or {null} instead
+   */
   private getItemAvatarUrl = (item: any): string | null => {
     return this.props.avatarField && item[this.props.avatarField]
       ? (
@@ -125,6 +171,12 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       ) : null
   }
 
+  /**
+   * Returns the rendered JSX element to be included as avatar element, for the item.
+   *
+   * @param item - the item object.
+   * @return - the ready to render JSX element
+   */
   private getItemAvatarChildren = (item: any): JSX.Element | JSX.Element[] | string | null => {
     if (this.props.avatarField && item[this.props.avatarField])
       return null
@@ -145,6 +197,13 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
     }
   }
 
+  /**
+   * Returns the corresponding color for the item avatar, if there is no image applicable as the avatar.
+   *
+   * @param item - the item object
+   * @param itemAlt - the item alternative string
+   * @return - the CSS color code or undefined on error
+   */
   private getItemAvatarColor = (item: any, itemAlt: string | undefined): string | undefined => {
     if (typeof this.props.avatarColor == 'function')
       return this.props.avatarColor(item)
@@ -158,10 +217,21 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
     return undefined
   }
 
+  /**
+   * Fetch items from the backend, and render them after, using HOC component.
+   */
   public fetch = (): void => {
     this.hocRef.current?.fetch()
   }
 
+  /**
+   * Basing on the item object, prepare the required for render item struct and return it.
+   *
+   * @param item - the item object
+   * @param index - the corresponding item index in the entire items array
+   * @param items - the entire array of items
+   * @return - the prepared for render item struct
+   */
   private prepareItem = (item: any, index: number, items: any[]): ProvListItemPrepared => {
     const
       keyRe = /{key}/g,
@@ -183,7 +253,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       avatarChildren: JSX.Element | JSX.Element[] | string | null = this.getItemAvatarChildren(item),
       avatarColor: string | undefined = this.getItemAvatarColor(item, itemAltText),
       selection = (this.props.selected ?? this.state.selected ?? []) as any[],
-      selected: boolean = (key !== undefined && this.props.selectable && selection.length)
+      selected: boolean = (key !== undefined && ((this.props.selectable ?? false) !== false) && selection.length)
         ? selection.includes(key)
         : false,
       actions: JSX.Element | JSX.Element[] | null = this.props.renderItemActions === undefined
@@ -270,7 +340,10 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                           </Avatar>
                         </ListItemAvatar>
                       )}
-                      {preparedItem.key !== undefined && this.props.avatarField === undefined && this.props.selectable === true && (
+                      {preparedItem.key !== undefined
+                          && this.props.avatarField === undefined
+                          && (this.props.selectable ?? false) !== false
+                          && (
                         <ListItemIcon>
                           <Checkbox
                             edge="start"
@@ -284,6 +357,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                               e.stopPropagation()
                               this.handleCheckboxChange(preparedItem.key)
                             }}
+                            disabled={Array.isArray(this.props.selectable) && !this.props.selectable.includes(preparedItem.key)}
                           />
                         </ListItemIcon>
                       )}
@@ -294,12 +368,12 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                       />
 
                       {(
-                        (preparedItem.key !== undefined && this.props.selectable && this.props.avatarField)
+                        (preparedItem.key !== undefined && (this.props.selectable ?? false) !== false && this.props.avatarField)
                         || (preparedItem.actions !== null)
                       ) && (
                         <ListItemSecondaryAction>
                           {preparedItem.actions}
-                          {(preparedItem.key !== undefined && this.props.selectable && this.props.avatarField) && (
+                          {(preparedItem.key !== undefined && (this.props.selectable ?? false) !== false && this.props.avatarField) && (
                             <Checkbox
                               edge="start"
                               checked={preparedItem.selected}
@@ -368,7 +442,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                           >
                             {preparedItem.avatarChildren}
                           </Avatar>
-                        ) : (preparedItem.key !== undefined && this.props.selectable === true) ? (
+                        ) : (preparedItem.key !== undefined && (this.props.selectable ?? false) !== false) ? (
                           <Checkbox
                             edge="start"
                             checked={preparedItem.selected}
@@ -387,7 +461,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                           (
                             preparedItem.key !== undefined
                             && this.props.avatarField !== undefined
-                            && this.props.selectable === true
+                            && (this.props.selectable ?? false) !== false
                           )
                           || (preparedItem.cardHeaderActions !== null)
                         ) ? (
@@ -395,7 +469,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
                             {preparedItem.cardHeaderActions}
                             {preparedItem.key !== undefined
                               && this.props.avatarField !== undefined
-                              && this.props.selectable === true
+                              && (this.props.selectable ?? false) !== false
                               && (
                                 <Checkbox
                                   edge="start"

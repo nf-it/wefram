@@ -10,7 +10,8 @@ import {
   MaterialIconSize,
   Menu,
   MenuItem,
-  Typography, RelIcon
+  Typography,
+  RelIcon
 } from 'system/components'
 
 

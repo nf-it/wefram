@@ -20,7 +20,7 @@ export type AaaAuthorizationSession = {
 }
 
 export type AaaSessionUser = {
-  id: string
+  id: UuidKey
   login: string
   firstName: string
   middleName: string
@@ -40,7 +40,7 @@ export const localStorageAuthorizationKeyname: string = 'system.aaa.authorizatio
 export const localStorageUsernameRememberKeyname: string = "system.aaa.rememberedUsername"
 
 export type UserEditModel = {
-  id: string | null
+  id: UuidKey | null
   login: string
   secret: string | null
   locked: boolean
@@ -57,11 +57,19 @@ export type UserEditModel = {
   roles: UuidKey[]
 }
 
+export type UserModel = UserEditModel & {
+  id: UuidKey
+}
+
 export type RoleEditModel = {
-  id: string | null
+  id: UuidKey | null
   name: string
   permissions: string[]
   users: CommonKey[]
+}
+
+export type RoleModel = RoleEditModel & {
+  id: UuidKey
 }
 
 export type ActiveDirectoryDomainModel = {

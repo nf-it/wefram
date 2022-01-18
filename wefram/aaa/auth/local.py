@@ -1,4 +1,6 @@
-""" Plain authorization using only password stored in the users database. """
+"""
+Plain authorization using only password stored in the users database.
+"""
 
 from typing import *
 from ...models import User

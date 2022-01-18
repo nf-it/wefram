@@ -24,6 +24,12 @@ import {gettext} from 'system/l10n'
 
 
 type ProvTableState = {
+  /**
+   * @property loading - `true` (initially = true) when loading items
+   * @property items - the fetched from backend items array
+   * @property selected - the array of selected items' keys
+   * @property expanded - the dict containing corresponding rows' numbers and their expanded state
+   */
   loading: boolean
   items?: any[]
   selected?: ListsSelection
@@ -39,12 +45,18 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
 
   private hocRef = createRef<ProvListsHoc>()
 
+  /**
+   * Called when checkbox has been clicked to modify the list of the selected items.
+   *
+   * @param key - the corresponding item's key (on which's checkbox has been clicked)
+   */
   private handleCheckboxChange = (key: CommonKey): void => {
+    const restricted: boolean = Array.isArray(this.props.selectable) && !this.props.selectable.includes(key)
     const selected = (this.props.selected ?? this.state.selected ?? []) as any
     const checked = selected.includes(key)
     if (checked) {
       selected.splice(selected.indexOf(key), 1)
-    } else {
+    } else if (!restricted) {
       selected.push(key)
     }
     this.props.onSelection !== undefined
@@ -52,6 +64,10 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
       : this.setState({selected})
   }
 
+  /**
+   * Inverts the selection, taking all items and inverting their corresponding state. If
+   * the another item is selected - makes it unselected, and vise versa.
+   */
   public invertSelection = (): void => {
     const items = this.props.items ?? this.state.items ?? []
     const currentSelected = (this.props.selected ?? this.state.selected ?? []) as any
@@ -64,7 +80,8 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
       if (key === undefined)
         return
       const selected: boolean = currentSelected.includes(key)
-      if (!selected) {
+      const restricted: boolean = Array.isArray(this.props.selectable) && !this.props.selectable.includes(key)
+      if (!selected && !restricted) {
         updatedSelected.push(key)
       }
     })
@@ -73,6 +90,9 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
       : this.setState({selected: updatedSelected})
   }
 
+  /**
+   * Fetch items from the backend, and render them after, using HOC component.
+   */
   public fetch = (): void => {
     this.hocRef.current?.fetch()
   }
@@ -83,7 +103,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
 
     const
       colSpan: number = this.props.columns.length + 1
-        + (this.props.selectable ? 1 : 0)
+        + ((this.props.selectable ?? false) !== false ? 1 : 0)
         + (this.props.renderRowPrefix ? 1 : 0)
         + (this.props.renderRowSuffix ? 1 : 0)
 
@@ -106,7 +126,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
             {this.props.renderRowExpandedChild && (
               <TableCell padding={'checkbox'} />
             )}
-            {this.props.selectable && (
+            {(this.props.selectable ?? false) !== false && (
               <TableCell align={'center'} padding={'checkbox'}>
                 <Tooltip title={gettext("Invert selection", 'system.ui')}>
                   <IconButton
@@ -149,7 +169,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
                     ) : null,
                 // avatarUrl: string | null = this.getItemAvatarUrl(item),
                 selection = (this.props.selected ?? this.state.selected ?? []) as any[],
-                selected: boolean = (key !== undefined && this.props.selectable && selection.length)
+                selected: boolean = (key !== undefined && (this.props.selectable ?? false) !== false && selection.length)
                   ? selection.includes(key)
                   : false
 
@@ -186,7 +206,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
                         )}
                       </TableCell>
                     )}
-                    {this.props.selectable === true && (
+                    {(this.props.selectable ?? false) !== false && (
                       <TableCell align={'center'} padding={'checkbox'}>
                         {key !== undefined && (
                           <Checkbox

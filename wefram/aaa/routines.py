@@ -1,3 +1,8 @@
+"""
+A set of general routines for authorization, authentication and accounting (AAA)
+functionality of the project.
+"""
+
 import importlib
 from typing import *
 import jwt
@@ -68,6 +73,10 @@ async def authenticate(username: str, password: str) -> User:
 
 
 async def _create_jwt_token(user: User, session: Session) -> Tuple[str, datetime.datetime]:
+    """ Creates the new JWT token basing on the given user and session, returning
+    pair of token (coded string) and it's expiration time.
+    """
+
     settings_: SettingsCatalog = await settings.get('aaa')
     jwt_expire: int = settings_[SETTINGS_JWT_EXPIRE] * 60
     logger.debug(f"settings[SETTINGS_JWT_EXPIRE] = {jwt_expire}", "_create_jwt_token")
@@ -92,6 +101,10 @@ async def _create_jwt_token(user: User, session: Session) -> Tuple[str, datetime
 
 
 async def _create_refresh_token(user: User, session: Session) -> str:
+    """ Creates a new refresh token for the given user and session, writing
+    the new token to the database in time, and returning the token itself.
+    """
+
     token: str = random_token(strong=True)
     await RefreshToken.create(
         token=token,
@@ -102,6 +115,19 @@ async def _create_refresh_token(user: User, session: Session) -> str:
 
 
 async def create_session(user: User) -> Tuple[str, str, datetime.datetime]:
+    """ Creates a new session for the given user. The session will be written
+    to the interprocess storage (Redis). The routine do not return the new session
+    itself, but returns corresponding authentication data instead.
+
+    :param user:
+        The :class:`User` user object
+    :returns:
+        a tuple, containing:
+        (1) JWT token
+        (2) corresponding refresh token
+        (3) JWT token expiration time
+    """
+
     session: Session = await Session.create(user)
 
     jwt_token: str
@@ -115,6 +141,21 @@ async def create_session(user: User) -> Tuple[str, str, datetime.datetime]:
 
 
 async def refresh_with_token(refresh_token: str) -> Tuple[User, str, str, datetime.datetime]:
+    """ Used to re-create a new JWT token using given corresponding refresh
+    token. The existing refresh-token (if it will be found) will be deleted
+    from the database.
+
+    :param refresh_token:
+        the corresponding refresh token (which previously been generated and returned
+        when the new session been created)
+    :return:
+        a tuple, containing:
+        (1) the corresponding User object
+        (2) new JWT token
+        (3) new corresponding refresh token
+        (4) JWT token expiration time
+    """
+
     token: Optional[RefreshToken] = await RefreshToken.first(token=refresh_token)
     if token is None:
         raise AuthenticationFailed("Token has not been found")
@@ -183,7 +224,7 @@ def permitted(scopes: Union[str, Sequence[str]]) -> bool:
 
 
 def get_current_user() -> Optional[SessionUser]:
-    """ Returns the currently logged in user, if logged in, or None instead. """
+    """ Returns the currently logged-in user, if logged in, or None instead. """
 
     if not context:
         return None
@@ -195,7 +236,7 @@ def get_current_user() -> Optional[SessionUser]:
 
 
 def get_current_user_id() -> Optional[str]:
-    """ Return the currently logged in user id (User.id), if logged in, or None instead. """
+    """ Returns the currently logged-in user id (User.id), if logged in, or None instead. """
 
     user: Optional[SessionUser] = get_current_user()
     if user is None:

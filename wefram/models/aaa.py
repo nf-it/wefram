@@ -19,6 +19,7 @@ __all__ = [
 
 class RefreshToken(ds.Model):
     """ The model stores the JWT refresh tokens used for renew expired JWT """
+
     token = ds.Column(ds.String(128), nullable=False, primary_key=True)
     user_id = ds.Column(ds.UUID(), ds.ForeignKey('systemUser.id', ondelete='CASCADE'), nullable=False)
     session = ds.Column(ds.String(64), nullable=False)
@@ -27,6 +28,7 @@ class RefreshToken(ds.Model):
 
 class UsersRoles(ds.Model):
     """ The junction model for assigning roles to user and vise versa """
+
     user_id = ds.Column(ds.UUID(), ds.ForeignKey('systemUser.id', ondelete='CASCADE'))
     role_id = ds.Column(ds.UUID(), ds.ForeignKey('systemRole.id', ondelete='CASCADE'))
     _pk = ds.PrimaryKeyConstraint(user_id, role_id)
@@ -34,6 +36,7 @@ class UsersRoles(ds.Model):
 
 class User(ds.Model):
     """ The main system user model describing users able to log in to the system. """
+
     id = ds.UUIDPrimaryKey()
     login = ds.Column(ds.String(80), nullable=False, unique=True)
     secret = ds.Column(ds.Password(), nullable=False)
@@ -184,6 +187,7 @@ class User(ds.Model):
 
 class Role(ds.Model):
     """ The role model describing sets of permissions grouped by roles. """
+
     id = ds.UUIDPrimaryKey()
     name = ds.Column(ds.Caption(), unique=True)
     permissions = ds.Column(ds.JSONB(none_as_null=True))
@@ -201,6 +205,7 @@ class Role(ds.Model):
 
 class SessionLog(ds.Model):
     """ The journaling model stores all successful logins of users """
+
     id = ds.BigAutoIncrement()
     user_id = ds.Column(ds.UUID(), ds.ForeignKey(User.id, ondelete='CASCADE'), nullable=False)
     ts = ds.Column(ds.DateTime(), nullable=False, default=datetime.datetime.now)
@@ -213,8 +218,8 @@ class SessionLog(ds.Model):
 @dataclass
 class Session:
     """ The session class used in-memory as representation of the current
-    (request-context) user's session. Not applies to the SQL database.
-    """
+    (request-context) user's session. Not applies to the SQL database. """
+
     token: str
     user: dict
     permissions: List[str]
@@ -223,6 +228,15 @@ class Session:
 
     @classmethod
     async def create(cls, user: User) -> 'Session':
+        """ Creates a new session for the given user (actual for the log-in
+        time when user has successfully logged in to the system).
+        The new created session saves to the in-memory storage (Redis) as
+        result.
+
+        :param user: The :class:~wefram.models.aaa.User: object
+        :return: the :class:~wefram.models.aaa.Session: session object
+        """
+
         from ..aaa import random_token
 
         session = cls(
@@ -252,6 +266,9 @@ class Session:
         return json_encode(response)
 
     async def save(self) -> None:
+        """ Saves the current session object to the in-memory storage (Redis) giving
+        all working processes ability to act with it. """
+
         from .. import settings
 
         rk: str = self.redis_key_for(self.user['id'], self.token)
@@ -260,16 +277,31 @@ class Session:
         await cn.expire(rk, ((await settings.get('aaa'))[SETTINGS_SESSION_LIFETIME] * 60))
 
     async def touch(self) -> None:
+        """ Refreshes the last session activity timestamp in the in-memory storage. """
+
         self.touch_timestamp = datetime.datetime.now()
         await self.save()
 
     async def drop(self) -> None:
+        """ Drops this session deleting it from the in-memory storage, preventing
+        (if any) logged-in user from ability to continue work using this session. """
+
         rk: str = self.redis_key_for(self.user['id'], self.token)
         cn: ds.redis.RedisConnection = await ds.redis.get_connection()
         await cn.delete(rk)
 
     @classmethod
     async def fetch(cls, user_id: str, token: str) -> 'Session':
+        """ Fetches the session for the given user's ID and given session token.
+        Returns the :class:~wefram.models.aaa.Session: object if the session
+        exists, or raises FileNotFoundError otherwise.
+
+        :param user_id: the :class:~wefram.models.aaa.User: 'id' of the user;
+        :param token: the corresponding session token
+        :return: the Session object, if the session exists
+        :raises: FileNotFoundError if there is no session for given criteria
+        """
+
         rk: str = cls.redis_key_for(user_id, token)
         cn: ds.redis.RedisConnection = await ds.redis.get_connection()
         jsoned: Optional[str] = await cn.get(rk)
@@ -283,16 +315,50 @@ class Session:
 
     @classmethod
     def redis_key_for(cls, user_id: str, token: str) -> str:
+        """ Return the Redis key name for the given user and token. The key will
+        be combined with static prefix 'aaa:session' and corresponding
+        user id and corresponding session token.
+
+        Example:
+        "aaa:session:1ab2fa10-d152-4ac9-9d06-1bfee423ce70:64478e7a965e4fb6a56327a45c03f282c0e745c2d5d64f96b0d0e73c483b64b0"
+
+        :param user_id: the :class:~wefram.models.aaa.User: 'id' of the user;
+        :param token: the corresponding session token
+        :return: the corresponding Redis key
+        """
+
         return ':'.join(['aaa', 'session', user_id, token])
 
     @classmethod
     async def get_all_sessrks_for_user(cls, user_id: str) -> List[str]:
+        """ Fetches all present in the in-memory storage (Redis) sessions'
+        keys (Redis keys) for the given user (by user's id). This gives
+        an ability to fetch all sesssions for the given user.
+
+        Example result:
+        [
+            "aaa:session:1ab2fa10-d152-4ac9-9d06-1bfee423ce70:64478e7a965e4fb6a56327a45c03f282c0e745c2d5d64f96b0d0e73c483b64b0",
+            "aaa:session:1ab2fa10-d152-4ac9-9d06-1bfee423ce70:34478e74965e41b6a36327a45c6af282c0e7421255dacf96b540d0e73c483b64"
+        ]
+
+        :param user_id: the corresponding User.id for which about to fetch
+            and list all keys
+        :return: a list of redis keys of all sessions for the corresponding
+            user
+        """
+
         rk: str = ':'.join(['aaa', 'session', user_id, '*'])
         cn: ds.redis.RedisConnection = await ds.redis.get_connection()
         return [k.decode('utf-8') for k in await cn.keys(rk)]
 
     @classmethod
     async def fetch_all_for_user(cls, user_id: str) -> List['Session']:
+        """ Returns active sessions (:class:~wefram.models.aaa.Session: objects) for the
+        given user by the corresponding ID.
+
+        :param user_id: The ID of the user for which to get all sessions for
+        :return: a list of Session objects
+        """
         rks: List[str] = await cls.get_all_sessrks_for_user(user_id)
         if not rks:
             return []

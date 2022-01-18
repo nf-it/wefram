@@ -313,7 +313,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
         }
       }, () => {
         this.props.onHocFetch({
-          items: response,
+          items: this.handleFetchedItems(response),
           itemsCount: undefined,
           itemsCountAll: undefined
         })
@@ -331,13 +331,19 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
         }
       }, () => {
         this.props.onHocFetch({
-          items: response.items,
-          itemsCount: undefined,
-          itemsCountAll: undefined
+          items: this.handleFetchedItems(response.items),
+          itemsCount: response.itemsCount,
+          itemsCountAll: response.itemsCountAll
         })
         this.props.onFetchDone && this.props.onFetchDone(true)
       })
     }
+  }
+
+  private handleFetchedItems = (items: any[]): any[] => {
+    if (this.props.onAfterFetch === undefined)
+      return items
+    return this.props.onAfterFetch(items)
   }
 
   private handlePaginationChange = (e: any, page: number): void => {
@@ -436,11 +442,12 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
           mt={1} mb={1} ml={1}
           display={'flex'} flexDirection={'row'} alignItems={'center'}
         >
-          {this.props.selectable === true && (!this.props.disableSelectInvertButton) && (
+          {(this.props.selectable ?? false) !== false && (!this.props.disableSelectInvertButton) && (
             <Box flexGrow={1} mr={3} marginLeft={'-2px'}>
               <Tooltip title={gettext("Invert selection", 'system.ui')}>
                 <IconButton
                   onClick={() => (this.props.onHocInvertSelection && this.props.onHocInvertSelection())}
+                  disabled={Array.isArray(this.props.selectable) && this.props.selectable.length === 0}
                 >
                   <MaterialIcon icon={'select_all'} />
                 </IconButton>
