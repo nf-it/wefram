@@ -397,7 +397,14 @@
     "Open login log"
     : "Открыть журнал входов",
     "Client address"
-    : "Адрес клиента"
+    : "Адрес клиента",
+    "Lock selected"
+    : "Заблокировать выбранных",
+    "Unlock selected"
+    : "Разблокировать выбранных",
+    "Log off selected"
+    : "Разлогинить выбранных"
+
   },
   "aaa-form": {
     "New user"
