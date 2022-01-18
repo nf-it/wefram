@@ -24,6 +24,7 @@ __all__ = [
     'JSONedResponse',
     'StatusResponse',
     'NoContentResponse',
+    'SuccessResponse',
     'PrebuiltFile',
     'PrebuiltHTML',
     'templates'
@@ -86,6 +87,26 @@ class NoContentResponse(Response):
         super().__init__(
             status_code=status_code,
             content=None,
+            headers=headers,
+            media_type=media_type,
+            background=background
+        )
+
+
+class SuccessResponse(Response):
+    def __init__(
+            self,
+            text: str = None,
+            status_code: int = None,
+            headers: dict = None,
+            media_type: str = None,
+            background: BackgroundTask = None
+    ):
+        super().__init__(
+            status_code=status_code if status_code is not None else (
+                200 if text else 204
+            ),
+            content=text,
             headers=headers,
             media_type=media_type,
             background=background

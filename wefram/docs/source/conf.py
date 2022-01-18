@@ -18,8 +18,8 @@ sys.path.insert(0, os.path.abspath('../../..'))
 # -- Project information -----------------------------------------------------
 
 project = 'Wefram'
-copyright = '2021, NF-IT'
-author = 'NF-IT'
+copyright = '2022, Denis "Reagent" Khodus'
+author = 'Denis Khodus'
 
 # The full version, including alpha/beta/rc tags
 release = '1.0'

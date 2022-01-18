@@ -1,7 +1,7 @@
 import setuptools
 
 
-VERSION = '0.2.43'
+VERSION = '0.2.44'
 
 
 with open("README.md", 'r') as f:
@@ -11,7 +11,7 @@ with open("README.md", 'r') as f:
 setuptools.setup(
     name='wefram',
     version=VERSION,
-    author='NF-IT',
+    author='Denis Khodus',
     url='https://github.com/nf-it/wefram',
     description="Wefram web platform",
     long_description=long_description,

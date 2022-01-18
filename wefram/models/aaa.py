@@ -18,6 +18,7 @@ __all__ = [
 
 
 class RefreshToken(ds.Model):
+    """ The model stores the JWT refresh tokens used for renew expired JWT """
     token = ds.Column(ds.String(128), nullable=False, primary_key=True)
     user_id = ds.Column(ds.UUID(), ds.ForeignKey('systemUser.id', ondelete='CASCADE'), nullable=False)
     session = ds.Column(ds.String(64), nullable=False)
@@ -25,12 +26,14 @@ class RefreshToken(ds.Model):
 
 
 class UsersRoles(ds.Model):
+    """ The junction model for assigning roles to user and vise versa """
     user_id = ds.Column(ds.UUID(), ds.ForeignKey('systemUser.id', ondelete='CASCADE'))
     role_id = ds.Column(ds.UUID(), ds.ForeignKey('systemRole.id', ondelete='CASCADE'))
     _pk = ds.PrimaryKeyConstraint(user_id, role_id)
 
 
 class User(ds.Model):
+    """ The main system user model describing users able to log in to the system. """
     id = ds.UUIDPrimaryKey()
     login = ds.Column(ds.String(80), nullable=False, unique=True)
     secret = ds.Column(ds.Password(), nullable=False)
@@ -57,6 +60,7 @@ class User(ds.Model):
     properties = ds.Column(ds.JSONB(), default=lambda: dict())
     comments = ds.Column(ds.Text(), nullable=False, default='')
     email = ds.Column(ds.Email(), nullable=False, default='')
+
     roles = ds.relationship(
         ds.TheModel('Role'),
         secondary='systemUsersRoles',
@@ -97,8 +101,8 @@ class User(ds.Model):
         return ' '.join([s for s in (self.first_name, self.middle_name, self.last_name) if s != ''])
 
     @full_name.expression
-    def full_name(cls):
-        return ds.func.concat_ws(' ', cls.first_name, cls.middle_name, cls.last_name)
+    def full_name(self):
+        return ds.func.concat_ws(' ', self.first_name, self.middle_name, self.last_name)
 
     @ds.hybrid_property
     def display_name(self) -> str:
@@ -108,8 +112,8 @@ class User(ds.Model):
         return ' '.join([s for s in (self.first_name, self.last_name) if s])
 
     @display_name.expression
-    def display_name(cls):
-        return ds.func.concat_ws(' ', cls.first_name, cls.last_name)
+    def display_name(self):
+        return ds.func.concat_ws(' ', self.first_name, self.last_name)
 
     @ds.hybrid_property
     def caption(self) -> str:
@@ -118,21 +122,35 @@ class User(ds.Model):
         )])
 
     @caption.expression
-    def caption(cls) -> str:
+    def caption(self) -> str:
         """ Returns caption which includes both login and full name. """
         return ds.func.concat_ws(
-            ' ', cls.first_name, cls.middle_name, cls.last_name,
-            ds.func.concat('[', cls.login, ']')
+            ' ', self.first_name, self.middle_name, self.last_name,
+            ds.func.concat('[', self.login, ']')
         )
 
     async def all_permissions(self) -> List[str]:
-        """ Returns a list of all permission scope current logged in
+        """ Returns a list of all permission scope current logged-in
         user is accessible to.
+
+        Example of the result:
+        ['app1.permission1', 'app1.permission2', 'app2.some_permission']
         """
+
         return await self.all_permissions_for(self.id)
 
     @classmethod
     async def all_permissions_for(cls, user_id: str) -> List[str]:
+        """ Returns a list of all permission scope the given user (by
+        his/her ID) is accessible to.
+
+        Example of the result:
+        ['app1.permission1', 'app1.permission2', 'app2.some_permission']
+
+        :param user_id: the ID of the user for which return permissions for
+        :return: list of permissions
+        """
+
         user: Optional[User] = await cls.get(user_id)
         if user is None:
             raise KeyError(f"User[id={user_id}] has not been found")
@@ -147,8 +165,25 @@ class User(ds.Model):
 
         return list(permissions)
 
+    @classmethod
+    async def update_locked_state(cls, state: bool, ids: List[str]) -> None:
+        """ Updates the locked status for the given list of users. Users
+        about to be given by their 'id'.
+
+        :param state: The state to be set for all given users;
+        :param ids: The list of corresponding users' IDs (UUIDs)
+        """
+
+        users: List[User] = await cls.all(cls.id.in_(ids))
+        if not users:
+            return
+
+        for user in users:
+            user.locked = state
+
 
 class Role(ds.Model):
+    """ The role model describing sets of permissions grouped by roles. """
     id = ds.UUIDPrimaryKey()
     name = ds.Column(ds.Caption(), unique=True)
     permissions = ds.Column(ds.JSONB(none_as_null=True))
@@ -165,6 +200,7 @@ class Role(ds.Model):
 
 
 class SessionLog(ds.Model):
+    """ The journaling model stores all successful logins of users """
     id = ds.BigAutoIncrement()
     user_id = ds.Column(ds.UUID(), ds.ForeignKey(User.id, ondelete='CASCADE'), nullable=False)
     ts = ds.Column(ds.DateTime(), nullable=False, default=datetime.datetime.now)
@@ -176,6 +212,9 @@ class SessionLog(ds.Model):
 
 @dataclass
 class Session:
+    """ The session class used in-memory as representation of the current
+    (request-context) user's session. Not applies to the SQL database.
+    """
     token: str
     user: dict
     permissions: List[str]
@@ -263,6 +302,8 @@ class Session:
 
 
 class SessionUser(BaseUser):
+    """ The request-level session user used in the AAA context. """
+
     def __init__(
             self,
             session: Session,

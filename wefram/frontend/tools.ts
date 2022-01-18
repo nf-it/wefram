@@ -1,4 +1,4 @@
-/*
+/**
  A set of different TypeScript general tools (functions) used anywhere.
 
  Author: Denis "reagent" Khodus (c) 2021
@@ -6,8 +6,8 @@
  The part of these tools been exported from the outer library called `lodash`,
  lighty modified or optimized.
  The reason to do that is because lodash is a big package while we need only a
- really small set of functionality of it.
- */
+ tiny set of functionality of it.
+*/
 
 
 type _Internal = {
@@ -21,6 +21,11 @@ const _internal: _Internal = {
 const _compactScreenMaxWidth: number = 650
 
 
+/**
+ * Converts the string ISO-date to the JS/TS Date() object.
+ * @param {string} src  the source string date to be converted
+ * @returns {Date}      the corresponding Date() object, or {null} if failed
+ */
 export function strToDate(src: string): Date | null {
   if (!src.trim())
     return null
@@ -60,17 +65,31 @@ export function strToDate(src: string): Date | null {
 }
 
 
+/**
+ * Generated the new random (unique) UUID4. If the [prefix] given - prepends
+ * the resulting UUID with the given prefix.
+ * @param {string} [prefix]   The optional prefix about to be prepended
+ * @returns {string}          The new UUID4
+ */
 export function uniqueId(prefix?: string): string {
   _internal.lastGeneratedId++
   return String(prefix ? String(prefix).concat('_') : '').concat(String(_internal.lastGeneratedId))
 }
 
 
+/**
+ * Return {true} if the given value is like an object, {false} otherwise
+ * @param value   The unknown value which test to
+ */
 export function isObjectLike(value: unknown) {
   return value != null && typeof value == 'object';
 }
 
 
+/**
+ * Return {true} if the given object IS the object type, {false} otherwise
+ * @param object  The unknown value which test to
+ */
 export function isObject(object: unknown) {
   return object != null && typeof object === 'object';
 }
