@@ -6,8 +6,8 @@ import {
   IconButton,
   InputAdornment,
   LazyTextField,
-  ListsProvidedFilters,
-  ListsSelection, MaterialIcon,
+  EnumsProvidedFilters,
+  EnumsSelection, MaterialIcon,
   Paper,
   ProvTable,
   ProvTableProps,
@@ -18,7 +18,7 @@ import {dialog} from 'system/dialog'
 import {api} from 'system/api'
 import {notifications} from 'system/notification'
 import {RequestApiPath} from 'system/routing'
-import {UrlStateStorage} from 'system/components/Lists/types'
+import {UrlStateStorage} from 'system/components/ProvEnums/types'
 
 
 export interface EntityTableProps extends ProvTableProps {
@@ -32,7 +32,7 @@ export interface EntityTableProps extends ProvTableProps {
   deleteButton?: RequestApiPath | boolean
   deleteButtonCaption?: string
   deleteConfirmMessage?: string
-  itemsSelected?: ListsSelection
+  itemsSelected?: EnumsSelection
   refreshButton?: boolean
   urlStateOffset?: boolean | string
   urlStateLimit?: boolean | string
@@ -46,7 +46,7 @@ export interface EntityTableProps extends ProvTableProps {
 type EntityListState = {
   searchValue: string
   searchLazyValue: string
-  itemsSelected: ListsSelection
+  itemsSelected: EnumsSelection
 }
 
 
@@ -59,7 +59,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
 
   private listRef = createRef<ProvTable>()
 
-  onItemsSelection = (itemsSelected: ListsSelection): void => {
+  onItemsSelection = (itemsSelected: EnumsSelection): void => {
     this.setState({itemsSelected})
   }
 
@@ -69,8 +69,8 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
 
   render() {
     const
-      providedFilters: ListsProvidedFilters = {},
-      itemsSelected: ListsSelection = this.props.itemsSelected ?? this.state.itemsSelected
+      providedFilters: EnumsProvidedFilters = {},
+      itemsSelected: EnumsSelection = this.props.itemsSelected ?? this.state.itemsSelected
     let
       urlStateStorage: UrlStateStorage | undefined = this.props.urlStateStorage ?? {}
 

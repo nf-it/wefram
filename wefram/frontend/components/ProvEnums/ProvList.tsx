@@ -19,11 +19,11 @@ import {
   ListItemSecondaryAction
 } from 'system/components'
 import {
-  ListField,
-  ListsSelection,
+  EnumField,
+  EnumsSelection,
   ProvListProps,
 } from './types'
-import {ProvListsHoc} from './ProvListsHoc'
+import {ProvEnumsHoc} from 'wefram/frontend/components/ProvEnums/ProvEnumsHoc'
 import {FieldItemData} from './FieldItemData'
 import {CommonKey} from 'system/types'
 import {isCompactScreen, colorByString} from 'system/tools'
@@ -42,7 +42,7 @@ type ProvListState = {
   compactScreen: boolean
   loading: boolean
   items?: any[]
-  selected?: ListsSelection
+  selected?: EnumsSelection
 }
 
 
@@ -65,8 +65,8 @@ type ProvListItemPrepared = {
   key: CommonKey | undefined
   routePath: string | null
   divider: boolean
-  primaryField: ListField | null
-  secondaryField: ListField | null
+  primaryField: EnumField | null
+  secondaryField: EnumField | null
   itemAltText: string | undefined
   avatarUrl: string | null
   avatarChildren: JSX.Element | JSX.Element[] | string | null
@@ -83,7 +83,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
     loading: true,
   }
 
-  private hocRef = createRef<ProvListsHoc>()
+  private hocRef = createRef<ProvEnumsHoc>()
 
   componentDidMount() {
     this.updateWindowDimensions();
@@ -246,8 +246,8 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
             : itemsRoute(item)
           ) : null,
       divider: boolean = index < items.length - 1,
-      primaryField: ListField | null = this.props.primaryField ?? 'caption',
-      secondaryField: ListField | null = this.props.secondaryField ?? null,
+      primaryField: EnumField | null = this.props.primaryField ?? 'caption',
+      secondaryField: EnumField | null = this.props.secondaryField ?? null,
       itemAltText: string | undefined = this.getItemAlt(item),
       avatarUrl: string | null = this.getItemAvatarUrl(item),
       avatarChildren: JSX.Element | JSX.Element[] | string | null = this.getItemAvatarChildren(item),
@@ -289,7 +289,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
         : (this.props.cardsOnRowWideScreen ?? this.props.cardsOnRow ?? 3)
 
     return (
-      <ProvListsHoc
+      <ProvEnumsHoc
         ref={this.hocRef}
         onHocFetch={(state) => {
           this.setState({
@@ -526,7 +526,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
             })}
           </Gridbox>
         )}
-      </ProvListsHoc>
+      </ProvEnumsHoc>
     )
   }
 }

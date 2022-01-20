@@ -8,6 +8,6 @@ Model.Meta
 ----------
 
 
-.. autoclass:: system.ds.orm.model.Meta
+.. autoclass:: wefram.ds.orm.model.Meta
     :members:
 

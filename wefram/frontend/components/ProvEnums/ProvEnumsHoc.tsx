@@ -11,10 +11,10 @@ import {
   Pagination, IconButton, MaterialIcon
 } from 'system/components'
 import {
-  ListsProvidedFilters,
-  ListsSelection,
-  ListsSorting,
-  ListsSortingOptions,
+  EnumsProvidedFilters,
+  EnumsSelection,
+  EnumsSorting,
+  EnumsSortingOptions,
   UrlStateStorage,
   ProvListProps,
   ProvListOverridedParams,
@@ -52,17 +52,17 @@ type ProvHocState = {
   itemsCountAll?: number
   error: string | null
 
-  sort?: ListsSorting | null
-  selected?: ListsSelection
+  sort?: EnumsSorting | null
+  selected?: EnumsSelection
   offset?: number
   limit?: number
 
-  overridedFilters?: ListsProvidedFilters
+  overridedFilters?: EnumsProvidedFilters
   overridedParams: ProvHocOverridedParams
 }
 
 
-export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
+export class ProvEnumsHoc extends React.Component<ProvHocProps, ProvHocState> {
   state: ProvHocState = {
     loading: true,
     pagination: false,
@@ -115,7 +115,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
       overridedParams.limit = s.limit
     }
     if (urlStateStorage.filters) {
-      const providedFilters: ListsProvidedFilters = {}
+      const providedFilters: EnumsProvidedFilters = {}
       let filterArgName: string
       let filterArgValue: string | null
       for (let filterName in urlStateStorage.filters) {
@@ -140,7 +140,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
     return s
   }
 
-  private sortString2Sort = (s: string): ListsSorting | undefined => {
+  private sortString2Sort = (s: string): EnumsSorting | undefined => {
     if (!s)
       return undefined
     if (s.startsWith('-'))
@@ -203,7 +203,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
     window.history.replaceState({}, '', url)
   }
 
-  private sort2string = (sort: ListsSorting | null | undefined): string => {
+  private sort2string = (sort: EnumsSorting | null | undefined): string => {
     if (sort === null || sort === undefined)
       return ''
     return ''.concat(
@@ -225,7 +225,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
     const
       props: ProvHocProps = useProps ?? this.props,
       params: Record<string, any> = {},
-      sort: ListsSorting | null =
+      sort: EnumsSorting | null =
         this.state.overridedParams.sort
         ?? props.sort
         ?? this.state.sort
@@ -361,7 +361,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
 
   private handleSortChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const value: string = e.target.value as string
-    const sort: ListsSorting | null = value === 'null' ? null : {
+    const sort: EnumsSorting | null = value === 'null' ? null : {
       value: value.startsWith('-') ? value.substr(1) : value,
       direction: value.startsWith('-') ? 'desc' : 'asc'
     }
@@ -374,7 +374,7 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
     }, cb)
   }
 
-  private sortValueOf = (sort?: ListsSorting | null): string => {
+  private sortValueOf = (sort?: EnumsSorting | null): string => {
     if (sort === undefined || sort === null)
       return 'null'
     return ''.concat(
@@ -410,9 +410,9 @@ export class ProvListsHoc extends React.Component<ProvHocProps, ProvHocState> {
       items = this.props.items || [],
       limit: number | null = this.props.limit ?? this.state.limit ?? null,
       offset: number | null = this.props.offset ?? this.state.offset ?? null,
-      sort: ListsSorting | undefined = this.props.sort ?? this.state.sort ?? undefined,
+      sort: EnumsSorting | undefined = this.props.sort ?? this.state.sort ?? undefined,
       sortValue: string = this.sortValueOf(sort),
-      sortOptions: ListsSortingOptions = this.props.sortOptions || [],
+      sortOptions: EnumsSortingOptions = this.props.sortOptions || [],
 
       pages: number | null = this.state.itemsCount !== undefined && limit !== null
         ? Math.ceil(this.state.itemsCount / limit)

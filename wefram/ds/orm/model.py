@@ -857,7 +857,8 @@ class History:
 
 
 class Meta:
-    """ The model's subclass describing some optionals and service methods for the ORM class.
+    """
+    The model's subclass describing some optionals and service methods for the ORM class.
     """
 
     model: ClassVar

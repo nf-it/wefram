@@ -1,3 +1,11 @@
+"""
+The basic API functionality module. The general case for the API mechamics
+and the base for all other specific cases.
+
+The base is routing functionality to handle API routes with standardized
+paths.
+"""
+
 from typing import *
 from ..requests import routing, Route
 
@@ -16,6 +24,20 @@ __all__ = [
 
 def _rq(endpoint: Callable, path: str, method: Union[str, List[str]], version: Optional[Union[int, str]] = None) -> Callable:
     """
+    Registers the route with the endpoint, returning the endpoint back to the caller.
+
+    :param endpoint:
+        The endpoint for the given route
+    :param path:
+        The relative path for the route (this path will be only a part of the resulting URL)
+    :param method:
+        The HTTP method (GET, POST, PUT, DELETE, OPTIONS...)
+    :param version:
+        (optional) the APIU version for which this route is applicable to
+
+    :return:
+        The given endpoint back to the caller
+
     API route path format:
     /api/{app_name}/v1/{path} -- for versioned route ('version' argument is not omitted)
     /api/{app_name}/{path} -- for non-versioned route
@@ -41,12 +63,15 @@ def handle_req(
     */api/myapp/v2/example*
 
     The exeption is when the path is starting with double slashes (``//``). Then the resulting path will
-    be the exactly the given one.
+    be exactly the given one.
 
-    :param path:    the URL path of the API controller
-    :param version: optional, the API version for which this controller is made for
-    :param methods: the HTTP method or methods for which (whose) this controller is applicable for,
-                    by default is 'GET' method
+    :param path:
+        The URL path of the API controller
+    :param version:
+        (optional), the API version for which this controller is made for
+    :param methods:
+        The HTTP method or methods for which (whose) this controller is applicable for,
+        by default is 'GET' method
     """
 
     def decorator(endpoint: Callable) -> Callable:

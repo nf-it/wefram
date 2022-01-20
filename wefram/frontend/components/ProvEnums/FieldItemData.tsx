@@ -1,24 +1,24 @@
 import React from 'react'
 import {Box, MaterialIcon} from 'system/components'
 import {
-  ListField,
+  EnumField,
   FieldType,
-  ListsFieldType,
-  ListsFieldStruct
+  EnumsFieldType,
+  EnumsFieldStruct
 } from './types'
 import {gettext} from 'system/l10n'
 
 
 export type FieldItemDataProps = {
   item: any
-  field: ListField
+  field: EnumField
   disableCaption?: boolean
 }
 
 
 type FieldItemDataInnerProps = {
   item: any
-  field: ListsFieldType
+  field: EnumsFieldType
   disableCaption?: boolean
   style?: React.CSSProperties
 }
@@ -33,7 +33,7 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
     return 'string'
   }
 
-  private makeRenderingElement = (itemValue: any, field: ListsFieldStruct): JSX.Element | null =>
+  private makeRenderingElement = (itemValue: any, field: EnumsFieldStruct): JSX.Element | null =>
   {
     const hidden: boolean = field.hidden === undefined
       ? false
@@ -148,7 +148,7 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
     if (this.props.field === null)
       return null
 
-    const field: ListsFieldType = typeof this.props.field == 'string'
+    const field: EnumsFieldType = typeof this.props.field == 'string'
       ? { fieldName: this.props.field, fieldType: this.guessFieldType(this.props.item[this.props.field]) }
       : this.props.field
     const itemValue: any = field.getter

@@ -1,3 +1,29 @@
+"""
+The API entity functionalty.
+
+The entity is a some class realizing CRUD (in general) functionality for
+a general named entity (not matter what really happens in the class methods
+on create, read, update & delete). The basic idea is to standardize the
+CRUD with the same approach on different entities and applications, and
+with standardized routing and paths.
+
+This means that by declaring an entity class, the application programmer
+automatically realizes standartized and HTTP-routed API methods for
+interacting with it from the frontend of the project. In addition,
+secutiry scopes checks (even on every CRUD method) automatically applies
+to the given functionalty basing on declared requirements.
+
+For example, the special case of the entity API is the ORM Model API which
+gives understandable mechanics for read (SELECT from the database),
+create (INSERT into database), update (UPDATE rows in database) and
+delete (DELETE from the database) ORM-declared objects (rows).
+
+But the target application may declare any logics on given methods. For
+example, the entity may realize only read functionality, or make some
+work with network communication, translating the request to the other
+host, or something else.
+"""
+
 from typing import *
 from abc import ABC, abstractmethod
 from starlette.responses import Response
@@ -107,29 +133,216 @@ class EntityCRUD(ABC):
 
 class EntityAPI(EntityCRUD, ABC):
     """
-    The API ready entity abstract class. Implements much of logics for the HTTP
+    The API-ready entity abstract class. Implements much of logics for the HTTP
     requests handling, endpointing to the EntityCRUD defined abstract methods.
     """
 
     app: str
+    """ The application for which is entity is applicable to. Filled automatically
+    at the entity registration time. """
+
     paths: dict
+    """ The dict, containing registerd API paths for the every API method. For example:
+    ``
+        {
+            'create': '/api/<app>/<EntityName>',
+            'read': '/api/<app>/<EntityName>/<key>',
+            'list': '/api/<app>/<EntityName>',
+            'update': '/api/<app>/<EntityName>/<key>',
+            'update_batch': '/api/<app>/<EntityName>',
+            'options': '/api/<app>/<EntityName>',
+            'options_resolve': '/api/<app>/<EntityName>/resolve',
+            'delete': '/api/<app>/<EntityName>/<key>',
+            'delete_batch': '/api/<app>/<EntityName>',
+        }
+    ``
+    
+    So, by accessing the entity class'es ``path`` property using the corresponding
+    method key, the programmer may get the absolute URL for accessing the corresponding
+    API method from the frontend.
+    """
+
     name: Optional[str] = None
+    """ The entity name. Filled automatically basing on the entity class name. """
+
     version: Optional[Union[str, int]] = None
+    """ Optional, the API version. Gives an ability to handle different versions of the
+    entity by declaring different entity classes (for example, basing on the one
+    general class and hanlding differences between versions in the inheited ones. """
+
     path_prefix: Optional[str] = None
+    """ Optional prefix used on the absolute routing path generation. This prefix, if
+    specified, will be used in the routing path right after `/api` and before the rest
+    of the path. For example:
+    
+    ``prefix = 'myprefix'``
+    
+    The path will be: ``/api/myprefix/myapp/v1/MyEntity``
+    """
+
     path_suffix: Optional[str] = None
+    """ Optional suffix used on the absolute routing path generation. This suffix, if
+    specified, will be used in the routing path at the end. For example:
+    
+    ``suffix = 'mysuffix'``
+    
+    The path will be: ``/api/myapp/v1/MyEntity/mysuffix``
+    """
+
     requires: Optional[Union[str, List[str]]] = None
-    allow_create: [bool, List[str]] = True
-    allow_read: [bool, List[str]] = True
-    allow_options: [bool, List[str]] = True
-    allow_update: [bool, List[str]] = True
-    allow_delete: [bool, List[str]] = True
+    """ The general requirement for access rights. The programmer may list required
+    permissions (scopes) here and them will be used by default for all API methods,
+    except ones whose declares own requirements. 
+    
+    For example:
+    
+    .. highlight:: python
+    .. code-block:: python
+    
+        class MyEntity(EntityAPI):
+            requires = ['mypermission']
+            
+    """
+
+    allow_create: Union[bool, List[str]] = True
+    """ If set to `True` (default) - the method is allowed and will be routed. If
+    **requires** property has been specified - it will be applied to this method.
+    If set to `False` - the method is prohibited and will not be routed. If set
+    to list type - then this method is allowed, will be routed, but requirements
+    for security access permissions (scopes) will be overrided with the given
+    list of permissions (even if has been specified by **requires** property).
+    
+    .. highlight:: python
+    .. code-block:: python
+    
+        class MyEntity1(EntityAPI):
+            # Permit the method, but require 'some_access' permission
+            requires = ['some_access']
+            allow_create = True  # may be omitted because by default is True
+            
+        class MyEntity2(EntityAPI):
+            # Permit the method & requires 'other_permission', and not requires
+            # any other permissions to access.
+            requires = ['some_access']
+            allow_create = ['other_permission']
+    """
+
+    allow_read: Union[bool, List[str]] = True
+    """ If set to `True` (default) - the method is allowed and will be routed. If
+        **requires** property has been specified - it will be applied to this method.
+        If set to `False` - the method is prohibited and will not be routed. If set
+        to list type - then this method is allowed, will be routed, but requirements
+        for security access permissions (scopes) will be overrided with the given
+        list of permissions (even if has been specified by **requires** property).
+
+        .. highlight:: python
+        .. code-block:: python
+
+            class MyEntity1(EntityAPI):
+                # Permit the method, but require 'some_access' permission
+                requires = ['some_access']
+                allow_read = True  # may be omitted because by default is True
+
+            class MyEntity2(EntityAPI):
+                # Permit the method & requires 'other_permission', and not requires
+                # any other permissions to access.
+                requires = ['some_access']
+                allow_read = ['other_permission']
+    """
+
+    allow_options: Union[bool, List[str]] = True
+    """ If set to `True` (default) - the method is allowed and will be routed. If
+            **requires** property has been specified - it will be applied to this method.
+            If set to `False` - the method is prohibited and will not be routed. If set
+            to list type - then this method is allowed, will be routed, but requirements
+            for security access permissions (scopes) will be overrided with the given
+            list of permissions (even if has been specified by **requires** property).
+
+            .. highlight:: python
+            .. code-block:: python
+
+                class MyEntity1(EntityAPI):
+                    # Permit the method, but require 'some_access' permission
+                    requires = ['some_access']
+                    allow_options = True  # may be omitted because by default is True
+
+                class MyEntity2(EntityAPI):
+                    # Permit the method & requires 'other_permission', and not requires
+                    # any other permissions to access.
+                    requires = ['some_access']
+                    allow_options = ['other_permission']
+    """
+
+    allow_update: Union[bool, List[str]] = True
+    """ If set to `True` (default) - the method is allowed and will be routed. If
+            **requires** property has been specified - it will be applied to this method.
+            If set to `False` - the method is prohibited and will not be routed. If set
+            to list type - then this method is allowed, will be routed, but requirements
+            for security access permissions (scopes) will be overrided with the given
+            list of permissions (even if has been specified by **requires** property).
+
+            .. highlight:: python
+            .. code-block:: python
+
+                class MyEntity1(EntityAPI):
+                    # Permit the method, but require 'some_access' permission
+                    requires = ['some_access']
+                    allow_update = True  # may be omitted because by default is True
+
+                class MyEntity2(EntityAPI):
+                    # Permit the method & requires 'other_permission', and not requires
+                    # any other permissions to access.
+                    requires = ['some_access']
+                    allow_update = ['other_permission']
+    """
+
+    allow_delete: Union[bool, List[str]] = True
+    """ If set to `True` (default) - the method is allowed and will be routed. If
+            **requires** property has been specified - it will be applied to this method.
+            If set to `False` - the method is prohibited and will not be routed. If set
+            to list type - then this method is allowed, will be routed, but requirements
+            for security access permissions (scopes) will be overrided with the given
+            list of permissions (even if has been specified by **requires** property).
+
+            .. highlight:: python
+            .. code-block:: python
+
+                class MyEntity1(EntityAPI):
+                    # Permit the method, but require 'some_access' permission
+                    requires = ['some_access']
+                    allow_delete = True  # may be omitted because by default is True
+
+                class MyEntity2(EntityAPI):
+                    # Permit the method & requires 'other_permission', and not requires
+                    # any other permissions to access.
+                    requires = ['some_access']
+                    allow_delete = ['other_permission']
+    """
 
     @classmethod
     def path_base(cls) -> str:
+        """ Internal method which returns a routing path base string basing (by default)
+        on the entity class name. Useful for overriding how the entity sounds in the
+        routing path (URL).
+        """
         return cls.__name__
 
     @staticmethod
     def prepare_response(result: Any, status_code: int = 200) -> Response:
+        """ Wrapper method which get the handler result and returns the HTTP response.
+        This allows the handler methods (at CRUD model) to return Python-basic
+        response like 'True' or dict or list, or even just a string, not dealing with
+        HTTP response generation.
+
+        :param result:
+            The result of the API handler, which may be any kind of type.
+        :param status_code:
+            The status code which about to use as HTTP status code in the response;
+            by default is '200 OK';
+        :return:
+            The formed and ready to send to the calling frontend client response.
+        """
+
         # If the result is None - return 'No content' response.
         if result is None:
             return NoContentResponse()
@@ -157,6 +370,7 @@ class EntityAPI(EntityCRUD, ABC):
         then rename dict's keys from localCamesCase (typical for the JSON, JS & TS) to
         the snake_case (instead, typical for the Python).
         """
+
         payload: Optional[Any] = request.scope['payload']
         if not payload:
             return None
@@ -168,7 +382,7 @@ class EntityAPI(EntityCRUD, ABC):
     def parse_request_arguments(cls, request: Request) -> Dict[str, str]:
         """ Parses the query arguments (if any) and returns them as dict. For the
         current moment - it is just a proxy function to the middleware prepared
-        arguments dict.
+        arguments' dict.
         """
         return request.scope['query_args']
 
@@ -176,8 +390,9 @@ class EntityAPI(EntityCRUD, ABC):
     async def handle_create(cls, request: Request) -> Response:
         """ Creates a single entity object, using JSON or FormData payload
         to set it up with the values. Returns no content response 201 if
-        succeed.
-        :arg_param return_key: if set to 'true' - return the new entity
+        succeeded.
+
+        If argument :argument return_key: setted to 'true' - return the new entity
         object's key (which requires FLUSH+COMMIT operation to be executed
         in the ORM prior to response been completed, usually).
         """
@@ -232,7 +447,7 @@ class EntityAPI(EntityCRUD, ABC):
     @classmethod
     async def handle_options(cls, request: Request) -> Response:
         """ This method returns a dict, containing keys and corresponding
-        object's human readable representations, like names.
+        object's human-readable representations, like names.
         """
         args: Dict[str, str] = cls.parse_request_arguments(request)
         keys: List[str] = args.get('keys', None) or []
@@ -275,7 +490,7 @@ class EntityAPI(EntityCRUD, ABC):
 
 
 def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
-    """ Registers the EntityAPI-based class to handle entity based API logics. """
+    """ Decorator registers the EntityAPI-based class to handle entity based API logics. """
 
     from ..aaa import wrappers
 
@@ -436,6 +651,10 @@ def register(cls: ClassVar[EntityAPI]) -> ClassVar[EntityAPI]:
 
 
 def get_entity(name: str) -> Optional[EntityAPI]:
+    """ Returns the entity by its given name. Returns None if the entity
+    do not exist.
+    """
+
     app_name: str
     entity_name: str
     if '.' not in name:

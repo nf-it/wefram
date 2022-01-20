@@ -12,6 +12,8 @@ Welcome to Wefram's documentation!
    :caption: Contents:
 
    ds
+   api
+   screens
 
 
 

@@ -6,8 +6,8 @@ import {
   IconButton,
   InputAdornment,
   LazyTextField,
-  ListsProvidedFilters,
-  ListsSelection,
+  EnumsProvidedFilters,
+  EnumsSelection,
   MaterialIcon,
   Paper,
   ProvList,
@@ -19,7 +19,7 @@ import {dialog} from 'system/dialog'
 import {api} from 'system/api'
 import {notifications} from 'system/notification'
 import {RequestApiPath} from 'system/routing'
-import {UrlStateStorage} from 'system/components/Lists/types'
+import {UrlStateStorage} from 'system/components/ProvEnums/types'
 
 
 export interface EntityListProps extends ProvListProps {
@@ -32,7 +32,7 @@ export interface EntityListProps extends ProvListProps {
   deleteButton?: RequestApiPath | boolean
   deleteButtonCaption?: string
   deleteConfirmMessage?: string
-  itemsSelected?: ListsSelection
+  itemsSelected?: EnumsSelection
   refreshButton?: boolean
   urlStateOffset?: boolean | string
   urlStateLimit?: boolean | string
@@ -44,7 +44,7 @@ export interface EntityListProps extends ProvListProps {
 type EntityListState = {
   searchValue: string
   searchLazyValue: string
-  itemsSelected: ListsSelection
+  itemsSelected: EnumsSelection
 }
 
 
@@ -57,7 +57,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
 
   private listRef = createRef<ProvList>()
 
-  onItemsSelection = (itemsSelected: ListsSelection): void => {
+  onItemsSelection = (itemsSelected: EnumsSelection): void => {
     this.setState({itemsSelected})
   }
 
@@ -67,8 +67,8 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
 
   render() {
     const
-      providedFilters: ListsProvidedFilters = {},
-      itemsSelected: ListsSelection = this.props.itemsSelected ?? this.state.itemsSelected
+      providedFilters: EnumsProvidedFilters = {},
+      itemsSelected: EnumsSelection = this.props.itemsSelected ?? this.state.itemsSelected
     let
       urlStateStorage: UrlStateStorage | undefined = this.props.urlStateStorage ?? {}
 

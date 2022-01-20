@@ -14,10 +14,10 @@ import {
   Tooltip
 } from 'system/components'
 import {
-  ListsSelection,
+  EnumsSelection,
   ProvTableProps,
 } from './types'
-import {ProvListsHoc} from './ProvListsHoc'
+import {ProvEnumsHoc} from 'wefram/frontend/components/ProvEnums/ProvEnumsHoc'
 import {FieldItemData} from './FieldItemData'
 import {CommonKey} from 'system/types'
 import {gettext} from 'system/l10n'
@@ -32,7 +32,7 @@ type ProvTableState = {
    */
   loading: boolean
   items?: any[]
-  selected?: ListsSelection
+  selected?: EnumsSelection
   expanded: Record<number, boolean>
 }
 
@@ -43,7 +43,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
     expanded: {}
   }
 
-  private hocRef = createRef<ProvListsHoc>()
+  private hocRef = createRef<ProvEnumsHoc>()
 
   /**
    * Called when checkbox has been clicked to modify the list of the selected items.
@@ -109,7 +109,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
 
 
     return (
-      <ProvListsHoc
+      <ProvEnumsHoc
         ref={this.hocRef}
         disableSelectInvertButton
         onHocFetch={(state) => {
@@ -256,7 +256,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
             })}
           </TableBody>
         </Table>
-      </ProvListsHoc>
+      </ProvEnumsHoc>
     )
   }
 }

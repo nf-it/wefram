@@ -2,10 +2,10 @@ import './index.css'
 export { ProvList } from './ProvList'
 export { ProvTable } from './ProvTable'
 export type {
-  ListsSorting,
-  ListsSortingOptions,
-  ListsSelection,
-  ListsProvidedFilters,
+  EnumsSorting,
+  EnumsSortingOptions,
+  EnumsSelection,
+  EnumsProvidedFilters,
   ProvListProps,
   ProvListOverridedParams,
   ProvTableColumn,
