@@ -17,7 +17,7 @@ import {
   EnumsSelection,
   ProvTableProps,
 } from './types'
-import {ProvEnumsHoc} from 'wefram/frontend/components/ProvEnums/ProvEnumsHoc'
+import {ProvEnumsHoc} from './ProvEnumsHoc'
 import {FieldItemData} from './FieldItemData'
 import {CommonKey} from 'system/types'
 import {gettext} from 'system/l10n'
