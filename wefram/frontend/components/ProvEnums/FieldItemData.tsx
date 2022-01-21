@@ -4,7 +4,7 @@ import {
   EnumField,
   FieldType,
   EnumsFieldType,
-  EnumsFieldStruct
+  EnumsField
 } from './types'
 import {gettext} from 'system/l10n'
 
@@ -33,7 +33,7 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
     return 'string'
   }
 
-  private makeRenderingElement = (itemValue: any, field: EnumsFieldStruct): JSX.Element | null =>
+  private makeRenderingElement = (itemValue: any, field: EnumsField): JSX.Element | null =>
   {
     const hidden: boolean = field.hidden === undefined
       ? false

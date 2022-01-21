@@ -13,6 +13,16 @@ posibility to interact with it. The API *is* the way the frontend and
 backend, in general, interacting with each other.
 
 
+Entity API reference
+--------------------
+
 .. autoclass:: wefram.api.EntityAPI
+    :members:
+
+
+Model API reference
+-------------------
+
+.. autoclass:: wefram.api.ModelAPI
     :members:
 

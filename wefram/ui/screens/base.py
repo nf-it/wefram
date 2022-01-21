@@ -6,17 +6,39 @@ from ...urls import asset_url
 from ...tools import CSTYLE, get_calling_app, array_from, get_calling_module
 from ...types.ui import BaseScreen
 from ... import config, logger, ds, api, ui
-
-
-RouteParams = List[str]
-CompositeLayout = List[Any]
+from .types import CompositeLayout, RouteParams
 
 
 class Screen(BaseScreen):
     pass
 
 
+class ManagedScreen(BaseScreen):
+    """
+    The backend controlled screen with very common definition on what is it. The basic
+    point is that this screen will always fetch the result of its :meth:`~ManagedScreen.on_render`
+    method on every screen open at the frontend, and pass the fetched results to the
+    target screen container as ``managedProps`` struct. The format of this struct is not
+    described and may be any JSONable, depending on what the screen container need to
+    work with.
+
+    The :meth:`~ManagedScreen.on_render` method calls on every screen open, produce and
+    return the JSONable result, which responses to the frontend and about to be used by
+    the managed screen at the frontend program code.
+
+    The managed screen identifies by its name and the parent app where it was declated
+    (or the one specified with the ``app`` property of the screen class).
+    """
+
+    screen_class = 'ManagedScreen'
+
+    async def on_render(self) -> Any:
+        raise NotImplementedError
+
+
 class CompositeScreen(BaseScreen):
+    screen_class = 'CompositeScreen'
+
     component: str = '/wefram/containers/CompositeScreen'
     layout: Any = None
     static: bool = None

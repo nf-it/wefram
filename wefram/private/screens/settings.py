@@ -92,3 +92,16 @@ class MailAccountsScreen(ui.screens.Screen):
     requires = mail.PERMISSION
     caption = mail.MSG_APP_CAPTION
     order = 50
+
+
+@ui.screens.register(sitemap=SITEMAP_FOLDER_ID)
+class TestScreen(ui.screens.EntityScreen):
+    entity = 'MailAccount'
+    route = '/test'
+    parent = APP_ID
+    icon = None
+    requires = mail.PERMISSION
+    caption = "Testing"
+    order = 60
+
+

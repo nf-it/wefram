@@ -42,7 +42,7 @@ Models
 ------
 
 The every entity about to be defined as python classes, basing
-on the :class:`wefram.ds.orm.model.Model` parent class:
+on the :class:`wefram.ds.model.Model` parent class:
 
 .. code-block:: python
 
@@ -241,8 +241,8 @@ And the last example, as simple as possible:
 
 
 As we see - instead of writing a SQLAlchemy-based query we called a
-single simple method :py:meth:`~wefram.ds.orm.model.Model.all` of the
-corresponding :class:`wefram.ds.orm.model.Model`. Of cource, helper
+single simple method :py:meth:`~wefram.ds.model.Model.all` of the
+corresponding :class:`~wefram.ds.model.Model`. Of cource, helper
 methods cannot be used in all cases, but them makes a simple operations
 handled simple.
 
@@ -251,8 +251,8 @@ Offset and limit
 ^^^^^^^^^^^^^^^^
 
 We can limit the quantity of resulting objects by using ``limit``
-named argument for :py:meth:`~wefram.ds.orm.model.Model.all` or
-:py:meth:`~wefram.ds.orm.model.Model.select` methods. This argument
+named argument for :py:meth:`~wefram.ds.model.Model.all` or
+:py:meth:`~wefram.ds.model.Model.select` methods. This argument
 indicates maximal the quantity of objects we allow to be fetched
 from the database.
 
@@ -334,13 +334,13 @@ simplification in general. This is a kind of automation which realises the
 one of the most used cases when fetching objects from the database - the
 **search**.
 
-To make this happened, we need to use :class:`~wefram.ds.orm.model.Meta` subclass (which is described
+To make this happened, we need to use :class:`~wefram.ds.model.Meta` subclass (which is described
 in the :ref:`ds_models`. We will show a very short part of it here,
 just to make sense how to make some model searchable. And how to use that.
 
 The search for objects by textual term is done by calling the class method
 ``like`` or ``ilike`` for case sensetive and case insensetive, respectively,
-within corresponding fetching method, like :py:meth:`wefram.ds.orm.model.Model.all`
+within corresponding fetching method, like :py:meth:`wefram.ds.model.Model.all`
 
 .. code-block:: python
 
@@ -382,11 +382,11 @@ to the SELECT query, ``SELECT .. FOR UPDATE`` when we speaking about
 PostgreSQL, for example.
 
 To add this kind of modifier using Wefram helper methods such as
-:py:meth:`~wefram.ds.orm.model.Model.all`,
-:py:meth:`~wefram.ds.orm.model.Model.select`,
-:py:meth:`~wefram.ds.orm.model.Model.first`,
-:py:meth:`~wefram.ds.orm.model.Model.get`,
-:py:meth:`~wefram.ds.orm.model.Model.fetch`,
+:py:meth:`~wefram.ds.model.Model.all`,
+:py:meth:`~wefram.ds.model.Model.select`,
+:py:meth:`~wefram.ds.model.Model.first`,
+:py:meth:`~wefram.ds.model.Model.get`,
+:py:meth:`~wefram.ds.model.Model.fetch`,
 you may pass named argument to the corresponding method call: ``update=True``.
 
 
@@ -422,13 +422,13 @@ this case):
 
 As we see - we even not cares about primary key column name(s)
 in the query. Just calling the method
-:py:meth:`~wefram.ds.orm.model.Model.fetch`
+:py:meth:`~wefram.ds.model.Model.fetch`
 giving primary key values to it as arguments.
 
 Even if we need to fetch objects with **complex primary key**
 declared - we can do this using
-:py:meth:`~wefram.ds.orm.model.Model.fetch`` method like
-:py:meth:`~wefram.ds.orm.model.Model.get`
+:py:meth:`~wefram.ds.model.Model.fetch`` method like
+:py:meth:`~wefram.ds.model.Model.get`
 method (described below). Just give not plain values, but
 tuple of primary key values instead, in order they been
 declared in the model. For example:
@@ -482,7 +482,7 @@ say we give ``limit=1`` in the query).
 Fetching by primary key value
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To do that, we about to use :py:meth:`~wefram.ds.orm.model.Model.get`
+To do that, we about to use :py:meth:`~wefram.ds.model.Model.get`
 method of the corresponding model:
 
 .. code-block:: python
@@ -525,12 +525,12 @@ Fetch only first object
 There are cases when we querying for the request not by the
 object's primary key, but by another filters (or even without
 any of them). But the case is that we expect only one object
-to be returned, while :py:meth:`~wefram.ds.orm.model.Model.all`
+to be returned, while :py:meth:`~wefram.ds.model.Model.all`
 method returns a list.
 
 Let's assume that we have a query and we except only one
 object to be returned or nothing. While using
-:py:meth:`~wefram.ds.orm.model.Model.all` general
+:py:meth:`~wefram.ds.model.Model.all` general
 case we always will get a list, even empty. Not the best
 options for this vase, yea?
 
@@ -575,8 +575,8 @@ Let's do the same query with a little simplification:
         return await User.first(login=login, password=password, enabled=True)
 
 
-The :py:meth:`~wefram.ds.orm.model.Model.first` method of the
-:class:`~wefram.ds.orm.model.Model` returns only first object
+The :py:meth:`~wefram.ds.model.Model.first` method of the
+:class:`~wefram.ds.model.Model` returns only first object
 from the result (it even sets ``limit=1`` automatically to not to
 fetch more than one row from the database), or returns ``None`` if
 none objects with given criteria been found.
@@ -588,7 +588,7 @@ Creating the object
 We will have nothing to fetch if nothing being created, right? So, the
 **create** is not less important operation then the **read** one.
 
-To create an object we about to use :py:meth:`~wefram.ds.orm.model.Model.create`
+To create an object we about to use :py:meth:`~wefram.ds.model.Model.create`
 class method on the corresponding model. The created object will automatically be
 assigned to the current default database session.
 
@@ -641,7 +641,7 @@ its corresponding values in the database. So, first of all, we need
 to fetch the corresponding object first.
 
 To modify the object it is best to call the
-:py:meth:`~wefram.ds.orm.model.Model.update` method on
+:py:meth:`~wefram.ds.model.Model.update` method on
 the model instance, and pass new corresponding columns' values
 to it within named arguments (*kwargs*).
 
@@ -680,11 +680,11 @@ Deleting the existing object
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To delete the object, when we have fetched that object before, we just
-can call instance method :py:meth:`~wefram.ds.orm.model.Model.delete`.
+can call instance method :py:meth:`~wefram.ds.model.Model.delete`.
 This will delete the object from the
 database.
 
-Again, the method :py:meth:`~wefram.ds.orm.model.Model.delete`` is an
+Again, the method :py:meth:`~wefram.ds.model.Model.delete` is an
 instance method, not the class one. This means that this method works
 with previously fetched from the database object (using any selecting
 method described before).
@@ -705,7 +705,7 @@ Deleting many objects or without fetching
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 As been described in the section above, to use
-:py:meth:`~wefram.ds.orm.model.Model.delete` method we
+:py:meth:`~wefram.ds.model.Model.delete` method we
 have to fetch the corresponding object or objects first. This is the
 approach the SQLAlchemy tells us.
 
@@ -714,10 +714,10 @@ objetcs at a time, or even when we just do not want to fetch objects
 from the database just ot delete them (why?)
 
 In this case, Wefram offers a class method (*class*, not *instance*)
-named :py:meth:`~wefram.ds.orm.model.Model.delete_where`.
+named :py:meth:`~wefram.ds.model.Model.delete_where`.
 This method waits a clause or filter to be given like for
-:py:meth:`~wefram.ds.orm.model.Model.all` or
-:py:meth:`~wefram.ds.orm.model.Model.first` methods (really the same
+:py:meth:`~wefram.ds.model.Model.all` or
+:py:meth:`~wefram.ds.model.Model.first` methods (really the same
 syntax).
 
 For example:
@@ -736,7 +736,7 @@ For example:
 
 
 .. attention::
-    Please note that :py:meth:`~wefram.ds.orm.model.Model.delete_where`
+    Please note that :py:meth:`~wefram.ds.model.Model.delete_where`
     is not capable of triggering
     the history (because it uses the fast, direct SQL query like
     DELETE FROM ... WHERE ...) and the history **WILL NOT** be

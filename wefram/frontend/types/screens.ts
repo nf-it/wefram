@@ -3,8 +3,11 @@ import {RouteComponentProps} from 'react-router-dom'
 import {Permissions} from '../aaa'
 
 
+export type ScreenClass = 'Screen' | 'ManagedScreen' | 'CompositeScreen'
+
 export type ScreenModelProps = {
   name: string
+  screenClass: ScreenClass
   rootComponent?: React.LazyExoticComponent<any> | null
   rootComponentPath?: string | null
   requires: Permissions
@@ -21,5 +24,9 @@ export type ScreenConfiguration = {
 export type ScreensConfiguration = Record<string, ScreenConfiguration>
 
 export type ScreenProps = RouteComponentProps & ScreenModelProps
+
+export type ManagedScreenProps = ScreenProps & {
+  managedProps?: any
+}
 
 export type ScreensSchema = Record<string, ScreenModelProps>

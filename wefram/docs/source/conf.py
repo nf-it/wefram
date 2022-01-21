@@ -22,7 +22,7 @@ copyright = '2022, Denis "Reagent" Khodus'
 author = 'Denis Khodus'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0'
+release = '0.2'
 
 
 # -- General configuration ---------------------------------------------------
@@ -46,7 +46,7 @@ exclude_patterns = []
 
 # -- Options for HTML output -------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
+# The theme to use for HTML and HTML Help pages. See the documentation for
 # a list of builtin themes.
 #
 # html_theme = 'alabaster'
@@ -58,3 +58,7 @@ html_theme = 'furo'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+
+autodoc_member_order = 'bysource'
+add_function_parentheses = True

@@ -457,7 +457,7 @@ export class ProvEnumsHoc extends React.Component<ProvHocProps, ProvHocState> {
 
           {(this.props.textTotalCount ?? false) !== false && this.state.itemsCount !== undefined && (
             <Box component={'span'} mr={4}>
-              {this.props.textTotalCount === true && gettext("Total rows", 'system.ui')}
+              {this.props.textTotalCount === true ? gettext("Total rows", 'system.ui') : this.props.textTotalCount}
               {': '}
               {this.state.itemsCount}
             </Box>

@@ -2,7 +2,7 @@ from typing import *
 from ...models import Session, SettingsCatalog
 from ..const.aaa import SETTINGS_REMEMBER_USERNAME
 from ... import config, api, l10n, settings, ui
-from ...requests import Request, JSONResponse
+from ...requests import Request, JSONResponse, HTTPException
 from ...runtime import context
 
 
@@ -30,3 +30,22 @@ async def instantiate(request: Request) -> JSONResponse:
         }
     }
     return JSONResponse(response)
+
+
+@api.handle_get('ui/screens/managed/on_render/{name}')
+async def render_managed_screen(request: Request) -> JSONResponse:
+    """ Used to prepare the managed screen props on the screen render. This
+    controller calls from the frontend on every managed screen open and prior
+    to that screen been rendered.
+    """
+
+    screen_name: str = request.path_params['name']
+    screen: ui.screens.ManagedScreen = ui.screens.get_screen(screen_name)
+
+    if screen is None:
+        raise HTTPException(404)
+
+    if not hasattr(screen, 'on_render'):
+        raise HTTPException(500)
+
+    return JSONResponse(await screen.on_render())

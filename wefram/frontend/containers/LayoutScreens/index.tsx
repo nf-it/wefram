@@ -34,6 +34,7 @@ export default class LayoutScreens extends React.Component<LayoutScreensProps, L
                 render={
                   (props) => <Screen
                     name={screenSchema.name}
+                    screenClass={screenSchema.screenClass}
                     rootComponent={screenSchema.rootComponent || undefined}
                     requires={screenSchema.requires}
                     routeUrl={screenSchema.routeUrl}
@@ -60,6 +61,7 @@ export default class LayoutScreens extends React.Component<LayoutScreensProps, L
                 render={
                   (props) => <Screen
                     name={screenSchema.name}
+                    screenClass={screenSchema.screenClass}
                     rootComponent={screenSchema.rootComponent || undefined}
                     requires={screenSchema.requires}
                     routeUrl={screenSchema.routeUrl}

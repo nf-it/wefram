@@ -146,6 +146,8 @@ class _JsonEncoder(json.JSONEncoder):
             return str(o.file_id)
         elif isinstance(o, Model):
             return o.json(deep=True)
+        elif hasattr(o, 'json') and callable(o.json):
+            return o.json()
         if isinstance(o, (dict, list, tuple, str, int, float)) or o is True or o is False or o is None:
             return self.encode(o)
         return json.JSONEncoder.default(self, o)
@@ -213,6 +215,8 @@ def for_jsonify(o: Any, deep: bool = False) -> Any:
         return str(o.file_id)
     elif isinstance(o, Model):
         return o.json(deep=deep)
+    elif hasattr(o, 'json') and callable(o.json):
+        return o.json()
 
     return o
 

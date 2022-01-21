@@ -15,6 +15,8 @@ class BaseScreen:
     _route_params: List[str]
     _requires: List[str]
 
+    screen_class: Literal['Screen', 'ManagedScreen', 'CompositeScreen'] = 'Screen'
+
     name: str
     app: str
     route: str = None
@@ -49,6 +51,7 @@ class BaseScreen:
     def schema_json(cls) -> dict:
         return {
             'name': cls.name,
+            'screenClass': cls.screen_class,
             'rootComponentPath': cls._root_component,
             'rootComponent': cls._root_component_predef(),
             'requires': cls._requires,

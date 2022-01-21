@@ -143,7 +143,11 @@ class EntityAPI(EntityCRUD, ABC):
 
     paths: dict
     """ The dict, containing registerd API paths for the every API method. For example:
-    ``
+    
+    
+    .. highlight:: python
+    .. code-block:: python
+     
         {
             'create': '/api/<app>/<EntityName>',
             'read': '/api/<app>/<EntityName>/<key>',
@@ -155,7 +159,6 @@ class EntityAPI(EntityCRUD, ABC):
             'delete': '/api/<app>/<EntityName>/<key>',
             'delete_batch': '/api/<app>/<EntityName>',
         }
-    ``
     
     So, by accessing the entity class'es ``path`` property using the corresponding
     method key, the programmer may get the absolute URL for accessing the corresponding
