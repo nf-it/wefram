@@ -8,6 +8,10 @@ from ...runtime import context
 
 @api.handle_get('instantiate')
 async def instantiate(request: Request) -> JSONResponse:
+    """ Responses to the frontend with the current user's environment context, like
+    localization parameeters, session information, some configuration etc.
+    """
+
     session: Session = context['session']
     aaa_settings: SettingsCatalog = await settings.get('system.aaa')
 
@@ -40,7 +44,7 @@ async def render_managed_screen(request: Request) -> JSONResponse:
     """
 
     screen_name: str = request.path_params['name']
-    screen: ui.screens.ManagedScreen = ui.screens.get_screen(screen_name)
+    screen: ui.screens.ManagedScreen = ui.screens.get_screen_instance(screen_name)
 
     if screen is None:
         raise HTTPException(404)

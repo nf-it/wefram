@@ -7,11 +7,9 @@ import {
   InputAdornment,
   LazyTextField,
   EnumsProvidedFilters,
-  EnumsSelection,
-  MaterialIcon,
+  EnumsSelection, MaterialIcon,
   Paper,
-  ProvList,
-  ProvListProps,
+  ProvTable,
   Tooltip
 } from 'system/components'
 import {gettext} from 'system/l10n'
@@ -20,25 +18,7 @@ import {api} from 'system/api'
 import {notifications} from 'system/notification'
 import {RequestApiPath} from 'system/routing'
 import {UrlStateStorage} from 'system/components/ProvEnums/types'
-
-
-export interface EntityListProps extends ProvListProps {
-  search?: boolean | string
-  searchArgName?: string
-  addScreen?: RequestApiPath
-  addButtonCaption?: string
-  addButtonAction?: () => void
-  controls?: JSX.Element | JSX.Element[]
-  deleteButton?: RequestApiPath | boolean
-  deleteButtonCaption?: string
-  deleteConfirmMessage?: string
-  itemsSelected?: EnumsSelection
-  refreshButton?: boolean
-  urlStateOffset?: boolean | string
-  urlStateLimit?: boolean | string
-  urlStateSort?: boolean | string
-  urlStateSearch?: boolean | string
-}
+import {EntityTableProps} from './types'
 
 
 type EntityListState = {
@@ -48,14 +28,14 @@ type EntityListState = {
 }
 
 
-export class EntityList extends React.Component<EntityListProps, EntityListState> {
+export class EntityTable extends React.Component<EntityTableProps, EntityListState> {
   state: EntityListState = {
     searchValue: "",
     searchLazyValue: "",
     itemsSelected: []
   }
 
-  private listRef = createRef<ProvList>()
+  private listRef = createRef<ProvTable>()
 
   onItemsSelection = (itemsSelected: EnumsSelection): void => {
     this.setState({itemsSelected})
@@ -109,17 +89,18 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
     const
       refreshButton = this.props.refreshButton !== false && (
         this.props.search !== undefined
-          || this.props.addScreen !== undefined
-          || this.props.deleteButton !== undefined
+          || this.props.addScreenPath !== undefined
+          || this.props.deleteButtonPath !== undefined
           || this.props.controls !== undefined
       )
     const
       controlsBox =
         this.props.search !== undefined
-        || this.props.addScreen !== undefined
-        || this.props.deleteButton !== undefined
+        || this.props.addScreenPath !== undefined
+        || this.props.deleteButtonPath !== undefined
         || this.props.controls !== undefined
         || refreshButton
+
 
     return (
       <Paper variant={'outlined'}>
@@ -129,20 +110,25 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
               <LazyTextField
                 label={gettext("Find")}
                 placeholder={this.props.search === true ? gettext("Type here to find...") : String(this.props.search)}
-                value={this.state.searchValue}
+                value={this.props.searchValue ?? this.state.searchValue}
                 fullWidth
                 variant={'outlined'}
                 size={'small'}
-                onChange={event => this.setState({searchValue: event.target.value})}
-                onChangeLazy={event => this.setState({searchLazyValue: event.target.value})}
-                color={this.state.searchValue ? 'success' : undefined}
+                onChange={event => this.setState(
+                  {searchValue: event.target.value},
+                  () => this.props.onSearchChange && this.props.onSearchChange(event.target.value)
+                )}
+                onChangeLazy={event => {
+                  this.setState({searchLazyValue: event.target.value})
+                }}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position={'end'}>
                       <IconButton
                           size={'small'}
                           onClick={() => this.setState(
-                            {searchValue: '', searchLazyValue: ''}
+                            {searchValue: '', searchLazyValue: ''},
+                            () => this.props.onSearchChange && this.props.onSearchChange('')
                           )}
                       >
                         <MaterialIcon icon={'backspace'} />
@@ -159,10 +145,10 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
               <Box ml={1} display={'flex'}>{this.props.controls}</Box>
             ) : null}
 
-            {this.props.addScreen !== undefined && (
+            {this.props.addScreenPath !== undefined && (
               <Box ml={1} display={'flex'}>
                 <ButtonLink
-                  to={api.pathToUrl(this.props.addScreen)}
+                  to={api.pathToUrl(this.props.addScreenPath)}
                   variant={'outlined'}
                   color={'primary'}
                 >
@@ -170,7 +156,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
                 </ButtonLink>
               </Box>
             )}
-            {!Boolean(this.props.addScreen) && this.props.addButtonAction !== undefined && (
+            {!Boolean(this.props.addScreenPath) && this.props.addButtonAction !== undefined && (
               <Box ml={1} display={'flex'}>
                 <Button
                   variant={'outlined'}
@@ -182,7 +168,7 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
               </Box>
             )}
 
-            {this.props.deleteButton !== undefined && this.props.deleteButton !== false && (
+            {this.props.deleteButtonPath !== undefined && this.props.deleteButtonPath !== false && (
               <Box ml={1} display={'flex'}>
                 <Tooltip title={this.props.deleteButtonCaption ?? gettext("Delete")}>
                   <Button
@@ -195,9 +181,9 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
                         okCallback: () => {
                           dialog.setBusy(true)
                           api.deleteObjects(
-                            typeof this.props.deleteButton == 'boolean'
+                            typeof this.props.deleteButtonPath == 'boolean'
                               ? this.props.requestPath
-                              : this.props.deleteButton as RequestApiPath,
+                              : this.props.deleteButtonPath as RequestApiPath,
                             this.state.itemsSelected
                           )
                             .then(res => {
@@ -236,22 +222,20 @@ export class EntityList extends React.Component<EntityListProps, EntityListState
           </Box>
         )}
 
-        <Box pl={this.props.variant === 'cards' ? 2 : 0} pr={this.props.variant === 'cards' ? 2 : 0}>
-          <ProvList
-            ref={this.listRef}
-            providedFilters={providedFilters}
-            selected={itemsSelected}
-            urlStateStorage={urlStateStorage}
-            onSelection={this.onItemsSelection}
-            onProvidedFiltersUpdateReq={(filters => {
-              this.setState({
-                searchValue: filters['ilike'],
-                searchLazyValue: filters['ilike']
-              })
-            })}
-            {...this.props}
-          />
-        </Box>
+        <ProvTable
+          {...this.props}
+          ref={this.listRef}
+          providedFilters={providedFilters}
+          selected={itemsSelected}
+          urlStateStorage={urlStateStorage}
+          onSelection={this.onItemsSelection}
+          onProvidedFiltersUpdateReq={(filters => {
+            this.setState({
+              searchValue: filters['ilike'],
+              searchLazyValue: filters['ilike']
+            })
+          })}
+        />
       </Paper>
     )
   }

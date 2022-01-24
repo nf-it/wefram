@@ -6,6 +6,7 @@ import {Permissions} from '../aaa'
 export type ScreenClass = 'Screen' | 'ManagedScreen' | 'CompositeScreen'
 
 export type ScreenModelProps = {
+  app: string
   name: string
   screenClass: ScreenClass
   rootComponent?: React.LazyExoticComponent<any> | null

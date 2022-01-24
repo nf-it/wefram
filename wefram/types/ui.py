@@ -50,6 +50,7 @@ class BaseScreen:
     @classmethod
     def schema_json(cls) -> dict:
         return {
+            'app': cls.app,
             'name': cls.name,
             'screenClass': cls.screen_class,
             'rootComponentPath': cls._root_component,

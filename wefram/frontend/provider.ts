@@ -9,7 +9,12 @@ const managedScreenPrerenderPath: RequestApiPath = api.path('system', 'ui/screen
 
 
 export type ProjectAppProvider = {
+  /** Used to fetch the instantiation data, describing the frontend environment for the
+   * current user, from the backend.
+   */
   instantiate(): Response<ProjectConfiguration>
+
+  /** Used to fetch prerender data from the backend prior the ManagedScreen render */
   prerenderManagedScreen(name: string): Response<any>
 }
 

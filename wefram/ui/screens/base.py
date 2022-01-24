@@ -6,10 +6,15 @@ from ...urls import asset_url
 from ...tools import CSTYLE, get_calling_app, array_from, get_calling_module
 from ...types.ui import BaseScreen
 from ... import config, logger, ds, api, ui
-from .types import CompositeLayout, RouteParams
+from .types import RouteParams
 
 
 class Screen(BaseScreen):
+    """
+    The basic, statically programmed at the frontend side of the application screen. None
+    any extra actions from the backend is provided, except of on-demand loading of the
+    JavaScript built code as .js file.
+    """
     pass
 
 
@@ -33,38 +38,66 @@ class ManagedScreen(BaseScreen):
     screen_class = 'ManagedScreen'
 
     async def on_render(self) -> Any:
+        """ Called on every screen open on the frontend side, returning some (really not
+        defined here) data to the caller.
+        """
         raise NotImplementedError
 
 
-class CompositeScreen(BaseScreen):
-    screen_class = 'CompositeScreen'
-
-    component: str = '/wefram/containers/CompositeScreen'
-    layout: Any = None
-    static: bool = None
-
-    @classmethod
-    def layout_schema(cls) -> CompositeLayout:
-        return []
-
-    @classmethod
-    def schema_json(cls) -> dict:
-        is_static: bool = cls.static is True or (cls.static is None and not callable(cls.layout))
-        layout: Optional[list] = None if not is_static else cls.layout_schema()
-
-        schema: dict = super().schema_json()
-        schema['params']['layout'] = layout
-        return schema
-
-    async def render(self, request: Request) -> Optional[CompositeLayout]:
-        raise NotImplementedError
+# -- DELAYED, has much more priorited tasks before this one
+# class CompositeScreen(BaseScreen):
+#     screen_class = 'CompositeScreen'
+#
+#     component: str = '/wefram/containers/CompositeScreen'
+#     layout: Any = None
+#     static: bool = None
+#
+#     @classmethod
+#     def layout_schema(cls) -> CompositeLayout:
+#         return []
+#
+#     @classmethod
+#     def schema_json(cls) -> dict:
+#         is_static: bool = cls.static is True or (cls.static is None and not callable(cls.layout))
+#         layout: Optional[list] = None if not is_static else cls.layout_schema()
+#
+#         schema: dict = super().schema_json()
+#         schema['params']['layout'] = layout
+#         return schema
+#
+#     async def render(self, request: Request) -> Optional[CompositeLayout]:
+#         raise NotImplementedError
 
 
 class FilesScreen(BaseScreen):
+    """
+    The typo screen for managing and enumerating stored files. MUST be inherited
+    by the end screen.
+
+    For example:
+
+    .. highlight:: python
+    .. code-block:: python
+
+        from wefram.ui import screens
+
+        @register
+        class MyFilesScreen(screens.FilesScreen):
+            api_entity = 'some_storage'
+
+    """
+
     component: str = '/wefram/containers/StoredFilesScreen'
-    api_entity: Any = None
-    updatable: Union[bool, str, List[str]] = None
     icon: str = asset_url('icons/files.png')
+
+    api_entity: Any = None
+    """ The corresponding registered storage entity of the file storage.
+    Required to be set! """
+
+    updatable: Union[bool, str, List[str]] = None
+    """ Do allow files update (deletion, replacing, uploading)? Set to ``True`` to allow update
+    for all users, ``False`` to decline update for everyone, or specify the permission scope
+    (or scopes using ``list``) whose have permission to update. """
 
     @classmethod
     def schema_json(cls) -> dict:
@@ -101,11 +134,37 @@ class FilesScreen(BaseScreen):
 
 
 class ImagesScreen(FilesScreen):
+    """
+    The typo screen for managing and enumerating stored images. MUST be inherited
+    by the application screen class.
+
+    For example:
+
+    .. highlight:: python
+    .. code-block:: python
+
+        from wefram.ui import screens
+
+        @register
+        class MyImagesScreen(screens.ImagesScreen):
+            api_entity = 'some_storage'
+            gap = 2
+            row_height = 120
+            columns = 4
+
+    """
+
     component: str = '/wefram/containers/StoredImagesScreen'
     icon: str = asset_url('icons/images.png')
+
     columns: Optional[int] = None
+    """ The quantity of columns per row of the gallery. """
+
     row_height: Optional[int] = None
+    """ The height of each row of the gallery, in pixels. """
+
     gap: Optional[int] = None
+    """ The gap (margin) between images in the gallery, in pixels. """
 
     @classmethod
     def schema_json(cls) -> dict:
@@ -119,25 +178,51 @@ class ImagesScreen(FilesScreen):
         return schema
 
 
+# The registry of all registered in the project screens.
 registered: Dict[str, Any] = {}
 
 
 def as_json() -> dict:
+    """ Returns the screens' schema (for all defined on the backend screens) as ``dict``
+    ready for JSONify. Used at the moment of ``make`` to generate the static TypeScript
+    file defining all declared screens.
+    """
+
     return {
         name: screen.schema_json() for name, screen in registered.items()
     }
 
 
 def runtime_json() -> dict:
+    """ Returns the screens' schema in the context of the client (especially useful
+    for logged-in users).
+    """
+
     return {
         name: screen.runtime_json() for name, screen in registered.items()
     }
 
 
 def get_screen(name: str) -> ClassVar[BaseScreen]:
+    """ Returns the screen class by its name. Returns ``None`` if there is no screen
+    with given name been registered.
+    """
+
     if name not in registered:
         return None
     return registered[name]
+
+
+def get_screen_instance(name: str) -> Any:
+    """ Returns the screen instance (the object of the screen class) by its name.
+    Returns ``None`` if there is no screen with given name been registered.
+    """
+
+    screen_class = get_screen(name)
+    if screen_class is None:
+        return None
+
+    return screen_class()
 
 
 def register(
@@ -145,6 +230,8 @@ def register(
         sitemap: Optional[Union[bool, int, str, Tuple[str, int]]] = None
 ) -> ClassVar[BaseScreen]:
     """
+    The decorator which registers the screen in the project.
+
     :param _cls:
     :param sitemap:
         if True - the screen will be registered at sitemap with class properties

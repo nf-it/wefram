@@ -7,10 +7,10 @@ import {
   InputAdornment,
   LazyTextField,
   EnumsProvidedFilters,
-  EnumsSelection, MaterialIcon,
+  EnumsSelection,
+  MaterialIcon,
   Paper,
-  ProvTable,
-  ProvTableProps,
+  ProvList,
   Tooltip
 } from 'system/components'
 import {gettext} from 'system/l10n'
@@ -19,28 +19,7 @@ import {api} from 'system/api'
 import {notifications} from 'system/notification'
 import {RequestApiPath} from 'system/routing'
 import {UrlStateStorage} from 'system/components/ProvEnums/types'
-
-
-export interface EntityTableProps extends ProvTableProps {
-  search?: boolean | string
-  searchArgName?: string
-  searchValue?: string
-  addScreen?: RequestApiPath
-  addButtonCaption?: string
-  addButtonAction?: () => void
-  controls?: JSX.Element[] | JSX.Element
-  deleteButton?: RequestApiPath | boolean
-  deleteButtonCaption?: string
-  deleteConfirmMessage?: string
-  itemsSelected?: EnumsSelection
-  refreshButton?: boolean
-  urlStateOffset?: boolean | string
-  urlStateLimit?: boolean | string
-  urlStateSort?: boolean | string
-  urlStateSearch?: boolean | string
-
-  onSearchChange?: (value: string) => void
-}
+import {EntityListProps} from './types'
 
 
 type EntityListState = {
@@ -50,14 +29,14 @@ type EntityListState = {
 }
 
 
-export class EntityTable extends React.Component<EntityTableProps, EntityListState> {
+export class EntityList extends React.Component<EntityListProps, EntityListState> {
   state: EntityListState = {
     searchValue: "",
     searchLazyValue: "",
     itemsSelected: []
   }
 
-  private listRef = createRef<ProvTable>()
+  private listRef = createRef<ProvList>()
 
   onItemsSelection = (itemsSelected: EnumsSelection): void => {
     this.setState({itemsSelected})
@@ -111,18 +90,17 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
     const
       refreshButton = this.props.refreshButton !== false && (
         this.props.search !== undefined
-          || this.props.addScreen !== undefined
-          || this.props.deleteButton !== undefined
+          || this.props.addScreenPath !== undefined
+          || this.props.deleteButtonPath !== undefined
           || this.props.controls !== undefined
       )
     const
       controlsBox =
         this.props.search !== undefined
-        || this.props.addScreen !== undefined
-        || this.props.deleteButton !== undefined
+        || this.props.addScreenPath !== undefined
+        || this.props.deleteButtonPath !== undefined
         || this.props.controls !== undefined
         || refreshButton
-
 
     return (
       <Paper variant={'outlined'}>
@@ -132,7 +110,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
               <LazyTextField
                 label={gettext("Find")}
                 placeholder={this.props.search === true ? gettext("Type here to find...") : String(this.props.search)}
-                value={this.props.searchValue ?? this.state.searchValue}
+                value={this.state.searchValue}
                 fullWidth
                 variant={'outlined'}
                 size={'small'}
@@ -140,9 +118,8 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
                   {searchValue: event.target.value},
                   () => this.props.onSearchChange && this.props.onSearchChange(event.target.value)
                 )}
-                onChangeLazy={event => {
-                  this.setState({searchLazyValue: event.target.value})
-                }}
+                onChangeLazy={event => this.setState({searchLazyValue: event.target.value})}
+                color={this.state.searchValue ? 'success' : undefined}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position={'end'}>
@@ -167,10 +144,10 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
               <Box ml={1} display={'flex'}>{this.props.controls}</Box>
             ) : null}
 
-            {this.props.addScreen !== undefined && (
+            {this.props.addScreenPath !== undefined && (
               <Box ml={1} display={'flex'}>
                 <ButtonLink
-                  to={api.pathToUrl(this.props.addScreen)}
+                  to={api.pathToUrl(this.props.addScreenPath)}
                   variant={'outlined'}
                   color={'primary'}
                 >
@@ -178,7 +155,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
                 </ButtonLink>
               </Box>
             )}
-            {!Boolean(this.props.addScreen) && this.props.addButtonAction !== undefined && (
+            {!Boolean(this.props.addScreenPath) && this.props.addButtonAction !== undefined && (
               <Box ml={1} display={'flex'}>
                 <Button
                   variant={'outlined'}
@@ -190,7 +167,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
               </Box>
             )}
 
-            {this.props.deleteButton !== undefined && this.props.deleteButton !== false && (
+            {this.props.deleteButtonPath !== undefined && this.props.deleteButtonPath !== false && (
               <Box ml={1} display={'flex'}>
                 <Tooltip title={this.props.deleteButtonCaption ?? gettext("Delete")}>
                   <Button
@@ -203,9 +180,9 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
                         okCallback: () => {
                           dialog.setBusy(true)
                           api.deleteObjects(
-                            typeof this.props.deleteButton == 'boolean'
+                            typeof this.props.deleteButtonPath == 'boolean'
                               ? this.props.requestPath
-                              : this.props.deleteButton as RequestApiPath,
+                              : this.props.deleteButtonPath as RequestApiPath,
                             this.state.itemsSelected
                           )
                             .then(res => {
@@ -244,20 +221,22 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
           </Box>
         )}
 
-        <ProvTable
-          {...this.props}
-          ref={this.listRef}
-          providedFilters={providedFilters}
-          selected={itemsSelected}
-          urlStateStorage={urlStateStorage}
-          onSelection={this.onItemsSelection}
-          onProvidedFiltersUpdateReq={(filters => {
-            this.setState({
-              searchValue: filters['ilike'],
-              searchLazyValue: filters['ilike']
-            })
-          })}
-        />
+        <Box pl={this.props.variant === 'cards' ? 2 : 0} pr={this.props.variant === 'cards' ? 2 : 0}>
+          <ProvList
+            ref={this.listRef}
+            providedFilters={providedFilters}
+            selected={itemsSelected}
+            urlStateStorage={urlStateStorage}
+            onSelection={this.onItemsSelection}
+            onProvidedFiltersUpdateReq={(filters => {
+              this.setState({
+                searchValue: filters['ilike'],
+                searchLazyValue: filters['ilike']
+              })
+            })}
+            {...this.props}
+          />
+        </Box>
       </Paper>
     )
   }
