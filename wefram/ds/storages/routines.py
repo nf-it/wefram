@@ -1,3 +1,8 @@
+"""
+Provides general purpose functions for working with storage entities and stored
+(uploaded) files.
+"""
+
 from typing import *
 from uuid import uuid4
 import os
@@ -34,6 +39,11 @@ def file_not_modified(
         response_headers: Headers,
         request_headers: Headers
 ) -> bool:
+    """ Returns ``True`` if the given requested file was not modified, to realise the
+    'Not modified' HTTP answer to better traffic economy and better browser (client-side)
+    file cache usage.
+    """
+
     try:
         if_none_match = request_headers["if-none-match"]
         etag = response_headers["etag"]
@@ -58,6 +68,10 @@ def file_not_modified(
 
 
 def test_required(entity_name: str) -> bool:
+    """ Returns ``True`` if the current user has access to modify file storage,
+    meaning upload, replace or delete operation.
+    """
+
     from ...aaa import permitted
 
     if entity_name not in entities.registered:
@@ -74,6 +88,10 @@ def test_required(entity_name: str) -> bool:
 
 
 def test_readable(entity_name: str) -> bool:
+    """ Returns ``True`` if the current user is allowed to read files from the storage
+    entity, by downloading them.
+    """
+
     from ...aaa import permitted
     if entity_name not in entities.registered:
         return False
@@ -88,15 +106,29 @@ def get_file_subpath(file_id: str) -> FilenameParts:
 
 
 def get_file_root(entity: str, file_id: str) -> str:
+    """ Returns the absolute path to the file location, but without the
+    corresponding filename.
+    """
+
     return os.path.join(config.FILES_ROOT, entity, file_id[:2])
 
 
 def get_file_blobfn(entity: str, file_id: str, filename: str) -> str:
+    """ Returns the absolute path to the file's content struct by its storage
+    entity name and corresponding ``file_id``.
+    """
+
     dir1, dir2, dir3 = get_file_subpath(file_id)
     return os.path.join(config.FILES_ROOT, entity, dir1, dir2, dir3, filename)
 
 
 def get_file_infofn(entity: str, file_id: str) -> str:
+    """ Returns the absolute path to the file's info struct by its storage
+    entity name and corresponding ``file_id``.
+    The filename will be the same as content-filename with '.fileinfo.json'
+    suffix appended.
+    """
+
     dir1, dir2, dir3 = get_file_subpath(file_id)
     return os.path.join(config.FILES_ROOT, entity, dir1, dir2, dir3, '.fileinfo.json')
 
@@ -108,6 +140,37 @@ def upload_file_content(
         info: Optional[dict] = None,
         force_id: Optional[str] = None
 ) -> str:
+    """ Stores the given file in the file system of the server within given storage
+    entity. There are two files will be created: the file with the real content and
+    the file with information struct, next to the content one.
+
+    :param entity:
+        The corresponding storage entity. The full entity name must be used, including
+        parent application name. For example: ``myapp.my_storage``.
+
+    :param file:
+        The file object itself.
+
+    :param filename:
+        The filename of the file. It is not included in the ``file`` object, so must
+        be specified here.
+
+    :param info:
+        The optional ``dict`` of extra parameters or information which about to be
+        stored in the corresponding file info struct.
+
+    :param force_id:
+        The optional argument which provides the ability of force the ``file_id``
+        instead of generation the new one. Useful for replacing the file, keeping
+        the old ``file_id``.
+
+    :return:
+        The new file id (or the ``force_id`` value, if have been specified).
+
+    :raises:
+        The `AccessDenied` if the current user has no access.
+    """
+
     from ...aaa import get_current_user
 
     if not test_required(entity):
@@ -141,6 +204,19 @@ def upload_file_content(
 
 
 def remove_file(entity: str, file_id: str) -> None:
+    """ Removes the file from the file system of the server.
+
+    :param entity:
+        The corresponding storage entity. The full entity name must be used, including
+        parent application name. For example: ``myapp.my_storage``.
+
+    :param file_id:
+        The corresponding ``file_id`` of the file to remove.
+
+    :raises:
+        The `AccessDenied` if the current user has no access.
+    """
+
     if not test_required(entity):
         raise exceptions.AccessDenied()
 
@@ -156,6 +232,19 @@ def remove_file(entity: str, file_id: str) -> None:
 
 
 def remove_files(entity: str, files_ids: List[str]) -> None:
+    """ Removes files from the file system of the server.
+
+    :param entity:
+        The corresponding storage entity. The full entity name must be used, including
+        parent application name. For example: ``myapp.my_storage``.
+
+    :param files_ids:
+        The list of corresponding ``file_id`` of files to remove.
+
+    :raises:
+        The `AccessDenied` if the current user has no access.
+    """
+
     if not test_required(entity):
         raise exceptions.AccessDenied()
 
@@ -249,6 +338,16 @@ async def get_file_response(
 
 
 def get_abs_filename(entity: str, file_id: str) -> Optional[str]:
+    """ Returns the absolute filename of the corresponding, uploaded file. If the file
+    is not exists - returns ``None`` instead.
+
+    Note that if the ``file_id`` starts with slash (``/`` symbol), then the ``file_id`` will
+    be interpreted as static file path and will be rooted to the static files root directory,
+    in the 'assets' folder. This makes possible to statically place files and specify their
+    file_ids in the database (for example, default files whose about to be used if there are
+    not uploaded ones).
+    """
+
     if file_id.startswith('/'):
         filepath: str = os.path.join(config.STATICS_ROOT, 'assets', file_id.replace('..', ''))
         if not os.path.isfile(filepath):

@@ -1,3 +1,13 @@
+"""
+Provides Redis in-memory database connections functionality.
+
+Redis is primaryly used to cache often used data in memory and store current
+project state.
+
+The example of the Redis usage is storing users' sessions
+(again, for example).
+"""
+
 import aioredis
 from aioredis import Redis as RedisConnection
 from .. import config
@@ -7,7 +17,6 @@ from ..runtime import context
 __all__ = [
     'create_connection',
     'get_connection',
-    # 'close_connection',
     'RedisConnection',
     'pool',
     'disconnect'
@@ -41,14 +50,4 @@ async def get_connection() -> RedisConnection:
 async def disconnect() -> None:
     await pool.disconnect()
 
-
-# async def close_connection(connection: RedisConnection = None) -> None:
-#
-#     if not connection:
-#         if 'redis' not in context:
-#             return
-#         connection = context['redis']
-#
-#     await connection.disconnect()
-#     await connection.close()
 
