@@ -1,5 +1,5 @@
 """
-The middleware core.
+Provides the middleware core.
 The module both handles the middlewares registry and provides functions
 for middlewares registrations.
 """

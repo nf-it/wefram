@@ -1,5 +1,5 @@
 """
-The basic API functionality module. The general case for the API mechamics
+Provides the basic API functionality. The general case for the API mechamics
 and the base for all other specific cases.
 
 The base is routing functionality to handle API routes with standardized

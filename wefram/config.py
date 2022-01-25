@@ -1,5 +1,5 @@
 """
-Project static configuration.
+Provides the project static configuration.
 
 Do NOT modify this file, use environment variables or `config.json` file instead.
 The environment values will have the higher priority than same taken from the

@@ -1,5 +1,5 @@
 """
-The API entity functionalty.
+Provides the API entity functionalty.
 
 The entity is a some class realizing CRUD (in general) functionality for
 a general named entity (not matter what really happens in the class methods

@@ -1,5 +1,5 @@
 """
-Handle setup functionality. Used by the ``manage`` mechanics.
+Provides the setup functionality. Used by the ``manage`` mechanics.
 Manages applications' repository and configuration functionality, including
 enabling-disabling and setting up.
 """

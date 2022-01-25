@@ -1,6 +1,6 @@
 """
-A special case of Entity API realizing the API interfaces for ORM Models. This
-gives a simple approach on how to declare API/REST-API for any declared ORM
+Provides a special case of Entity API realizing the API interfaces for ORM Models.
+This gives a simple approach on how to declare API/REST-API for any declared ORM
 model without re-writing the same code for every model on common operations
 like create, read, update & delete.
 """

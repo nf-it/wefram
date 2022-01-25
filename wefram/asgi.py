@@ -1,5 +1,5 @@
 """
-The ASGI entry point.
+Provides the ASGI entry point.
 This module is used by the web server, include development runtime server.
 """
 

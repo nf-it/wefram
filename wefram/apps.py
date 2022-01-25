@@ -1,6 +1,6 @@
 """
-The core applications' control module. Handling the project lifecycle at the
-installed applications level, from the startup and within the process life.
+Provides handling the project lifecycle at the installed applications
+level, from the startup and within the process life.
 """
 
 from typing import *

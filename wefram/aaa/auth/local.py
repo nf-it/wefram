@@ -1,5 +1,5 @@
 """
-Plain authorization using only password stored in the users database.
+Provides the plain authorization, which uses only passwords stored in the users' database.
 """
 
 from typing import *

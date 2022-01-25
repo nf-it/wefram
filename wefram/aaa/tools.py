@@ -1,5 +1,5 @@
 """
-A set of AAA tools, primaryly used by the authorization, authentication and accounting.
+Provides a set of AAA tools, primaryly used by the authorization, authentication and accounting.
 """
 
 import uuid

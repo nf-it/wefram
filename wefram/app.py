@@ -1,5 +1,5 @@
 """
-The Wefram application main module.
+Provides the Wefram application declarations and definitions.
 The Wefram, like any of its based app, has general entities about to be registered and
 handled like any other entity of any app.
 """

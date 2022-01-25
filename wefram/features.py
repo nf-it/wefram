@@ -1,5 +1,5 @@
 """
-The ``features`` modules.
+Provides the platform `features` functionality.
 
 Adds the ability to register features whose one or the another application provides.
 The one application may register one or several features, giving other applications an

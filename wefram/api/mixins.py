@@ -1,5 +1,5 @@
 """
-A set of mixins classes for Entity API. Using these mixins allow to
+Provides a set of mixins classes for Entity API. Using these mixins allow to
 extend the default functionality with the standartized facilities.
 """
 

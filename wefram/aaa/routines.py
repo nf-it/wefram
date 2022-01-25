@@ -1,5 +1,5 @@
 """
-A set of general routines for authorization, authentication and accounting (AAA)
+Provides general routines for authorization, authentication and accounting (AAA)
 functionality of the project.
 """
 

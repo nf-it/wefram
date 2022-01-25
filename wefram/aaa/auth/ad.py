@@ -1,5 +1,5 @@
 """
-Active Directory authentication backend
+Provides the Active Directory authentication backend, used by Wefram AAA.
 """
 
 from typing import *

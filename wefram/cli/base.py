@@ -1,3 +1,7 @@
+"""
+Provides the basic CLI (command-line interface) declarations.
+"""
+
 from typing import *
 from dataclasses import dataclass
 from abc import abstractmethod, ABC
@@ -17,6 +21,26 @@ class CliExecutable:
 
 
 class CliMiddleware(ABC):
+    """
+    The base middleware class used to create CLI middlewares. The ``__call__`` method
+    MUST be defined. Example:
+
+    .. highlight:: python
+    .. code-block:: python
+
+        from typing import *
+        from wefram import cli
+
+        class MyCliMiddleware(cli.CliMiddleware):
+            async def __call__(self, call_next: Callable) -> None:
+                # ... some python code prior to the next call
+                # ...
+                await self.call_next()
+                # ...
+                # ... some python code after the next call
+
+    """
+
     def __init__(self, nextcalls):
         self._nextcalls: List[Union[Callable, CliExecutable]] = nextcalls
 

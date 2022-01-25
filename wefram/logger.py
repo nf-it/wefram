@@ -1,5 +1,5 @@
 """
-Used to log different messages to the stdout for the, mainly, debugging and
+Provides the logging of different messages to the stdout for, mainly, debugging and
 development purposes.
 """
 

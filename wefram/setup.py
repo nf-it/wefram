@@ -1,5 +1,5 @@
 """
-This module uses by the ``manage`` mechanics within the ``setup`` target.
+Provides the Wefram initial setup.
 """
 
 

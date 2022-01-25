@@ -1,3 +1,8 @@
+"""
+Provides permissions defs (class), the registry of all registered in the project
+permissions and the registration and operational functionality.
+"""
+
 from typing import *
 from dataclasses import dataclass
 from .. import logger, apps
@@ -43,6 +48,7 @@ PermissionsSet = Dict[str, Permissions]
 PermissionsSchema = List[dict]
 
 
+# Project's permissions registry
 registered: Permissions = []
 
 

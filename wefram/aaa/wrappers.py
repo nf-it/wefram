@@ -1,5 +1,5 @@
 """
-ASGI/routing-level wrappers for the authentication mechanics used by the project and
+Provides ASGI/routing-level wrappers for the authentication mechanics used by the project and
 by the middleware.
 """
 

@@ -1,5 +1,5 @@
 """
-The Wefram platform specific exceptions.
+Provides the Wefram platform specific exceptions.
 """
 
 
