@@ -94,7 +94,8 @@ export type EnumsField = {
    *
    * @property getter - Optional callback which can be used to handle the raw value and return some
    * computed value instead. Useful when need to do some work with got values from the backend to
-   * make them corretly or more understable readable by a user.
+   * make them corretly or more understable readable by a user. If not set - by default the item's
+   * [fieldName] value will be used (item[fieldName]).
    */
 
   fieldType?: FieldType
@@ -227,6 +228,21 @@ type ProvEnumCommonProps = {
    * @property textTotalCount - If set to `true` - the total count of all items will be shown
    * (and the corresponding API request will be generated with total count request).
    *
+   * @property unsortedOption - Allows to add the "Unsorted" option in the sorting options. By
+   * default, if the sorting options are defined - the default sorting always used in the request
+   * because the default sorting option is selected in the interface, even if the user don't
+   * change anything. This property adds an "Unsorted" option at the top of all defined sorting
+   * options and selecting this one will omit any sorting in the API request.
+   * Possible values are `true` (enabled, add localized "Unsorted" option), `false` (default) -
+   * do not add the "Unsorted" option, or {string} type - which enables this propery and overrides
+   * the default localized name with the given one.
+   *
+   * @property urlStateStorage - Defines the behaviour on how the enumeration state stores in
+   * the URL. If omitted (by default) - the current state will not being saved in the URL of the
+   * current location. Otherwise, several or all state's arguments will be added to the currently
+   * opened screen's URL. The state includes: `sort`, `offset`, `limit` & `filters`. The every
+   * required to be saved to the URL state argument must be specified as {string} corresponding
+   * name.
    */
 
   onAfterFetch?: (items: any[]) => any[]

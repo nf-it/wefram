@@ -89,6 +89,13 @@ class EntityScreen(ManagedScreen):
     (if set to ``True`` - display the default system text indicating that there are no 
     items in the list) or ``str`` (used to set the own text). """
 
+    filters_empty_allowed: bool = False
+    """ By default, if the any filter's value is the empty string - this filter
+    ignores and will not be included in the API request. This parameter is for 
+    avoiding of this behaviour and passing empty string as the corresponding filter 
+    value (even if the value is empty, yes). This parameter is a list of filters 
+    names for which this behaviour is applicable to. """
+
     permit_search: bool = True
     """ If set to ``True`` - the search text input will be rendered, allowing
     a user to search over the entity (the entity must have findable fields
@@ -131,13 +138,6 @@ class EntityScreen(ManagedScreen):
                 'other_option': 'some other value'
             }
     """
-
-    filters_empty_allowed: bool = False
-    """ By default, if the any filter's value is the empty string - this filter
-    ignores and will not be included in the API request. This parameter is for 
-    avoiding of this behaviour and passing empty string as the corresponding filter 
-    value (even if the value is empty, yes). This parameter is a list of filters 
-    names for which this behaviour is applicable to. """
 
     async def on_render(self) -> Any:
 
