@@ -1,3 +1,6 @@
+"""
+The Wefram platform specific exceptions.
+"""
 
 
 class HTTPResponseError(BaseException):

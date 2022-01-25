@@ -1,3 +1,8 @@
+"""
+The core applications' control module. Handling the project lifecycle at the
+installed applications level, from the startup and within the process life.
+"""
+
 from typing import *
 from types import ModuleType
 import importlib
@@ -28,14 +33,19 @@ manifests: IAppsManifests = {}
 
 
 def start() -> None:
+    """ Dummy function used by the ``main`` """
     pass
 
 
 def has(app: str) -> bool:
+    """ Returns ``True`` if the app with given is installed and enabled. """
+
     return app in modules
 
 
 def is_enabled(app: str) -> bool:
+    """ Returns ``True`` if the app with given name is enabled. """
+
     return app in config.APPS_ENABLED or app in modules
 
 
@@ -76,8 +86,8 @@ def get_apps_loaded() -> List[str]:
 
 
 def get_app_caption(app_name: str) -> Union[str, L10nStr]:
-    """ Returns the app's caption, or the app's name if there is no
-    caption defined by CAPTION const in the [app.py].
+    """ Returns the app's caption, or the app's name if there is no caption defined
+    by the CAPTION const in the [app.py].
     """
     from .l10n import gettext
 
@@ -134,10 +144,14 @@ def get_apps_order() -> Dict[str, int]:
 
 
 def get_order_for(apps: List[str]) -> Dict[str, int]:
+    """ Returns the order in which to handle or display specified apps. The list
+    of apps for whose to return the order must be given using ``apps`` argument.
+    """
+
     order: Dict[str, int] = {}
     for app in apps:
         if not has_app(app):
-            raise ModuleNotFoundError("app `` is not installed")
+            raise ModuleNotFoundError(f"app `{app}` is not installed")
         manifest: Manifest = Manifest.manifest_for(app)
         order[app] = manifest.order
     return order

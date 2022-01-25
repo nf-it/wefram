@@ -1,8 +1,13 @@
+"""
+The Wefram application main module.
+The Wefram, like any of its based app, has general entities about to be registered and
+handled like any other entity of any app.
+"""
+
 from . import config, ds, aaa, settings
 from .settings.props import NumberProp, NumberMMProp, BooleanProp
 from .private import const
 from .l10n import lazy_gettext
-# from .demo import build as demo
 
 
 CAPTION = lazy_gettext("System")

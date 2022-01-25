@@ -1,3 +1,8 @@
+"""
+General purpose functions used by the Wefram platform, but whose may
+be useful for the any installed and based on the platform application.
+"""
+
 from typing import *
 from types import ModuleType
 import uuid

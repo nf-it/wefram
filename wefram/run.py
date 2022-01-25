@@ -1,3 +1,5 @@
+""" The main entry point of the Wefram-based project. """
+
 from typing import *
 import os
 

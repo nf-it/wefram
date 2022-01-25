@@ -1,3 +1,9 @@
+"""
+Handle setup functionality. Used by the ``manage`` mechanics.
+Manages applications' repository and configuration functionality, including
+enabling-disabling and setting up.
+"""
+
 import asyncio
 from types import ModuleType
 from typing import *
@@ -18,6 +24,10 @@ __all__ = [
 
 
 async def drop() -> None:
+    """ Drops all project data, cleaning up both relational database tables
+    and in-memory Redis data.
+    """
+
     from . import ds
 
     logger.warning("Flushing REDIS database!")
@@ -83,6 +93,11 @@ async def _setup() -> None:
 
 
 async def setup() -> None:
+    """ Handles the project setup procedure. Used at first install time or to
+    fully reinstall the project, including dropping all existing data in
+    databases.
+    """
+
     from . import ds
 
     print("\n\nSETUP procedure initialized, setting the project up\n\n")
@@ -111,11 +126,32 @@ async def _demo(app_to_build: Optional[str] = None) -> None:
 
 
 async def demo(app_to_build: Optional[str] = None) -> None:
+    """ Used to fill up the project database with demo data, provided by
+    corresponding applications. Not all apps may have demo data setup
+    functionality (depending on the app).
+
+    :param app_to_build:
+        The name of the app for which do set up a demo data.
+        If omitted - do set up demo data for all enabled apps in the
+        project.
+    :type app_to_build:
+        (optional) str
+    """
+
     logger.warning("Settings up the project demo")
     await runtime.within_cli(_demo, app_to_build)
 
 
 async def remove(apps_to_remove: List[str]) -> None:
+    """ Removes the application from the project. This physically removes app's
+    files in the project directory.
+
+    :param apps_to_remove:
+        The list of apps' names to remove
+    :type apps_to_remove:
+        list
+    """
+
     print("Updating `apps.json` file")
     apps_json_filename: str = os.path.join(config.PRJ_ROOT, 'apps.json')
     json_to_file([
@@ -141,6 +177,15 @@ async def remove(apps_to_remove: List[str]) -> None:
 
 
 async def enable(apps_to_enable: List[str]) -> None:
+    """ Enables the installed in the project application. The application about
+    to exist in the project at the moment of this function execution.
+
+    :param apps_to_enable:
+        The list of apps' names to enable
+    :type apps_to_enable:
+        list
+    """
+
     for app in apps_to_enable:
         if has_app(app):
             continue
@@ -176,6 +221,15 @@ async def enable(apps_to_enable: List[str]) -> None:
 
 
 async def disable(apps_to_disable: List[str]) -> None:
+    """ Disabled the installed and enabled app in the project. This function do not
+    remove app's files from the project directory.
+
+    :param apps_to_disable:
+        The list of apps' names to disable.
+    :type apps_to_disable:
+        list
+    """
+
     for app in apps_to_disable:
         if has_app(app):
             continue

@@ -1,3 +1,8 @@
+"""
+The ASGI entry point.
+This module is used by the web server, include development runtime server.
+"""
+
 from typing import *
 import asyncio
 from starlette.applications import Starlette
@@ -10,8 +15,17 @@ from . import run, config, requests, logger, ds, runtime, middlewares, ui
 from .requests import Route
 
 
+__all__ = [
+    'asgi',
+    'get_default_path',
+    'default_route',
+    'root_route',
+    'start'
+]
+
+
 def get_default_path() -> str:
-    """ Returns an URL where to redirect the client browser when accesing the root (/) path. """
+    """ Returns the URL where to redirect the client browser when accesing the root (/) path. """
 
     is_authenticated: bool = runtime.context['is_authenticated']
     return (
@@ -20,10 +34,10 @@ def get_default_path() -> str:
 
 
 async def default_route(request: requests.Request) -> requests.Response:
-    """ Handles the route when none of the upper corresponds to. Handles
-    cases when the user tryes to access the non-existence path, the
-    or static file (useful for development environment).
+    """ Handles the route when none of the upper corresponds to. Handle cases when the user tryes
+    to access the non-existence path, the or static file (useful for development environment).
     """
+
     rop: str = request.path_params['rest_of_path'].replace('..', '')
     if requests.is_static_path(rop):
         return requests.PrebuiltFile(rop)
@@ -33,6 +47,7 @@ async def default_route(request: requests.Request) -> requests.Response:
 
 async def root_route(*_) -> requests.RedirectResponse:
     """ Handles the exactly root route (/). """
+
     return requests.RedirectResponse(get_default_path(), 307)
 
 

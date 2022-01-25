@@ -1,3 +1,7 @@
+"""
+Some runtime contexts and functions.
+"""
+
 from typing import *
 from collections import UserDict
 from .requests import context as request_context
