@@ -1,3 +1,8 @@
+"""
+Provides the project settings routines, functionality to get and save
+the one or the another settings entity.
+"""
+
 from typing import *
 from ..tools import get_calling_app
 from ..runtime import context
@@ -29,6 +34,8 @@ async def get(
         entity: Optional[str] = None,
         force_user_id: [bool, str, None] = False
 ) -> SettingsCatalog:
+    """ Fetches the specified entity and returns it to the caller. """
+
     entity_name: str = _entity_name_for(entity)
     if entity_name not in entities.registered:
         raise RuntimeError(
@@ -106,5 +113,6 @@ async def reset(
 
 
 async def drop(*entity_names: str) -> None:
+    """ TODO drop specified entity(ies) restoring the default values. """
     pass
 

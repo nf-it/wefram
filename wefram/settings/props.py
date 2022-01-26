@@ -1,3 +1,7 @@
+"""
+Provides types of properties used in the settings entities.
+"""
+
 from typing import *
 from ..types.l10n import L10nStr
 from ..types.settings import PropBase
@@ -31,14 +35,44 @@ KeysValuesList = Sequence[KeyValueItem]
 
 
 class StringProp(PropBase):
+    """
+    The common, single line string text field. Python representation is ``str``.
+    """
+
     prop_type = 'string'
 
 
 class NumberProp(PropBase):
+    """
+    The number property. Represented by ``int`` type.
+    """
+
     prop_type = 'number'
 
 
 class NumberMMProp(PropBase):
+    """
+    The property providing the selection of a number from the specified
+    range of numbers: the minimum and the maximum ones. The step might
+    be set to the necessary value.
+
+    :param min_value:
+        The minimum allowed value, the range start.
+    :type min_value:
+        int
+
+    :param max_value:
+        The maximum allowed value, the range end.
+    :type max_value:
+        int
+
+    :param step:
+        The step of the value selection. Is optional and if is omitted,
+        then "1" will be used.
+    :type step:
+        Optional, int
+    """
+
     prop_type = 'number-min-max'
 
     def __init__(
@@ -63,10 +97,29 @@ class NumberMMProp(PropBase):
 
 
 class TextProp(PropBase):
+    """
+    The multiline text field. Represented by ``str`` python type.
+    """
+
     prop_type = 'text'
 
 
 class BooleanProp(PropBase):
+    """
+    The boolean (true-false, yes-no) property. Rendered as switch with given
+    caption next to it. The additional ``inline`` argument might be set to
+    rearrange the caption from the left column to the one line, with caption
+    right next to the switch on the right side.
+
+    :param inline:
+        If set to ``True``, then the switch will be rendered on the begin of
+        the property row, with the caption right next to the switch; else,
+        if set to ``False`` (default) - the default layout with caption at
+        the left side and the switch at the right side.
+    :type inline:
+        bool, default = False
+    """
+
     prop_type = 'boolean'
 
     def __init__(
@@ -85,6 +138,40 @@ class BooleanProp(PropBase):
 
 
 class ChoiceProp(PropBase):
+    """
+    The choice property which provides the selection the one option
+    from the list of available. Options declares using the ``options``
+    argument.
+
+    :param options:
+        The set of available options to select from. There two variants
+        of options declaration are provided:
+
+        #. Using the list, each element of which is a tuple, containing
+            the corresponding item key (value) at the first place, and
+            the caption of that item at the second. For example:
+
+            ``
+            ChoiceProp(caption="The first variant", options=[
+                ('value1', "The first option"),
+                ('value2', "The second option")
+            ])
+            ``
+        #. Using the dict, where keys represents corresponding items'
+            values, and dict's values represents items' captions. In
+            this case items will be ordered by their captions. For
+            example:
+
+            ``
+            ChoiceProp(caption="The second variant", options={
+                'value1': "The first option",
+                'value2': "The second option"
+            })
+            ``
+    :type options:
+        list, dict
+    """
+
     prop_type = 'choice'
 
     def __init__(
@@ -115,10 +202,45 @@ class ChoiceProp(PropBase):
 
 
 class StringListProp(PropBase):
+    """
+    The modificable list of strings. This property provides the posibility
+    to render and modify the list of strings, by adding and removing them.
+    The python representation is ``list`` or, in ``typing`` terms,
+    the ``List[str]``.
+    """
+
     prop_type = 'string-list'
 
 
 class ImageProp(PropBase):
+    """
+    Provides the uploadable image property. Requires the corresponding
+    storage entity to be specified.
+
+    :param entity:
+        The corresponding storage entity to which the image uploads to.
+
+    :param clearable:
+        If set to ``True`` - the uploaded image might be removed, clearing
+        the property's value; otherwise the image is required to be present.
+
+    :param prop_cover:
+        If set to ``True``, the image in the property will be shown covered,
+        otherwise - contained.
+
+    :param prop_height:
+        The height of the image rendered as the settings property.
+
+    :param prop_width:
+        The width of the image rendered as the settings property.
+
+    :param prop_inline:
+        If set to ``True`` - the image property will be rendered full width,
+        with caption at the top of the image; otherwise the standard layout
+        will be used with caption in the left part, and the image in the
+        right part of the property row.
+    """
+
     prop_type = 'image'
 
     def __init__(
@@ -155,6 +277,14 @@ class ImageProp(PropBase):
 
 
 class FileProp(PropBase):
+    """
+    Provides the uploadable file property. Requires the corresponding
+    storage entity to be specified.
+
+    :param entity:
+        The corresponding storage entity to which the file uploads to.
+    """
+
     prop_type = 'file'
 
     def __init__(
