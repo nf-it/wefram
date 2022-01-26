@@ -10,8 +10,9 @@ from typing import *
 from ...types.l10n import L10nStr
 from ...api.entities import get_entity, EntityAPI
 from ...aaa import permitted
+from ...tools import snakecase_to_lowercamelcase
 from .base import ManagedScreen
-from .types import EnumField
+from .types import EnumField, EnumsSortingOption
 
 
 class EntityScreen(ManagedScreen):
@@ -21,7 +22,7 @@ class EntityScreen(ManagedScreen):
 
     component = 'wefram/containers/EntityScreen'
 
-    caption: Union[str, L10nStr] = None
+    caption: Union[str, L10nStr] = ...
     """ The caption for the screen. If omitted - will not be displayed. If set,
     this caption will be rendered at the top of the screen, prior to enumeration
     of items. May be localized using :func:`~wefram.l10n.lazy_gettext`. """
@@ -29,7 +30,7 @@ class EntityScreen(ManagedScreen):
     entity: str = None
     """ The corresponding API-entity name for which this screen is for. """
 
-    entity_caption: Union[str, L10nStr] = None
+    entity_caption: Union[str, L10nStr] = ...
     """ The optional caption used in the notifications and messages when something about
     to be shown to the user with the entity name. Adviced to fill up this parameter, 
     because otherwise the system entity  name (the class name) will be used instead, 
@@ -39,29 +40,29 @@ class EntityScreen(ManagedScreen):
     """ The variant how the listing screen will look like: as list or as table.
     Possible values are 'list' and 'table'. """
 
-    table_columns: List[EnumField] = None
+    table_columns: List[EnumField] = ...
     """ Defines columns whose will be present on the table screen (if the table
     variant has been selected). The each table column must be defined as
     :py:meth:`~EnumField` class instance. """
 
-    primary_field: Union[EnumField, List[EnumField]] = None
+    primary_field: Union[EnumField, List[EnumField]] = ...
     """ Defines the primary field for the ``list`` variant of enum. If the
     several fields needs to be placed next to each other - group them using
     list or tuple. """
 
-    secondary_field: Union[EnumField, List[EnumField]] = None
+    secondary_field: Union[EnumField, List[EnumField]] = ...
     """ Defines the secondary field for the ``list`` variant of enum. If the
     several fields needs to be placed next to each other - group them using
     list or tuple. """
 
-    avatar_color: Union[bool, str] = None
+    avatar_color: Union[bool, str] = ...
     """ The color of the avatar (if it is defined). Possible value types are:
     (a) `string` - the exact CSS color code, **or** the name of the field, 
     which's value to use as color code;
     (b) or `boolean` (set to `true` to automatically generate the avatar color
     basing on the item's alternative string). """
 
-    avatar_field: str = None
+    avatar_field: str = ...
     """ The name of the corresponding item's field name to use as avatar image 
     source. """
 
@@ -71,7 +72,7 @@ class EntityScreen(ManagedScreen):
     items) deletion. Note that if ``permit_delete`` doesn't permits deletion -
     checkboxes will not been rendered even if ``batch_delete`` is set to ``True``. """
 
-    default_sort: str = None
+    default_sort: str = ...
     """ The name of the entity field used for default sourting options. If the
     default sorting about to be descending - prepend the name of the field with
     the `minus` character (like ``-myfield``). Note that this is optional
@@ -79,11 +80,11 @@ class EntityScreen(ManagedScreen):
     sorting might be set using :py:prop:`wefram.ds.model.Meta.order` property
     of the corresponding ORM model class. """
 
-    delete_confirm_message: Union[str, L10nStr] = None
+    delete_confirm_message: Union[str, L10nStr] = ...
     """ The text message which displays to the user (as model dialog) when he|she 
     clicks on "Delete". If omitted, the default, common warning will be shown instead. """
 
-    empty_list_text: Union[str, L10nStr] = None
+    empty_list_text: Union[str, L10nStr] = ...
     """ Optional parameter which defines the text which will be rendered to the end user
     if there are no items fetched as the API request. Possible value types are ``bool`` 
     (if set to ``True`` - display the default system text indicating that there are no 
@@ -96,12 +97,48 @@ class EntityScreen(ManagedScreen):
     value (even if the value is empty, yes). This parameter is a list of filters 
     names for which this behaviour is applicable to. """
 
+    item_key_field: str = ...
+    """ The name of the key field of the item. By default, the name 'key' used as
+    the item key, and if there is no 'key' field - the 'id' name will be used. If the 
+    item has other than one of those two names as a primary key - the name of this field 
+    must be set using this property. """
+
+    pagination: bool = False
+    """ If set to ``True`` - the pagination will be used to display enumeration;
+    the corresponding set of UI elements will be automatically rendered. Pagination uses API
+    request arguments ``offset`` and ``limit`` to control the offset (the start position 
+    from which to select objects) and the quantity of fetching items. """
+
+    sort_options: List[EnumsSortingOption] = ...
+    """ The list of sort options. If set, the selection of sorting will be rendered to the end 
+    user, allowing to change the default sorting of items to another option. Each option about
+    to be an object of :class:`~wefram.ui.screens.EnumsSortingOption` class. """
+
+    storage_entity: str = ...
+    """ he name of the defined storage entity, used for the avatar rendering. Used in 
+    combination with ``avatar_field`` parameter. For example: `myapp.myentity`. """
+
+    text_total_count: Union[str, bool] = False
+    """ If set to ``True`` - the total count of all items will be shown (and the corresponding
+    API request will be generated with total count request). If set to ``str`` type - the given 
+    text will prepend the total count number instead of default localized text. """
+
+    unsorted_option: Union[str, bool] = ...
+    """ Allows to add the "Unsorted" option in the sorting options. By
+    default, if the sorting options are defined - the default sorting always used in the request
+    because the default sorting option is selected in the interface, even if the user don't
+    change anything. This property adds an "Unsorted" option at the top of all defined sorting
+    options and selecting this one will omit any sorting in the API request.
+    Possible values are ``True`` (enabled, add localized "Unsorted" option), ``False`` (default) -
+    do not add the "Unsorted" option, or ``str`` type - which enables this propery and overrides
+    the default localized name with the given one. """
+
     permit_search: bool = True
     """ If set to ``True`` - the search text input will be rendered, allowing
     a user to search over the entity (the entity must have findable fields
     declared). """
 
-    permit_add: Union[bool, str, List[str]] = None
+    permit_add: Union[bool, str, List[str]] = ...
     """ If set to ``True`` - the Add button will be rendered allowing to add
     new objects of the corresponding entity. Set to ``False`` to disable the
     ability of adding new objects at all. If set to ``str`` or a list of ``str``,
@@ -110,7 +147,7 @@ class EntityScreen(ManagedScreen):
     not specified, the corresponding entity's permissions rules will be used
     to decide - has the user rights to create new object or has not. """
 
-    permit_delete: Union[bool, str, List[str]] = None
+    permit_delete: Union[bool, str, List[str]] = ...
     """ If set to ``True`` - the Delete button will be rendered allowing to remove
     objects of the corresponding entity. Set to ``False`` to disable the
     ability of removing objects at all. If set to ``str`` or a list of ``str``,
@@ -119,7 +156,7 @@ class EntityScreen(ManagedScreen):
     not specified, the corresponding entity's permissions rules will be used
     to decide - has the user rights to remove objects or has not. """
 
-    provided_filters: dict = None
+    provided_filters: dict = ...
     """ Used to specify filters used in the request to the entity API. In
     opposition to the fully frontend programmed screen, specifying filters
     for the ``EntityScreen`` screen is a primaryly static option, allowing to
@@ -165,7 +202,7 @@ class EntityScreen(ManagedScreen):
 
         entity_name: str = self.entity
         if not entity_name or not isinstance(entity_name, str):
-            raise RuntimeError(
+            raise ValueError(
                 "ManagedScreen.entity must be set and be the name of the corresponding entity!"
             )
 
@@ -185,7 +222,7 @@ class EntityScreen(ManagedScreen):
         entity_fqname: str = '.'.join([entity_app, entity_name])
         entity: ClassVar[EntityAPI] = get_entity(entity_fqname)
         if entity is None:
-            raise RuntimeError(
+            raise ValueError(
                 f"ManagedScreen.entity={entity_fqname} does not exists!"
             )
 
@@ -206,16 +243,8 @@ class EntityScreen(ManagedScreen):
             'filtersEmptyAllowed': bool(self.filters_empty_allowed)
         }
 
-        # Handling the common properties
-        if self.avatar_color:
-            props['avatarClor'] = self.avatar_color
-        if self.avatar_field:
-            props['avatarField'] = self.avatar_field
-        if self.caption:
-            props['caption'] = str(self.caption)
-        if self.entity_caption:
-            props['entityCaption'] = str(self.entity_caption)
-        if self.default_sort:
+        # Handling some special cases of properties
+        if self.default_sort is not ...:
             props['defaultSort'] = {
                 'value': self.default_sort[1:],
                 'direction': 'desc'
@@ -223,12 +252,35 @@ class EntityScreen(ManagedScreen):
                 'value': self.default_sort,
                 'direction': 'asc'
             }
-        if self.delete_confirm_message:
-            props['deleteConfirmMessage'] = str(self.delete_confirm_message)
-        if self.empty_list_text:
-            props['emptyListText'] = str(self.empty_list_text)
-        if self.provided_filters:
-            props['providedFilters'] = self.provided_filters
+
+        if self.sort_options is not ...:
+            if not isinstance(self.sort_options, (list, tuple)):
+                raise ValueError(
+                    "EntityScreen.sort_options must be a list or tuple of EnumsSortingOption objects."
+                )
+            props['sortOptions'] = [
+                opt.as_json() for opt in self.sort_options if isinstance(opt, EnumsSortingOption)
+            ]
+
+        # Handling the common properties
+        prop_name: str
+        for prop_name in [
+            'avatar_color',
+            'avatar_field',
+            'provided_filters',
+            'caption',
+            'entity_caption',
+            'delete_confirm_message',
+            'empty_list_text',
+            'item_key_field',
+            'pagination',
+            'storage_entity',
+            'text_total_count',
+        ]:
+            prop_value: Any = getattr(self, prop_name, ...)
+            if prop_value is ...:
+                continue
+            props[snakecase_to_lowercamelcase(prop_name)] = prop_value
 
         # Handling the 'list' variant
         if self.enum_variant == 'list':

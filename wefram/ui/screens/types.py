@@ -1,10 +1,13 @@
 from typing import *
+from dataclasses import dataclass
+from ...types.l10n import L10nStr
 from ...tools import py_to_json
 
 
 __all__ = [
     'RouteParams',
     'Prop',
+    'EnumsSortingOption',
     'EnumField'
 ]
 
@@ -21,6 +24,25 @@ class Prop:
 
     def as_json(self) -> dict:
         return {k: v for k, v in py_to_json(self.props) if v is not ...}
+
+
+class EnumsSortingOption(dataclass):
+    """
+    The sorting option definition used in the enumerating components.
+    """
+
+    value: str
+    """ The actual field name (value) which to use in the API request. """
+
+    caption: Union[str, L10nStr]
+    """ The human-readable caption which to render in the interface. This one
+    may be set using lazy localization with :py:func:`~wefram.l10n.lazy_gettext`. """
+
+    def as_json(self) -> dict:
+        return {
+            'value': self.value,
+            'caption': str(self.caption)
+        }
 
 
 class EnumField(Prop):
