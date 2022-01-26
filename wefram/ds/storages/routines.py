@@ -263,6 +263,35 @@ async def get_embedded_file_response(
         file_id: str,
         request: Optional[Request] = None
 ) -> Union[FileResponse, NotModifiedResponse]:
+    """ The special case of the file response which returns the embedded in the
+    project file. The embedded file is not the one uploaded, but instead - is the
+    file which was placed in the assets of one or the another application. For
+    example, if the application put the default icon image to the assets (or even
+    not modificable file) - this file will be named embedded in this scenario.
+
+    The embedded ``file_id`` always starts with the leading slash symbol (``/``)
+    and the corresponding relative path to the file. The path must include both
+    parent application and the rest of the path.
+
+    The described above path may be created with helper function, see
+    :py:func:`wefram.urls.asset_url` for detailts.
+
+    For example: `/my_very_app/images/my_icon.png`
+
+    :param file_id:
+        The ``file_id`` of the corresponding file - the relative asset path.
+
+    :param request:
+        The ``Request`` object of the request.
+
+    :return:
+        ``NotModifiedResponse`` if, basing on the request, the requested file
+        was not modified, or the ``FileResponse`` instead.
+
+    :raises:
+        ``FileNotFound`` exception if the given file is not exists.
+    """
+
     filepath: str = os.path.join(config.STATICS_ROOT, 'assets', file_id.replace('..', ''))
     if not os.path.isfile(filepath):
         raise FileNotFoundError()
@@ -294,6 +323,38 @@ async def get_file_response(
         file_id: str,
         request: Optional[Request] = None
 ) -> Union[FileResponse, NotModifiedResponse]:
+    """
+    Generates the file response for the given storage ``entity`` and corresponding ``file_id``,
+    and with usage of the given ``request``. If the requesting client (usually web browser)
+    supports caching of files and provides the neccessary data in the request - the
+    ``NotModifiedResponse`` may be returned instead of the real file if the requested file was
+    not modified and the cached file on the client side is still valid.
+
+    If the given ``file_id`` starts with a leading slash symbol - :py:func:`get_embedded_file_response`
+    function will be used instead to return embedded file.
+
+    :param entity:
+        The fully qualified storage entity, including parent application name. For example:
+        `myapp.my_file_storage`.
+
+    :param file_id:
+        The corresponding file id.
+
+    :param request:
+        The ``Request`` object of the request.
+
+    :return:
+        ``NotModifiedResponse`` if, basing on the request, the requested file
+        was not modified, or the ``FileResponse`` instead.
+
+    :raises:
+        ``FileNotFound`` exception if the given file is not exists.
+
+    :raises:
+        ``AccessDenied`` exception if the user (from the request context) has no access
+        to the file.
+    """
+
     if not test_readable(entity):
         raise exceptions.AccessDenied()
 
