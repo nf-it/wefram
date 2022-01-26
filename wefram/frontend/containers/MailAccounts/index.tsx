@@ -42,7 +42,7 @@ export default class Screen extends React.Component<ScreenProps, ScreenState> {
             textTotalCount
             selectable
             addButtonAction={() => this.setState({entityKey: null})}
-            deleteButton={true}
+            deleteAction={true}
             entityCaption={gettext("Mail accounts", 'system.mail')}
             primaryField={'name'}
             secondaryField={'username'}

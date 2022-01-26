@@ -1,10 +1,11 @@
+"""
+Provides a special case of sidebar layout - sitemap, which points to the
+project's screens' structure.
+"""
+
 from typing import *
-from dataclasses import dataclass
-from ..aaa import permitted
 from ..types.l10n import L10nStr
 from ..types.ui import BaseScreen
-from ..tools import CSTYLE, get_calling_app, array_from
-from .. import logger
 from . import sidebar
 
 
@@ -29,7 +30,7 @@ def folder(
 ) -> None:
     """ Appends the folder to the sidebar with given name (the name is
     very important because all childs about to be appended to the
-    folder by it's name).
+    folder by its name).
 
     :param name: the name of the sitemap item
     :param caption: the caption which will be displayed to the end user

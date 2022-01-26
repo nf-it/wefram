@@ -113,7 +113,7 @@ export default class Screen extends React.Component<ScreenProps> {
               />
             ]}
             defaultSort={{value: 'fullName', direction: 'asc'}}
-            deleteButton={true}
+            deleteAction={true}
             deleteConfirmMessage={gettext("Are you sure you want to delete the selected users?", 'system.aaa-messages')}
             entityCaption={gettext("Users list", 'system.aaa')}
             limit={30}

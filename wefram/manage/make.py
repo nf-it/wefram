@@ -1,5 +1,6 @@
 from typing import *
 from types import ModuleType
+from datetime import datetime
 import asyncio
 import os
 import os.path
@@ -44,6 +45,9 @@ async def run(targets: list) -> None:
     if targets[0] == 'help':
         print_help()
         return
+
+    # Storing the timestamp when the make begun
+    start_timestamp = datetime.now()
 
     logger.set_level(max(logger.VERBOSITY, logger.INFO))
     logger.info(f"starting to make the project", 'make')
@@ -120,4 +124,12 @@ async def run(targets: list) -> None:
             await makefunc(roots)
         else:
             makefunc(roots)
+
+    # Storing the timestamp when the make done
+    end_timestamp = datetime.now()
+
+    # Printing the success result and the time spend on make
+    time_spend = (end_timestamp - start_timestamp).seconds
+
+    print(f"\n\nMake done in {CSTYLE['red']}{time_spend}{CSTYLE['clear']} seconds")
 

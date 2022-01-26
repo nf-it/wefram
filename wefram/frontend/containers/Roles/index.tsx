@@ -24,9 +24,9 @@ export default class Screen extends React.Component<ScreenProps> {
           {gettext("Administrate roles", 'system.aaa')}
         </Typography>
         <EntityList
-          addScreen={addScreenPath}
+          addScreenPath={addScreenPath}
           defaultSort={{value: 'name', direction: 'asc'}}
-          deleteButton={true}
+          deleteAction={true}
           entityCaption={gettext("Roles list", 'system.aaa')}
           itemsRoute={itemScreenPath}
           limit={25}

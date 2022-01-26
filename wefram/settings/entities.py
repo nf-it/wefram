@@ -1,3 +1,8 @@
+"""
+Provides the platform-managed settings functionality. This module serves the
+settings' entities registration and registry.
+"""
+
 from typing import *
 from ..tools import CSTYLE, get_calling_app
 from ..types.l10n import L10nStr
@@ -11,6 +16,8 @@ __all__ = [
 ]
 
 
+# Registry of declared settings entities, as dict. The entity names are
+# dict keys, and dict values are corresponding entity objects.
 registered: Dict[str, SettingsEntity] = dict()
 
 
@@ -24,6 +31,16 @@ def register(
         order: Optional[int] = None,
         tab: Optional[str] = None
 ) -> None:
+    """ Registers the settings entity in the system. The entity is described as
+    a set of this function arguments.
+
+    :param properties:
+        Declared the set of entity's properties. There are two possible variants on how those
+        properties are declared:
+
+        #.
+    """
+
     app_name: str = get_calling_app()
     entity_name: str = '.'.join([s for s in (app_name, name) if s])
     logger.debug(

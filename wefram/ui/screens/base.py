@@ -1,3 +1,9 @@
+"""
+Provides the basic screens' classes available for inheritance with the real applications'
+screens' classes. In addition, provides screens' management functionality like returning
+the current screen schema and so on.
+"""
+
 from typing import *
 import os.path
 import re

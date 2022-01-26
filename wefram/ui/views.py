@@ -1,3 +1,7 @@
+"""
+Provides the server-side rendering (SSR) ``views`` functionality.
+"""
+
 from typing import *
 import asyncio
 import os.path
@@ -18,28 +22,49 @@ __all__ = [
 ]
 
 
+# A registry of declared context loaders of the project
 context_loaders: List[Callable] = []
 
 
 def add_context_loader(f: Callable) -> None:
+    """ Registers the context loader's callback in the project. """
+
     context_loaders.append(f)
 
 
 class View:
+    """
+    The general view class which about to be used for SSR views rendering. Each time the view
+    about to be rendered - the corresponding object (instance of the view's class) being created
+    and its :py:meth:`~wefram.ui.View.render` method called.
+    """
+
     _route_url: str
     _requires: List[str]
 
     _assets_uuid: str = None
+
     public_statics: str = config.STATICS_URL
     public_assets: str = f'{config.STATICS_URL}/assets'
     public_fonts: str = f'{config.STATICS_URL}/fonts'
 
     name: str
+    """ The view name. Generally, based on the inheriting class name. """
+
     app: str
+    """ The view's parent application name. """
+
     route: Union[str, List[str]] = None
+    """ The path definition to automatically register the view's route. The view does
+    not requires to be routed additionally by any kind of route - it uses this property
+    to automatically be registered in the routing table by given ``route`` path. """
+
     requires: Optional[List[str]] = None
+    """ Optional set of required permission scopes whose the current used must have
+    to be able to call this view been rendered. """
 
     ctx_loaders: Optional[List[Callable]] = None
+    """ A set of registered for the view context loaders. """
 
     def __init__(self, request: Request):
         self.request: Request = request
@@ -57,43 +82,54 @@ class View:
 
     @classmethod
     def get_assets_uuid(cls) -> Optional[str]:
-        """ Returns built assets UUID. If the project is in PRODUCTION
-        state - returns the cached one which aknowns at the moment of
-        the ASGI process start; otherwise (within DEVELOPMENT project
-        state) each time reads the corresponding 'assets.uuid' file in
-        the build directory.
+        """ Returns built assets UUID. If the project is in PRODUCTION state - returns the cached
+        one which aknowns at the moment of the ASGI process start; otherwise (within DEVELOPMENT
+        project state) each time reads the corresponding 'assets.uuid' file in the build directory.
         """
+
         if config.PRODUCTION:
             return View._assets_uuid
+
         return get_assets_uuid()
 
     @classmethod
     def get_public_css_path(cls) -> str:
-        """ Returns the fully-qualified URL path to the public site's
-        merged and minified stylesheets (CSS) resource.
+        """ Returns the fully-qualified URL path to the public site's merged and minified
+        stylesheets (CSS) resource.
         """
+
         assets_uuid: Optional[str] = View.get_assets_uuid()
         if not assets_uuid:
             return ""
+
         return f"{config.STATICS_URL}/assets/{assets_uuid}.css"
 
     @classmethod
     def get_public_js_path(cls) -> str:
-        """ Returns the fully-qualified URL path to the public site's
-        merged and minified JavaScripts (JS) resource.
+        """ Returns the fully-qualified URL path to the public site's merged and minified
+        JavaScripts (JS) resource.
         """
+
         assets_uuid: Optional[str] = View.get_assets_uuid()
         if not assets_uuid:
             return ""
+
         return f"{config.STATICS_URL}/assets/{assets_uuid}.js"
 
     @classmethod
     def append_context_loader(cls, loader: Callable) -> None:
+        """ Used to append the context loader callback to this view. """
+
         if cls.ctx_loaders is None:
             cls.ctx_loaders = []
         cls.ctx_loaders.append(loader)
 
     async def use_context_loaders(self) -> None:
+        """ Calls on view render. Takes all view-registered context loaders, executes
+        them in the order they being registered and appends results to the consolidated
+        context dict.
+        """
+
         if not context_loaders:
             return
         loaders: List[Callable] = context_loaders + (self.ctx_loaders or [])
@@ -108,6 +144,8 @@ class View:
 
     @classmethod
     async def endpoint(cls, request: Request) -> Response:
+        """ The endpoint callback used in the routing purposes to render this view. """
+
         view: View = cls(request)
         await view.use_context_loaders()
         ctx: Optional[dict] = await view.get_context_data()
@@ -116,14 +154,28 @@ class View:
         return await view.render()
 
     async def get_context_data(self) -> Optional[dict]:
+        """ The dummy, able to override callback used to get view's context data. """
         pass
 
     async def render(self) -> Response:
+        """ The abstract method which must be ovirriden with the real rendering callback,
+        returning the resulting view response, usually a generated HTML code.
+        """
         raise NotImplementedError
 
 
 class TemplateView(View):
+    """
+    A special, but most often used can of the SSR view. It allows to define an entry
+    template (.html file) which will be rendered using Jinja2 template engine.
+    """
+
     template: str = None
+    """ The Jinja2 formatted HTML template file. If the template name starts with the
+    leading slash symbol - the template will be searched rooted by the project directory,
+    which provides ability to the application programmer to use the template from the
+    another application. Otherwise, the root for the template path will be the applcation
+    directory. """
 
     def get_template_filename(self) -> str:
         template: str = self.template
@@ -140,16 +192,23 @@ class TemplateView(View):
         return templates.TemplateResponse(template_filename, self.ctx)
 
 
+# The registry of all declared views in the project.
 registered: Dict[str, Any] = {}
 
 
 def get_view(name: str) -> ClassVar[View]:
+    """ Returns the view (the class) by its name. If there is no view with given name
+    been registered - returns ``None`` instead.
+    """
+
     if name not in registered:
         return None
     return registered[name]
 
 
 def get_assets_uuid() -> Optional[str]:
+    """ Returns the current assets UUID used to fetch composed JS and CSS files. """
+
     assets_uuid_fn: str = os.path.join(config.STATICS_ROOT, 'assets.uuid')
     if not os.path.isfile(assets_uuid_fn):
         return None
@@ -162,10 +221,14 @@ def get_assets_uuid() -> Optional[str]:
 
 
 def init_view_public_assets() -> None:
+    """ Called once on the project process start and prepares the views' mechanics. """
+
     View._assets_uuid = get_assets_uuid()
 
 
 def register(cls: ClassVar[View]) -> ClassVar[View]:
+    """ The decorator registers the view class in the project. """
+
     name: str = cls.__name__
 
     def _make_requires(_scopes: Optional[List[str]]) -> List[str]:
@@ -213,5 +276,6 @@ def register(cls: ClassVar[View]) -> ClassVar[View]:
     return cls
 
 
+# Initialize the project views' mechanics.
 init_view_public_assets()
 

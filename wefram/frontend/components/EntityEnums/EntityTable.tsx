@@ -90,14 +90,14 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
       refreshButton = this.props.refreshButton !== false && (
         this.props.search !== undefined
           || this.props.addScreenPath !== undefined
-          || this.props.deleteButtonPath !== undefined
+          || this.props.deleteAction !== undefined
           || this.props.controls !== undefined
       )
     const
       controlsBox =
         this.props.search !== undefined
         || this.props.addScreenPath !== undefined
-        || this.props.deleteButtonPath !== undefined
+        || this.props.deleteAction !== undefined
         || this.props.controls !== undefined
         || refreshButton
 
@@ -168,7 +168,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
               </Box>
             )}
 
-            {this.props.deleteButtonPath !== undefined && this.props.deleteButtonPath !== false && (
+            {this.props.deleteAction !== undefined && this.props.deleteAction !== false && (
               <Box ml={1} display={'flex'}>
                 <Tooltip title={this.props.deleteButtonCaption ?? gettext("Delete")}>
                   <Button
@@ -181,9 +181,9 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
                         okCallback: () => {
                           dialog.setBusy(true)
                           api.deleteObjects(
-                            typeof this.props.deleteButtonPath == 'boolean'
+                            typeof this.props.deleteAction == 'boolean'
                               ? this.props.requestPath
-                              : this.props.deleteButtonPath as RequestApiPath,
+                              : this.props.deleteAction as RequestApiPath,
                             this.state.itemsSelected
                           )
                             .then(res => {

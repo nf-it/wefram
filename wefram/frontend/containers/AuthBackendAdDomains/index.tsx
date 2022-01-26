@@ -143,7 +143,7 @@ export default class Screen extends React.Component<ScreenProps, ScreenState> {
               {fieldName: 'domain', caption: gettext("Domain", 'system.aaa')},
               {fieldName: 'server', caption: gettext("Server", 'system.aaa')}
             ]}
-            deleteButton={true}
+            deleteAction={true}
             entityCaption={gettext("Domains list", 'system.aaa')}
             selectable
             requestPath={entityPath}

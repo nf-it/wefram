@@ -20,7 +20,7 @@ class EntityScreen(ManagedScreen):
     The screen consists of both list (or table) and card.
     """
 
-    component = 'wefram/containers/EntityScreen'
+    component = 'containers/EntityScreen'
 
     caption: Union[str, L10nStr] = ...
     """ The caption for the screen. If omitted - will not be displayed. If set,

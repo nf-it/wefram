@@ -315,7 +315,9 @@
     "You must be signed in"
     : "Вы должны войти в систему",
     "The access is denied"
-    : "Доступ закрыт"
+    : "Доступ закрыт",
+    "Network error occured! Please check the internet connection and try again a little later!"
+    : "Произошла сетевая ошибка. Пожалуйста, проверьте соединение с интернет и попробуйте немного позже!"
   },
   "aaa": {
     "Authentication"

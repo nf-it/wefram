@@ -1,3 +1,7 @@
+"""
+Provides localization types and classes.
+"""
+
 from typing import *
 from ..tools import get_calling_app
 

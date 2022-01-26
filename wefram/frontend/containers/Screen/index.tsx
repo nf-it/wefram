@@ -1,10 +1,68 @@
 import React from 'react'
-import {api} from 'system/api'
-import {Box} from 'system/components'
-import {LoadingLinear} from 'system/components'
+import {Box, Button, LoadingLinear, Typography} from 'system/components'
+import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
 import {projectProvider} from 'system/provider'
 import {ScreenProps, ScreenClass} from 'system/types'
+
+
+export type ScreenOnDemandErrorBoundaryProps = {
+  children: React.ReactNode
+}
+
+type ScreenOnDemandErrorBoundaryState = {
+  hasError: boolean
+}
+
+class ScreenOnDemandErrorBoundary extends React.Component<ScreenOnDemandErrorBoundaryProps, ScreenOnDemandErrorBoundaryState> {
+  state: ScreenOnDemandErrorBoundaryState = {
+    hasError: false
+  }
+
+  public static getDerivedStateFromError(_: Error): ScreenOnDemandErrorBoundaryState {
+    return { hasError: true }
+  }
+
+  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <Box style={{
+          margin: '4px 0 16px',
+          padding: '32px',
+          textAlign: 'center',
+          border: '2px solid #d20',
+          borderRadius: '4px'
+        }}>
+          <Typography style={{
+            color: 'red',
+            paddingBottom: '32px'
+          }}>
+            {gettext("Network error occured! Please check the internet connection and try again a little later!", 'system.responses')}
+          </Typography>
+          <Box style={{
+            display: 'flex',
+            justifyContent: 'center'
+          }}>
+            <Button
+              variant={'outlined'}
+              onClick={() => {
+                window.location.reload()
+              }}
+            >
+              {gettext("Try again", 'system.ui')}
+            </Button>
+          </Box>
+        </Box>
+      )
+    }
+
+    return this.props.children
+  }
+}
 
 
 type State = {
@@ -52,14 +110,16 @@ export class Screen extends React.Component<ScreenProps, State> {
     return (
       <React.Fragment>
         {RootComponent !== null && (
-          <React.Suspense fallback={<LoadingLinear open={true}/>}>
-            <Box className={`Screen-${this.props.name}`}>
-              <RootComponent
-                {...this.props}
-                managedProps={this.state.managedProps}
-              />
-            </Box>
-          </React.Suspense>
+          <ScreenOnDemandErrorBoundary>
+            <React.Suspense fallback={<LoadingLinear open={true}/>}>
+              <Box className={`Screen-${this.props.name}`}>
+                <RootComponent
+                  {...this.props}
+                  managedProps={this.state.managedProps}
+                />
+              </Box>
+            </React.Suspense>
+          </ScreenOnDemandErrorBoundary>
         )}
       </React.Fragment>
     )

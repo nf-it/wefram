@@ -222,6 +222,7 @@ export class EntityForm extends React.Component<EntityFormProps, EntityFormState
             ].join(': ')
             : `${gettext('An error occurred while fetching data from the server', 'system.ui-common')}`
         notifications.showError(msg)
+        this.close()
       }
     })
   }

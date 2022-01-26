@@ -39,6 +39,9 @@ export const responses: ResponsesRoutines = {
   },
 
   responseErrorMessage(err?) {
+    if (err !== undefined && err.response === undefined)
+      return gettext("Network error occured! Please check the internet connection and try again a little later!", 'system.responses')
+
     const serverErrorMsg: string = gettext(
       "There is an error on the server, please try again a little later!"
     )
@@ -47,6 +50,7 @@ export const responses: ResponsesRoutines = {
       ? serverErrorMsg
       : String(err?.response?.data || serverErrorMsg)
     const statusCode: number = err?.response?.status || 400
+
     if (statusCode >= 500) {
       return serverErrorMsg
     } else if (statusCode === 400) {

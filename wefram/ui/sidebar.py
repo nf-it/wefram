@@ -1,3 +1,7 @@
+"""
+Provides the project's sidebar layout definition and registry.
+"""
+
 from typing import *
 from dataclasses import dataclass
 from ..aaa import permitted
@@ -19,27 +23,57 @@ _ORDER_INC: int = 100
 
 @dataclass
 class Item:
-    """ A sidebar item class describing any item within project sidebar. """
+    """
+    A sidebar item class describing any item within project sidebar.
+    """
 
     name: str
+    """ The item's system name. """
+
     caption: [str, L10nStr]
+    """ The item's human readable, rendered caption. """
+
     url: Optional[str]
+    """ The target on-click URL. If set, the item will be rendered inside the
+    link <A> element with given target URL. """
+
     url_target: Optional[Literal['screen', 'blank', 'redirect', 'container']]
+    """ The target for the item link. Possible values are:
+    
+    * 'screen' - the target URL is a screen and the internal SPA routing will be used;
+    * 'blank' - the target URL must be opened in the new tab;
+    * 'redirect' - the target URL must be opened in the same tab;
+    * 'container' - the internal option telling the renderer that this is a folder item; 
+    """
+
     endpoint: Optional[str]
+    """ Reserved for the future use. """
+
     order: int
+    """ The order decribing the placement of this item among other ones. The higher
+    values places the item lower, while lower values - upper. """
+
     icon: Optional[str]
+    """ The relative path to the item's icon file. """
+
     requires: Optional[List[str]] = None
+    """ A list of required permission scopes. If the current user has no required
+    scopes - the item will not be rendered for him|her. """
 
     def __repr__(self):
         return f"sidebar.Item name={self.name} order={self.order}"
 
     @property
     def permitted(self) -> bool:
+        """ Returns ``True`` if the current user is able to see this item. """
+
         if not self.requires:
             return True
         return permitted(self.requires)
 
     def as_json(self) -> dict:
+        """ Returns the item JSON-ready dict for responsing to the client side. """
+
         children: Optional[List[Item]] = _childrens.get(self.name, None)
         return {
             'name': self.name,

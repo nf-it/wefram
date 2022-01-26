@@ -1,3 +1,7 @@
+"""
+Provides types definitions for applications management and runtime usage.
+"""
+
 from typing import *
 from types import ModuleType
 import os.path
@@ -15,13 +19,48 @@ __all__ = [
 
 @dataclass
 class Manifest:
+    """ The application manifest dataclass. """
+
     name: str
+    """ The application system name. """
+
     caption: str
+    """ The application human readable and displayable name. """
+
     order: Optional[int]
+    """ The order in which this application will be handled and rendered in the enumerations. """
+
     requirements: dict
+    """ The structure of third-party Python (backend) and TypeScript (frontend) packages'
+    dependencies. This struct, if declared, must be formed as dict:
+    
+    ``
+    {
+        ...
+        "requirements": {
+            "pip": {
+                "<package_name>": "<compatible_version>",
+                "starlette": "latest",
+                "SQLAlchemy": "1.4",
+                ...
+            },
+            "node": {
+                "<packageName>": "<compatibleVersion>",
+                "@mui/system": "^5.0.6",
+                "@mui/lab": "==5.0.0-alpha.53",
+                "sass-loader": "latest",
+                ...
+            }
+        },
+        ... 
+    }
+    ``
+    """
 
     @classmethod
     def default_manifest(cls, name: str) -> 'Manifest':
+        """ Returns the default manifest by the application name. """
+
         return cls(
             name=name,
             caption=name,
@@ -31,6 +70,8 @@ class Manifest:
 
     @classmethod
     def manifest_for(cls, name: str) -> 'Manifest':
+        """ Returns the manifest dataclass for the given by ``name`` application. """
+
         root: Optional[str] = app_root(name)
         if not root:
             return cls.default_manifest(name)
@@ -48,6 +89,8 @@ class Manifest:
         )
 
     def write(self, filename: str) -> None:
+        """ Write the manifest dataclass to the given ``filename``. """
+
         json_to_file({
             'name': self.name,
             'caption': self.caption,

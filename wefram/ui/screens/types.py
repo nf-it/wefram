@@ -1,3 +1,7 @@
+"""
+Provides type definitions and basic classes used by screens.
+"""
+
 from typing import *
 from dataclasses import dataclass
 from ...types.l10n import L10nStr
@@ -26,7 +30,8 @@ class Prop:
         return {k: v for k, v in py_to_json(self.props) if v is not ...}
 
 
-class EnumsSortingOption(dataclass):
+@dataclass
+class EnumsSortingOption:
     """
     The sorting option definition used in the enumerating components.
     """
