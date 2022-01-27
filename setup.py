@@ -1,7 +1,7 @@
 import setuptools
 
 
-VERSION = '0.2.44'
+VERSION = '0.2.46'
 
 
 with open("README.md", 'r') as f:
@@ -12,6 +12,7 @@ setuptools.setup(
     name='wefram',
     version=VERSION,
     author='Denis Khodus',
+    author_email='deniskhodus@gmail.com',
     url='https://github.com/nf-it/wefram',
     description="Wefram web platform",
     long_description=long_description,
@@ -23,7 +24,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: Unix"
     ],
-    python_requires='>=3.9',
+    python_requires='==3.9',
     py_modules=['wefram'],
     include_package_data=True,
     install_requires=[

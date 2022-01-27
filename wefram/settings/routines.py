@@ -34,7 +34,8 @@ async def get(
         entity: Optional[str] = None,
         force_user_id: [bool, str, None] = False
 ) -> SettingsCatalog:
-    """ Fetches the specified entity and returns it to the caller.
+    """ Fetches the specified entity's data and returns it to the caller as the
+    specied :py:class:`~wefram.models.settings.SettingsCatalog` object.
 
     Speaking about personalized settings, the next logic will be used when fetching
     the settings entity:
@@ -50,6 +51,9 @@ async def get(
         has the saved one;
     * Otherwise, the global scoped settings entity will be fetched.
 
+    Note that *settings* mechanics uses caching of its entities in the in-memory database
+    (Redis) to decrease the amount of PostgreSQL selects.
+
     :param entity:
         The name of the corresponding settings entity. If the name of the entity's parent
         application is omitted - the calling application will be considered the parent one;
@@ -61,7 +65,19 @@ async def get(
 
     :param force_user_id:
         Optional argument provides ability to get the settings entity for the specified user
-        instead of global scoped.
+        instead of the default logic. The ``None`` value may be used to override user's
+        personalized entity even if the current context user is logged in and has the
+        saved personalized entity.
+    :type force_user_id:
+        Optional, str|None
+
+    :return:
+        The :py:class:`~wefram.models.settings.SettingsCatalog` object.
+
+    :raises:
+        `RuntimeError` "settings has no requested entity" if the requested entity is not
+        declared in the project. Usually this means misspelling the entity name in the
+        program code of the one or the another applcation.
     """
 
     entity_name: str = _entity_name_for(entity)
@@ -88,6 +104,15 @@ async def get(
 
 
 async def getall(force_user_id: [bool, str, None] = False) -> Dict[str, SettingsCatalog]:
+    """ The shortcut functions returning all declared entities' data for the given criteria. The
+    only criteria is using ``force_user_id`` argument which is full described in the
+    :py:func:`~wefram.settings.get` function.
+
+    :return:
+        A dict containing entities' names as keys and corresponding fetched catalogs as
+        dict's values.
+    """
+
     return {
         entity_name: await get(entity_name, force_user_id)
         for entity_name in entities.registered.keys()
@@ -100,6 +125,36 @@ async def update(
         force_user_id: [bool, str, None] = False,
         verify_permitted: bool = False
 ) -> None:
+    """
+    Used to update the given entity's properties' values. May be used to update the
+    settings entity's values catalog without fetching it first.
+
+    :param values:
+        The dict containing properties' names as keys, and corresponding new values.
+
+    :param entity:
+        The name of the corresponding settings entity. If the name of the entity's parent
+        application is omitted - the calling application will be considered the parent one;
+        otherwise, if the entity is given in the format "<app_name>.<entity_name>", then
+        the given application's entity will be fetched. This makes possible to get settings
+        in one app from the another one.
+
+    :param force_user_id:
+        Optional argument provides ability to set the settings of the entity for the specified
+        user instead of the default logic. The ``None`` value may be used to override user's
+        personalized entity even if the current context user is logged in and has the
+        saved personalized entity.
+
+    :param verify_permitted:
+        By default, the responsibility for permission checking on the settings changes inside
+        the program code is on the corresponding application's programmer. The point is that
+        application programmer really understands when to update settings, and whose criteria
+        must succeed to do that.
+        In opposite, the application programmer might want to Wefram to check - has the current
+        context user access right to update given entity's settings or do not. To enable this
+        scenario this argument, being set to ``True``, might be used.
+    """
+
     entity_name: str = _entity_name_for(entity)
     if entity_name not in entities.registered:
         raise RuntimeError(
@@ -133,6 +188,11 @@ async def reset(
         force_user_id: [bool, str, None] = False,
         verify_permitted: bool = False
 ) -> None:
+    """ The same as :py:func:`~wefram.settings.update`, but allows to update several entitys' catalogs
+    at once, using the higher-level dict, each key of which represents the corresponding entity name &
+    the value represents the applicable to the :py:func:`~wefram.settings.update` values dict.
+    """
+
     [
         (await update(values[entity], entity, force_user_id, verify_permitted))
         for entity

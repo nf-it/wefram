@@ -42,7 +42,7 @@ class PropBase(abc.ABC):
 @dataclass
 class SettingsEntity:
     """
-    The settings entity. Any application may have any quanityt of settings entities, divided
+    The settings entity. Any application may have any quanity of settings entities, divided
     by the understandable and appropriate logic. Each entity stores a set of properties, declared
     by corresponding, inherited from the :py:class:`PropBase` class. And each entity renders on
     the client side, on the settings page, as a separate group of properties with optional
