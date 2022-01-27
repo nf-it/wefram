@@ -34,7 +34,35 @@ async def get(
         entity: Optional[str] = None,
         force_user_id: [bool, str, None] = False
 ) -> SettingsCatalog:
-    """ Fetches the specified entity and returns it to the caller. """
+    """ Fetches the specified entity and returns it to the caller.
+
+    Speaking about personalized settings, the next logic will be used when fetching
+    the settings entity:
+
+    * If the argument ``force_user_id`` is set to ``None`` - the global scoped settings
+        will be fetched;
+    * If the argument ``force_user_id`` is set to the specific user's ``id`` - the
+        personalized settings for the given user will be returned;
+    * If the argument ``force_user_id`` is omitted and the current context user is not
+        logged in - the global scoped entity will be returned;
+    * If the argument ``force_user_id`` is omitted and the current context user IS
+        logged in - then his|her scoped settings entity will be fetched, IF he or she
+        has the saved one;
+    * Otherwise, the global scoped settings entity will be fetched.
+
+    :param entity:
+        The name of the corresponding settings entity. If the name of the entity's parent
+        application is omitted - the calling application will be considered the parent one;
+        otherwise, if the entity is given in the format "<app_name>.<entity_name>", then
+        the given application's entity will be fetched. This makes possible to get settings
+        in one app from the another one.
+    :type entity:
+        str
+
+    :param force_user_id:
+        Optional argument provides ability to get the settings entity for the specified user
+        instead of global scoped.
+    """
 
     entity_name: str = _entity_name_for(entity)
     if entity_name not in entities.registered:

@@ -112,10 +112,10 @@ class BooleanProp(PropBase):
     right next to the switch on the right side.
 
     :param inline:
-        If set to ``True``, then the switch will be rendered on the begin of
+        If set to ``True``, then the switch will be rendered on the begining of
         the property row, with the caption right next to the switch; else,
-        if set to ``False`` (default) - the default layout with caption at
-        the left side and the switch at the right side.
+        if set to ``False`` (default) - the default layout with caption on
+        the left side and the switch on the right side.
     :type inline:
         bool, default = False
     """
@@ -140,7 +140,7 @@ class BooleanProp(PropBase):
 class ChoiceProp(PropBase):
     """
     The choice property which provides the selection the one option
-    from the list of available. Options declares using the ``options``
+    from the list of available. Options are declared using the ``options``
     argument.
 
     :param options:
@@ -157,7 +157,7 @@ class ChoiceProp(PropBase):
                 ('value2', "The second option")
             ])
             ``
-        #. Using the dict, where keys represents corresponding items'
+        #. Using the dict, in which keys representing corresponding items'
             values, and dict's values represents items' captions. In
             this case items will be ordered by their captions. For
             example:
@@ -218,27 +218,39 @@ class ImageProp(PropBase):
     storage entity to be specified.
 
     :param entity:
-        The corresponding storage entity to which the image uploads to.
+        The corresponding storage entity name to which the image uploads to.
+    :type entity:
+        str
 
     :param clearable:
         If set to ``True`` - the uploaded image might be removed, clearing
         the property's value; otherwise the image is required to be present.
+    :type clearable:
+        bool, default = True
 
     :param prop_cover:
         If set to ``True``, the image in the property will be shown covered,
         otherwise - contained.
+    :type prop_cover:
+        bool, default = False
 
     :param prop_height:
         The height of the image rendered as the settings property.
+    :type prop_height:
+        str | int, default = '10vmax'
 
     :param prop_width:
         The width of the image rendered as the settings property.
+    :type prop_width:
+        str | int
 
     :param prop_inline:
         If set to ``True`` - the image property will be rendered full width,
         with caption at the top of the image; otherwise the standard layout
         will be used with caption in the left part, and the image in the
         right part of the property row.
+    :type prop_inline:
+        bool, default = False
     """
 
     prop_type = 'image'

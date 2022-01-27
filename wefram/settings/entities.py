@@ -40,7 +40,7 @@ def register(
 
         #. Using ``dict`` type. Keys of the dict represents the corresponding propertys'
             names. Sorting of properties among each other is possible by using the ``order``
-            argument of the each property. For example:
+            argument of each property. For example:
 
             ``
             settings.register(
