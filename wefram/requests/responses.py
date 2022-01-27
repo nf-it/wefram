@@ -1,3 +1,8 @@
+"""
+Provides different response types used in controllers. In addition to own type definitions
+this module re-exports the Starlette defined types to make response handling one-placed.
+"""
+
 import typing
 import os.path
 from starlette.responses import (
@@ -31,10 +36,18 @@ __all__ = [
 ]
 
 
+# Defines the Jinja2 template engine renderer.
 templates = Jinja2Templates(directory=config.APPS_ROOT)
 
 
 class JSONResponse(_starletteJSONResponse):
+    """
+    Redefines the Starlett's JSONReponse type with the Wefram one. This class
+    overrides the ``render`` method, implementing the own JSONify logic by
+    using extended :py:func:`~wefram.tools.json_encode` function which handles
+    much more than the default one.
+    """
+
     def render(self, content: typing.Any) -> bytes:
         return json_encode(
             content,
@@ -46,6 +59,14 @@ class JSONResponse(_starletteJSONResponse):
 
 
 class JSONedResponse(_starletteJSONResponse):
+    """
+    The almost same as :py:class:`~wefram.requests.JSONResponse` response class,
+    but in addition this class prepends the JSONifying with renaming given
+    response content struct in the JSON-format names (renaming snakecase Pythonic
+    names to lowerCamesCase JSONic ones). This happens if the ``dict``, ``list``
+    or ``tuple`` being given as content.
+    """
+
     def render(self, content: typing.Any) -> bytes:
         if isinstance(content, (dict, list, tuple)):
             content = rerekey_snakecase_to_lowercamelcase(content)
@@ -59,6 +80,11 @@ class JSONedResponse(_starletteJSONResponse):
 
 
 class StatusResponse(Response):
+    """
+    Simple response mainly to response with given HTTP status code, with
+    optional text description.
+    """
+
     def __init__(
             self,
             status_code: int = 200,
@@ -77,6 +103,12 @@ class StatusResponse(Response):
 
 
 class NoContentResponse(Response):
+    """
+    The simplification of the :py:class:`~wefram.requests.StatusResponse` by
+    defaulting to 204 status code. This class do not support text
+    description.
+    """
+
     def __init__(
             self,
             status_code: int = 204,
@@ -94,6 +126,12 @@ class NoContentResponse(Response):
 
 
 class SuccessResponse(Response):
+    """
+    The simplification of the :py:class:`~wefram.requests.StatusResponse` by
+    defaulting to 204 status code, with the text description as the first
+    argument.
+    """
+
     def __init__(
             self,
             text: str = None,
@@ -114,6 +152,24 @@ class SuccessResponse(Response):
 
 
 class PrebuiltFile(FileResponse):
+    """
+    Responses with a prubuilt (embedded in the assets) file content. The relative
+    filename must be given, with application part in that path. The Starlette's
+    ``FileResponse`` will be used to response the given file.
+
+    :param filename:
+        The relative to the statics root filename. This filename must include the
+        application name in it too. For example:
+
+        ``
+        ...
+        return PrebuiltFile('myapp/something/thefile.docx')
+        ``
+
+        As you can see - the statics root directory must not be included in the
+        filename path.
+    """
+
     def __init__(
             self,
             filename: str,
@@ -133,6 +189,24 @@ class PrebuiltFile(FileResponse):
 
 
 class PrebuiltHTML(HTMLResponse):
+    """
+    Responses with a prubuilt (embedded in the assets) HTML content. The relative
+    filename must be given, with application part in that path. The Starlette's
+    ``HTMLResponse`` will be used to response the given HTML file.
+
+    :param filename:
+        The relative to the statics root filename. This filename must include the
+        application name in it too. For example:
+
+        ``
+        ...
+        return PrebuiltFile('myapp/something/thefile.docx')
+        ``
+
+        As you can see - the statics root directory must not be included in the
+        filename path.
+    """
+
     def __init__(
             self,
             filename: str,

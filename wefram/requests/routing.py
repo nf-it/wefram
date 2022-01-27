@@ -1,3 +1,8 @@
+"""
+Provides the project's routing functionality, declaring corresponding classes,
+the corresponding routes' registry and functions and decorators.
+"""
+
 import inspect
 from typing import *
 from starlette.routing import Route as _Route, Request, PlainTextResponse
@@ -19,7 +24,9 @@ __all__ = [
 
 
 class Route(_Route):
-    """ The wrapper class extending the Starlette's Route class """
+    """
+    The wrapper class extending the Starlette's Route class.
+    """
 
     def __init__(
             self,
@@ -70,6 +77,7 @@ class Route(_Route):
         return _decorated
 
 
+# The project's routing registry.
 registered: List[Route] = []
 static_routes_prefixes: List[str] = [
     '/static'
@@ -77,7 +85,7 @@ static_routes_prefixes: List[str] = [
 
 
 def append(r: Route) -> None:
-    """ Appends the given route to the routing table of the project."""
+    """ Appends the given route to the routing table of the project. """
 
     _methods: str = ','.join(str(s) for s in r.methods)
     logger.debug(f"routed {CSTYLE['white']}{_methods}{CSTYLE['clear']} {CSTYLE['pink']}{r.path}{CSTYLE['clear']}")
@@ -85,8 +93,9 @@ def append(r: Route) -> None:
 
 
 def abs_url(path: str, app: Optional[str] = None) -> str:
-    """ Returns the absolete URL for the given path and app. If the app
-    has been ommited - use the calling app by default. """
+    """ Returns the absolete URL for the given path and app. If the application name
+    has been ommited - use the calling application by default.
+    """
 
     app = app or get_calling_app()
     if path.startswith('//'):
@@ -102,6 +111,24 @@ def format_path(
         inner: Optional[str] = None,
         suffix: Optional[str] = None
 ) -> str:
+    """ Formats the given base path with the specified optional qualifications like
+    prefix and suffix. The resulting path will look like:
+
+    `` /[prefix]/<app>/[inner]/<relpath>/[suffix] ``
+
+    This function is used maily to standartize the routing schemas, for example - the
+    API mechanics of the Wefram used it.
+
+    The minimalistic path, without any optional arguments given, will look like:
+
+    ``/<app>/<relpath>``
+
+    For example:
+
+    ``/myapp/my_super_controller``
+
+    """
+
     if relpath.startswith('//'):
         return relpath[1:]
     route_app: str = get_calling_app()
@@ -114,7 +141,9 @@ def format_path(
 
 def route(path: str, methods: Optional[List[str]] = None) -> Callable:
     """ Decorator used to route the function endpoint. It appends the resulting
-    route to the routing table of the project. """
+    route to the routing table of the project. If the ``methods`` argument
+    is omitted - then the default [GET] HTTP method will be used.
+    """
 
     def decorator(endpoint: Callable) -> Callable:
         request_methods = methods or ['GET']
@@ -124,9 +153,10 @@ def route(path: str, methods: Optional[List[str]] = None) -> Callable:
 
 
 def is_static_path(p: str) -> bool:
-    """ Returns `True` if the given FQ path is the static one (endpoints to
+    """ Returns ``True`` if the given FQ path is the static one (endpoints to
     the static file storage, not the response function or class), and `False`
-    otherwise. """
+    otherwise.
+    """
 
     p: str = p.lstrip('/')
     if '/' in p:
