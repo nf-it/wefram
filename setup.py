@@ -1,7 +1,7 @@
 import setuptools
 
 
-VERSION = '0.2.46'
+VERSION = '0.2.47'
 
 
 with open("README.md", 'r') as f:
@@ -21,10 +21,13 @@ setuptools.setup(
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Programming Language :: Python :: 3",
+        "Programming Language :: JavaScript",
         "License :: OSI Approved :: MIT License",
-        "Operating System :: Unix"
+        "Operating System :: Unix",
+        "Environment :: Web Environment",
+        "Framework :: FastAPI",
     ],
-    python_requires='==3.9',
+    python_requires='>=3.9',
     py_modules=['wefram'],
     include_package_data=True,
     install_requires=[
