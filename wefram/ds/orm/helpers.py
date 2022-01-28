@@ -1,3 +1,8 @@
+"""
+Provides some helper functions for model declarations and
+statements generation.
+"""
+
 from typing import *
 from sqlalchemy import Table, not_
 from sqlalchemy.orm.attributes import QueryableAttribute

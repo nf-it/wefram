@@ -1,3 +1,28 @@
+"""
+Provides the migration mechanics for the PostgreSQL database.
+
+This facility makes possible to read the current database state, analysing
+system tables with description of all tables and all columns, indexes, etc.
+After that, it makes possible to understand whose database tables fully
+corresponds to the declared ORM models, whose are not.
+
+This facility generates necessary SQL statements targeted to make the
+PostgreSQL database schema to be identical to the declared ORM schema.
+
+This avoids to handle migration history (like traditional ORMs
+usually provides), but take in the account the current state, differ
+to the ORM's declared schema, understand what must be done to make the
+database tables fully identical to the declared schema and execute
+necessary SQL code.
+
+The migration facility of the Wefram does not stores any migration
+history or SQL statements. It is not needed to. Any changes made to
+the ORM schema in the project will be transfered to the database,
+making the database identical to the CURRENT state, to the NOW.
+Not matter what will happen next and whose model will be declared or
+modified.
+"""
+
 from typing import *
 from datetime import date, datetime
 from dataclasses import dataclass

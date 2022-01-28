@@ -1,3 +1,7 @@
+"""
+Provides the database history logging facility.
+"""
+
 from typing import *
 from datetime import datetime
 from sqlalchemy import event, inspect
@@ -21,7 +25,9 @@ __all__ = [
 
 
 class DataHistory(Model):
-    """ The general ORM history model storing all non-separated changelogs. """
+    """
+    The general ORM history model storing all non-separated changelogs.
+    """
 
     id = BigAutoIncrement()
     """ The history row primary key (big integer). """
@@ -59,6 +65,8 @@ class DataHistory(Model):
 
 
 async def start() -> None:
+    """ Called on the process startup and initalized the history facility. """
+
     logger.debug("starting to changelogging the history on declared models")
     for model_name, model in models_by_name.items():
         if not model.Meta.history.enable:
@@ -81,6 +89,31 @@ async def push_history_record(
         before: Optional[Dict[str, Any]] = None,
         after: Optional[Dict[str, Any]] = None
 ) -> None:
+    """ Records the history event to the database journal. Used to record
+    some event even manually.
+
+    :param target:
+        The ORM model's instance (object of the model) for which the event
+        been generated for. This is not a class, but the corresponding
+        instance.
+
+    :param action:
+        The action happen. Possible values are: 'create', 'modify' or 'delete'.
+
+    :param attrs:
+        The list of attributes whose been changed in the corresponding instance.
+        Is not required (and about to be omitted) for the 'create' and 'delete'
+        actions.
+
+    :param before:
+        The dict containing of values been before changes - the state of values
+        before change.
+
+    :param after:
+        The dict containing of values become after change - the state of values
+        been saved to the database.
+    """
+
     from ... import aaa
 
     history: History = target.__class__.Meta.history

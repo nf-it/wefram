@@ -1,3 +1,7 @@
+"""
+Provides the SQLAlchemy-based async engine and async session.
+"""
+
 from asyncio import current_task
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine, async_scoped_session

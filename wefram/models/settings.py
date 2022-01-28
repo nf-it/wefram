@@ -104,7 +104,9 @@ class SettingsCatalog(UserDict):
         await redis_cn.set(key, json_encode(data))
 
     async def _load(self, user_id: Optional[str]) -> Optional[Dict[str, Any]]:
-        """ Loads this settings catalog's values. Read from the Redis in-memory
+        """ Loads this settings catalog's values for the given scope - the
+        personalized one if the ``user_id`` is set to the corresponding user
+        ``id``, of global one if it is equals to "GLOBAL". Read from the Redis in-memory
         cache if this entity (taking in account ``user_id``) exists in it. If the
         entity not exists in the Redis - try to load from the PostgreSQL database.
         If there is no saved catalog in the PostgreSQL database - the default
@@ -156,7 +158,12 @@ class SettingsCatalog(UserDict):
             self.data[k] = v
 
     async def load(self) -> 'SettingsCatalog':
-        # Trying to fetch personal catalog first, if allowed by the entity policy
+        """ Loads the settings catalog and returns to the calling function. Tries
+        to fetch the personal catalog first, if is allowed by the entity policy,
+        and if fail - the global scoped will be loaded.
+        """
+
+        # Trying to fetch personal catalog first, if is allowed by the entity policy
         if self.user_id is not None and self.entity.allow_personals:
             data: Optional[Dict[str, Any]] = await self._load(self.user_id)
             if data is not None:
@@ -185,6 +192,13 @@ class SettingsCatalog(UserDict):
         return self
 
     async def save(self, globally: Optional[bool] = None) -> None:
+        """ Saves the settings catalog, storing all values both to the in-memory
+        database (Redis) and to the PostgreSQL. If the ``globally`` set to
+        ``True``, then settings will be saved in the global scope; if set to
+        ``False`` or omitted - then settings will be saved personally if the
+        catalog is personal, or globally otherwise.
+        """
+
         user_id: Optional[str] = self.user_id if globally is None else (
             None if globally is True else self.user_id
         )
@@ -205,8 +219,25 @@ class SettingsCatalog(UserDict):
 
 
 class StoredSettings(ds.Model):
+    """
+    The settings catalog model. Used to save settings permanently
+    to the PostgreSQL database.
+    """
+
     id = ds.UUIDPrimaryKey()
+    """ The primary key of the catalog. """
+
     entity = ds.Column(ds.String(255), nullable=False)
+    """ The settings entity name. """
+
     user_id = ds.Column(ds.UUID(), ds.ForeignKey('systemUser.id', ondelete='CASCADE'), nullable=True)
+    """ The :py:prop:`~wefram.models.User.id` - `id` of the corresponding ``systemUser``
+    object for which this catalog is personalized for; if is set to ``None`` - the
+    catalog represents as the global scoped. """
+
     data = ds.Column(ds.JSONB())
+    """ The settings catalog's data. Stores actual values for the entity's
+    properties. """
+
     _entity_user_index = ds.Index('systemStoredSettings_entity_user_id', entity, user_id)
+
