@@ -1,3 +1,11 @@
+"""
+Provides the base classes for ORM models' declaring, including corresponding
+metaclass (used by the SQLAlchemy declarative definition), the base Model
+class (used by ALL ORM models of the project) and the Model.Meta class,
+describing additional models' properties and providing some extra
+functionality for the models' handling.
+"""
+
 import datetime
 import decimal
 import inspect
@@ -31,6 +39,10 @@ __all__ = [
 
 
 class _ModelMetaclass(DeclarativeMeta):
+    """
+    The metaclass used by the SQLAlchemy declarative base.
+    """
+
     def __init__(cls, name, bases, clsdict):
         tablename: Optional[str] = None
 

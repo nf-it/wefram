@@ -1,4 +1,6 @@
-""" Serving different authentication and authorization functionality which is out of models' API. """
+"""
+Provides different authentication and authorization functionality which is out of models' API.
+"""
 
 from typing import *
 import datetime

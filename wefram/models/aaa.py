@@ -1,3 +1,9 @@
+"""
+Provides AAA models describing typical workflow of the users' sessions. Users,
+roles, permissions, sessions, etc... are described here as corresponding
+models, both ORM and Pythonic-only.
+"""
+
 from typing import *
 from dataclasses import dataclass
 import datetime
@@ -18,16 +24,27 @@ __all__ = [
 
 
 class RefreshToken(ds.Model):
-    """ The model stores the JWT refresh tokens used for renew expired JWT """
+    """
+    The model stores the JWT refresh tokens used for renew the expired one.
+    """
 
     token = ds.Column(ds.String(128), nullable=False, primary_key=True)
+    """ The corresponding refresh token string. """
+
     user_id = ds.Column(ds.UUID(), ds.ForeignKey('systemUser.id', ondelete='CASCADE'), nullable=False)
+    """ The ``id`` of the user for which this token is applicable to. """
+
     session = ds.Column(ds.String(64), nullable=False)
+    """ The corresponding user's session ``id`` (the hash-string). """
+
     created = ds.Column(ds.DateTime(True), nullable=False, default=datetime.datetime.now)
+    """ The timestamp when this token was created at. """
 
 
 class UsersRoles(ds.Model):
-    """ The junction model for assigning roles to user and vise versa """
+    """
+    The junction model for assigning roles to user and vise versa.
+    """
 
     user_id = ds.Column(ds.UUID(), ds.ForeignKey('systemUser.id', ondelete='CASCADE'))
     role_id = ds.Column(ds.UUID(), ds.ForeignKey('systemRole.id', ondelete='CASCADE'))
@@ -35,34 +52,91 @@ class UsersRoles(ds.Model):
 
 
 class User(ds.Model):
-    """ The main system user model describing users able to log in to the system. """
+    """
+    The main system user model describing users able to log in to the system.
+    """
 
     id = ds.UUIDPrimaryKey()
+    """ The ID of the user, with UUID type. """
+
     login = ds.Column(ds.String(80), nullable=False, unique=True)
+    """ The unique username which user is represented by. May have '@' symbol
+    in its name to represent the domain user. Is unique across entire system
+    (there is not possible the have two users with same login). To make the
+    login available after removing user with the same login - at the moment
+    of user remove his/her login renames, appending additional text:
+    ``__#REMOVED#__<date-time-when-removed>``. """
+
     secret = ds.Column(ds.Password(), nullable=False)
+    """ The hashed with SHA2-256 password for this user. The password may be
+    empty for non-local users. """
+
     locked = ds.Column(ds.Boolean(), default=False, nullable=False)
+    """ If set to ``True`` - the user will still be visible in the system, but
+    will not be able not log in. All currently logged in user with valid
+    sessions will still be logged in even on this column change (the another
+    function :py:meth:`~wefram.models.User.logoff` method. """
+
     available = ds.Column(ds.Boolean(), default=True, nullable=False)
+    """ Used to remove the user from the system. By settings this column
+    to ``False`` you 'removes' the user. This will not log off any
+    currently logged in user, to do that there is the another method
+    :py:meth:`~wefram.models.User.logoff`. """
+
     created_at = ds.Column(
         ds.DateTime(True),
         default=datetime.datetime.now,
         nullable=False
     )
+    """ The timestamp when this user been created at. """
+
     created_by = ds.Column(
         ds.UUID(),
         ds.ForeignKey('systemUser.id'),
         nullable=True,
         default=None
     )
+    """ The ``id`` of the user which created this one. Actually, this is
+    the ``id`` of the user which initiated the user creation - usually
+    the some kind of project administrator. """
+
     last_login = ds.Column(ds.DateTime(True), nullable=True, default=None)
+    """ The timestamp of the last user log on. May be ``None`` if this user 
+    did not logged on yet. """
+
     first_name = ds.Column(ds.String(100), nullable=False, default='')
+    """ The user's first name. If required to be set. """
+
     middle_name = ds.Column(ds.String(100), nullable=False, default='')
+    """ The user's middle name. """
+
     last_name = ds.Column(ds.String(100), nullable=False, default='')
+    """ The user's last name. """
+
     timezone = ds.Column(ds.String(80), nullable=True, default=None)
+    """ The preferred time zone of this user. May be set to ``None`` to use
+    the default project's server's timezone. """
+
     locale = ds.Column(ds.String(8), nullable=True, default=None)
+    """ The user's locale (used for localized text and formats to be rendered).
+    May be set to ``None`` to user the default project's locale. """
+
     avatar = ds.Column(ds.Image('system.users'), nullable=True, default=None)
+    """ The ``file_id`` of the user's uploaded avatar image. Is not required
+    and may be ``None``. """
+
     properties = ds.Column(ds.JSONB(), default=lambda: dict())
+    """ The dict (JSON on the database side, take this in mind) containing
+    the user's preferences for the any purpose. """
+
     comments = ds.Column(ds.Text(), nullable=False, default='')
+    """ The textual column containing the optional comments about this user.
+    The Wefram interface displays this information to the users and roles
+    administrators only, but not to the user him/herself. """
+
     email = ds.Column(ds.Email(), nullable=False, default='')
+    """ The user's email address used for the general purposes. Is not
+    required and may be empty. """
 
     roles = ds.relationship(
         ds.TheModel('Role'),
@@ -70,6 +144,8 @@ class User(ds.Model):
         back_populates='users',
         lazy='selectin'
     )
+    """ The many-to-many relationship to roles which this user is
+    assigned with. """
 
     class Meta:
         caption_key = 'caption'
@@ -183,6 +259,28 @@ class User(ds.Model):
 
         for u in users:
             u.locked = state
+
+    async def remove(self) -> None:
+        """ Removes the user from the system. Instead of real deletion of the
+        object from the database, the user marks the ``available`` flag with
+        ``True`` preventing user from being used and preventing the user
+        login. In addition, to make this user's ``login`` available to new
+        ones after removing (because the ``login`` is the unique column) -
+        renamed the login, appending ``__#REMOVED#__<date-time-when-removed>``.
+        """
+
+        if '__#REMOVED#__' not in self.login:
+            timestamp: str = datetime.datetime.now().isoformat(timespec='milliseconds')
+            self.login = f"{self.login}__#REMOVED#__{timestamp}"
+        self.available = False
+
+    async def logoff(self) -> None:
+        """ Logs off this user, dropping all current sessions. If there are
+        no sessions are present - do nothing.
+        """
+
+        from ..aaa import drop_user_sessions_by_id
+        await drop_user_sessions_by_id(self.id)
 
 
 class Role(ds.Model):
@@ -368,7 +466,9 @@ class Session:
 
 
 class SessionUser(BaseUser):
-    """ The request-level session user used in the AAA context. """
+    """
+    The request-level session user used in the AAA context.
+    """
 
     def __init__(
             self,

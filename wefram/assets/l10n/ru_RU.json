@@ -405,7 +405,9 @@
     "Unlock selected"
     : "Разблокировать выбранных",
     "Log off selected"
-    : "Разлогинить выбранных"
+    : "Разлогинить выбранных",
+    "Cannot delete user(s) due to the database conflict. Please try again."
+    : "Не удалось удалить пользователя(ей) из-за конфликта в базе данных. Попробуйте снова."
 
   },
   "aaa-form": {

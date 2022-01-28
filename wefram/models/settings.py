@@ -1,3 +1,8 @@
+"""
+Provides models, both ORM (persistent storage) and runtime, for the
+settings facility of the Wefram platform.
+"""
+
 from typing import *
 from collections import UserDict
 from .. import ds, logger
@@ -12,6 +17,14 @@ __all__ = [
 
 
 class SettingsCatalog(UserDict):
+    """
+    The runtime class providing loading and saving settings for the
+    corresponding entity. When the application uses the
+    :py:func:`wefram.settings.get` function to load settings for the
+    given entity - this class based instance returns to the calling
+    code.
+    """
+
     def __init__(self, entity: SettingsEntity, user_id: Optional[str]):
         from ..settings import entities
 
@@ -26,6 +39,10 @@ class SettingsCatalog(UserDict):
         self.user_id: Optional[str] = user_id
 
     def __getitem__(self, key):
+        """ Returns the settings value by the key, using dict-like access:
+        ``prop_value = some_settings['some_prop']``
+        """
+
         if key not in self.entity.properties:
             raise KeyError(f"settings entity '{self.entity_name}' has no property '{key}'")
         item: Any = super().__getitem__(key)
@@ -39,11 +56,19 @@ class SettingsCatalog(UserDict):
         return item
 
     def __setitem__(self, key, value):
+        """ Updates the settings value, using dict-like access:
+        ``some_settings['some_prop'] = 'some_value'``
+        """
+
         if key not in self.entity.properties:
             raise KeyError(f"settings entity '{self.entity_name}' has no property '{key}'")
         super().__setitem__(key, value)
 
     def __delitem__(self, key):
+        """ Drops the settings value to the default one. The might
+        be made using dict-like approach: ``del(some_settings['some_prop'])``
+        """
+
         defaults: dict = self.entity.defaults or {}
         if key in defaults:
             super().__setitem__(key, defaults[key])
@@ -51,31 +76,60 @@ class SettingsCatalog(UserDict):
         super().__delitem__(key)
 
     def __iter__(self):
+        """ Iterate over settings' properties' values. """
+
         return super().__iter__()
 
     def redis_key(self, user_id: Optional[str]) -> str:
+        """ Returns the Redis attribute key name to store values for this
+        settings catalog. The format of the key name:
+
+        ``settings:catalog:[user_id]:<entity_name>``
+
+        """
         return ':'.join(['settings', 'catalog', (user_id or ''), self.entity_name])
 
     def load_defaults(self) -> None:
+        """ Set properties' values to the default values (read from the entity
+        declaration, from the ``defaults`` attribute).
+        """
+
         self.data: Dict[str, Any] = self.entity.defaults or {}
 
     async def _save_to_redis(self, data: Optional[Dict[str, Any]], user_id: Optional[str]) -> None:
+        """ Saves this catalog values to the Redis in-memory database. """
+
         redis_cn: ds.redis.RedisConnection = await ds.redis.get_connection()
         key: str = self.redis_key(user_id)
         await redis_cn.set(key, json_encode(data))
 
     async def _load(self, user_id: Optional[str]) -> Optional[Dict[str, Any]]:
+        """ Loads this settings catalog's values. Read from the Redis in-memory
+        cache if this entity (taking in account ``user_id``) exists in it. If the
+        entity not exists in the Redis - try to load from the PostgreSQL database.
+        If there is no saved catalog in the PostgreSQL database - the default
+        values will be used instead.
+
+        If the catalog is present in the PostgreSQL database and is not exists
+        in the Redis - it will be saved to the Redis to fetch it faster next time.
+        """
+
+        # Try to fetch cached catalog from the Redis
         redis_cn: ds.redis.RedisConnection = await ds.redis.get_connection()
         key: str = self.redis_key(user_id)
-
         cached_catalog: Optional[str] = await redis_cn.get(key)
+
         if cached_catalog is None:
+            # If there is no cached catalog in the Redis - try to load from
+            # the PostgreSQL.
             stored_catalog: StoredSettings = await StoredSettings.first(
                 entity=self.entity_name,
                 user_id=user_id
             )
             catalog: StoredSettings = stored_catalog if stored_catalog is not None else None
+
             if catalog is not None:
+                # If the catalog is present in the PostgreSQL - cache it to the Redis
                 await self._save_to_redis(catalog.data, user_id)
                 personality: str = "GLOBAL" if user_id is None else user_id
                 logger.debug(
@@ -83,6 +137,7 @@ class SettingsCatalog(UserDict):
                     '_load'
                 )
                 return catalog.data
+
             else:
                 return None
 
