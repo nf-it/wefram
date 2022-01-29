@@ -174,7 +174,7 @@ export class ProvTable extends React.Component<ProvTableProps, ProvTableState> {
                   : false
 
               const
-                expandedChild: JSX.Element | JSX.Element[] | null = this.props.renderRowExpandedChild
+                expandedChild: React.ReactNode | null = this.props.renderRowExpandedChild
                   ? this.props.renderRowExpandedChild(item)
                   : null
 

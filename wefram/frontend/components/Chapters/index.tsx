@@ -6,7 +6,7 @@ import {TranslatedTextVariant} from 'system/types'
 
 export type ChapterProps = {
   caption: string
-  children: JSX.Element | JSX.Element[]
+  children: React.ReactNode
   title?: boolean | string
 }
 
@@ -19,7 +19,7 @@ export type FetchableChapterProps = {
 }
 
 export type ChaptersProps = {
-  children: JSX.Element | JSX.Element[]
+  children: React.ReactNode
 }
 
 type ChaptersState = {

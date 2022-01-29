@@ -69,11 +69,11 @@ type ProvListItemPrepared = {
   secondaryField: EnumField | null
   itemAltText: string | undefined
   avatarUrl: string | null
-  avatarChildren: JSX.Element | JSX.Element[] | string | null
+  avatarChildren: React.ReactNode | null
   avatarColor?: string
   selected: boolean
-  actions: JSX.Element | JSX.Element[] | null
-  cardHeaderActions: JSX.Element | JSX.Element[] | null
+  actions: React.ReactNode | null
+  cardHeaderActions: React.ReactNode | null
 }
 
 
@@ -177,7 +177,7 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
    * @param item - the item object.
    * @return - the ready to render JSX element
    */
-  private getItemAvatarChildren = (item: any): JSX.Element | JSX.Element[] | string | null => {
+  private getItemAvatarChildren = (item: any): React.ReactNode | null => {
     if (this.props.avatarField && item[this.props.avatarField])
       return null
     if (this.props.avatarFallback === undefined) {
@@ -250,16 +250,16 @@ export class ProvList extends React.Component<ProvListProps, ProvListState> {
       secondaryField: EnumField | null = this.props.secondaryField ?? null,
       itemAltText: string | undefined = this.getItemAlt(item),
       avatarUrl: string | null = this.getItemAvatarUrl(item),
-      avatarChildren: JSX.Element | JSX.Element[] | string | null = this.getItemAvatarChildren(item),
+      avatarChildren: React.ReactNode | null = this.getItemAvatarChildren(item),
       avatarColor: string | undefined = this.getItemAvatarColor(item, itemAltText),
       selection = (this.props.selected ?? this.state.selected ?? []) as any[],
       selected: boolean = (key !== undefined && ((this.props.selectable ?? false) !== false) && selection.length)
         ? selection.includes(key)
         : false,
-      actions: JSX.Element | JSX.Element[] | null = this.props.renderItemActions === undefined
+      actions: React.ReactNode | null = this.props.renderItemActions === undefined
         ? null
         : this.props.renderItemActions(item, index, items),
-      cardHeaderActions: JSX.Element | JSX.Element[] | null = this.props.renderItemCardHeaderActions === undefined
+      cardHeaderActions: React.ReactNode | null = this.props.renderItemCardHeaderActions === undefined
         ? null
         : this.props.renderItemCardHeaderActions(item, index, items)
 

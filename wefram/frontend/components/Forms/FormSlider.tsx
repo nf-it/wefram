@@ -11,8 +11,8 @@ export type FormSliderFieldProps = FormSliderProps & FormItemProps & {
   ref?: React.LegacyRef<FormSlider>
   fieldStyle?: React.CSSProperties
   label?: string
-  labelBefore?: string | JSX.Element
-  labelAfter?: string | JSX.Element
+  labelBefore?: React.ReactNode
+  labelAfter?: React.ReactNode
 }
 
 

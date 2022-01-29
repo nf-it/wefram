@@ -14,7 +14,7 @@ export type EntityFormProps = {
   close?: string | boolean
   closeOnSubmit?: boolean
   confirmOnUnsaved?: boolean
-  controls?: JSX.Element[]
+  controls?: React.ReactNode
   data: any
   dataInitial?: any
   delete?: string | boolean
@@ -24,7 +24,7 @@ export type EntityFormProps = {
   deleteRequres?: Permissions
   entityName?: string
   entityKey?: string | null
-  help?: JSX.Element
+  help?: React.ReactNode
   stateDataName?: string
   requestDeep?: boolean
   requestPath?: RequestApiPath | string

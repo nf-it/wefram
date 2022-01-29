@@ -74,7 +74,7 @@ export type EnumsField = {
 
   /** The field caption (strongly recommends to fill up this property for the table variant of
    * enumerations). Might be a string or JSX element. */
-  caption?: string | JSX.Element
+  caption?: React.ReactNode
 
   /** The ability to override some caption styles (styles whose applies to the field caption, but
    * not to the field values). */
@@ -185,7 +185,7 @@ type ProvEnumCommonProps = {
 
   /** Used to generate the fallback textual string if the avatar is defined, but there is
    * no avatar uploaded and nothing to show as the avatar image. */
-  avatarFallback?: string | ((item: any) => JSX.Element | JSX.Element[] | null)
+  avatarFallback?: string | ((item: any) => React.ReactNode | null)
 
   /** The name of the corresponding item's field name to use as avatar image source. */
   avatarField?: string
@@ -305,10 +305,10 @@ export type ProvListProps = ProvEnumCommonProps & {
   cardsOnRowWideScreen?: number
   itemComponent?: React.ElementType
   primaryField?: EnumField
-  renderItemActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
-  renderItemCardHeaderActions?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
-  renderPrimaryField?: (item: any, field?: EnumField) => JSX.Element | JSX.Element[] | null
-  renderSecondaryField?: (item: any, field?: EnumField) => JSX.Element | JSX.Element[] | null
+  renderItemActions?: (item: any, index?: number, arr?: any[]) => React.ReactNode | null
+  renderItemCardHeaderActions?: (item: any, index?: number, arr?: any[]) => React.ReactNode | null
+  renderPrimaryField?: (item: any, field?: EnumField) => React.ReactNode | null
+  renderSecondaryField?: (item: any, field?: EnumField) => React.ReactNode | null
   secondaryField?: EnumField
   variant?: 'list' | 'cards'
 }
@@ -324,9 +324,9 @@ export type ProvTableColumns = ProvTableColumn[]
 
 export type ProvTableProps = ProvEnumCommonProps & {
   columns: ProvTableColumns
-  renderRowPrefix?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
-  renderRowSuffix?: (item: any, index?: number, arr?: any[]) => JSX.Element | JSX.Element[] | null
-  renderRowExpandedChild?: (item: any) => JSX.Element | JSX.Element[] | null
+  renderRowPrefix?: (item: any, index?: number, arr?: any[]) => React.ReactNode | null
+  renderRowSuffix?: (item: any, index?: number, arr?: any[]) => React.ReactNode | null
+  renderRowExpandedChild?: (item: any) => React.ReactNode | null
 }
 
 

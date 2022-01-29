@@ -33,7 +33,7 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
     return 'string'
   }
 
-  private makeRenderingElement = (itemValue: any, field: EnumsField): JSX.Element | null =>
+  private makeRenderingElement = (itemValue: any, field: EnumsField): React.ReactNode | null =>
   {
     const hidden: boolean = field.hidden === undefined
       ? false
@@ -46,7 +46,7 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
     if (field.render)
       return field.render(itemValue, this.props.item)
 
-    let value: null | string | JSX.Element
+    let value: null | React.ReactNode
 
     if (field.valueVisualize !== undefined && typeof field.valueVisualize == 'function') {
       value = field.valueVisualize(itemValue)
@@ -155,7 +155,7 @@ class FieldItemDataInner extends React.Component<FieldItemDataInnerProps> {
       ? field.getter(this.props.item)
       : this.props.item[field.fieldName]
 
-    const rendered: JSX.Element | null = this.makeRenderingElement(itemValue, field)
+    const rendered: React.ReactNode | null = this.makeRenderingElement(itemValue, field)
     if (rendered === null)
       return null
 

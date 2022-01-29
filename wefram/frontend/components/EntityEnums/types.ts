@@ -1,3 +1,4 @@
+import React from 'react'
 import {EnumsSelection, ProvListProps, ProvTableProps} from 'system/components'
 import {RequestApiPath} from 'system/routing'
 
@@ -17,7 +18,7 @@ export type EntityEnumsProps = {
   /** Optional set of JSX element about to be rendered in the controls area, next to the buttons like "Add",
    * "Delete", and next to the search text input (if enabled). This makes possible to extend the default controls
    * layout, adding own elements, like extra buttons, text labels, etc. */
-  controls?: JSX.Element | JSX.Element[]
+  controls?: React.ReactNode
 
   /** Optional path used when "Delete" button clicked and the deletion of items confirmed. By default, the main
    * request path (inherited from the ProvListProps or ProvTableProps) will be used (with [DELETE] method), but

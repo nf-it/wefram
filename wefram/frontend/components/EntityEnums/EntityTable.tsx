@@ -139,7 +139,7 @@ export class EntityTable extends React.Component<EntityTableProps, EntityListSta
               />
             )}
 
-            {Array.isArray(this.props.controls) ? this.props.controls.map((el: JSX.Element) => (
+            {Array.isArray(this.props.controls) ? this.props.controls.map((el: React.ReactNode) => (
               <Box ml={1} display={'flex'}>{el}</Box>
             )) : this.props.controls !== null && this.props.controls !== undefined ? (
               <Box ml={1} display={'flex'}>{this.props.controls}</Box>

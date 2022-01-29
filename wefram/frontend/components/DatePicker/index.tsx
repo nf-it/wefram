@@ -71,7 +71,7 @@ export type DatePickerProps = {
   readOnly?: boolean
   reduceAnimations?: boolean
   renderDay?: (day: DateValue, selectedDates: Array<DateValue | null>, pickersDayProps: PickersDayProps<DateValue>) => JSX.Element
-  renderLoading?: () => React.ReactNode
+  renderLoading?: () => React.ReactNode | undefined
   rifmFormatter?: (str: string) => string
   shouldDisableDate?: (day: DateValue) => boolean
   shouldDisableYear?: (day: DateValue) => boolean
@@ -80,8 +80,8 @@ export type DatePickerProps = {
   showToolbar?: boolean
   ToolbarComponent?: React.JSXElementConstructor<ToolbarComponentProps<DateValue | null>>
   toolbarFormat?: string
-  toolbarPlaceholder?: React.ReactNode
-  toolbarTitle?: React.ReactNode
+  toolbarPlaceholder?: React.ReactNode | undefined
+  toolbarTitle?: React.ReactNode | undefined
   TransitionComponent?: React.JSXElementConstructor<MuiTransitionProps>
   views?: readonly DatePickerView[]
 }

@@ -18,10 +18,10 @@ export type ImageProps = {
   disableError?: boolean              /** Disables the error icon if set to true. */
   disableSpinner?: boolean            /** Disables the loading spinner if set to true. */
   disableTransition?: boolean         /** Disables the transition after load if set to true. */
-  errorIcon?: JSX.Element             /** Override the error icon. */
+  errorIcon?: React.ReactNode         /** Override the error icon. */
   iconContainerStyle?: React.CSSProperties  /** Override the inline-styles of the container that contains the loading spinner and the error icon. */
   imageStyle?: React.CSSProperties    /** Override the inline-styles of the image. */
-  loading?: JSX.Element               /** Override the loading component. */
+  loading?: React.ReactNode           /** Override the loading component. */
   onClick?: React.MouseEventHandler   /** Fired when the user clicks on the image happened. */
   onError?: React.EventHandler<any>   /** Fired when the image failed to load. */
   onLoad?: React.EventHandler<any>    /** Fired when the image finished loading. */
@@ -44,9 +44,9 @@ type ImagePropsDefaults = {
   disableError: boolean
   disableSpinner: boolean
   disableTransition: boolean
-  errorIcon: JSX.Element | null
+  errorIcon: React.ReactNode | null
   variant: ImageVariant
-  loading: JSX.Element
+  loading: React.ReactNode
 }
 
 const defaults: ImagePropsDefaults = {
