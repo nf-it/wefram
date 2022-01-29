@@ -25,7 +25,7 @@ from sqlalchemy.sql import Select, Delete, sqltypes
 from sqlalchemy.sql.elements import ClauseList, BinaryExpression, UnaryExpression
 
 from . import reg
-from .types import Attribute
+# from .types import Attribute
 from ... import config, logger
 from ...runtime import context
 from ...tools import CSTYLE, snakecase_to_lowercamelcase, app_name
@@ -68,10 +68,10 @@ class _ModelMetaclass(DeclarativeMeta):
             if isinstance(attr, Column):
                 meta.columns.append(attr)
 
-            if isinstance(attr, Attribute):
-                meta.attributes.append(attr)
-                attr.parent_class = cls
-                attr.parent_key = key
+            # if isinstance(attr, Attribute):
+            #     meta.attributes.append(attr)
+            #     attr.parent_class = cls
+            #     attr.parent_key = key
 
         cls.Meta = meta
         if app not in reg.app_models:

@@ -1,15 +1,19 @@
+"""
+Provides extra column and value types, extending default SQLAlchemy
+defined ones.
+"""
+
 from typing import *
 import uuid
-from abc import ABC
 from sqlalchemy.schema import *
 from sqlalchemy.types import *
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 
 
-class Attribute:
-    def __init__(self):
-        self.parent_key = None
-        self.parent_class = None
+# class Attribute:
+#     def __init__(self):
+#         self.parent_key = None
+#         self.parent_class = None
 
 
 def _new_uuid4():
