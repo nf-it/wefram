@@ -25,7 +25,6 @@ from sqlalchemy.sql import Select, Delete, sqltypes
 from sqlalchemy.sql.elements import ClauseList, BinaryExpression, UnaryExpression
 
 from . import reg
-# from .types import Attribute
 from ... import config, logger
 from ...runtime import context
 from ...tools import CSTYLE, snakecase_to_lowercamelcase, app_name
@@ -63,17 +62,18 @@ class _ModelMetaclass(DeclarativeMeta):
         if not app:
             return
 
+        # Handling the ``Meta`` creation of the ORM model
         meta: Meta = Meta(cls, app, cls.__module__)
+
         for key, attr in cls.__dict__.items():
+            # Handle the auto-assigning of the ``Caption``-based column as
+            # the model's caption attribute.
             if isinstance(attr, Column):
                 meta.columns.append(attr)
 
-            # if isinstance(attr, Attribute):
-            #     meta.attributes.append(attr)
-            #     attr.parent_class = cls
-            #     attr.parent_key = key
-
         cls.Meta = meta
+
+        # Handle the model registration
         if app not in reg.app_models:
             reg.app_models[app] = dict()
         reg.app_models[app][cls.__decl_cls_name__] = cls
