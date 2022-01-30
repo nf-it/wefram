@@ -14,13 +14,13 @@ import {
   TitlebarControl,
   Typography
 } from 'system/components'
+import {FormCommonFieldItem} from 'system/forms'
 import {
   ScreenProps,
   SettingsSchema,
   SettingsPropsValuesUpdate,
   SettingsTabSchema,
-  SettingsEntity,
-  FormCommonFieldItem
+  SettingsEntity
 } from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'

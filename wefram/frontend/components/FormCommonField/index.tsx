@@ -1,5 +1,5 @@
 import React from 'react'
-import {FormCommonFieldItem} from 'system/types'
+import {FormCommonFieldItem} from 'system/forms'
 import {
   Box,
   FormControlLabel,

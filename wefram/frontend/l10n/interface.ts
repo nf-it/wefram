@@ -1,26 +1,7 @@
-/**
- * Provides the localization facility of the project.
- *
- * The project's applications about to import `gettext` and `ngettext` functions to get a localized text
- * basing on the source, english form.
- *
- * For example:
- *
- * ``
- *    ...
- *    import {gettext} from 'system/l10n'
- *
- *    ...
- *
- *    const localized_text: string = gettext("Welcome", 'myapp.mydomain')
- *    const another_text: string = gettext("How are you?")
- * ``
- */
-
-import {Response} from './response'
-import {api} from './api'
-import {RequestApiPath} from './routing'
-import {TranslatedTextVariant, LocaleDicrionary, TranslatedTextResponse} from './types'
+import {Response} from 'system/response'
+import {api} from 'system/api'
+import {RequestApiPath} from 'system/routing'
+import {TranslatedTextVariant, LocaleDicrionary, LocalizationAPI} from './types'
 
 
 export const appName: string = 'l10n'
@@ -32,49 +13,6 @@ const translationsPath: RequestApiPath = {
 }
 
 let translations: LocaleDicrionary = { }
-
-/**
- * The localization project interface.
- */
-export type LocalizationAPI = {
-  _tryToTranslate(s: string, domain: string): string | null
-
-  /**
-   * Loads the localization dictionary from the instantiate request's response data.
-   */
-  load(): Response<LocaleDicrionary>
-
-  /**
-   * Initializes the localization dictionary from the {LocaleDictionary} struct.
-   * @param s - the dictionary from which to initialize from.
-   */
-  initializeFromStruct(s: LocaleDicrionary): void
-
-  /**
-   * Initializes the localization dictionary from the backend using request.
-   */
-  initializeFromServer(): Promise<any>
-
-  /**
-   * Used to localize the given text (using given optional context domain).
-   * @param s - the source, international english {string} text to localize.
-   * @param domain - the optional domain context.
-   * @return - localized {string} text.
-   */
-  gettext(s: string, domain?: string | undefined): string
-
-  /**
-   * Used to localize the given numbered text with singular and plural forms of words.
-   * @param n - the number for which to localize; if the number is plural - the plural text
-   *    form will be used, otherwise the singular text form will be used instead.
-   * @param singular - the singular text form, international english {string} text to localize.
-   * @param plural - the plural text form, international english {string} text to localize.
-   * @param domain - the optional domain context.
-   * @return - localized {string} text.
-   */
-  ngettext(n: number, singular: string, plural: string, domain?: string | undefined): string
-  getTranslationText(app: string, textId: string, variant?: TranslatedTextVariant): Promise<TranslatedTextResponse | null>
-}
 
 export const localization: LocalizationAPI = {
   _tryToTranslate(s: string, domain: string): string | null {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {TranslatedTextVariant} from 'system/types'
+import {TranslatedTextVariant} from 'system/l10n'
 import {LazyText} from 'system/components'
 
 

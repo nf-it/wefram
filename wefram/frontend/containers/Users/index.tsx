@@ -3,12 +3,14 @@ import {
   Box,
   Dialog,
   EntityList,
-  MaterialIcon, MenuButton,
+  MaterialIcon,
+  MenuButton,
   Typography
 } from 'system/components'
 import {notifications} from 'system/notification'
 import {runtime} from 'system/runtime'
-import {ScreenProps, UuidKey, UserModel} from 'system/types'
+import {UserModel} from 'system/aaa'
+import {ScreenProps, UuidKey} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {aaaProvider, session} from 'system/aaa'

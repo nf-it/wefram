@@ -1,5 +1,5 @@
 import {observable, computed, makeObservable, toJS} from 'mobx'
-import {SessionUser, Permissions} from '../types/aaa'
+import {SessionUser, Permissions} from './types'
 
 
 class Session {
@@ -47,12 +47,5 @@ class Session {
     return true
   }
 }
-
-export type ClientSession = {
-  user: SessionUser | null
-  permissions: Permissions
-}
-
-export type ClientSessionResponse = ClientSession | null
 
 export const session = new Session()

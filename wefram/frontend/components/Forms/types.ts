@@ -1,6 +1,7 @@
 import React from 'react'
 import {RequestApiPath, RequestMethod} from 'system/routing'
-import {ApiEntityComplexResponse, ApiEntityResponse, Permissions} from 'system/types'
+import {Permissions} from 'system/aaa'
+import {ApiEntityComplexResponse, ApiEntityResponse} from 'system/types'
 
 
 export type FormFieldCommon = {

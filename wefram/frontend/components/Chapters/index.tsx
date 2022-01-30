@@ -1,7 +1,7 @@
 import React from 'react'
 import {arrayFrom} from 'system/tools'
 import {Box, TranslatedText, Tabs, Tab, Typography} from 'system/components'
-import {TranslatedTextVariant} from 'system/types'
+import {TranslatedTextVariant} from 'system/l10n'
 
 
 export type ChapterProps = {

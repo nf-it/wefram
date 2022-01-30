@@ -19,7 +19,7 @@ import {runtime} from 'system/runtime'
 import {routing} from 'system/routing'
 import {aaa} from 'system/aaa/api'
 import {session} from 'system/aaa/session'
-import {localStorageUsernameRememberKeyname} from 'system/types/aaa'
+import {localStorageUsernameRememberKeyname} from 'system/aaa'
 import './index.css'
 
 

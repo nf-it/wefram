@@ -2,7 +2,8 @@ import React, {createRef} from 'react'
 import {gettext} from 'system/l10n'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
-import {ScreenProps, ActiveDirectoryDomainModel} from 'system/types'
+import {ActiveDirectoryDomainModel} from 'system/aaa'
+import {ScreenProps} from 'system/types'
 import {
   Box,
   Dialog,

@@ -1,6 +1,6 @@
 import {AxiosRequestConfig} from 'axios'
 import {RequestApiPath, RequestPathParams} from 'system/routing'
-import {CommonKey, EntityKey, ApiSubmitMethod} from 'system/types'
+import {CommonKey, ApiSubmitMethod, EntityKey} from 'system/types/common'
 
 
 export interface IApiRequestConfig extends AxiosRequestConfig { }

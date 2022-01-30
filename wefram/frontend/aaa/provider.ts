@@ -1,7 +1,6 @@
 import {UuidKey} from 'system/types'
-import {AaaAuthorizationSession, SessionLogModel} from '../types/aaa'
+import {AaaAuthorizationSession, ClientSession} from './types'
 import {aaa} from './api'
-import {ClientSession} from './session'
 import {api} from '../api'
 import {RequestApiPath} from '../routing'
 import {NoContentResponse, Response} from '../response'

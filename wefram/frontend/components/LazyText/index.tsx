@@ -1,7 +1,7 @@
 import React from 'react'
 import {api} from 'system/api'
 import {notifications} from 'system/notification'
-import {LazyTextVariant} from 'system/types'
+import {LazyTextVariant} from 'system/l10n'
 import {Box, CircularProgress, FetchFailedBox, MarkdownText, Typography} from 'system/components'
 import {AxiosResponse} from 'axios'
 

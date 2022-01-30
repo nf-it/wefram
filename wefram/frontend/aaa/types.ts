@@ -1,5 +1,6 @@
-import {EntityDateTime} from 'system/types/api'
+import {EntityDateTime} from 'system/types/common'
 import {CommonKey, UuidKey} from 'system/types/common'
+
 
 export type AaaAuthorizationSession = {
   token: string
@@ -87,3 +88,10 @@ export type SessionLogModel = {
   ts: EntityDateTime
   extra: any
 }
+
+export type ClientSession = {
+  user: SessionUser | null
+  permissions: Permissions
+}
+
+export type ClientSessionResponse = ClientSession | null

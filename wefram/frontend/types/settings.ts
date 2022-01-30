@@ -1,4 +1,4 @@
-import {FormCommonFieldItem} from 'system/types'
+import {FormCommonFieldItem} from 'system/forms'
 
 
 export type SettingsProperties = FormCommonFieldItem[]

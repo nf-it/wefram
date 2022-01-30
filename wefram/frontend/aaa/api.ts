@@ -1,8 +1,8 @@
 import {runInAction} from 'mobx'
-import {AaaSession, localStorageAuthorizationKeyname, AaaAuthorizationSession} from "../types/aaa";
+import {AaaSession, localStorageAuthorizationKeyname, AaaAuthorizationSession, ClientSessionResponse} from "./types";
 import {aaaProvider} from "./provider";
-import {ClientSessionResponse, session} from './session'
-import {request, updateAuthorizationHeader} from 'system/requests'
+import {session} from './session'
+import {updateAuthorizationHeader} from 'system/requests'
 
 
 export type AaaInterface = {

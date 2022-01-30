@@ -15,7 +15,8 @@ import {
   Paper,
   Typography, TranslatedChapter, Chapters, MaterialIcon
 } from 'system/components'
-import {RoleEditModel, ScreenProps} from 'system/types'
+import {RoleEditModel} from 'system/aaa'
+import {ScreenProps} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath, routing} from 'system/routing'

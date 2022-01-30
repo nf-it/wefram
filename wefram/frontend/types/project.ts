@@ -1,6 +1,6 @@
 import {SidebarConfiguration} from './sidebar'
 import {ClientSession} from 'system/aaa'
-import {LocaleDicrionary, Locale} from 'system/types'
+import {LocaleDicrionary, Locale} from 'system/l10n'
 import {ScreensConfiguration} from 'system/types/screens'
 
 
