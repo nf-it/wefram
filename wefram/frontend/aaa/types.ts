@@ -95,3 +95,18 @@ export type ClientSession = {
 }
 
 export type ClientSessionResponse = ClientSession | null
+
+export type AaaInterface = {
+  initializeFromServer(): Promise<any>
+  initializeFromStruct(authsession: ClientSessionResponse): void
+  dropSession(): void
+  getAuthorizationSession(): AaaSession
+  storeAuthorizationSession(session: AaaSession): void
+  dropAuthorizationSession(): void
+  getAuthorizationToken(): string | null
+  getRefreshToken(): string | null
+  authenticate(username: string, password: string): Promise<AaaSession>
+  logout(): void
+  isLoggedIn(): boolean
+  check(): Promise<any>
+}

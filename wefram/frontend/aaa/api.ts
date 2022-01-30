@@ -3,22 +3,7 @@ import {AaaSession, localStorageAuthorizationKeyname, AaaAuthorizationSession, C
 import {aaaProvider} from "./provider";
 import {session} from './session'
 import {updateAuthorizationHeader} from 'system/requests'
-
-
-export type AaaInterface = {
-  initializeFromServer(): Promise<any>
-  initializeFromStruct(authsession: ClientSessionResponse): void
-  dropSession(): void
-  getAuthorizationSession(): AaaSession
-  storeAuthorizationSession(session: AaaSession): void
-  dropAuthorizationSession(): void
-  getAuthorizationToken(): string | null
-  getRefreshToken(): string | null
-  authenticate(username: string, password: string): Promise<AaaSession>
-  logout(): void
-  isLoggedIn(): boolean
-  check(): Promise<any>
-}
+import {AaaInterface} from './types'
 
 
 export const aaa: AaaInterface = {

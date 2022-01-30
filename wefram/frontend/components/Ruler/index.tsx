@@ -1,5 +1,5 @@
 import React from 'react'
-import {breakpoints, ThemeBreakpoints} from 'system/theme'
+import {breakpoints, ThemeBreakpoints} from 'system/project/theme'
 import {Box} from 'system/components'
 
 
