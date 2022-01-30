@@ -1,3 +1,7 @@
+/**
+ * Provides main entry point for the project's user interface (React-based).
+ */
+
 import React from 'react'
 import {observer} from 'mobx-react'
 import {Switch, Route, Router} from 'react-router-dom'
