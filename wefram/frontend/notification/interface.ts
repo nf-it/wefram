@@ -1,36 +1,9 @@
-import {makeObservable, observable} from 'mobx'
-import {AxiosResponse, AxiosError} from 'axios'
-import {NotificationVariant} from 'system/components'
 import {responses} from 'system/response'
-import {gettext} from './l10n'
+import {gettext} from '../l10n'
+import {NotificationInterface} from './types'
+import {notificationsStore} from './mobx-store'
 
 
-class Store {
-  open: boolean = false
-  message: string = ''
-  variant: NotificationVariant = 'info'
-
-  constructor() {
-    makeObservable(this, {
-      open: observable,
-      message: observable,
-      variant: observable
-    })
-  }
-}
-
-export const notificationsStore = new Store()
-
-type NotificationInterface = {
-  showInfo(msg: string): void
-  showSuccess(msg?: string): void
-  showWarning(msg: string): void
-  showError(msg: string): void
-  showRequestSuccess(res?: AxiosResponse): void
-  showRequestError(err?: AxiosError): void
-  showSomeServerError(): void
-  hide(): void
-}
 
 export const notifications: NotificationInterface = {
   showInfo(msg) {
@@ -78,9 +51,3 @@ export const notifications: NotificationInterface = {
   }
 }
 
-
-export type NotificationMobxStoreType = {
-  open: boolean
-  message: string
-  variant: NotificationVariant
-}

@@ -30,6 +30,40 @@ enabled project's applications. So, the final project will have a set of modules
 third-party packages (both for backend & frontend).
 
 
+Provides
+--------
+
+The platform itself provides some most used functionality and facilities, ready
+to use from the box, such as:
+
+* **Applications'** (project's modules) management.
+* Application's and platform's **dependencies** management.
+* **PostgreSQL** database management and state-based migration.
+* In-memory **Redis** connectivity, caching facility, etc.
+* **ORM** (Object relating modeling) with files storage transparent integration.
+* **Files storage** for uploadable content.
+* **Localization** *extended* facility with domains support both on backend and frontend.
+* **Routing** facility for both HTTP(S) and WebSockets.
+* **API** functionality out of box.
+* **Template rendering** for SSR (server-side rendering) using *Jinja2* template engine.
+* **Frontend** ready-to-use **React** implementation.
+* Implemented **Material-UI** with extended set of common purpose components.
+* Ready-to-use **User interface** with the theming facility.
+* **Settings** ready-to-use facility (the application is not required to have the own implementation).
+* **AAA** - Authentication, Authorization and Accounting facility.
+* **Permissions** handling out of box.
+* **CLI** (command-line interface) basics to implement command line management facilities.
+* **Notifications** (displayed to users), messages transports between backend and frontend.
+* **Sidebar** and **Sidemap** automated facility.
+* **Screens** (client-side rendered) facility, even **managed screens** with backend runtime qualifications.
+* Frontend **typo screens automatisations** to exclude needing of writting any line of the
+  'React @ TypeScript' code for very common cases.
+
+
+As been said - the platform aims to make programmers work on the corresponding project's
+code.
+
+
 Written on
 ----------
 
