@@ -1,13 +1,16 @@
 import {makeObservable, observable, runInAction} from 'mobx'
 import {Location} from 'history'
 import {Localization} from '@mui/material/locale'
-import {Locale} from './l10n'
-import {ProjectConfiguration, ProjectDevelopmentConfiguration, ScreensConfiguration, SidebarConfiguration} from './types'
+import {Locale} from '../l10n'
+import {ScreensConfiguration} from '../screens'
+import {SidebarConfiguration} from '../sidebar'
+import {aaa} from '../aaa'
+import {localization, gettext} from '../l10n'
+import {notifications} from '../notification'
+import {routing} from '../routing'
+import {ProjectConfiguration, ProjectDevelopmentConfiguration} from './types'
 import {projectProvider} from './provider'
-import {aaa} from './aaa'
-import {localization, gettext} from './l10n'
-import {notifications} from './notification'
-import {routing} from './routing'
+
 
 
 type ScrollPositions = Record<string, number>

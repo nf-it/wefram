@@ -1,4 +1,4 @@
-import {ThemeOptions, Components} from '@mui/material'
+import {ThemeOptions} from '@mui/material'
 
 
 const primaryColor = '#0070f0'

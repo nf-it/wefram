@@ -1,8 +1,8 @@
 import React from 'react'
 import {Box, EntityList, Typography} from 'system/components'
-import {ScreenProps} from 'system/types'
+import {ScreenProps} from 'system/screens'
 import {gettext} from 'system/l10n'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'
 

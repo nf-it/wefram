@@ -22,7 +22,7 @@ import {
 } from 'system/components'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
-import {aaaProvider, SessionLogModel} from 'system/aaa'
+import {SessionLogModel} from 'system/aaa'
 import {RequestApiPath} from 'system/routing'
 import {session, UserEditModel} from 'system/aaa'
 

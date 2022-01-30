@@ -13,7 +13,7 @@ import {
   Tooltip,
 } from 'system/components'
 import {observer} from 'mobx-react'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 import {session} from 'system/aaa'
 import {gettext} from 'system/l10n'
 import {routingHistory} from 'system/routing'

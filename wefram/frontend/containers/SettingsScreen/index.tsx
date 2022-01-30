@@ -15,13 +15,13 @@ import {
   Typography
 } from 'system/components'
 import {FormCommonFieldItem} from 'system/forms'
+import {ScreenProps} from 'system/screens'
 import {
-  ScreenProps,
   SettingsSchema,
   SettingsPropsValuesUpdate,
   SettingsTabSchema,
   SettingsEntity
-} from 'system/types'
+} from 'system/settings'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {notifications} from 'system/notification'

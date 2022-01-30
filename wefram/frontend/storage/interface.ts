@@ -1,10 +1,6 @@
 import {RequestApiPath, routing} from 'system/routing'
-import {StoredFileModel, StoredFilesModel} from 'system/types'
+import {Storage, StoredFileModel, StoredFilesModel} from './types'
 
-
-export type Storage = {
-  urlFor(entity: string, fileId: string): string
-}
 
 export const storage: Storage = {
   urlFor(entity, fileId) {

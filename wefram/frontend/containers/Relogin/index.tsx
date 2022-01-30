@@ -2,7 +2,7 @@ import React from 'react'
 import {runInAction} from 'mobx'
 import {gettext} from 'system/l10n'
 import {aaa, session} from 'system/aaa'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 import {routing} from 'system/routing'
 import {
   Box,

@@ -8,9 +8,10 @@ import {
   Typography
 } from 'system/components'
 import {notifications} from 'system/notification'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 import {UserModel} from 'system/aaa'
-import {ScreenProps, UuidKey} from 'system/types'
+import {ScreenProps} from 'system/screens'
+import {UuidKey} from 'system/types'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {aaaProvider, session} from 'system/aaa'

@@ -15,7 +15,7 @@ import {
 } from 'system/components'
 import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 import {routing} from 'system/routing'
 import {aaa} from 'system/aaa/api'
 import {session} from 'system/aaa/session'

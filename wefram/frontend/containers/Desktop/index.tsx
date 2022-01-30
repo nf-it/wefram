@@ -1,5 +1,5 @@
 import React from 'react'
-import {ScreenProps} from 'system/types'
+import {ScreenProps} from 'system/screens'
 import {
   Box,
   Button,
@@ -9,7 +9,7 @@ import {
   TranslatedText,
   Typography
 } from 'system/components'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 import {session} from 'system/aaa'
 import {gettext} from 'system/l10n'
 import './index.css'

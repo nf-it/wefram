@@ -18,3 +18,9 @@ export type StoredImageModel = {
 }
 
 export type StoredImagesModel = StoredImageModel[]
+
+
+export type Storage = {
+  urlFor(entity: string, fileId: string): string
+}
+

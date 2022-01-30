@@ -3,7 +3,7 @@ import {
   Box,
   Typography
 } from 'system/components'
-import {ScreenProps} from 'system/types'
+import {ScreenProps} from 'system/screens'
 import {gettext} from 'system/l10n'
 
 

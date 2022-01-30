@@ -1,5 +1,5 @@
 import {AxiosInstance} from 'axios'
-import {aaa} from './aaa'
+import {aaa} from 'system//aaa'
 
 const axios = require('axios')
 

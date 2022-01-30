@@ -1,26 +1,10 @@
 import {runInAction} from 'mobx'
-import {AxiosError, AxiosResponse} from 'axios'
 import {gettext} from 'system/l10n'
 import {routing} from 'system/routing'
 import {aaa} from 'system/aaa'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
+import {ResponsesRoutines} from './types'
 
-export type AnyResponse = Promise<AxiosResponse<any>>
-
-export type NoContentResponse = Promise<AxiosResponse<void>>
-
-export type BaseResponse<T> = {
-  status: number,
-  data: T
-}
-
-export type Response<T> = Promise<BaseResponse<T>>
-
-export type ResponsesRoutines = {
-  handleCathedResponse(err: AxiosError): void
-  responseSuccessMessage(res?: AxiosResponse): string
-  responseErrorMessage(err?: AxiosError): string
-}
 
 export const responses: ResponsesRoutines = {
   handleCathedResponse(err) {
@@ -64,3 +48,4 @@ export const responses: ResponsesRoutines = {
     }
   }
 }
+

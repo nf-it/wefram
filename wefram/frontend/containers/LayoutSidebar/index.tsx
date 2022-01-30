@@ -13,11 +13,11 @@ import {
 } from 'system/components'
 import LayoutAppbar from '../LayoutAppbar'
 import {Link} from 'react-router-dom'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 import {routing} from 'system/routing'
 import {dialog} from 'system/dialog'
 import {messages, StoredMessage} from 'system/messages'
-import {SidebarItemModel} from 'system/types'
+import {SidebarItemModel} from 'system/sidebar'
 import {workspaceTheme} from 'build/theme'
 import './index.css'
 

@@ -38,6 +38,6 @@
  */
 
 
-export {dialogsStore} from './mobx-store'
 export * from './types'
 export * from './interface'
+export {dialogsStore} from './mobx-store'

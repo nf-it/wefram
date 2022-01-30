@@ -1,11 +1,11 @@
 import React from 'react'
-import {ScreenProps} from 'system/types'
+import {ScreenProps} from 'system/screens'
 import {
   Box,
   StoredImagesList,
   Typography
 } from 'system/components'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 
 
 type ScreenState = {

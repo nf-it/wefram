@@ -9,12 +9,12 @@ import {
   Tooltip,
   Typography
 } from 'system/components'
-import {StoredFilesModel, StoredFileModel, StoredImageModel} from 'system/types'
+import {StoredFilesModel, StoredFileModel, StoredImageModel} from 'system/storage'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
 import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 import {storage} from 'system/storage'
 import {dialog} from 'system/dialog'
 import './index.css'

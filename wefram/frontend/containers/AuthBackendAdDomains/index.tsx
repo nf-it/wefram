@@ -3,7 +3,7 @@ import {gettext} from 'system/l10n'
 import {RequestApiPath} from 'system/routing'
 import {api} from 'system/api'
 import {ActiveDirectoryDomainModel} from 'system/aaa'
-import {ScreenProps} from 'system/types'
+import {ScreenProps} from 'system/screens'
 import {
   Box,
   Dialog,

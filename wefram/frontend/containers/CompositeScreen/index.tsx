@@ -1,5 +1,5 @@
 import React from 'react'
-import {ScreenProps} from 'system/types'
+import {ScreenProps} from 'system/screens'
 
 
 type ScreenStateAny = Record<string, any>

@@ -10,16 +10,22 @@ class Store {
 
   /** Sets to `true` to open the dialog modal */
   open: boolean = false
+
   /** The dialog's window's title */
   title?: string = undefined
+
   /** The dialog's content - the JSX elements */
-  content?: React.ReactNode
+  content?: React.ReactNode = undefined
+
   /** The array of dialog window buttons of type {DialogButton} */
   buttons?: DialogButton[] = undefined
+
   /** The callback fires on the dialog close */
   closeCallback?: any = undefined
+
   /** If set to `true` - the busy indicator will be rendered for the dialog, while set to `true`. */
   busy?: boolean = false
+
   /** Used for controlled dialog's input value */
   inputValue?: string = ''
 

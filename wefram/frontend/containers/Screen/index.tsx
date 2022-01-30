@@ -2,8 +2,8 @@ import React from 'react'
 import {Box, Button, LoadingLinear, Typography} from 'system/components'
 import {gettext} from 'system/l10n'
 import {notifications} from 'system/notification'
-import {projectProvider} from 'system/provider'
-import {ScreenProps, ScreenClass} from 'system/types'
+import {projectProvider} from 'system/project'
+import {ScreenProps, ScreenClass} from 'system/screens'
 
 
 export type ScreenOnDemandErrorBoundaryProps = {

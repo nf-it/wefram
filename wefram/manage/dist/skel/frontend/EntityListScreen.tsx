@@ -4,7 +4,7 @@ import {
   EntityList,
   Typography
 } from 'system/components'
-import {ScreenProps} from 'system/types'
+import {ScreenProps} from 'system/screens'
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'

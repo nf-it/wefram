@@ -9,7 +9,7 @@ import {
 import {gettext} from 'system/l10n'
 import {api} from 'system/api'
 import {RequestApiPath} from 'system/routing'
-import {MailAccountModel} from 'system/types'
+import {MailAccountModel} from 'system/mail'
 
 
 const objectPath: RequestApiPath = api.entityObjectPath('system', 'MailAccount')

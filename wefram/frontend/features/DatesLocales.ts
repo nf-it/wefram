@@ -1,5 +1,5 @@
 import {gettext} from 'system/l10n'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 
 
 export type DateFormat = {

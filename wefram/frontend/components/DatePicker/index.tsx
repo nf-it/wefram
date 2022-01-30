@@ -20,7 +20,7 @@ import {PickersDayProps} from '@mui/lab/PickersDay/PickersDay'
 import {ToolbarComponentProps} from '@mui/lab/internal/pickers/typings/BasePicker'
 import {TransitionProps as MuiTransitionProps} from '@mui/material/transitions/transition'
 import IconButton from '@mui/material/IconButton'
-import {runtime} from 'system/runtime'
+import {runtime} from 'system/project'
 
 
 export type DateValue = any
