@@ -580,6 +580,9 @@ class DatabaseMigration:
 
 
 async def migrate() -> None:
+    """ Starts the migration process, bringing the state of the database to that which was declared
+    for the project.
+    """
     await (DatabaseMigration(
         drop_missing_tables=bool(config.DATABASE.get('migrate', {}).get('drop_missing_tables')),
         drop_missing_columns=bool(config.DATABASE.get('migrate', {}).get('drop_missing_columns'))
@@ -587,5 +590,6 @@ async def migrate() -> None:
 
 
 async def dropall() -> None:
+    """ Drops all data in the corresponding, specified in the config, database. """
     await (DatabaseMigration()).drop_all()
 

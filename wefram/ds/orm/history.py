@@ -11,7 +11,6 @@ from .model import DatabaseModel as Model, History
 from .reg import models_by_name
 from .types import Column, BigAutoIncrement, String, StringChoice, UUID, JSONB, DateTime, ForeignKey
 from .helpers import ModelColumn
-from .engine import AsyncSession
 from ...tools import CSTYLE, for_jsonify
 from ...runtime import context
 from ... import logger
@@ -139,11 +138,6 @@ async def push_history_record(
     db = context['db']
     db.add(record)
 
-    # async with AsyncSession() as db:
-    #     async with db.begin():
-    #         db.add(record)
-    #         await db.commit()
-
     logger.debug(
         f"logged {CSTYLE['blue']}{action}{CSTYLE['clear']} action for"
         f" {CSTYLE['red']}{target.__class__.__app__}.{target.__class__.__decl_cls_name__}{CSTYLE['clear']}",
@@ -152,10 +146,13 @@ async def push_history_record(
 
 
 def log_instance_after_create(mapper, connection, target) -> None:
+    """ The hook function used in the SQLAlchemy core on the model's instance's creation. """
     await_only(push_history_record(target, 'create'))
 
 
 def log_instance_after_update(mapper, connection, target) -> None:
+    """ The hook function used in the SQLAlchemy core on the model's instance's modificaiton. """
+
     # Collecting the list of changed attributes
     history: History = target.__class__.Meta.history
     inspr: orm_state.InstanceState = inspect(target)
@@ -184,5 +181,6 @@ def log_instance_after_update(mapper, connection, target) -> None:
 
 
 def log_instance_after_delete(mapper, connection, target) -> None:
+    """ The hook function used in the SQLAlchemy core on the model's instance's deletion. """
     await_only(push_history_record(target, 'delete'))
 

@@ -141,6 +141,8 @@ class Model:
     """
 
     Meta: 'Meta'
+    """ This model's subclass describing some optionals and service methods for the ORM class. 
+    For more details see :class:`~wefram.ds.Meta` class."""
 
     @property
     def __caption__(self) -> str:
@@ -861,11 +863,31 @@ DatabaseModel = declarative_base(cls=Model, metaclass=_ModelMetaclass)
 
 @dataclass
 class History:
+    """
+    History Meta used in conjuction with model's ``Meta`` class to declare the
+    model's instances' journaling.
+    """
+
     enable: bool = False
+    """ If set to ``True`` - Wefram will log actions on the given model. Creating,
+    modifition and deletion actions will be logged to the corresponding journaling
+    table. """
+
     model: ClassVar = None
+    """ The corresponding model class for the logging. """
+
     ignore: List[Union[str, Column]] = None
+    """ The optional list of excluded from the monitoring attributes. Changes of
+    given attributes will not trigger the history record creation. """
+
     attributes: List[Union[str, Column]] = None
+    """ The optional list of attributes whose to include in the history record
+    state. If is omitted - all columns will be taken. """
+
     exclude: List[Union[str, Column]] = None
+    """ The optional list of attributes whose about to be excluded from the
+    history record state. Those attributes, even if been changed, will not been
+    recorded to the history state dump. """
 
 
 class Meta:
@@ -984,7 +1006,7 @@ class Meta:
     """
 
     history: History
-    """ (history) """
+    """ The history defition, describing journaling of instances of this model. """
 
     def __init__(self, cls: _ModelMetaclass, app_name: str, module_name: str):
         self.model: ClassVar = cls
