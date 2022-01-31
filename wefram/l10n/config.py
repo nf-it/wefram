@@ -1,3 +1,7 @@
+"""
+Provides localization module's internal configuration.
+"""
+
 import os.path
 from .. import config
 

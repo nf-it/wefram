@@ -23,13 +23,15 @@ class L10nStr:
             self,
             untranslated: str,
             domain: Optional[str] = None,
-            plural_num: Optional[Union[int, float, callable]] = None
+            plural_num: Optional[Union[int, float, callable]] = None,
+            plural_untranslated: str = None
     ):
         super().__init__()
         self.app_name: str = get_calling_app()
         self.untranslated: str = untranslated
         self.domain: Optional[str] = domain
         self.plural_num: Optional[Union[int, float, callable]] = plural_num
+        self.plural_untranslated: Optional[str] = plural_untranslated
 
     def localize(self) -> str:
         """ Translates this lazy stored localization in runtime to the corresponding
@@ -39,7 +41,12 @@ class L10nStr:
 
         return translate(self.untranslated, self.domain, self.app_name) \
             if self.plural_num is None \
-            else translate_pluralizable(self.plural_num, self.untranslated, self.domain, self.app_name)
+            else translate_pluralizable(
+                self.plural_num,
+                [self.untranslated, self.plural_untranslated],
+                self.domain,
+                self.app_name
+            )
 
     def __str__(self) -> str:
         return self.localize()

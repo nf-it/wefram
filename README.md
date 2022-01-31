@@ -46,6 +46,7 @@ to use from the box, such as:
 * **State-based migration** with no needing of any kind of migration history or scripts generating.
 * **In-memory database** (**Redis**) connectivity, caching facility, etc.
 * **ORM** (Object relating modeling) with files storage transparent integration.
+* **ORM history** facility with automated logging of changes in models' instances.
 * **Files storage** for uploadable content with ready-to-use support from the platform side, including
   all routings and handlings.
 * **Localization** *extended* facility with domains support both on backend and frontend.

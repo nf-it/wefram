@@ -1,3 +1,8 @@
+"""
+Provides the localization catalogs facility. Catalogs used to accumulate corresponding
+language's translations, distributed over domains (contexts).
+"""
+
 from typing import *
 import os.path
 import json
@@ -21,6 +26,13 @@ __all__ = [
 
 
 class _Domain:
+    """
+    The localization domain. This represents the language + context translations
+    set. This means that for the every installed language localizaiton and for
+    the each context domain will be createn an object of this class, containing
+    only translations for THAT language and for THAT domain.
+    """
+
     messages: Dict[str, str]
     messages_lc: Dict[str, str]
 
@@ -29,30 +41,52 @@ class _Domain:
         self.messages_lc = {u.lower(): t for u, t in messages.items()}
 
     def get(self, untranslated: str) -> Optional[str]:
+        """ Returns the translated text for the given untranslated one. Returns
+        ``None`` if there is no corresponding translated text is loaded.
+        """
         return self.messages.get(untranslated, None)
 
     def getlc(self, untranslated: str) -> Optional[str]:
+        """ Returns the translated text for the given untranslated lower-cased
+        one. This function used to try to find the corresponding translation
+        without case sensetivity.
+        Returns ``None`` if there is no corresponding translated text is loaded.
+        """
         return self.messages_lc.get(untranslated, None)
 
     def add(self, untranslated: str, translated: str) -> None:
+        """ Adds the translated variant for the corresponding untranslated one. """
         self.messages[untranslated] = translated
         self.messages_lc[untranslated.lower()] = translated
 
     def merge(self, messages: Dict[str, str]):
+        """ Merges this domain with the another one, taking the ``messages``
+        argument of ``dict`` type, where dict's keys represents untranslated
+        texts and the corresponding values represents translated texts.
+        """
         for m_id, m_msg in messages.items():
             self.messages[m_id] = m_msg
             self.messages_lc[m_id.lower()] = m_msg
 
     def merge_with(self, merging_domain: '_Domain'):
+        """ Merges this domain with the another one of ``_Domain`` type. """
         self.messages.update(merging_domain.messages)
         self.messages_lc.update(merging_domain.messages_lc)
 
     @property
     def as_dict(self) -> Dict[str, str]:
+        """ Returns this domain as ``dict`` with keys representing untranslated
+        texts and values representing corresponding translated ones.
+        """
         return self.messages.copy()
 
 
 def locate_dictionary_json(locale: Locale) -> Optional[str]:
+    """ Returns the path to the filename contains the localization
+    dictionary JSON file. If there is no installed locale by the
+    given ``locale`` argument - the ``None`` will be returned.
+    """
+
     fn: str
     language: str = locale.language
     territory: str = locale.territory
