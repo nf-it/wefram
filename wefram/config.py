@@ -206,7 +206,7 @@ else:
                 "ProjectSidebar": "system/containers/LayoutSidebar",
                 "ProjectScreens": "system/containers/LayoutScreens"
             },
-            "theme": "system/theme"
+            "theme": "system/project/theme"
         }
     }
 

@@ -47,7 +47,7 @@ def _make_theme() -> None:
     fn: str = os.path.join(config.BUILD_ROOT, 'frontend', 'theme.ts')
     if os.path.isfile(fn):
         os.unlink(fn)
-    theme: str = build_frontend.get('theme') or build_defaults['frontend']['theme'] or 'system/theme'
+    theme: str = build_frontend.get('theme') or build_defaults['frontend']['theme'] or 'system/project/theme'
     with open(fn, 'w') as f:
         f.write(f"import workspaceTheme from '{theme}'\n")
         f.write("export {workspaceTheme}\n")
