@@ -10,7 +10,7 @@ __all__ = [
 ]
 
 
-BUILD_TEXTS_ROOT: str = os.path.join(config.BUILD_ROOT, 'texts')
+BUILD_TEXTS_ROOT: str = os.path.join(config.ASSETS_ROOT, 'texts')
 
 
 def path_from_root(root: str) -> Optional[str]:

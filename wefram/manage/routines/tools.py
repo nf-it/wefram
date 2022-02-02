@@ -1,4 +1,12 @@
+"""
+Provides general purpose functions for the management interface. This
+modules may duplicate some tools from the core, but this behaviour is
+more preferred than using the core's corresponding functions, because
+by using this module we don't rely on core imports' dependencies.
+"""
+
 from typing import *
+import json
 
 
 __all__ = [
@@ -7,7 +15,8 @@ __all__ = [
     'term_choice',
     'term_floatinput',
     'term_intinput',
-    'term_input'
+    'term_input',
+    'json_to_file'
 ]
 
 
@@ -115,4 +124,11 @@ def term_floatinput(caption: str, default: Optional[float] = None) -> float:
         except ValueError:
             answer = None
     return answer
+
+
+def json_to_file(o: Any, filename: str, **kwargs) -> None:
+    kwargs.setdefault('indent', 2)
+    kwargs.setdefault('ensure_ascii', False)
+    with open(filename, 'w') as f:
+        json.dump(o, f, **kwargs)
 

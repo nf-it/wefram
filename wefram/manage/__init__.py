@@ -4,6 +4,7 @@ import os
 import os.path
 import importlib
 import asyncio
+from .. import runtime
 
 
 __all__ = [
@@ -21,6 +22,9 @@ EXCLUDED = [
 PRIVATE = [
     'platform'
 ]
+
+
+runtime.environment['execution_target'] = 'manage'
 
 
 def get_facilities() -> List[str]:

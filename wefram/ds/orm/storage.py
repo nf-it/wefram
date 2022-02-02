@@ -40,8 +40,8 @@ class StoredFile:
         """
 
         if self.file_id.startswith('/'):
-            return f"{config.STATICS_URL}/assets/{self.file_id.lstrip('/')}"
-        return f'{config.FILES_URL}/{self.entity}/{self.file_id}'
+            return f"/static/assets/{self.file_id.lstrip('/')}"
+        return f"{config.URL['files']}/{self.entity}/{self.file_id}"
 
 
 class StoredImage(StoredFile):

@@ -81,7 +81,7 @@ logger.debug(
 _routes: List[Union[requests.Route, Mount]] = requests.routing.registered
 _routes.insert(0, Route('/', root_route, methods=['GET']))
 _routes.append(Route(config.URL['login_screen'], ui.screens.Screen.endpoint, methods=['GET']))
-_routes.append(Mount(config.STATICS_URL, app=StaticFiles(directory=config.STATICS_ROOT), name='static'))
+_routes.append(Mount('/static', app=StaticFiles(directory=config.STATICS_ROOT), name='static'))
 _routes.append(Route('/{rest_of_path:path}', default_route, methods=['GET']))
 
 

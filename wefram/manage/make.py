@@ -60,8 +60,8 @@ async def run(targets: list) -> None:
 
     # The list of project roots whose about to make
     roots: List[str] = []
-    if config.ASSETS_DIR:
-        roots.append(config.ASSETS_DIR)
+    if config.ASSETS_SRC_DIR:
+        roots.append(config.ASSETS_SRC_DIR)
 
     # Defining the global build context which may be used by apps
     ctx: dict = dict()

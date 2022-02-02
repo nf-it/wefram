@@ -11,6 +11,7 @@ import os
 import os.path
 import json
 import wefram
+import wefram.confskel as skeletons
 
 
 __version__ = 1
@@ -54,7 +55,7 @@ def read(
 
         # We will try to find the requested value over actual (current) and over
         # default (if exists) configurations.
-        _configs: list = [_json_config, _json_default_config]
+        _configs: list = [PROJECT_CONFIG, PROJECT_CONFIG_DEFAULT]
 
         for _config in _configs:
             if not _config:  # If the config did not loaded - skipping it (of cource)
@@ -103,18 +104,18 @@ def read(
 PRJ_ROOT: str = os.getcwd()
 
 
-_json_config: Any = None
-_json_default_config: Any = None
+PROJECT_CONFIG: Any = None
+PROJECT_CONFIG_DEFAULT: Any = None
 
 # Loading the actual (deployed) config
 if os.path.isfile(os.path.join(PRJ_ROOT, 'config.json')):
     with open(os.path.join(PRJ_ROOT, 'config.json')) as f:
-        _json_config = json.load(f)
+        PROJECT_CONFIG = json.load(f)
 
 # Loading the default (usually saved in the repo) config
 if os.path.isfile(os.path.join(PRJ_ROOT, 'config.default.json')):
     with open(os.path.join(PRJ_ROOT, 'config.default.json')) as f:
-        _json_default_config = json.load(f)
+        PROJECT_CONFIG_DEFAULT = json.load(f)
 
 # --
 # -- Custom configuration
@@ -144,6 +145,10 @@ UVICORN_PORT: int = read('uvicorn.port', 8000, 'int')
 APP_TITLE: str = read('appTitle', "WEFRAM workspace", 'str')
 PROJECT_NAME: str = read('projectName', "wefram_project", 'str')
 URL: dict = {
+    # 'statics': read('url.statics', '/static', 'str'),  # for now, pre-built const is used instead
+    'statics': "/static",
+    # 'files': read('url.files', '/files', 'str'),  # for now, pre-built const is used instead
+    'files': "/files",
     'default': read('url.default', '/welcome', 'str'),
     'default_authenticated': read('url.defaultAuthenticated', '/workspace', 'str'),
     'default_guest': read('url.defaultGuest', '/welcome', 'str'),
@@ -172,6 +177,10 @@ DATABASE: dict = {
         'drop_missing_columns': read('db.migrate.dropMissingColumns', False, 'bool')
     }
 }
+STORAGE: dict = {
+    'root': read('storage.root', '/volume', 'str'),
+    'files_dir': read('storage.filesDir', 'files', 'str')
+}
 REDIS: dict = {
     'uri': read('redis.uri', 'redis://localhost/0', 'str'),
     'password': read('redis.password', None) or None
@@ -183,32 +192,35 @@ DESKTOP: dict = {
     'intro_text': read('desktop.intro_text') or None
 }
 
+STORAGE_ROOT: str = STORAGE['root']
+if STORAGE_ROOT and STORAGE_ROOT.startswith('/') and not os.path.isdir(STORAGE_ROOT):
+    # if PRODUCTION:
+    #     raise FileNotFoundError(
+    #         f"the storage volume's absolute path is invalid: {STORAGE['root']}"
+    #     )
+    STORAGE_ROOT = os.path.join(PRJ_ROOT, '.storage')
+elif not STORAGE_ROOT:
+    STORAGE_ROOT = os.path.join(PRJ_ROOT, '.storage')
+elif STORAGE_ROOT.startswith('./'):
+    STORAGE_ROOT = os.path.join(PRJ_ROOT, STORAGE_ROOT[2:])
+else:
+    STORAGE_ROOT = os.path.join(PRJ_ROOT, STORAGE_ROOT)
+FILES_ROOT: str = os.path.join(STORAGE_ROOT, STORAGE['files_dir'])
+
 
 # --
-# -- The build and global system configuration
+# -- The build/deployment configuration
 # --
 
 
 if os.path.isfile(os.path.join(PRJ_ROOT, 'build.json')):
     with open(os.path.join(PRJ_ROOT, 'build.json')) as f:
         BUILD_CONF: dict = json.load(f)
+elif os.path.isfile(os.path.join(PRJ_ROOT, 'deploy.json')):
+    with open(os.path.join(PRJ_ROOT, 'deploy.json')) as f:
+        BUILD_CONF: dict = json.load(f)
 else:
-    BUILD_CONF: dict = {
-        "buildDir": ".var/build",
-        "staticsDir": ".var/build/static",
-        "staticsUrl": "/static",
-        "assetsDir": "assets",
-        "filesDir": ".var/files",
-        "filesUrl": "/files",
-        "frontend": {
-            "components": {
-                "ProjectLayout": "system/containers/Layout",
-                "ProjectSidebar": "system/containers/LayoutSidebar",
-                "ProjectScreens": "system/containers/LayoutScreens"
-            },
-            "theme": "system/project/theme"
-        }
-    }
+    BUILD_CONF: dict = skeletons.BUILD_JSON
 
 if os.path.isfile(os.path.join(PRJ_ROOT, 'apps.json')):
     with open(os.path.join(PRJ_ROOT, 'apps.json')) as f:
@@ -216,20 +228,35 @@ if os.path.isfile(os.path.join(PRJ_ROOT, 'apps.json')):
 else:
     APPS_ENABLED: list = []
 
+
+if not BUILD_CONF or not isinstance(BUILD_CONF, dict):
+    BUILD_CONF = {}
+
+
 COREPKG: str = "wefram"  # the Python Wefram package name
 CORE_ROOT: str = os.path.split(wefram.__file__)[0]  # The Wefram root path
 
-BUILD_DIR: str = BUILD_CONF['buildDir']
 APPS_ROOT: str = PRJ_ROOT
-BUILD_ROOT: str = os.path.join(PRJ_ROOT, BUILD_DIR)
 
-ASSETS_DIR: str = BUILD_CONF['assetsDir'] or None
-ASSETS_ROOT: str = os.path.join(PRJ_ROOT, ASSETS_DIR) if ASSETS_DIR else None
-STATICS_ROOT: str = os.path.join(PRJ_ROOT, BUILD_CONF['staticsDir'])
-STATICS_URL: str = BUILD_CONF['staticsUrl']
-FILES_DIR: str = BUILD_CONF['filesDir']
-FILES_ROOT: str = os.path.join(PRJ_ROOT, FILES_DIR)
-FILES_URL: str = BUILD_CONF['filesUrl']
+BUILD_DIR: str = BUILD_CONF.get('buildDir', '.build')
+BUILD_ROOT: str = os.path.join(PRJ_ROOT, BUILD_DIR) if not BUILD_DIR.startswith('/') else BUILD_DIR
+
+ASSETS_DIR: str = BUILD_CONF.get('assetsDir', None) or os.path.join(BUILD_DIR, 'assets')
+ASSETS_ROOT: str = os.path.join(PRJ_ROOT, ASSETS_DIR) if not ASSETS_DIR.startswith('/') else ASSETS_DIR
+
+ASSETS_SRC_DIR: str = BUILD_CONF.get('assetsSource', None) or None
+ASSETS_SRC_ROOT: str = (os.path.join(PRJ_ROOT, ASSETS_SRC_DIR) if not ASSETS_SRC_DIR.startswith('/') else ASSETS_SRC_DIR) if ASSETS_SRC_DIR else None
+
+STATICS_DIR: str = BUILD_CONF.get('staticsDir', None) or os.path.join(BUILD_DIR, 'static')
+STATICS_ROOT: str = os.path.join(PRJ_ROOT, STATICS_DIR) if not STATICS_DIR.startswith('/') else STATICS_DIR
+
+DEPLOY: dict = BUILD_CONF.get('deploy', None) or {}
+DEPLOY.setdefault('include', [])
+DEPLOY.setdefault('exclude', [])
+DEPLOY.setdefault('path', '.deploy')
+DEPLOY.setdefault('clean', False)
+DEPLOY.setdefault('staticsDir', 'static')
+DEPLOY.setdefault('assetsDir', 'assets')
 
 
 # The setting below is only specific for the Wefram development mode when

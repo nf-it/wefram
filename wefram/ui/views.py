@@ -44,9 +44,9 @@ class View:
 
     _assets_uuid: str = None
 
-    public_statics: str = config.STATICS_URL
-    public_assets: str = f'{config.STATICS_URL}/assets'
-    public_fonts: str = f'{config.STATICS_URL}/fonts'
+    public_statics: str = '/static'
+    public_assets: str = f'/static/assets'
+    public_fonts: str = f'/static/fonts'
 
     name: str
     """ The view name. Generally, based on the inheriting class name. """
@@ -102,7 +102,7 @@ class View:
         if not assets_uuid:
             return ""
 
-        return f"{config.STATICS_URL}/assets/{assets_uuid}.css"
+        return f"/static/assets/{assets_uuid}.css"
 
     @classmethod
     def get_public_js_path(cls) -> str:
@@ -114,7 +114,7 @@ class View:
         if not assets_uuid:
             return ""
 
-        return f"{config.STATICS_URL}/assets/{assets_uuid}.js"
+        return f"/static/assets/{assets_uuid}.js"
 
     @classmethod
     def append_context_loader(cls, loader: Callable) -> None:

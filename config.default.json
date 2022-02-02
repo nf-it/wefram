@@ -1,6 +1,5 @@
 {
-  "project": {
-  },
+  "project": {},
   "projectName": "wefram",
   "appTitle": "Wefram Framework",
   "auth": {
@@ -14,14 +13,13 @@
     ]
   },
   "url": {
+    "statics": "/static",
+    "files": "/files",
     "default": "/workspace",
     "defaultAuthenticated": "/workspace",
     "defaultGuest": "/workspace",
     "onLogoff": "/workspace/login",
     "loginScreen": "/workspace/login"
-  },
-  "desktop": {
-    "requires": ["authenticated"]
   },
   "db": {
     "user": "weframdba",
@@ -31,12 +29,13 @@
     "migrate.dropMissingTables": true,
     "migrate.dropMissingColumns": true
   },
+  "storage": {
+    "root": ".storage",
+    "filesDir": "files"
+  },
   "uvicorn": {
     "port": 8888
   },
-  "devel": false,
   "echo_ds": false,
-  "development": {
-    "weframMasterDevelopment": true
-  }
+  "devel": true
 }

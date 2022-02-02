@@ -1,10 +1,8 @@
 {
-  "buildDir": ".var/build",
-  "staticsDir": ".var/build/static",
-  "staticsUrl": "/static",
-  "assetsDir": "assets",
-  "filesDir": ".var/files",
-  "filesUrl": "/files",
+  "buildDir": ".build",
+  "staticsDir": ".build/static",
+  "assetsDir": ".build/assets",
+  "assetsSource": false,
   "frontend": {
     "components": {
       "ProjectLayout": "system/containers/Layout",
@@ -12,5 +10,13 @@
       "ProjectScreens": "system/containers/LayoutScreens"
     },
     "theme": "system/project/theme"
+  },
+  "deploy": {
+    "include": [],
+    "exclude": [],
+    "path": ".deploy",
+    "clean": false,
+    "staticsDir": ".static",
+    "assetsDir": ".assets"
   }
 }

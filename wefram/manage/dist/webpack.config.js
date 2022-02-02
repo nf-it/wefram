@@ -15,7 +15,7 @@ module.exports = (env) => {
     entry: `./main.tsx`,
     output: {
       path: path.resolve(projectRoot, buildConfig.staticsDir),
-      publicPath: `${buildConfig.staticsUrl}/`,
+      publicPath: `/static/`,
       filename: 'app.[contenthash].js',
       chunkFilename: '[name].[chunkhash].js'
     },

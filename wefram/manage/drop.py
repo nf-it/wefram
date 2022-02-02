@@ -1,5 +1,7 @@
-""" Drops the project uploaded data, including all data in the relational database,
- Redis, and all uploaded files from the files directory. """
+"""
+Drops the project uploaded data, including all data in the relational database,
+Redis, and all uploaded files from the files directory.
+"""
 
 from .routines.tools import yesno
 from .. import setups

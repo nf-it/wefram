@@ -13,7 +13,9 @@ __all__ = [
 ]
 
 
-GENERAL_DICTS_PATH: str = os.path.join(config.ASSETS_ROOT, 'l10n')
-BUILT_DICTS_PATH: str = os.path.join(config.BUILD_ROOT, 'l10n')
-BUILT_TEXTS_PATH: str = os.path.join(config.BUILD_ROOT, 'texts')
+GENERAL_DICTS_PATH: str = os.path.join(config.ASSETS_SRC_ROOT, 'l10n') \
+    if config.ASSETS_SRC_ROOT \
+    else None
+BUILT_DICTS_PATH: str = os.path.join(config.ASSETS_ROOT, 'l10n')
+BUILT_TEXTS_PATH: str = os.path.join(config.ASSETS_ROOT, 'texts')
 

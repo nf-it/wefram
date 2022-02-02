@@ -17,3 +17,4 @@ recursive-include wefram README
 recursive-include wefram frontend/*
 recursive-include wefram assets/*
 recursive-include wefram manage/dist/*
+recursive-include wefram manage/dist/project/*

@@ -10,6 +10,7 @@ import json
 import sys
 from sqlalchemy import sql
 from sqlalchemy.ext.asyncio import create_async_engine
+from ...confskel import *
 
 
 def yesno(caption: Optional[str] = None, default_yes: bool = False) -> bool:
@@ -53,61 +54,13 @@ def json_to_file(o: Any, filename: str, **kwargs) -> None:
         json.dump(o, f, **kwargs)
 
 
+CWD: str = os.getcwd()
+CORE_PATH: str = os.path.abspath(f"{os.path.split(__file__)[0]}/../..")
+
 DIST = [
-    'manage',
-    'asgi.py',
-    'server.py',
-    'main.tsx',
-    'makefile'
+    z for z in os.listdir(os.path.join(CORE_PATH, 'manage', 'dist', 'project'))
+    if not z.startswith('.') and not z.startswith('_')
 ]
-
-BUILD_JSON = {
-    "buildDir": ".var/build",
-    "staticsDir": ".var/build/static",
-    "staticsUrl": "/static",
-    "assetsDir": "assets",
-    "filesDir": "./var/files",
-    "filesUrl": "/files",
-    "frontend": {
-        "components": {
-            "ProjectLayout": "system/containers/Layout",
-            "ProjectSidebar": "system/containers/LayoutSidebar",
-            "ProjectScreens": "system/containers/LayoutScreens"
-        },
-        "theme": "system/project/theme"
-    }
-}
-
-APPS_JSON = []
-
-CONFIG_JSON = {
-    "project": {},
-    "projectName": "wefram_based_project",
-    "appTitle": "Wefram Workspace",
-    "auth": {
-        "salt": random_secret(64),
-        "secret": random_secret(64),
-        "sessionTimeoutMins": 720,
-        "rememberUsername": True,
-        "backends": ['local'],
-    },
-    "url": {
-        "default": "/workspace",
-        "defaultAuthenticated": "/workspace",
-        "defaultGuest": "/workspace/login",
-        "onLogoff": "/workspace/login",
-        "loginScreen": "/workspace/login"
-    },
-    "db": {
-        "user": "wefram",
-        "pass": random_secret(64),
-        "name": "wefram",
-        "port": 5432,
-        "migrate.dropMissingTables": True,
-        "migrate.dropMissingColumns": True
-    },
-    "devel": True
-}
 
 
 async def create_database(
@@ -163,12 +116,9 @@ async def _main() -> None:
         os.makedirs(project_dir, exist_ok=True)
         os.chdir(project_dir)
 
-    cwd: str = os.getcwd()
-    core_path: str = os.path.abspath(f"{os.path.split(__file__)[0]}/../..")
-
     print("")
     print("The working directory for the project is")
-    print(f"  [{cwd}]")
+    print(f"  [{CWD}]")
     print("")
 
     print("Wefram-based project uses PostgreSQL database. Please enter its credentials.")
@@ -215,7 +165,7 @@ async def _main() -> None:
     print("as `git` repo name or directory name for the project and defines the project")
     print("along other ones.")
     print("")
-    project_name: str = term_input("Project name", (os.path.split(cwd)[-1]).replace('.', '_').replace(' ', '_'))
+    project_name: str = term_input("Project name", (os.path.split(CWD)[-1]).replace('.', '_').replace(' ', '_'))
 
     print("")
     print("Please define how your project will be titled (the human readable name which")
@@ -224,8 +174,8 @@ async def _main() -> None:
 
     for f in DIST:
         shutil.copyfile(
-            os.path.join(core_path, 'manage', 'dist', 'project', f),
-            os.path.join(cwd, f)
+            os.path.join(CORE_PATH, 'manage', 'dist', 'project', f),
+            os.path.join(CWD, f)
         )
 
     CONFIG_JSON['db']['user'] = db_user
@@ -235,14 +185,14 @@ async def _main() -> None:
     CONFIG_JSON['projectName'] = project_name
     CONFIG_JSON['appTitle'] = app_title
 
-    json_to_file(APPS_JSON, os.path.join(cwd, 'apps.json'))
-    json_to_file(BUILD_JSON, os.path.join(cwd, 'build.json'))
-    json_to_file(CONFIG_JSON, os.path.join(cwd, 'config.json'))
+    json_to_file(APPS_JSON, os.path.join(CWD, 'apps.json'))
+    json_to_file(BUILD_JSON, os.path.join(CWD, 'build.json'))
+    json_to_file(CONFIG_JSON, os.path.join(CWD, 'config.json'))
 
-    os.chmod(os.path.join(cwd, 'manage'), 0o770)
-    os.chmod(os.path.join(cwd, 'config.json'), 0o660)
-    os.chmod(os.path.join(cwd, 'build.json'), 0o660)
-    os.chmod(os.path.join(cwd, 'apps.json'), 0o660)
+    os.chmod(os.path.join(CWD, 'manage'), 0o770)
+    os.chmod(os.path.join(CWD, 'config.json'), 0o660)
+    os.chmod(os.path.join(CWD, 'build.json'), 0o660)
+    os.chmod(os.path.join(CWD, 'apps.json'), 0o660)
 
     print("")
     print("=============================================================================")

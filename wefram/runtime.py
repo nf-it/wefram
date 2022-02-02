@@ -13,6 +13,11 @@ def start() -> None:
     pass
 
 
+environment = {
+    'execution_target': 'server'
+}
+
+
 class Context(UserDict):
     """
     The context class. Provides very important context-level functionality.

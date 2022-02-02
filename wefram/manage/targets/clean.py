@@ -11,6 +11,7 @@ __all__ = [
 
 TREE = [
     config.STATICS_ROOT,
+    config.ASSETS_ROOT,
     config.BUILD_ROOT
 ]
 EXCLUDE = []

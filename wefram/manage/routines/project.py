@@ -1,6 +1,9 @@
+from typing import *
+
 
 __all__ = [
-    'ensure_apps_loaded'
+    'ensure_apps_loaded',
+    'make_deploying_srcs'
 ]
 
 
@@ -20,4 +23,38 @@ def ensure_apps_loaded() -> None:
 
     run.start()
     STATE['loaded'] = True
+
+
+def make_deploying_srcs() -> None:
+    """ Generates the list of rooted files and directories whose about to be
+    recursively copied from the development environment to the deployement
+    directory.
+
+    Note that only enabled applications will be included into the resulting
+    list of deploying sources.
+
+    :return:
+        The list of root-level directories and files about to be copied to
+        the deployment directory.
+    """
+
+    from ... import config
+
+    include_srcs: List[str] = config.DEPLOY.get('include', None) or []
+    exclude_srcs: List[str] = config.DEPLOY.get('exclude', None) or []
+    # path: str = config.DEPLOY.get('path', None) or '.deploy'
+    # clean: bool = bool(config.DEPLOY.get('clean', False))
+
+    sources: List[str] = config.APPS_ENABLED
+    sources.extend([
+        'apps.json',
+        # 'build.json',   # build.json is not required due to 'deploy.json' usage instead
+        # 'config.json',  # the config.json not about to be copied!
+        'config.default.json',
+        'asgi.py',
+        'server.py',
+        'requirements.txt'
+    ])
+
+
 

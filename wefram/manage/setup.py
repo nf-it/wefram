@@ -1,8 +1,9 @@
-""" Drops the project uploaded data, including all data in the relational database,
- Redis, and all uploaded files from the files directory, if any exists. After that,
- creates an initial schema and uploads the initial data.
+"""
+Drops the project uploaded data, including all data in the relational database,
+Redis, and all uploaded files from the files directory, if any exists. After that,
+creates an initial schema and uploads the initial data.
 
- Other words, doing ``setup`` procedure.
+Other words, doing ``setup`` procedure.
 """
 
 from typing import *

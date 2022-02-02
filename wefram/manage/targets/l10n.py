@@ -26,7 +26,7 @@ def run(roots: List[str]) -> None:
     dictionaries: Dict[str, Dictionary] = dict()
 
     source_paths: Dict[str, str] = dict()
-    if os.path.isdir(GENERAL_DICTS_PATH):
+    if GENERAL_DICTS_PATH and os.path.isdir(GENERAL_DICTS_PATH):
         source_paths['*'] = GENERAL_DICTS_PATH
 
     for root in roots:

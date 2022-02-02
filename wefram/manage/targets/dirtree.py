@@ -11,6 +11,7 @@ __all__ = [
 
 DIRTREE = [
     config.STATICS_ROOT,
+    config.ASSETS_ROOT,
     config.BUILD_ROOT,
     os.path.join(config.BUILD_ROOT, 'frontend')
 ]

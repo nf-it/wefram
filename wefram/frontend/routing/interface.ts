@@ -2,11 +2,12 @@ import {createBrowserHistory} from 'history'
 import {runtime} from 'system/project'
 import {screensSchema} from 'build/screens'
 import {session} from 'system/aaa'
-import buildConfig from '/build.json'
 import {Routing} from './types'
 
 
 export const routingHistory = createBrowserHistory()
+
+const STATIC_URL: string = '/static'
 
 
 export const routing: Routing = {
@@ -17,14 +18,14 @@ export const routing: Routing = {
   },
 
   assetPath(app, filename) {
-    return `${buildConfig.staticsUrl}/assets/${app}/${filename}`
+    return `${STATIC_URL}/assets/${app}/${filename}`
   },
 
   assetAbspath(filename) {
-    const prefix: string = `${buildConfig.staticsUrl}/assets/`
+    const prefix: string = `${STATIC_URL}/assets/`
     if (filename.startsWith(prefix))
       return filename
-    return `${buildConfig.staticsUrl}/assets/${filename.replace(/^\/+/g, '')}`
+    return `${STATIC_URL}/assets/${filename.replace(/^\/+/g, '')}`
   },
 
   screenPath(screenName) {
