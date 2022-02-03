@@ -18,3 +18,5 @@ recursive-include wefram frontend/*
 recursive-include wefram assets/*
 recursive-include wefram manage/dist/*
 recursive-include wefram manage/dist/project/*
+recursive-include wefram manage/dist/deploy/*
+recursive-include wefram manage/dist/deploy/docker/*

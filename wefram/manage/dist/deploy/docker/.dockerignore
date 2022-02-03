@@ -1,7 +1,9 @@
 /venv
+/Dockerfile
 /.venv
 /.git
 /.build
+/.dockerignore
 __pycache__
 *.pyc
 *.ts
