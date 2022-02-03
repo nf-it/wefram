@@ -54,8 +54,12 @@ CONFIG_JSON = {
     "auth": {
         "salt": random_secret(64),
         "secret": random_secret(64),
+        "audience": defaults.AUTH_AUDIENCE,
+        "jwtExpireMins": defaults.AUTH_JWT_EXPIRE_MINS,
         "sessionTimeoutMins": defaults.AUTH_SESSION_TIMEOUT_MINS,
         "rememberUsername": defaults.AUTH_REMEMBER_USERNAME,
+        "failedAuthDelay": defaults.AUTH_FAILED_AUTH_DELAY,
+        "succeed_auth_delay": defaults.AUTH_SUCCEED_AUTH_DELAY,
         "backends": defaults.AUTH_BACKENDS,
     },
     "url": {
@@ -69,9 +73,14 @@ CONFIG_JSON = {
         "user": defaults.DATABASE_USER,
         "pass": random_secret(64),
         "name": defaults.DATABASE_NAME,
+        "host": defaults.DATABASE_HOST,
         "port": defaults.DATABASE_PORT,
         "migrate.dropMissingTables": defaults.DATABASE_MIGRATE_DROP_MISSING_TABLES,
         "migrate.dropMissingColumns": defaults.DATABASE_MIGRATE_DROP_MISSING_COLUMNS
+    },
+    "redis": {
+        "uri": defaults.REDIS_URI,
+        "password": defaults.REDIS_PASSWORD
     },
     "storage": {
         "root": defaults.STORAGE_ROOT,
@@ -82,6 +91,17 @@ CONFIG_JSON = {
         "bind": defaults.UVICORN_BIND,
         "port": defaults.UVICORN_PORT
     },
+    "settings": {
+        "alwaysLoaded": []
+    },
+    "locale": {
+        "default": defaults.DEFAULT_LOCALE
+    },
+    "desktop": {
+        "requires": None,
+        "introText": None
+    },
     "echo_ds": defaults.CONFIG_ECHO_DS,
-    "devel": defaults.CONFIG_DEVEL
+    "devel": defaults.CONFIG_DEVEL,
+    "verbose": defaults.CONFIG_VERBOSE
 }
