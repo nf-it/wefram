@@ -68,7 +68,8 @@ def clean(full: bool = False) -> None:
     exclude: List[str] = [
         '.git',
         '.venv',
-        'venv'
+        'venv',
+        'config.json',
     ]  # The list of excluded from the cleanup roots
 
     storage_dir: str = config.STORAGE_DIR or defaults.STORAGE_ROOT
