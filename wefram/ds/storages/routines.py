@@ -9,7 +9,6 @@ import os
 import json
 import shutil
 import datetime
-import rfc6266
 import anyio
 from starlette.datastructures import URL, Headers
 from email.utils import parsedate
@@ -297,17 +296,19 @@ async def get_embedded_file_response(
         raise FileNotFoundError()
 
     filename: str = os.path.basename(filepath)
-    disposition_raw: Union[str, bytes] = rfc6266.build_header(filename)
-    disposition: str = disposition_raw.decode('latin-1') \
-        if isinstance(disposition_raw, bytes) \
-        else disposition_raw
+    # RFC-6266 is required here, but the corresponding package is BROKEN
+    # TODO!
+    # disposition_raw: Union[str, bytes] = rfc6266.build_header(filename)
+    # disposition: str = disposition_raw.decode('latin-1') \
+    #     if isinstance(disposition_raw, bytes) \
+    #     else disposition_raw
     stat_result = await anyio.to_thread.run_sync(os.stat, filepath)
 
     response: FileResponse = FileResponse(
         filepath,
         headers={
             'Connection': 'keep-alive',
-            'Content-Disposition': disposition,
+            # 'Content-Disposition': disposition,  # TODO
         },
         stat_result=stat_result
     )
@@ -375,10 +376,11 @@ async def get_file_response(
     if not os.path.isfile(blobfn):
         raise FileNotFoundError()
 
-    disposition_raw: Union[str, bytes] = rfc6266.build_header(filename)
-    disposition: str = disposition_raw.decode('latin-1') \
-        if isinstance(disposition_raw, bytes) \
-        else disposition_raw
+    # TODO
+    # disposition_raw: Union[str, bytes] = rfc6266.build_header(filename)
+    # disposition: str = disposition_raw.decode('latin-1') \
+    #     if isinstance(disposition_raw, bytes) \
+    #     else disposition_raw
 
     stat_result = await anyio.to_thread.run_sync(os.stat, blobfn)
 
@@ -386,7 +388,7 @@ async def get_file_response(
         blobfn,
         headers={
             'Connection': 'keep-alive',
-            'Content-Disposition': disposition,
+            # 'Content-Disposition': disposition,  # TODO
             'Content-Type': content_type
         },
         stat_result=stat_result

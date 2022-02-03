@@ -9,7 +9,7 @@ import datetime
 from sqlalchemy import types
 from .types import BigAutoIncrement, Column, DateTime, Integer, String
 from .model import DatabaseModel
-from ... import config
+from ... import config, defaults
 from ...tools import get_calling_app
 
 
@@ -40,8 +40,8 @@ class StoredFile:
         """
 
         if self.file_id.startswith('/'):
-            return f"/static/assets/{self.file_id.lstrip('/')}"
-        return f"{config.URL['files']}/{self.entity}/{self.file_id}"
+            return f"{defaults.URL_STATICS}/assets/{self.file_id.lstrip('/')}"
+        return f"{defaults.URL_FILES}/{self.entity}/{self.file_id}"
 
 
 class StoredImage(StoredFile):

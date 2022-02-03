@@ -136,7 +136,7 @@ async def push_history_record(
     )
 
     db = context['db']
-    db.add(record)
+    db.add(record)  # TODO! SQLAclhemy warns that Session.add() is not permitted in the context of .flush() !!
 
     logger.debug(
         f"logged {CSTYLE['blue']}{action}{CSTYLE['clear']} action for"

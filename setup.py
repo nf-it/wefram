@@ -51,7 +51,6 @@ setuptools.setup(
         'jinja2',
         'csscompressor',
         'jsmin',
-        'rfc6266',
         'ldap3',
         'aiosmtplib'
     ],

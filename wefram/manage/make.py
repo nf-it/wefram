@@ -119,11 +119,16 @@ async def run(targets: list) -> None:
                 f"Cannot find facility serves the make target '{target}'!"
             ) from exc
 
-        makefunc: callable = getattr(target_module, 'run')
-        if asyncio.iscoroutinefunction(makefunc):
-            await makefunc(roots)
-        else:
-            makefunc(roots)
+        try:
+            makefunc: callable = getattr(target_module, 'run')
+            if asyncio.iscoroutinefunction(makefunc):
+                await makefunc(roots)
+            else:
+                makefunc(roots)
+        except RuntimeError:
+            print(f"\n\nMake {CSTYLE['red']}FAILED{CSTYLE['clear']}, please read the messages above")
+            exit(1)
+            break
 
     # Storing the timestamp when the make done
     end_timestamp = datetime.now()

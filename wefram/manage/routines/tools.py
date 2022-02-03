@@ -16,7 +16,8 @@ __all__ = [
     'term_floatinput',
     'term_intinput',
     'term_input',
-    'json_to_file'
+    'json_to_file',
+    'merge_conf'
 ]
 
 
@@ -132,3 +133,31 @@ def json_to_file(o: Any, filename: str, **kwargs) -> None:
     with open(filename, 'w') as f:
         json.dump(o, f, **kwargs)
 
+
+def merge_conf(dist: dict, proj: dict) -> dict:
+    """ Merges two configuration dicts - the distributed one, which is
+    shipped with the Wefram platform and has all available options, and
+    the project's one, which is located in the corresponding project's
+    directory.
+
+    This procedure merges configurations recursively.
+
+    Note that only existing in the distributed configuration keys will
+    be served. All project's configuration options other than existing
+    in the corresponding distributed one, will be lost.
+
+    :param dist: the distributed configuration;
+    :param proj: the project's local configuration;
+    :return: merged configurations.
+    """
+
+    merged: dict = {}
+    for key in dist.keys():
+        if key not in proj:
+            merged[key] = dist[key]
+            continue
+        if isinstance(dist[key], dict):
+            merged[key] = merge_conf(dist[key], proj[key])
+            continue
+        merged[key] = proj[key]
+    return merged

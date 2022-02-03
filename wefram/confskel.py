@@ -5,6 +5,7 @@ files.
 
 import random
 import string
+from . import defaults
 
 
 __all__ = [
@@ -22,25 +23,25 @@ def random_secret(length: int) -> str:
 
 
 BUILD_JSON = {
-    "buildDir": ".build",
-    "staticsDir": ".build/static",
-    "assetsDir": ".build/assets",
-    "assetsSource": "assets",
+    "buildDir": defaults.BUILD_DIR,
+    "staticsDir": f"{defaults.BUILD_DIR}/static",
+    "assetsDir": f"{defaults.BUILD_DIR}/assets",
+    "assetsSource": defaults.ASSETS_SOURCE,
     "frontend": {
         "components": {
-            "ProjectLayout": "system/containers/Layout",
-            "ProjectSidebar": "system/containers/LayoutSidebar",
-            "ProjectScreens": "system/containers/LayoutScreens"
+            "ProjectLayout": defaults.FRONTEND_COMPONENTS_PROJECTLAYOUT,
+            "ProjectSidebar": defaults.FRONTEND_COMPONENTS_PROJECTSIDEBAR,
+            "ProjectScreens": defaults.FRONTEND_COMPONENTS_PROJECTSCREENS
         },
-        "theme": "system/project/theme"
+        "theme": defaults.FRONTEND_THEME
     },
     "deploy": {
         "include": [],
         "exclude": [],
-        "path": ".deploy",
-        "clean": False,
-        "staticsDir": ".static",
-        "assetsDir": ".assets"
+        "path": defaults.DEPLOY_PATH,
+        "clean": defaults.DEPLOY_CLEAN,
+        "staticsDir": defaults.DEPLOY_STATICS,
+        "assetsDir": defaults.DEPLOY_ASSETS
     }
 }
 
@@ -48,39 +49,39 @@ APPS_JSON = []
 
 CONFIG_JSON = {
     "project": {},
-    "projectName": "wefram_based_project",
-    "appTitle": "Wefram Workspace",
+    "projectName": defaults.PROJECT_NAME,
+    "appTitle": defaults.APP_TITLE,
     "auth": {
         "salt": random_secret(64),
         "secret": random_secret(64),
-        "sessionTimeoutMins": 720,
-        "rememberUsername": True,
-        "backends": ['local'],
+        "sessionTimeoutMins": defaults.AUTH_SESSION_TIMEOUT_MINS,
+        "rememberUsername": defaults.AUTH_REMEMBER_USERNAME,
+        "backends": defaults.AUTH_BACKENDS,
     },
     "url": {
-        # "statics": "/static",
-        # "files": "/files",
-        "default": "/workspace",
-        "defaultAuthenticated": "/workspace",
-        "defaultGuest": "/workspace/login",
-        "onLogoff": "/workspace/login",
-        "loginScreen": "/workspace/login"
+        "default": defaults.URL_DEFAULT,
+        "defaultAuthenticated": defaults.URL_DEFAULT_AUTHENTICATED,
+        "defaultGuest": defaults.URL_DEFAULT_GUEST,
+        "onLogoff": defaults.URL_ON_LOGOFF,
+        "loginScreen": defaults.URL_LOGIN_SCREEN
     },
     "db": {
-        "user": "wefram",
+        "user": defaults.DATABASE_USER,
         "pass": random_secret(64),
-        "name": "wefram",
-        "port": 5432,
-        "migrate.dropMissingTables": True,
-        "migrate.dropMissingColumns": True
+        "name": defaults.DATABASE_NAME,
+        "port": defaults.DATABASE_PORT,
+        "migrate.dropMissingTables": defaults.DATABASE_MIGRATE_DROP_MISSING_TABLES,
+        "migrate.dropMissingColumns": defaults.DATABASE_MIGRATE_DROP_MISSING_COLUMNS
     },
     "storage": {
-        "root": ".storage",
-        "filesDir": "files"
+        "root": defaults.STORAGE_ROOT,
+        "filesDir": defaults.STORAGE_FILES_DIR
     },
     "uvicorn": {
-        "port": 8888
+        "loop": defaults.UVICORN_LOOP,
+        "bind": defaults.UVICORN_BIND,
+        "port": defaults.UVICORN_PORT
     },
-    "echo_ds": False,
-    "devel": True
+    "echo_ds": defaults.CONFIG_ECHO_DS,
+    "devel": defaults.CONFIG_DEVEL
 }

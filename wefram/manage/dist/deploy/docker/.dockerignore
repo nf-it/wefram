@@ -1,0 +1,8 @@
+/venv
+/.venv
+/.git
+/.build
+__pycache__
+*.pyc
+*.ts
+*.tsx

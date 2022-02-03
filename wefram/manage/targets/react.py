@@ -12,5 +12,7 @@ def run(*_) -> None:
         print("This can be used in development environments only! Please switch to PRODUCTION on the prod server!")
         print("***")
 
-    subprocess.run(['yarn', command])
+    result: subprocess.CompletedProcess = subprocess.run(['yarn', command])
+    if result.returncode != 0:
+        raise RuntimeError
 

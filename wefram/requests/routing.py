@@ -8,7 +8,7 @@ from typing import *
 from starlette.routing import Route as _Route, Request, PlainTextResponse
 from starlette.responses import Response
 from ..tools import CSTYLE, get_calling_app
-from .. import logger, exceptions
+from .. import logger, exceptions, defaults
 
 
 __all__ = [
@@ -80,7 +80,7 @@ class Route(_Route):
 # The project's routing registry.
 registered: List[Route] = []
 static_routes_prefixes: List[str] = [
-    '/static'
+    defaults.URL_STATICS
 ]
 
 

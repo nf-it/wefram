@@ -8,7 +8,7 @@ import os.path
 from starlette.routing import Route
 from ..requests import Request, Response, routing, templates
 from ..tools import CSTYLE, get_calling_app, array_from
-from .. import config, logger, features
+from .. import config, logger, features, defaults
 
 
 __all__ = [
@@ -44,9 +44,9 @@ class View:
 
     _assets_uuid: str = None
 
-    public_statics: str = '/static'
-    public_assets: str = f'/static/assets'
-    public_fonts: str = f'/static/fonts'
+    public_statics: str = defaults.URL_STATICS
+    public_assets: str = f'{defaults.URL_STATICS}/assets'
+    public_fonts: str = f'{defaults.URL_STATICS}/fonts'
 
     name: str
     """ The view name. Generally, based on the inheriting class name. """
@@ -102,7 +102,7 @@ class View:
         if not assets_uuid:
             return ""
 
-        return f"/static/assets/{assets_uuid}.css"
+        return f"{defaults.URL_STATICS}/assets/{assets_uuid}.css"
 
     @classmethod
     def get_public_js_path(cls) -> str:
@@ -114,7 +114,7 @@ class View:
         if not assets_uuid:
             return ""
 
-        return f"/static/assets/{assets_uuid}.js"
+        return f"{defaults.URL_STATICS}/assets/{assets_uuid}.js"
 
     @classmethod
     def append_context_loader(cls, loader: Callable) -> None:

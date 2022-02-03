@@ -4,7 +4,7 @@ import os.path
 import shutil
 import csscompressor
 import jsmin
-from ... import config, logger
+from ... import config, logger, defaults
 from ...tools import CSTYLE, module_path
 
 
@@ -123,9 +123,9 @@ def make_styles(roots: List[str], assets_uuid: str) -> None:
             with open(os.path.join(srcpath, source), 'r') as f:
                 content: str = f.read() \
                     .strip() \
-                    .replace('{{ PUBLIC_ASSETS }}', f'/static/assets') \
-                    .replace('{{ PUBLIC_FONTS }}', f'/static/fonts') \
-                    .replace('{{ APP_ASSETS }}', f'/static/assets/{root}')
+                    .replace('{{ PUBLIC_ASSETS }}', f'{defaults.URL_STATICS}/assets') \
+                    .replace('{{ PUBLIC_FONTS }}', f'{defaults.URL_STATICS}/fonts') \
+                    .replace('{{ APP_ASSETS }}', f'{defaults.URL_STATICS}/assets/{root}')
                 contents.append(content)
         embedpath: str = os.path.join(srcpath, 'embed')
         if os.path.isdir(embedpath):
@@ -150,9 +150,9 @@ def make_styles(roots: List[str], assets_uuid: str) -> None:
             with open(os.path.join(srcpath, source), 'r') as f:
                 content: str = f.read() \
                     .strip() \
-                    .replace('{{ PUBLIC_ASSETS }}', f'/static/assets') \
-                    .replace('{{ PUBLIC_FONTS }}', f'/static/fonts') \
-                    .replace('{{ APP_ASSETS }}', f'/static/assets/{root}')
+                    .replace('{{ PUBLIC_ASSETS }}', f'{defaults.URL_STATICS}/assets') \
+                    .replace('{{ PUBLIC_FONTS }}', f'{defaults.URL_STATICS}/fonts') \
+                    .replace('{{ APP_ASSETS }}', f'{defaults.URL_STATICS}/assets/{root}')
                 contents.append(content)
 
     # Now making the final asset

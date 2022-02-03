@@ -12,6 +12,7 @@ import os.path
 import json
 import wefram
 import wefram.confskel as skeletons
+import wefram.defaults as defaults
 
 
 __version__ = 1
@@ -129,78 +130,77 @@ PROJECT: dict = read('project', None) or {}
 # -- The runtime and production configuration
 # --
 
-PRODUCTION: bool = not read('devel', False, 'bool')
-VERBOSE: [str, int, bool] = read('verbose', False, 'bool')
-ECHO_DS: bool = read('echo_ds', False, 'bool')
+PRODUCTION: bool = not read('devel', defaults.CONFIG_DEVEL, 'bool')
+VERBOSE: [str, int, bool] = read('verbose', defaults.CONFIG_VERBOSE, 'bool')
+ECHO_DS: bool = read('echo_ds', defaults.CONFIG_ECHO_DS, 'bool')
 
-UVICORN_LOOP: str = read('uvicorn.loop', 'uvloop', 'str')
-UVICORN_BIND: str = read('uvicorn.bind', '0.0.0.0', 'str')
-UVICORN_PORT: int = read('uvicorn.port', 8000, 'int')
+UVICORN_LOOP: str = read('uvicorn.loop', defaults.UVICORN_LOOP, 'str')
+UVICORN_BIND: str = read('uvicorn.bind', defaults.UVICORN_BIND, 'str')
+UVICORN_PORT: int = read('uvicorn.port', defaults.UVICORN_PORT, 'int')
 
 
 # --
 # -- The project configuration
 # --
 
-APP_TITLE: str = read('appTitle', "WEFRAM workspace", 'str')
-PROJECT_NAME: str = read('projectName', "wefram_project", 'str')
+APP_TITLE: str = read('appTitle', defaults.APP_TITLE, 'str')
+PROJECT_NAME: str = read('projectName', defaults.PROJECT_NAME, 'str')
 URL: dict = {
-    # 'statics': read('url.statics', '/static', 'str'),  # for now, pre-built const is used instead
-    'statics': "/static",
-    # 'files': read('url.files', '/files', 'str'),  # for now, pre-built const is used instead
-    'files': "/files",
-    'default': read('url.default', '/welcome', 'str'),
-    'default_authenticated': read('url.defaultAuthenticated', '/workspace', 'str'),
-    'default_guest': read('url.defaultGuest', '/welcome', 'str'),
-    'on_logoff': read('url.onLogoff', '/workspace', 'str'),
-    'login_screen': read('url.loginScreen', '/workspace/login', 'str')
+    'statics': defaults.URL_STATICS,
+    'files': defaults.URL_FILES,
+    'default': read('url.default', defaults.URL_DEFAULT, 'str'),
+    'default_authenticated': read('url.defaultAuthenticated', defaults.URL_DEFAULT_AUTHENTICATED, 'str'),
+    'default_guest': read('url.defaultGuest', defaults.URL_DEFAULT_GUEST, 'str'),
+    'on_logoff': read('url.onLogoff', defaults.URL_ON_LOGOFF, 'str'),
+    'login_screen': read('url.loginScreen', defaults.URL_LOGIN_SCREEN, 'str')
 }
 AUTH: dict = {
     'salt': read('auth.salt', "--PLEASE-CHANGE-THIS-TO-THE-RANDOM--", 'str'),
     'secret': read('auth.secret', "--PLEASE-CHANGE-THIS-TO-THE-RANDOM--", 'str'),
-    'audience': read('auth.audience', 'localhost', 'str'),
-    'jwt_expire_mins': read('auth.jwtExpireMins', 0, 'int'),
-    'session_timeout_mins': read('auth.sessionTimeoutMins', 720, 'int'),
-    'failed_auth_delay': read('auth.failedAuthDelay', 2, 'int'),
-    'succeed_auth_delay': read('auth.succeedAuthDelay', 2, 'int'),
-    'remember_username': read('auth.rememberUsername', True, 'bool'),
-    'backends': read('auth.backends') or ['local']
+    'audience': read('auth.audience', defaults.AUTH_AUDIENCE, 'str'),
+    'jwt_expire_mins': read('auth.jwtExpireMins', defaults.AUTH_JWT_EXPIRE_MINS, 'int'),
+    'session_timeout_mins': read('auth.sessionTimeoutMins', defaults.AUTH_SESSION_TIMEOUT_MINS, 'int'),
+    'failed_auth_delay': read('auth.failedAuthDelay', defaults.AUTH_FAILED_AUTH_DELAY, 'int'),
+    'succeed_auth_delay': read('auth.succeedAuthDelay', defaults.AUTH_SUCCEED_AUTH_DELAY, 'int'),
+    'remember_username': read('auth.rememberUsername', defaults.AUTH_REMEMBER_USERNAME, 'bool'),
+    'backends': read('auth.backends') or defaults.AUTH_BACKENDS
 }
 DATABASE: dict = {
-    'user': read('db.user', 'projectdba', 'str'),
-    'pass': read('db.pass', 'project', 'str'),
-    'host': read('db.host', '127.0.0.1', 'str'),
-    'port': read('db.port', 5432, 'int'),
-    'name': read('db.name', 'project', 'str'),
+    'user': read('db.user', defaults.DATABASE_USER, 'str'),
+    'pass': read('db.pass', defaults.DATABASE_PASS, 'str'),
+    'host': read('db.host', defaults.DATABASE_HOST, 'str'),
+    'port': read('db.port', defaults.DATABASE_PORT, 'int'),
+    'name': read('db.name', defaults.DATABASE_NAME, 'str'),
     'migrate': {
-        'drop_missing_tables': read('db.migrate.dropMissingTables', False, 'bool'),
-        'drop_missing_columns': read('db.migrate.dropMissingColumns', False, 'bool')
+        'drop_missing_tables': read('db.migrate.dropMissingTables', defaults.DATABASE_MIGRATE_DROP_MISSING_TABLES, 'bool'),
+        'drop_missing_columns': read('db.migrate.dropMissingColumns', defaults.DATABASE_MIGRATE_DROP_MISSING_COLUMNS, 'bool')
     }
 }
 STORAGE: dict = {
-    'root': read('storage.root', '/volume', 'str'),
-    'files_dir': read('storage.filesDir', 'files', 'str')
+    'root': read('storage.root', defaults.STORAGE_ROOT, 'str'),
+    'files_dir': read('storage.filesDir', defaults.STORAGE_FILES_DIR, 'str')
 }
 REDIS: dict = {
-    'uri': read('redis.uri', 'redis://localhost/0', 'str'),
-    'password': read('redis.password', None) or None
+    'uri': read('redis.uri', defaults.REDIS_URI, 'str'),
+    'password': read('redis.password', defaults.REDIS_PASSWORD) or None
 }
 SETTINGS_ALWAYS_LOADED: list = read('settings.alwaysLoaded') or []
-DEFAULT_LOCALE: str = read('locale.default', 'en_US', 'str')
+DEFAULT_LOCALE: str = read('locale.default', defaults.DEFAULT_LOCALE, 'str')
 DESKTOP: dict = {
     'requires': read('desktop.requires') or None,
     'intro_text': read('desktop.intro_text') or None
 }
 
-STORAGE_ROOT: str = STORAGE['root']
+STORAGE_DIR: str = STORAGE['root']
+STORAGE_ROOT: str = STORAGE_DIR
 if STORAGE_ROOT and STORAGE_ROOT.startswith('/') and not os.path.isdir(STORAGE_ROOT):
     # if PRODUCTION:
     #     raise FileNotFoundError(
     #         f"the storage volume's absolute path is invalid: {STORAGE['root']}"
     #     )
-    STORAGE_ROOT = os.path.join(PRJ_ROOT, '.storage')
+    STORAGE_ROOT = os.path.join(PRJ_ROOT, defaults.STORAGE_ROOT)
 elif not STORAGE_ROOT:
-    STORAGE_ROOT = os.path.join(PRJ_ROOT, '.storage')
+    STORAGE_ROOT = os.path.join(PRJ_ROOT, defaults.STORAGE_ROOT)
 elif STORAGE_ROOT.startswith('./'):
     STORAGE_ROOT = os.path.join(PRJ_ROOT, STORAGE_ROOT[2:])
 else:
@@ -238,7 +238,7 @@ CORE_ROOT: str = os.path.split(wefram.__file__)[0]  # The Wefram root path
 
 APPS_ROOT: str = PRJ_ROOT
 
-BUILD_DIR: str = BUILD_CONF.get('buildDir', '.build')
+BUILD_DIR: str = BUILD_CONF.get('buildDir', defaults.BUILD_DIR)
 BUILD_ROOT: str = os.path.join(PRJ_ROOT, BUILD_DIR) if not BUILD_DIR.startswith('/') else BUILD_DIR
 
 ASSETS_DIR: str = BUILD_CONF.get('assetsDir', None) or os.path.join(BUILD_DIR, 'assets')
@@ -253,10 +253,10 @@ STATICS_ROOT: str = os.path.join(PRJ_ROOT, STATICS_DIR) if not STATICS_DIR.start
 DEPLOY: dict = BUILD_CONF.get('deploy', None) or {}
 DEPLOY.setdefault('include', [])
 DEPLOY.setdefault('exclude', [])
-DEPLOY.setdefault('path', '.deploy')
-DEPLOY.setdefault('clean', False)
-DEPLOY.setdefault('staticsDir', 'static')
-DEPLOY.setdefault('assetsDir', 'assets')
+DEPLOY.setdefault('path', defaults.DEPLOY_PATH)
+DEPLOY.setdefault('clean', defaults.DEPLOY_CLEAN)
+DEPLOY.setdefault('staticsDir', defaults.DEPLOY_STATICS)
+DEPLOY.setdefault('assetsDir', defaults.DEPLOY_ASSETS)
 
 
 # The setting below is only specific for the Wefram development mode when

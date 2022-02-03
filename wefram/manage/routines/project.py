@@ -3,7 +3,7 @@ from typing import *
 
 __all__ = [
     'ensure_apps_loaded',
-    'make_deploying_srcs'
+    'make_deploying_srcs',
 ]
 
 
@@ -14,7 +14,8 @@ STATE = {
 
 def ensure_apps_loaded() -> None:
     """ Ensures that all apps been loaded prior to return from this function.
-    This routine does nothing if been executed before even once. """
+    This routine does nothing if been executed before even once.
+    """
 
     from ... import run
 
@@ -25,7 +26,7 @@ def ensure_apps_loaded() -> None:
     STATE['loaded'] = True
 
 
-def make_deploying_srcs() -> None:
+def make_deploying_srcs() -> List[str]:
     """ Generates the list of rooted files and directories whose about to be
     recursively copied from the development environment to the deployement
     directory.
@@ -42,10 +43,8 @@ def make_deploying_srcs() -> None:
 
     include_srcs: List[str] = config.DEPLOY.get('include', None) or []
     exclude_srcs: List[str] = config.DEPLOY.get('exclude', None) or []
-    # path: str = config.DEPLOY.get('path', None) or '.deploy'
-    # clean: bool = bool(config.DEPLOY.get('clean', False))
+    sources: List[str] = config.APPS_ENABLED.copy()
 
-    sources: List[str] = config.APPS_ENABLED
     sources.extend([
         'apps.json',
         # 'build.json',   # build.json is not required due to 'deploy.json' usage instead
@@ -56,5 +55,11 @@ def make_deploying_srcs() -> None:
         'requirements.txt'
     ])
 
+    if include_srcs and isinstance(include_srcs, (list, tuple)):
+        sources.extend(include_srcs)
 
+    if exclude_srcs and isinstance(exclude_srcs, (list, tuple)):
+        sources = [s for s in sources if s not in exclude_srcs]
+
+    return sources
 

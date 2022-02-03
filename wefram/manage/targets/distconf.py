@@ -13,45 +13,16 @@ available configuration options and structure, which makes easier to
 maintain those settings.
 """
 
+
 import os.path
-from typing import *
 from ... import config
-from ..routines.tools import json_to_file
+from ..routines.tools import json_to_file, merge_conf
 from ... import confskel
 
 
 __all__ = [
     'run'
 ]
-
-
-def merge_conf(dist: dict, proj: dict) -> dict:
-    """ Merges two configuration dicts - the distributed one, which is
-    shipped with the Wefram platform and has all available options, and
-    the project's one, which is located in the corresponding project's
-    directory.
-
-    This procedure merges configurations recursively.
-
-    Note that only existing in the distributed configuration keys will
-    be served. All project's configuration options other than existing
-    in the corresponding distributed one, will be lost.
-
-    :param dist: the distributed configuration;
-    :param proj: the project's local configuration;
-    :return: merged configurations.
-    """
-
-    merged: dict = {}
-    for key in dist.keys():
-        if key not in proj:
-            merged[key] = dist[key]
-            continue
-        if isinstance(dist[key], dict):
-            merged[key] = merge_conf(dist[key], proj[key])
-            continue
-        merged[key] = proj[key]
-    return merged
 
 
 def run(*_) -> None:

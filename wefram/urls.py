@@ -3,7 +3,7 @@ Provides URL generation and handling general functions.
 """
 
 from typing import *
-from . import config
+from . import defaults
 from .tools import get_calling_app
 
 
@@ -39,5 +39,5 @@ def asset_url(res_name: str, app_name: Optional[str] = None) -> str:
 
     if not app_name:
         app_name = get_calling_app()
-    return '/'.join(['/static', 'assets', app_name.strip('/'), res_name.strip('/')])
+    return '/'.join([defaults.URL_STATICS, 'assets', app_name.strip('/'), res_name.strip('/')])
 

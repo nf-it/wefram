@@ -28,3 +28,6 @@ react-app-env.d.ts
 /.var
 /.yarnrc.yml
 /.pnp.loader.mjs
+/.build
+/.storage
+/.deploy
