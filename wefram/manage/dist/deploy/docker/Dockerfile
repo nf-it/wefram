@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install -y gcc && apt-get -y clean
 RUN pip install --no-cache-dir --upgrade pip wheel
 COPY requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
-RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels install wefram
 
 
 FROM python:3.9-slim

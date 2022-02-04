@@ -160,10 +160,14 @@ def make_requirements() -> None:
 
     print("Generating requirements registry for Python's `pip install -r`")
     result: subprocess.CompletedProcess = subprocess.run(['pip', 'freeze'], capture_output=True)
-    packages: str = result.stdout.decode('utf-8').replace("\\n", "\n")
+    packages: List[str] = [
+        s for s in
+        result.stdout.decode('utf-8').replace("\\n", "\n").split('\n')
+        if s.strip() != '' and not s.stip().startswith('pkg_resources')
+    ]
 
     with open(os.path.join(DEPLOYMENT_ROOT, 'requirements.txt'), 'w') as f:
-        f.write(packages)
+        f.write('\n'.join(packages))
 
 
 def prod_config() -> None:

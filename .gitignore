@@ -26,7 +26,6 @@ react-app-env.d.ts
 /dist
 /wefram.egg-info
 /.var
-/.yarnrc.yml
 /.pnp.loader.mjs
 /.build
 /.storage
