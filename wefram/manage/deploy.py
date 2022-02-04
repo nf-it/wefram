@@ -163,7 +163,7 @@ def make_requirements() -> None:
     packages: List[str] = [
         s for s in
         result.stdout.decode('utf-8').replace("\\n", "\n").split('\n')
-        if s.strip() != '' and not s.stip().startswith('pkg_resources')
+        if s.strip() != '' and not s.strip().startswith('pkg_resources')
     ]
 
     with open(os.path.join(DEPLOYMENT_ROOT, 'requirements.txt'), 'w') as f:
@@ -247,7 +247,6 @@ async def run(*_) -> None:
             'l10n',
             'texts',
             'prefront',
-            'webpack',
             'react'
         ])
         print("")
