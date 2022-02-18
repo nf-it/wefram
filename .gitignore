@@ -8,6 +8,7 @@ yarn-error.log*
 /venv
 /.venv
 /.idea
+/.vscode
 /.cache
 /.yarnrc.yml
 /.yarn
@@ -30,3 +31,4 @@ react-app-env.d.ts
 /.build
 /.storage
 /.deploy
+

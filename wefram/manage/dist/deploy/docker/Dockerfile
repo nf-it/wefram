@@ -26,4 +26,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["python3", "server.py"]
+CMD ["gunicorn", "-w", "${WEB_CONCURRENCY:-2}", "-k", "uvicorn.workers.UvicornH11Worker asgi:application"]

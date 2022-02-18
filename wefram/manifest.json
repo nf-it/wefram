@@ -29,7 +29,8 @@
       "csscompressor": "latest",
       "jsmin": "latest",
       "ldap3": "latest",
-      "aiosmtplib": "latest"
+      "aiosmtplib": "latest",
+      "gunicorn": "latest"
     },
     "node": {
       "@babel/core": "^7.15",
