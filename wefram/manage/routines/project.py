@@ -52,6 +52,7 @@ def make_deploying_srcs() -> List[str]:
         'config.default.json',
         'asgi.py',
         'server.py',
+        'manage',
         'requirements.txt'
     ])
 

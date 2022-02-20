@@ -36,10 +36,6 @@
     "uri": "redis://localhost/0",
     "password": null
   },
-  "storage": {
-    "root": ".storage",
-    "filesDir": "files"
-  },
   "uvicorn": {
     "loop": "uvloop",
     "bind": "0.0.0.0",

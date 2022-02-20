@@ -91,7 +91,7 @@ class SettingsEntity:
     application, not conflicting with entities from other applications. """
 
     tab: Optional[str] = None
-    """ Optional name of the settings tab. 
+    """ Optional name of the settings tab.
     TODO! describe more detailed. """
 
     @property

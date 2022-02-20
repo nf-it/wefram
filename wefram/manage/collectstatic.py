@@ -9,11 +9,19 @@ with the some ingress nginx and about to be placed in the volumes.
 """
 
 import os
+import shutil
 from distutils.dir_util import copy_tree
 from .. import config
 
 
 async def run(_) -> None:
-    os.makedirs(STATICS_DST, exist_ok=True)
-    copy_tree(config.STATICS_ROOT, STATICS_DST)
+    dst_path: str = os.path.join(config.VOLUME_ROOT, config.VOLUME['statics'])
+
+    print(f"Clearing statics: {dst_path}")
+    if os.path.exists(dst_path):
+        shutil.rmtree(dst_path)
+    print(f"Copying statics to: {dst_path}")
+
+    os.makedirs(dst_path, exist_ok=True)
+    copy_tree(config.STATICS_ROOT, dst_path)
 

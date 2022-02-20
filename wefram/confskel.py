@@ -35,6 +35,11 @@ BUILD_JSON = {
         },
         "theme": defaults.FRONTEND_THEME
     },
+    "volume": {
+        "root": defaults.VOLUME_ROOT,
+        "statics": defaults.VOLUME_STATICS,
+        "files": defaults.VOLUME_FILES
+    },
     "deploy": {
         "include": [],
         "exclude": [],
@@ -81,10 +86,6 @@ CONFIG_JSON = {
     "redis": {
         "uri": defaults.REDIS_URI,
         "password": defaults.REDIS_PASSWORD
-    },
-    "storage": {
-        "root": defaults.STORAGE_ROOT,
-        "filesDir": defaults.STORAGE_FILES_DIR
     },
     "uvicorn": {
         "loop": defaults.UVICORN_LOOP,

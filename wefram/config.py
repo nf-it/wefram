@@ -131,7 +131,7 @@ PROJECT: dict = read('project', None) or {}
 # --
 
 PRODUCTION: bool = not read('devel', defaults.CONFIG_DEVEL, 'bool')
-VERBOSE: [str, int, bool] = read('verbose', defaults.CONFIG_VERBOSE, 'bool')
+VERBOSE: Union[str, int, bool] = read('verbose', defaults.CONFIG_VERBOSE, 'bool')
 ECHO_DS: bool = read('echo_ds', defaults.CONFIG_ECHO_DS, 'bool')
 
 UVICORN_LOOP: str = read('uvicorn.loop', defaults.UVICORN_LOOP, 'str')
@@ -176,10 +176,6 @@ DATABASE: dict = {
         'drop_missing_columns': read('db.migrate.dropMissingColumns', defaults.DATABASE_MIGRATE_DROP_MISSING_COLUMNS, 'bool')
     }
 }
-STORAGE: dict = {
-    'root': read('storage.root', defaults.STORAGE_ROOT, 'str'),
-    'files_dir': read('storage.filesDir', defaults.STORAGE_FILES_DIR, 'str')
-}
 REDIS: dict = {
     'uri': read('redis.uri', defaults.REDIS_URI, 'str'),
     'password': read('redis.password', defaults.REDIS_PASSWORD) or None
@@ -190,22 +186,6 @@ DESKTOP: dict = {
     'requires': read('desktop.requires') or None,
     'intro_text': read('desktop.intro_text') or None
 }
-
-STORAGE_DIR: str = STORAGE['root']
-STORAGE_ROOT: str = STORAGE_DIR
-if STORAGE_ROOT and STORAGE_ROOT.startswith('/') and not os.path.isdir(STORAGE_ROOT):
-    # if PRODUCTION:
-    #     raise FileNotFoundError(
-    #         f"the storage volume's absolute path is invalid: {STORAGE['root']}"
-    #     )
-    STORAGE_ROOT = os.path.join(PRJ_ROOT, defaults.STORAGE_ROOT)
-elif not STORAGE_ROOT:
-    STORAGE_ROOT = os.path.join(PRJ_ROOT, defaults.STORAGE_ROOT)
-elif STORAGE_ROOT.startswith('./'):
-    STORAGE_ROOT = os.path.join(PRJ_ROOT, STORAGE_ROOT[2:])
-else:
-    STORAGE_ROOT = os.path.join(PRJ_ROOT, STORAGE_ROOT)
-FILES_ROOT: str = os.path.join(STORAGE_ROOT, STORAGE['files_dir'])
 
 
 # --
@@ -233,6 +213,26 @@ if not BUILD_CONF or not isinstance(BUILD_CONF, dict):
     BUILD_CONF = {}
 
 
+VOLUME: str = BUILD_CONF.get('volume', None)
+if not isinstance(VOLUME, dict):
+    VOLUME = {}
+VOLUME.setdefault('root', '.storage')
+VOLUME.setdefault('files', 'files')
+VOLUME.setdefault('statics', 'statics')
+
+VOLUME_DIR: str = VOLUME['root']
+VOLUME_ROOT: str = VOLUME_DIR
+if VOLUME_ROOT and VOLUME_ROOT.startswith('/') and not os.path.isdir(VOLUME_ROOT):
+    VOLUME_ROOT = os.path.join(PRJ_ROOT, defaults.VOLUME_ROOT)
+elif not VOLUME_ROOT:
+    VOLUME_ROOT = os.path.join(PRJ_ROOT, defaults.VOLUME_ROOT)
+elif VOLUME_ROOT.startswith('./'):
+    VOLUME_ROOT = os.path.join(PRJ_ROOT, VOLUME_ROOT[2:])
+else:
+    VOLUME_ROOT = os.path.join(PRJ_ROOT, VOLUME_ROOT)
+FILES_ROOT: str = os.path.join(VOLUME_ROOT, VOLUME['files'])
+
+
 COREPKG: str = "wefram"  # the Python Wefram package name
 CORE_ROOT: str = os.path.split(wefram.__file__)[0]  # The Wefram root path
 
@@ -257,6 +257,8 @@ DEPLOY.setdefault('path', defaults.DEPLOY_PATH)
 DEPLOY.setdefault('clean', defaults.DEPLOY_CLEAN)
 DEPLOY.setdefault('staticsDir', defaults.DEPLOY_STATICS)
 DEPLOY.setdefault('assetsDir', defaults.DEPLOY_ASSETS)
+DEPLOY.setdefault('bind', defaults.DEPLOY_BIND)
+DEPLOY.setdefault('workers', defaults.DEPLOY_WORKERS)
 
 
 # The setting below is only specific for the Wefram development mode when

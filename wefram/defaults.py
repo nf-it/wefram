@@ -2,6 +2,8 @@
 Provides the platform-level default values for the anything.
 """
 
+from typing import *
+
 
 CONFIG_DEVEL: bool = True
 CONFIG_VERBOSE: bool = False
@@ -38,11 +40,12 @@ DATABASE_PORT: int = 5432
 DATABASE_MIGRATE_DROP_MISSING_TABLES: bool = False
 DATABASE_MIGRATE_DROP_MISSING_COLUMNS: bool = False
 
-STORAGE_ROOT: str = '.storage'
-STORAGE_FILES_DIR: str = 'files'
+VOLUME_ROOT: str = '.storage'
+VOLUME_FILES: str = 'files'
+VOLUME_STATICS: str = 'statics'
 
 REDIS_URI: str = 'redis://localhost/0'
-REDIS_PASSWORD: (str, None) = None
+REDIS_PASSWORD: Union[str, None] = None
 
 DEFAULT_LOCALE: str = 'en_US'
 
@@ -56,3 +59,5 @@ DEPLOY_PATH: str = '.deploy'
 DEPLOY_CLEAN: bool = False
 DEPLOY_STATICS: str = '.static'
 DEPLOY_ASSETS: str = '.assets'
+DEPLOY_BIND: str = '0.0.0.0:8000'
+DEPLOY_WORKERS: int = 4

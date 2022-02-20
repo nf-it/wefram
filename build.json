@@ -11,12 +11,19 @@
     },
     "theme": "system/project/theme"
   },
+  "volume": {
+    "root": ".storage",
+    "statics": "statics",
+    "files": "files"
+  },
   "deploy": {
     "include": [],
     "exclude": [],
     "path": ".deploy",
     "clean": false,
     "staticsDir": ".static",
-    "assetsDir": ".assets"
+    "assetsDir": ".assets",
+    "bind": "0.0.0.0:8000",
+    "workers": 4
   }
 }

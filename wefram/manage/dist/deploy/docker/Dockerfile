@@ -24,6 +24,6 @@ RUN rm -rf /wheels
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE {{ bindport }}
 
-CMD ["gunicorn", "-w", "${WEB_CONCURRENCY:-2}", "-k", "uvicorn.workers.UvicornH11Worker asgi:application"]
+CMD ["/usr/local/bin/gunicorn", "-b", "{{ bind }}", "-w", "{{ workers }}", "-k", "uvicorn.workers.UvicornWorker", "asgi:application"]
