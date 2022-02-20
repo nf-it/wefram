@@ -19,6 +19,7 @@ import os.path
 import shutil
 import subprocess
 import json
+import jinja2
 from distutils.dir_util import copy_tree
 from .. import config, logger, defaults, confskel
 from .routines.tools import yesno, json_to_file, merge_conf
@@ -27,8 +28,8 @@ from . import make
 
 
 DEPLOYMENT_ROOT: str = os.path.join(config.PRJ_ROOT, config.DEPLOY['path']) \
-        if not config.DEPLOY['path'].startswith('/') \
-        else config.DEPLOY['path']
+    if not config.DEPLOY['path'].startswith('/') \
+    else config.DEPLOY['path']
 
 SOURCES: List[str] = make_deploying_srcs()
 
@@ -72,7 +73,7 @@ def clean(full: bool = False) -> None:
         'config.json',
     ]  # The list of excluded from the cleanup roots
 
-    storage_dir: str = config.STORAGE_DIR or defaults.STORAGE_ROOT
+    storage_dir: str = config.VOLUME_DIR or defaults.VOLUME_ROOT
     if storage_dir and not storage_dir.startswith('/'):
         exclude.append(storage_dir.split('/')[0])
 
@@ -229,10 +230,27 @@ def make_dockerfile() -> None:
     )
 
     print("Deploying Dockerfile")
-    shutil.copy(
-        os.path.join(config.CORE_ROOT, 'manage', 'dist', 'deploy', 'docker', 'Dockerfile'),
-        os.path.join(DEPLOYMENT_ROOT, 'Dockerfile')
-    )
+    # shutil.copy(
+    #     os.path.join(config.CORE_ROOT, 'manage', 'dist', 'deploy', 'docker', 'Dockerfile'),
+    #     os.path.join(DEPLOYMENT_ROOT, 'Dockerfile')
+    # )
+    bindaddr, bindport = str(config.DEPLOY['bind']).split(':', 1) \
+        if ':' in str(config.DEPLOY['bind']) \
+        else (
+            str(config.DEPLOY['bind']),
+            '8000'
+        )
+    with open(os.path.join(config.CORE_ROOT, 'manage', 'dist', 'deploy', 'docker', 'Dockerfile'), 'r') as f:
+        dockerfile: str = jinja2.Template(f.read()).render(
+            bind=config.DEPLOY['bind'],
+            bindport=bindport,
+            bindaddr=bindaddr,
+            statics_dir=config.DEPLOY['staticsDir'],
+            assets_dir=config.DEPLOY['assetsDir'],
+            workers=config.DEPLOY['workers']
+        )
+    with open(os.path.join(DEPLOYMENT_ROOT, 'Dockerfile'), 'w') as f:
+        f.write(dockerfile)
 
 
 async def run(*_) -> None:
@@ -271,9 +289,9 @@ async def run(*_) -> None:
     )
     print("")
     clean_all: bool = yesno(
-            "Do full clean up at the deployment directory?\n"
-            "WARNING! This will erase ALL data except storage directory!",
-            bool(config.DEPLOY['clean'])
+        "Do full clean up at the deployment directory?\n"
+        "WARNING! This will erase ALL data except storage directory!",
+        bool(config.DEPLOY['clean'])
     )
     clean(clean_all)
 

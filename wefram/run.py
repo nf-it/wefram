@@ -29,7 +29,7 @@ private_screens.start()
 os.makedirs(config.BUILD_ROOT, exist_ok=True)
 os.makedirs(config.ASSETS_ROOT, exist_ok=True)
 os.makedirs(config.STATICS_ROOT, exist_ok=True)
-os.makedirs(config.STORAGE_ROOT, exist_ok=True)
+os.makedirs(config.VOLUME_ROOT, exist_ok=True)
 os.makedirs(config.FILES_ROOT, exist_ok=True)
 if config.ASSETS_SRC_ROOT:
     os.makedirs(config.ASSETS_SRC_ROOT, exist_ok=True)
