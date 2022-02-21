@@ -9,8 +9,8 @@ with the some ingress nginx and about to be placed in the volumes.
 """
 
 import os
-import shutil
 from distutils.dir_util import copy_tree
+from ..tools import rm_dir_contents
 from .. import config
 
 
@@ -19,7 +19,7 @@ async def run(_) -> None:
 
     print(f"Clearing statics: {dst_path}")
     if os.path.exists(dst_path):
-        shutil.rmtree(dst_path)
+        rm_dir_contents(dst_path)
     print(f"Copying statics to: {dst_path}")
 
     os.makedirs(dst_path, exist_ok=True)

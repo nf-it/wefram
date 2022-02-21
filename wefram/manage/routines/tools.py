@@ -4,9 +4,10 @@ modules may duplicate some tools from the core, but this behaviour is
 more preferred than using the core's corresponding functions, because
 by using this module we don't rely on core imports' dependencies.
 """
-
+import os.path
 from typing import *
 import json
+import shutil
 
 
 __all__ = [
@@ -17,7 +18,8 @@ __all__ = [
     'term_intinput',
     'term_input',
     'json_to_file',
-    'merge_conf'
+    'merge_conf',
+    'rm_dir_contents'
 ]
 
 
@@ -161,3 +163,26 @@ def merge_conf(dist: dict, proj: dict) -> dict:
             continue
         merged[key] = proj[key]
     return merged
+
+
+def rm_dir_contents(path: str, exclude: List[str] = None, ignore_errors: bool = False) -> None:
+    """ Removes the directory's contents, but not removing the directory
+    itself. This is more useful than :func:`rmtree` for example, because this
+    function does not deletes the directory itself, but only deletes all
+    files and directories in it recursively.
+
+    Optional ``exclude`` argument may be used to list files and
+    directories whose not about to be deleted.
+    """
+
+    if not os.path.isdir(path):
+        raise FileNotFoundError
+
+    exclude: List[str] = exclude if isinstance(exclude, (list, tuple)) else []
+
+    for fn in [f for f in os.listdir(path) if f not in exclude]:
+        fqfn: str = os.path.join(path, fn)
+        if os.path.isdir(fqfn):
+            shutil.rmtree(fqfn, ignore_errors=ignore_errors)
+        else:
+            os.unlink(fqfn)
