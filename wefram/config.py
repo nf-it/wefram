@@ -259,6 +259,8 @@ DEPLOY.setdefault('staticsDir', defaults.DEPLOY_STATICS)
 DEPLOY.setdefault('assetsDir', defaults.DEPLOY_ASSETS)
 DEPLOY.setdefault('bind', defaults.DEPLOY_BIND)
 DEPLOY.setdefault('workers', defaults.DEPLOY_WORKERS)
+if 'volume' not in DEPLOY or not isinstance(DEPLOY['volume'], dict):
+    DEPLOY['volume'] = defaults.DEPLOY_VOLUME
 
 
 # The setting below is only specific for the Wefram development mode when

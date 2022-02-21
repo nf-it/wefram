@@ -61,3 +61,8 @@ DEPLOY_STATICS: str = '.static'
 DEPLOY_ASSETS: str = '.assets'
 DEPLOY_BIND: str = '0.0.0.0:8000'
 DEPLOY_WORKERS: int = 4
+DEPLOY_VOLUME: dict = {
+    "root": "/volumes",
+    "statics": "statics",
+    "files": "files"
+}

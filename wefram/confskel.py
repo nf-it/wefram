@@ -47,13 +47,9 @@ BUILD_JSON = {
         "clean": defaults.DEPLOY_CLEAN,
         "staticsDir": defaults.DEPLOY_STATICS,
         "assetsDir": defaults.DEPLOY_ASSETS,
-        "bind": "0.0.0.0:8000",
-        "workers": 4,
-        "volume": {
-            "root": "/volumes",
-            "statics": "statics",
-            "files": "files"
-        }
+        "bind": defaults.DEPLOY_BIND,
+        "workers": defaults.DEPLOY_WORKERS,
+        "volume": defaults.DEPLOY_VOLUME
     }
 }
 
