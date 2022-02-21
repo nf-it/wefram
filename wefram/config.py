@@ -213,9 +213,9 @@ if not BUILD_CONF or not isinstance(BUILD_CONF, dict):
     BUILD_CONF = {}
 
 
-VOLUME: str = BUILD_CONF.get('volume', None)
+VOLUME: dict = BUILD_CONF.get('volume', None)
 if not isinstance(VOLUME, dict):
-    VOLUME = {}
+    VOLUME = dict()
 VOLUME.setdefault('root', '.storage')
 VOLUME.setdefault('files', 'files')
 VOLUME.setdefault('statics', 'statics')

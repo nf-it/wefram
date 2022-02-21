@@ -24,6 +24,11 @@
     "staticsDir": ".static",
     "assetsDir": ".assets",
     "bind": "0.0.0.0:8000",
-    "workers": 4
+    "workers": 4,
+    "volume": {
+      "root": "/volumes",
+      "statics": "statics",
+      "files": "files"
+    }
   }
 }
