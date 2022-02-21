@@ -112,7 +112,8 @@ def make_deploy_json() -> None:
     print("Generating 'deploy.json'")
     json_to_file({
         "staticsDir": config.DEPLOY['staticsDir'],
-        "assetsDir": config.DEPLOY['assetsDir']
+        "assetsDir": config.DEPLOY['assetsDir'],
+        "volume": config.DEPLOY['volume']
     }, os.path.join(DEPLOYMENT_ROOT, 'deploy.json'))
 
 
